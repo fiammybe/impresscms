@@ -2181,16 +2181,16 @@
         },
         {
             "name": "imponeer/smarty-sunrise-http-router",
-            "version": "v1.1.2",
+            "version": "v1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/imponeer/smarty-sunrise-http-router.git",
-                "reference": "cf252f42efa80cba9729acb466baaa1bc187c77e"
+                "reference": "506960d71994aa5a6a1f8cb6c68a9235b75af2ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/imponeer/smarty-sunrise-http-router/zipball/cf252f42efa80cba9729acb466baaa1bc187c77e",
-                "reference": "cf252f42efa80cba9729acb466baaa1bc187c77e",
+                "url": "https://api.github.com/repos/imponeer/smarty-sunrise-http-router/zipball/506960d71994aa5a6a1f8cb6c68a9235b75af2ff",
+                "reference": "506960d71994aa5a6a1f8cb6c68a9235b75af2ff",
                 "shasum": ""
             },
             "require": {
@@ -2217,9 +2217,9 @@
             "description": "Smarty extensions to use with amazing router from sunrise-php",
             "support": {
                 "issues": "https://github.com/imponeer/smarty-sunrise-http-router/issues",
-                "source": "https://github.com/imponeer/smarty-sunrise-http-router/tree/v1.1.2"
+                "source": "https://github.com/imponeer/smarty-sunrise-http-router/tree/v1.1.3"
             },
-            "time": "2022-09-13T19:55:55+00:00"
+            "time": "2022-10-01T11:03:37+00:00"
         },
         {
             "name": "imponeer/smarty-translate",
