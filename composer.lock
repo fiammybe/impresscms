@@ -8063,16 +8063,16 @@
         },
         {
             "name": "imponeer/smarty-debug",
-            "version": "v1.1.3",
+            "version": "v1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/imponeer/smarty-debug.git",
-                "reference": "f0edc9c9c96ae4f421970d643efcd5982648fa3e"
+                "reference": "bf253f9c528a52fbfcfe31707d850bb8d9871322"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/imponeer/smarty-debug/zipball/f0edc9c9c96ae4f421970d643efcd5982648fa3e",
-                "reference": "f0edc9c9c96ae4f421970d643efcd5982648fa3e",
+                "url": "https://api.github.com/repos/imponeer/smarty-debug/zipball/bf253f9c528a52fbfcfe31707d850bb8d9871322",
+                "reference": "bf253f9c528a52fbfcfe31707d850bb8d9871322",
                 "shasum": ""
             },
             "require": {
@@ -8106,9 +8106,9 @@
             ],
             "support": {
                 "issues": "https://github.com/imponeer/smarty-debug/issues",
-                "source": "https://github.com/imponeer/smarty-debug/tree/v1.1.3"
+                "source": "https://github.com/imponeer/smarty-debug/tree/v1.1.4"
             },
-            "time": "2022-09-13T08:32:17+00:00"
+            "time": "2022-10-01T07:01:38+00:00"
         },
         {
             "name": "myclabs/deep-copy",
