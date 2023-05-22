@@ -2438,16 +2438,16 @@
         },
         {
             "name": "imponeer/symfony-translations-constants-loader",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/imponeer/symfony-translations-constants-loader.git",
-                "reference": "7a9047558fc97fd5d31d5190f471031ecb032780"
+                "reference": "dd0c3cc6e624c64fddd27f2fa8dfbb744f6b85a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/imponeer/symfony-translations-constants-loader/zipball/7a9047558fc97fd5d31d5190f471031ecb032780",
-                "reference": "7a9047558fc97fd5d31d5190f471031ecb032780",
+                "url": "https://api.github.com/repos/imponeer/symfony-translations-constants-loader/zipball/dd0c3cc6e624c64fddd27f2fa8dfbb744f6b85a8",
+                "reference": "dd0c3cc6e624c64fddd27f2fa8dfbb744f6b85a8",
                 "shasum": ""
             },
             "require": {
@@ -2486,22 +2486,22 @@
             ],
             "support": {
                 "issues": "https://github.com/imponeer/symfony-translations-constants-loader/issues",
-                "source": "https://github.com/imponeer/symfony-translations-constants-loader/tree/v1.0.5"
+                "source": "https://github.com/imponeer/symfony-translations-constants-loader/tree/v1.0.6"
             },
-            "time": "2022-12-01T14:08:35+00:00"
+            "time": "2023-04-01T15:03:27+00:00"
         },
         {
             "name": "impresscms/codemirror-integration",
-            "version": "v0.2.3",
+            "version": "v0.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ImpressCMS/codemirror-integration.git",
-                "reference": "5d4c24e09c3d581aa79cb97c54eef8b6a86279cf"
+                "reference": "b9d3a74269192fa2ab2063c95523c1fc2c2631eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ImpressCMS/codemirror-integration/zipball/5d4c24e09c3d581aa79cb97c54eef8b6a86279cf",
-                "reference": "5d4c24e09c3d581aa79cb97c54eef8b6a86279cf",
+                "url": "https://api.github.com/repos/ImpressCMS/codemirror-integration/zipball/b9d3a74269192fa2ab2063c95523c1fc2c2631eb",
+                "reference": "b9d3a74269192fa2ab2063c95523c1fc2c2631eb",
                 "shasum": ""
             },
             "require": {
@@ -2563,9 +2563,9 @@
             "description": "Integrates CodeMirror with ImpressCMS",
             "support": {
                 "issues": "https://github.com/ImpressCMS/codemirror-integration/issues",
-                "source": "https://github.com/ImpressCMS/codemirror-integration/tree/v0.2.3"
+                "source": "https://github.com/ImpressCMS/codemirror-integration/tree/v0.2.5"
             },
-            "time": "2022-11-07T11:06:43+00:00"
+            "time": "2023-04-24T12:02:18+00:00"
         },
         {
             "name": "impresscms/composer-addon-installer-plugin",
@@ -7762,16 +7762,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v5.4.19",
+            "version": "v5.4.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "83d487b13b7fb4c0a6ad079f4e4c9b4525e1b695"
+                "reference": "9a401392f01bc385aa42760eff481d213a0cc2ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/83d487b13b7fb4c0a6ad079f4e4c9b4525e1b695",
-                "reference": "83d487b13b7fb4c0a6ad079f4e4c9b4525e1b695",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/9a401392f01bc385aa42760eff481d213a0cc2ba",
+                "reference": "9a401392f01bc385aa42760eff481d213a0cc2ba",
                 "shasum": ""
             },
             "require": {
@@ -7839,7 +7839,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v5.4.19"
+                "source": "https://github.com/symfony/translation/tree/v5.4.22"
             },
             "funding": [
                 {
@@ -7855,7 +7855,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-01T08:32:19+00:00"
+            "time": "2023-03-27T16:07:23+00:00"
         },
         {
             "name": "symfony/translation-contracts",
