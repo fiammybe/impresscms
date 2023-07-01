@@ -4526,7 +4526,7 @@
         },
         {
             "name": "narrowspark/http-emitter",
-            "version": "1.0.0",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/narrowspark/http-emitter.git",
@@ -4583,6 +4583,17 @@
                 "issues": "https://github.com/narrowspark/http-emitter/issues",
                 "source": "https://github.com/narrowspark/http-emitter"
             },
+            "funding": [
+                {
+                    "url": "https://github.com/prisis",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/_prisis_",
+                    "type": "open_collective"
+                }
+            ],
+            "abandoned": true,
             "time": "2019-09-12T21:29:46+00:00"
         },
         {
