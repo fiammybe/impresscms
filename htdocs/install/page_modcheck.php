@@ -37,7 +37,7 @@ function xoDiag( $status = -1, $str = '') {
 	if (empty($str)) {
 		$str = $strings[$status];
 	}
-	return '<td class="' . $classes[$status] . '">' . $str . '</td>';
+	return $str;
 }
 function xoDiagBoolSetting( $name, $wanted = false, $severe = false) {
 	$setting = strtolower( ini_get( $name ) );
@@ -71,7 +71,7 @@ function imCheckRequirements()
 	$requirement['server_api']['status']=true;
 
 	$requirement['php_version']['description']=_PHP_VERSION;
-	if (version_compare( phpversion(), '7.0', '>=')) {
+	if (version_compare( phpversion(), '7.4', '>=')) {
 		$requirement['php_version']['status']=1;
 	} else {
 		$requirement['php_version']['status']=0;
@@ -101,24 +101,29 @@ function imCheckRequirements()
 	$requirement['gd']['description']="GD Extension";
 	$requirement['gd']['result']=extension_loaded( 'GD' ) ? SUCCESS : FAILED;
 	$requirement['gd']['status']=extension_loaded( 'GD' ) ? true : false;
-	
-	
+
+
 	return $requirement;
 }
 
 ob_start();
 $requirements_array = imCheckRequirements();
 ?>
-<fieldset>
+
 <h3><?php echo REQUIREMENTS; ?></h3>
+	<div class="list-group">
 <?php foreach($requirements_array as &$requirement)
 	 {
 	 ?>
-<h4><?php echo $requirement['description']; ?>:&nbsp; <?php echo xoDiag($requirement['status'], $requirement['result']); ?> <img
-	src="img/<?php echo $requirement['status'] ? "yes" : "no"; ?>.png" alt="<?php echo $requirement['status'] ? SUCCESS : FAILED; ?>" class="rootimg" /></h4>
-<div class="clear">&nbsp;</div>
-		 <?php } ?>
-</fieldset>
+	<label class="list-group-item d-flex gap-3 py-3">
+		<div class="d-flex gap-2 w-100 justify-content-between">
+			<div>
+				<p class="lead mb-0"><?php echo $requirement['description']; ?> : <?php echo xoDiag($requirement['status'], $requirement['result']); ?> <i class="<?php echo $requirement['status'] ? "bi-check2-circle" : "bi-exclamation-circle"; ?>"></i></p>
+			</div>
+		</div>
+	</label>
+	 <?php } ?>
+	</div>
 
 <fieldset>
 <h3><?php echo RECOMMENDED_EXTENSIONS; ?></h3>
@@ -134,7 +139,7 @@ if (empty($ext)) {
 } else {
 	echo xoDiag( 1, implode( ',', $ext ) );
 }
-?> <img src="img/yes.png" alt="Success" class="rootimg" /></h4>
+?> <i class="bi-check2-circle"></i></h4>
 <div class="clear">&nbsp;</div>
 <h4><?php printf( PHP_EXTENSION, XML_PARSING ); ?>:&nbsp; <?php
 $ext = array();
@@ -145,7 +150,8 @@ if (empty($ext)) {
 } else {
 	echo xoDiag( 1, implode( ',', $ext ) );
 }
-?> <img src="img/yes.png" alt="Success" class="rootimg" /></h4>
+?> <i class="bi-check2-circle"></i>
+</h4>
 <div class="clear">&nbsp;</div>
 </fieldset>
 <!--

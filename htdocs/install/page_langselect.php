@@ -44,10 +44,13 @@ $content = "";
 
 
 $languages = icms_core_Filesystem::getDirList( "./language/" );
+$content .= '<div class="list-group">';
 foreach ( $languages as $lang) {
 	$sel = ( $lang == $wizard->language ) ? ' checked="checked"' : '';
-	$content .= "<div class=\"langselect\" style=\"text-decoration: none;\"><a href=\"javascript:void(0);\" style=\"text-decoration: none;\"><img src=\"../images/flags/$lang.gif\" alt=\"$lang\" /><br />$lang<br /> <input type=\"radio\" name=\"lang\" value=\"$lang\"$sel /></a></div>";
+	$content .= "<label class=\"list-group-item d-flex gap-3 py-3\"><input class=\"form-check-input flex-shrink-0\" type=\"radio\" name=\"lang\" id=\"listGroupRadios3\" value=\"$lang\" $sel><span class=\"fi fi-gb fis\"></span><h6 class=\"mb-0\">$lang</h6></label>";
+	//$content .= "<div class=\"langselect\" style=\"text-decoration: none;\"><a href=\"javascript:void(0);\" style=\"text-decoration: none;\"><img src=\"../images/flags/$lang.gif\" alt=\"$lang\" /><br />$lang<br /> <input type=\"radio\" name=\"lang\" value=\"$lang\"$sel /></a></div>";
 }
+$content .= '</label></div>';
 $content .= '<fieldset style="text-align: center;">';
 $content .= '<div>' . ALTERNATE_LANGUAGE_MSG . '</div>';
 $content .= '<div style="text-align: center; margin-top: 5px;"><a href="' . ALTERNATE_LANGUAGE_LNK_URL . '" target="_blank">' . ALTERNATE_LANGUAGE_LNK_MSG . '</a></div>';

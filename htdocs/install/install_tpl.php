@@ -29,150 +29,113 @@ if (isset($_COOKIE['xo_install_lang'])) {
 	$icmsConfig['language'] = $icmsConfig['language'] = htmlentities($_COOKIE['xo_install_lang']);
 }
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+?><!doctype html>
+<html lang="en">
 <head>
 	<title><?php echo sprintf(XOOPS_INSTALL_WIZARD, XOOPS_VERSION); ?>
 		(<?php echo ($wizard->currentPage + 1) . '/' . count($wizard->pages); ?>)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo _INSTALL_CHARSET ?>"/>
-	<?php
-	if (defined('_ADM_USE_RTL') && _ADM_USE_RTL) {
-		echo '<link rel="stylesheet" type="text/css" media="all" href="style_rtl.css" />';
-	} else {
-		echo '<link rel="stylesheet" type="text/css" media="all" href="style.css" />';
-		echo '<link rel="stylesheet" type="text/css" media="all" href="style.css" title="darkstyle" />';
-		echo '<link rel="stylesheet" type="text/css" media="all" href="stylelight.css" title="lightstyle" />';
-	}
-	?>
-
-	<script type="text/javascript" src="../libraries/jquery/jquery.js"></script>
-	<script type="text/javascript" src="stylesheetToggle.js"></script>
-	<script type="text/javascript" src="jquery.scrollTo.js"></script>
-	<script type="text/javascript">
-		$(function () {
-			$.stylesheetInit();
-			$('#toggler').bind('click', function (e) {
-					$.stylesheetToggle();
-					return false;
-				}
-			);
-			$('#help_button').click(function () {
-				if ($('div.xoform-help').is(":hidden")) {
-					$('div.xoform-help').slideDown("slow");
-				} else {
-					$('div.xoform-help').slideUp("slow");
-				}
-			});
-			$('#pagedown').click(function () {
-				$.scrollTo('max', 1500);
-			});
-		});
-	</script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-<?php
-if (defined('_ADM_USE_RTL') && _ADM_USE_RTL) {
-	echo '<body dir="rtl">';
-} else {
-	echo '<body>';
-}
-?>
-<div id="wrapper">
-	<div id="header">
-		<div id="logo"><img src="img/logo.png" alt="ImpressCMS"/></div>
-		<div id="info"><?php echo sprintf(XOOPS_INSTALL_WIZARD, XOOPS_VERSION) . "<br />" . INSTALL_STEP; ?>
-			&nbsp;<?php echo ($wizard->currentPage + 1) . INSTALL_OUTOF . count($wizard->pages); ?></div>
-	</div>
+<body>
+	<header>
+		<div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+			<a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+				<img src="./images/logo.svg" height="72" alt="ImpressCMS logo">
+				<span class="fs-4">New Wave Installer</span>
+			</a>
 
-	<div id="page_top">&nbsp;</div>
+			<nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+				<a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#"><?php echo sprintf(XOOPS_INSTALL_WIZARD, XOOPS_VERSION); ?></a>
+			</nav>
+		</div>
+	</header>
 
-	<div id="page">
+	<main>
 		<form action='<?php echo htmlentities($_SERVER['PHP_SELF']); ?>' method='post'>
-			<div id="leftside">
+		<div class="row">
+			<div class="col-md-3 offset-lg-1 d-none d-md-block">
 				<h3><?php echo INSTALL_H3_STEPS; ?></h3>
-				<ul>
+				<ul class="nav nav-pills flex-column mb-auto">
 					<?php foreach ($wizard->pages as $k => $page) {
 						$class = '';
-						if ($k == $wizard->currentPage) $class = ' class="current"';
-						elseif ($k > $wizard->currentPage) $class = ' class="disabled"';
-						if (empty($class)) {
-							$li = '<a href="' . $wizard->pageURI($page) . '">' . $wizard->pagesNames[$k] . '</a>';
-						} else {
-							$li = $wizard->pagesNames[$k];
+						if ($k == $wizard->currentPage)
+						{
+							$class = 'active';
+							$icon = 'bi-arrow-right-circle';
+							$li = '<a class="nav-link active" href="' . $wizard->pageURI($page) . '"><i class=' .$icon .'></i><strong> ' . $wizard->pagesNames[$k] . '</strong></a>';
 						}
-						echo "<li$class>$li</li>\n";
+						elseif ($k < $wizard->currentPage)
+						{
+							$class = '';
+							$icon = 'bi-check2-circle';
+							$li = '<a class="nav-link" href="' . $wizard->pageURI($page) . '"><i class=' .$icon .'></i><strong> ' . $wizard->pagesNames[$k] . '</strong></a>';
+						}
+						else {
+							$class = '';
+							$icon = 'bi-circle';
+							$li = '<a class="nav-link" href=""><i class=' .$icon .'></i> ' . $wizard->pagesNames[$k] . '</a>';
+						}
+//						if (empty($class)) {
+//							$li = '<a class="nav-link" href="' . $wizard->pageURI($page) . '">' . $wizard->pagesNames[$k] . '</a>';
+//							$icon = '"bi-circle"';
+//						} else {
+//							$li = '<a class="nav-link" href="' . $wizard->pageURI($page) . '">' . $wizard->pagesNames[$k] . '</a>';
+//							$icon = '"bi-circle"';
+//						}
+						echo "<li class='nav-item'>$li</li>\n";
 					} ?>
 				</ul>
-				<div class="clear">&nbsp;</div>
 			</div>
-			<div id="rightside">
-				<div class="page" id="<?php echo $wizard->currentPageName; ?>">
-					<?php if ($pageHasHelp) { ?>
-						<button type="button" onclick="javascript:void(0);" id="help_button"
-								title="<?php echo SHOW_HIDE_HELP; ?>">
-							<img src="img/help2.png" alt="<?php echo SHOW_HIDE_HELP; ?>"
-								 title="<?php echo SHOW_HIDE_HELP; ?>"/>
-						</button>
-					<?php } ?>
-					<button type="button" onclick="javascript:void(0);" id="pagedown">
-						<img src="img/down.png" alt="<?php echo SHOW_HIDE_HELP; ?>"
-							 title="<?php echo SHOW_HIDE_HELP; ?>"/>
-					</button>
-					<button type="button" onclick="javascript:void(0);" id="toggler">
-						<img src="img/toggler.png" alt="<?php echo SHOW_HIDE_HELP; ?>"/>
-					</button>
-					<h2><?php echo $wizard->pagesTitles[$wizard->currentPage]; ?></h2>
+
+				<div class="col-md-7 col-12" id="<?php echo $wizard->currentPageName; ?>">
+					<h1 class="text-center mb-2"><?php echo $wizard->pagesTitles[$wizard->currentPage]; ?></h1>
 					<?php echo $content; ?>
-				</div>
-				<div id="buttons">
+					<div class="d-flex gap-2 justify-content-center py-5">
 					<?php if ($wizard->currentPage != 0 && ($wizard->currentPage != 11)) { ?>
-						<button type="button" title="<?php echo BUTTON_PREVIOUS; ?>"
-								onclick="location.href='<?php echo $wizard->pageURI('-1'); ?>'" class="prev">
-							<img src="img/left-arr.png" alt="<?php echo BUTTON_PREVIOUS; ?>"
-								 title="<?php echo BUTTON_PREVIOUS; ?>" width="16"/>
-						</button>
+						<a class="btn btn-outline-secondary d-inline-flex align-items-center" href="<?php echo $wizard->pageURI('-1'); ?>" type="button">
+							<i class="bi-arrow-left-short"></i> <?php echo BUTTON_PREVIOUS; ?>
+						</a>
 					<?php } ?>
 					<?php if ($wizard->currentPage == 11) { ?>
-						<button id="hmo" title="<?php echo BUTTON_SHOW_SITE; ?>" type="button"
-								onclick="location.href='<?php echo $wizard->pageURI('11'); ?>?success=true'"
-								class="finish">
-							<img src="img/Home.png" alt="<?php echo BUTTON_SHOW_SITE; ?>"
-								 title="<?php echo BUTTON_SHOW_SITE; ?>" width="32"/>
-						</button>
+						<a class="btn btn-primary d-inline-flex align-items-center" href="<?php echo $wizard->pageURI('11'); ?>?success=true" type="button">
+							<?php echo BUTTON_SHOW_SITE; ?> <i class="bi-house"></i>
+						</a>
 					<?php } ?>
 					<?php if ($wizard->pages[$wizard->currentPage] == $wizard->secondlastpage) { ?>
 					<?php if (@$pageHasForm) { ?>
-					<button type="submit">
+					<button class="btn btn-primary d-inline-flex align-items-center" type="submit">
 						<?php } else { ?>
-						<button type="button" title="<?php echo BUTTON_NEXT; ?>" accesskey="n"
+						<button class="btn btn-primary d-inline-flex align-items-center" type="button" title="<?php echo BUTTON_NEXT; ?>" accesskey="n"
 								onclick="location.href='<?php echo $wizard->pageURI('+1'); ?>'" class="next">
 							<?php } ?>
 							<?php if ($_POST['mod'] != 1) { ?>
-								<img src="img/right-arr.png" alt="<?php echo BUTTON_NEXT; ?>" width="16"/>
+								<?php echo BUTTON_NEXT; ?> <i class="bi-arrow-right-short"></i>
 							<?php } else { ?>
 								<?php echo BUTTON_FINISH; ?>
 							<?php } ?>
 						</button>
 						<?php } else if ($wizard->pages[$wizard->currentPage] != $wizard->lastpage) { ?>
 						<?php if (@$pageHasForm) { ?>
-						<button type="submit" title="<?php echo BUTTON_NEXT; ?>">
+						<button class="btn btn-primary d-inline-flex align-items-center" type="submit" title="<?php echo BUTTON_NEXT; ?>">
 							<?php } else { ?>
-							<button type="button" title="<?php echo BUTTON_NEXT; ?>" accesskey="n"
+							<button class="btn btn-primary d-inline-flex align-items-center" type="button" title="<?php echo BUTTON_NEXT; ?>" accesskey="n"
 									onclick="location.href='<?php echo $wizard->pageURI('+1'); ?>'" class="next">
 								<?php } ?>
-								<img src="img/right-arr.png" alt="<?php echo BUTTON_NEXT; ?>" width="16"/>
+								<?php echo BUTTON_NEXT; ?> <i class="bi-arrow-right-short"></i>
 							</button>
 							<?php } ?>
 				</div>
-				<div class="clear">&nbsp;</div>
-			</div>
-		</form>
-		<div class="clear">&nbsp;</div>
-	</div>
-	<div id="page_bot">&nbsp;</div>
 
+
+		</div>
+		</form>
+	</main>
 	<div id="footer">
 		<?php echo INSTALL_COPYRIGHT; ?>
 	</div>
-</div>
 </body>
 </html>
