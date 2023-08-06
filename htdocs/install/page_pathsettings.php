@@ -85,14 +85,7 @@ class PathStuffController {
 	function readRequest() {
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$request = $_POST;
-			/*
-			 $request = xo_input_get_args( INPUT_POST, array(
-				'ROOT_PATH'	=> FILTER_SANITIZE_STRING,
-				'URL'		=> array(
-				'filter'	=> FILTER_VALIDATE_URL,
-				'flags'		=> FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED,
-				),
-				) );*/
+
 			if (isset($request['ROOT_PATH'])) {
 				$request['ROOT_PATH'] = str_replace( "\\", "/", $request['ROOT_PATH'] );
 				if (substr( $request['ROOT_PATH'], -1 ) == '/') {
