@@ -98,3 +98,24 @@ function imcms_get_url_domain($url)
 	return $domain;
 }
 
+/**
+ * Generate an input field in a form for the installer.
+ * @param $name	name of the field in the form
+ * @param $value a value, if there is one
+ * @param $label Text shown on the label associated with the control
+ * @param $help Text shown in the help zone associated with the control
+ * @param $type Type of control
+ * @return string
+ */
+function xoFormField( $name, $value, $label, $help = '', $type='text') {
+	$label = htmlspecialchars( $label );
+	$name = htmlspecialchars( $name, ENT_QUOTES );
+	$value = htmlspecialchars( $value, ENT_QUOTES );
+
+	$field = "<div class='mb-3'><label class='form-label' for='$name'>$label</label>\n";
+	$field .= "<div class='clear'>&nbsp;</div><input type='$type' class='form-control' name='$name' id='$name' value='$value' />";
+	if ($help) {
+		$field .= '<div class="xoform-help">' . $help . "</div></div>\n";
+	}
+	return $field;
+}
