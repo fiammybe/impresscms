@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Icms Installer</title>
+</head>
+<body>
+
+<div class="container py-3">
+	<header>
+		<div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+			<a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+				<img src="./images/logo.svg" height="72" alt="ImpressCMS logo">
+				<span class="fs-4">New Wave Installer</span>
+			</a>
+
+			<nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+				<a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">ImpressCMS 2.0 RC</a>
+			</nav>
+		</div>
+
+		<!--		<div class="p-3 pb-md-4 mx-auto text-center">-->
+		<!--			<h1 class="display-4 fw-normal text-body-emphasis">ImpressCMS 2.0 RC Installation Wizard</h1>-->
+		<!--			<p class="fs-5 text-body-secondary">Quickly build an effective pricing table for your potential customers with this Bootstrap example. It’s built with default Bootstrap components and utilities with little customization.</p>-->
+		<!--		</div>-->
+	</header>
+
+	<main>
+		<div class="row">
+			<div class="col-md-3 offset-lg-1 d-none d-md-block">
+				<ul class="nav nav-pills flex-column mb-auto">
+					<li class="nav-item">
+						<a href="lang_select.html" class="nav-link">
+							<i class="bi-check2-circle"></i>
+							<strong>Language Selection</strong>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link active" aria-current="page">
+							<i class="bi-arrow-right-circle"></i>
+							<strong>Introduction</strong>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Configuration Check
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Path Settings
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Database Connection
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Database Configuration
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Configuration Save
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Tables Creation
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Initial Settings
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Data Insertion
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Install Modules
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Welcome
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-7 col-12">
+				<div>
+					<h3>Welcome to the ImpressCMS installation assistant</h3>
+
+					<p>ImpressCMS is a Web publishing system written in PHP. It is an ideal tool for developing small to large dynamic community websites, intra company portals, corporate portals, weblogs and much more.</p>
+
+						<p>ImpressCMS is released under the terms of the GNU General Public License (GPL) and is free to use and modify. It is free to redistribute as long as you abide by the distribution terms of the GPL.</p>
+						<h3>Requirements</h3>
+						<ul>
+							<li>WWW Server: Apache, NGinx, IIS, Roxen, etc</li>
+							<li>Script: PHP 7.4+ and 16mb minimum memory allocation - PHP 8 is supported!</li>
+							<li>Database: MySQL 4.1.0 or higher, MariaDB 5.1 or higher</li>
+						</ul>
+
+					<h3>Before you install</h3>
+						<ul>
+							<li>Setup the web server, PHP and database server properly.</li>
+							<li>Prepare a database for ImpressCMS. This can be an existing database as well as a newly created one.</li>
+							<li>Prepare a user account and grant this user access to the database (all rights).</li>
+							<li>Make the directories of uploads/, cache/, templates_c/, modules/ writable (chmod 777 or 755 - depending on servers).</li>
+							<li>Make the file mainfile.php writable (chmod 666 depending on server).</li>
+							<li>In your internet browser settings turn on the allowance of cookies and JavaScript.</li>
+						</ul>
+				</div>
+				<div class="d-flex gap-2 justify-content-center py-5">
+					<a class="btn btn-outline-secondary d-inline-flex align-items-center" href="lang_select.html" type="button">
+						<i class="bi-arrow-left-short"></i> Back
+					</a>
+					<a class="btn btn-primary d-inline-flex align-items-center" href="page_modcheck.html" type="button">
+						Next <i class="bi-arrow-right-short"></i>
+					</a>
+				</div>
+			</div>
+			<div class="col-2"></div>
+		</div>
+
+	</main>
+
+	<footer class="pt-4 my-md-5 pt-md-5 border-top">
+		<div class="row">
+			<div class="col-12 col-md">
+				<img class="mb-2" src="../images/logo.gif" alt="ImpressCMS logo">
+				<small class="d-block mb-3 text-body-secondary">© 2017–2023</small>
+			</div>
+			<div class="col-6 col-md">
+				<h5>Features</h5>
+				<ul class="list-unstyled text-small">
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Stuff for developers</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
+				</ul>
+			</div>
+			<div class="col-6 col-md">
+				<h5>Resources</h5>
+				<ul class="list-unstyled text-small">
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource name</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another resource</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Final resource</a></li>
+				</ul>
+			</div>
+			<div class="col-6 col-md">
+				<h5>About</h5>
+				<ul class="list-unstyled text-small">
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Locations</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Privacy</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Terms</a></li>
+				</ul>
+			</div>
+		</div>
+	</footer>
+</div>
+</body>
+</html>

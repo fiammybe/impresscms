@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link
+	rel="stylesheet"
+	href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.9.2/css/flag-icons.min.css"
+/>
+<head>
+	<meta charset="UTF-8">
+	<title>Icms Installer</title>
+</head>
+<body>
+
+<div class="container py-3">
+	<header>
+		<div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+			<a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+				<img src="./images/logo.svg" height="72" alt="ImpressCMS logo">
+				<span class="fs-4">New Wave Installer</span>
+			</a>
+
+			<nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+				<a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">ImpressCMS 2.0 RC</a>
+			</nav>
+		</div>
+
+		<!--		<div class="p-3 pb-md-4 mx-auto text-center">-->
+		<!--			<h1 class="display-4 fw-normal text-body-emphasis">ImpressCMS 2.0 RC Installation Wizard</h1>-->
+		<!--			<p class="fs-5 text-body-secondary">Quickly build an effective pricing table for your potential customers with this Bootstrap example. It’s built with default Bootstrap components and utilities with little customization.</p>-->
+		<!--		</div>-->
+	</header>
+
+	<main>
+		<div class="row">
+			<div class="col-md-3 offset-lg-1 d-none d-md-block">
+				<ul class="nav nav-pills flex-column mb-auto">
+					<li class="nav-item">
+						<a href="#" class="nav-link active" aria-current="page">
+							<i class="bi-arrow-right-circle"></i>
+							<strong>Language Selection</strong>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Introduction
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Configuration Check
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Path Settings
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Database Connection
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Database Configuration
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Configuration Save
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Tables Creation
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Initial Settings
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Data Insertion
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Install Modules
+						</a>
+					</li>
+					<li>
+						<a href="#" class="nav-link">
+							<i class="bi-circle"></i>
+							Welcome
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-7 col-12">
+				<h1 class="text-center mb-2">Language Selection</h1>
+				<p class="lead text-center">Choose the language that will be used for the installer.</p>
+				<div class="list-group">
+					<label class="list-group-item d-flex gap-3 py-3">
+						<input class="form-check-input flex-shrink-0" type="radio" name="listLanguages" id="listGroupRadios3" value="">
+						<span class="fi fi-gb fis"></span>
+						<h6 class="mb-0">English</h6>
+					</label>
+					<label class="list-group-item d-flex gap-3 py-3" aria-current="true">
+						<input class="form-check-input flex-shrink-0" type="radio" name="listLanguages" id="listGroupRadios3" value="">
+						<span class="fi fi-fr fis"></span>
+						<h6 class="mb-0">Francais</h6>
+					</label>
+					<label class="list-group-item d-flex gap-3 py-3" aria-current="true">
+						<input class="form-check-input flex-shrink-0" type="radio" name="listLanguages" id="listGroupRadios3" value="">
+						<span class="fi fi-it fis"></span>
+						<h6 class="mb-0">Italiano</h6>
+					</label>
+					<label class="list-group-item d-flex gap-3 py-3" aria-current="true">
+						<input class="form-check-input flex-shrink-0" type="radio" name="listLanguages" id="listGroupRadios3" value="">
+						<span class="fi fi-nl fis"></span>
+						<h6 class="mb-0">Nederlands</h6>
+					</label>
+				</div>
+				<div class="d-flex gap-2 justify-content-center py-5">
+					<a class="btn btn-outline-secondary d-inline-flex align-items-center" href="index.html" type="button">
+						<i class="bi-arrow-left-short"></i> Back
+					</a>
+					<a class="btn btn-primary d-inline-flex align-items-center" href="page_start.html" type="button">
+						Next <i class="bi-arrow-right-short"></i>
+					</a>
+				</div>
+			</div>
+			<div class="col-2"></div>
+		</div>
+
+	</main>
+
+	<footer class="pt-4 my-md-5 pt-md-5 border-top">
+		<div class="row">
+			<div class="col-12 col-md">
+				<img class="mb-2" src="../images/logo.gif" alt="ImpressCMS logo">
+				<small class="d-block mb-3 text-body-secondary">© 2017–2023</small>
+			</div>
+			<div class="col-6 col-md">
+				<h5>Features</h5>
+				<ul class="list-unstyled text-small">
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Stuff for developers</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
+				</ul>
+			</div>
+			<div class="col-6 col-md">
+				<h5>Resources</h5>
+				<ul class="list-unstyled text-small">
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource name</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another resource</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Final resource</a></li>
+				</ul>
+			</div>
+			<div class="col-6 col-md">
+				<h5>About</h5>
+				<ul class="list-unstyled text-small">
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Locations</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Privacy</a></li>
+					<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Terms</a></li>
+				</ul>
+			</div>
+		</div>
+	</footer>
+</div>
+</body>
+</html>
