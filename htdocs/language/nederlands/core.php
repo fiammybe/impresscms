@@ -41,3 +41,24 @@ define('_CORE_PASSLEVEL2','Zwak');
 define('_CORE_PASSLEVEL3','Goed');
 define('_CORE_PASSLEVEL4','Sterk');
 define('_CORE_UNAMEPASS_IDENTIC','Gebruikernaam en wachtwoord zijn identiek.');
+
+/* Added in 1.3 */
+
+define('_CORE_CHECKSUM_FILES_ADDED',' bestanden toegevoegd');
+define('_CORE_CHECKSUM_FILES_REMOVED',' bestanden verwijderd');
+define('_CORE_CHECKSUM_ALTERED_REMOVED',' bestanden gewijzigd of verwijderd');
+define('_CORE_CHECKSUM_CHECKFILE','Bestand controleren ');
+define('_CORE_CHECKSUM_PERMISSIONS_ALTERED',' toegangsrechten van de bestanden werden veranderd');
+define('_CORE_CHECKSUM_CHECKFILE_UNREADABLE', 'Het bestand met de checksum informatie is onbeschikbaar of onleesbaar. Bestandscontrole kon niet worden uitgevoerd');
+define('_CORE_CHECKSUM_ADDING',' Toevoegen');
+define('_CORE_CHECKSUM_CHECKSUM',' Checksum');
+define('_CORE_CHECKSUM_PERMISSIONS',' Toegangsrechten');
+
+define('_CORE_DEPRECATED', 'Deprecated');
+define('_CORE_DEPRECATED_REPLACEMENT', 'gebruik %s in de plaats');
+define('_CORE_DEPRECATED_CALLSTACK', '<br />Call Stack: <br />');
+define('_CORE_DEPRECATED_MSG', '%s in %s, lijn %u <br />');
+define('_CORE_DEPRECATED_CALLEDBY', 'Aangeroepen door: ');
+define('_CORE_REMOVE_IN_VERSION', 'Dit zal worden verwijderd in versie %s');
+define('_CORE_DEBUG', 'Debug');
+define('_CORE_DEVELOPER_DASHBOARD', 'Ontwikkelaar Dashboard');

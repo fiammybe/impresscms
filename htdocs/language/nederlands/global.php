@@ -243,7 +243,7 @@ geupgrade!<br />Om het upgrade process te voltooien dient u op onderstaande te k
 systeem module te updaten.");
 
 // This shows local support site in ImpressCMS menu, (if selected language is not English)
-define('_IMPRESSCMS_LOCAL_SUPPORT','http://www.impresscms.be'); //add the local support site's URL
+define('_IMPRESSCMS_LOCAL_SUPPORT','https://www.impresscms.be'); //add the local support site's URL
 define('_IMPRESSCMS_LOCAL_SUPPORT_TITLE','ImpressCMS.be');
 define("_ALLEFTCON","Geef de tekst in die aan links uitgelijnd moet worden.");
 define("_ALCENTERCON","Geef de tekst in die gecentreerd moet worden.");
