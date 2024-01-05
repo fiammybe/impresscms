@@ -2,8 +2,11 @@
 
 class IcmsInstallWizard {
 	var $pages = array();
+	var $pagesNames = array();
+	var $pagesTitles = array();
 	var $titles = array();
 	var $currentPage = 0;
+	var $currentPageName = '';
 	var $lastpage;
 	var $secondlastpage;
 	var $language = 'english';
