@@ -87,7 +87,7 @@ class icms_view_Tpl extends Smarty {
 		if ($icmsConfig['debug_mode']) {
 			$this->debugging_ctrl = 'URL';
 			$groups = (is_object(icms::$user)) ? icms::$user->getGroups() : array(ICMS_GROUP_ANONYMOUS);
-			$moduleid = (isset($icmsModule) && is_object($icmsModule)) ? $icmsModule->getVar('mid') : 1;
+			$moduleid = (isset(icms::$module) && is_object(icms::$module)) ? icms::$module->getVar('mid') : 1;
 			$gperm_handler = icms::handler('icms_member_groupperm');
 			if ($icmsConfig['debug_mode'] == 3 && $gperm_handler->checkRight('enable_debug', $moduleid, $groups)) {
 				$this->debugging = true;

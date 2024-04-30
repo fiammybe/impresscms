@@ -613,20 +613,9 @@ class icms_ipf_Controller {
 	 * @todo	Needs to be completed
 	 */
 	public function getPrintAndMailLink($icmsObj) {
-		global $icmsConfig;
-
+		
 		$ret = '';
-		/*		$printlink = $this->handler->_moduleUrl . "print.php?" . $this->handler->keyName . "=" . $icmsObj->getVar($this->handler->keyName);
-		 $js = "javascript:openWithSelfMain('" . $printlink . "', 'smartpopup', 700, 519);";
-		 $printlink = '<a href="' . $js . '"><img  src="' . ICMS_IMAGES_SET_URL . '/actions/fileprint.png" alt="" style="vertical-align: middle;"/></a>';
-
-		 $icmsModule = icms_getModuleInfo($icmsObj->handler->_moduleName);
-		 $link = icms::$urls['full']();
-		 $mid = icms::$module->getVar('mid');
-		 $friendlink = "<a href=\"javascript:openWithSelfMain('".SMARTOBJECT_URL."sendlink.php?link=" . $link . "&amp;mid=" . $mid . "', ',',',',',','sendmessage', 674, 500);\"><img src=\"".SMARTOBJECT_IMAGES_ACTIONS_URL . "mail_send.png\"  alt=\"" . _CO_ICMS_EMAIL . "\" title=\"" . _CO_ICMS_EMAIL . "\" style=\"vertical-align: middle;\"/></a>";
-
-		 $ret = '<span id="smartobject_print_button">' . $printlink . "&nbsp;</span>" . '<span id="smartobject_mail_button">' . $friendlink . '</span>';
-		 */
+		
 		return $ret;
 	}
 

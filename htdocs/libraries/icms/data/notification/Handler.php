@@ -328,9 +328,8 @@ class icms_data_notification_Handler extends icms_core_ObjectHandler {
 			}
 		}
 
-		if (!isset($module_id)) {
-			global $icmsModule;
-			$module_id = $icmsModule->getVar('mid');
+		if (!isset($module_id)) {			
+			$module_id = icms::$module->getVar('mid');
 		}
 
 		if (!isset($mode)) {
@@ -462,9 +461,9 @@ class icms_data_notification_Handler extends icms_core_ObjectHandler {
 	 **/
 	public function triggerEvent($category, $item_id, $event, $extra_tags=array(), $user_list=array(), $module_id=null, $omit_user_id=null) {
 		if (!isset($module_id)) {
-			global $icmsModule;
-			$module =& $icmsModule;
-			$module_id = !empty($icmsModule) ? $icmsModule->getVar('mid') : 0;
+			
+			$module =& icms::$module;
+			$module_id = !empty(icms::$module) ? icms::$module->getVar('mid') : 0;
 		} else {
 			$module_handler = icms::handler('icms_module');
 			$module =& $module_handler->get($module_id);
@@ -599,8 +598,7 @@ class icms_data_notification_Handler extends icms_core_ObjectHandler {
 		}
 
 		if (!isset($module_id)) {
-			global $icmsModule;
-			$module_id = $icmsModule->getVar('mid');
+			$module_id = icms::$module->getVar('mid');
 		}
 
 		$criteria = new icms_db_criteria_Compo();
@@ -733,9 +731,9 @@ class icms_data_notification_Handler extends icms_core_ObjectHandler {
 	 */
 	static public function &categoryInfo($category_name='', $module_id=null) {
 		if (!isset($module_id)) {
-			global $icmsModule;
-			$module_id = !empty($icmsModule) ? $icmsModule->getVar('mid') : 0;
-			$module =& $icmsModule;
+			
+			$module_id = !empty(icms::$module) ? icms::$module->getVar('mid') : 0;
+			$module =& icms::$module;
 		} else {
 			$module_handler = icms::handler('icms_module');
 			$module =& $module_handler->get($module_id);
@@ -803,9 +801,9 @@ class icms_data_notification_Handler extends icms_core_ObjectHandler {
 	 */
 	static public function &categoryEvents($category_name, $enabled_only, $module_id=null) {
 		if (!isset($module_id)) {
-			global $icmsModule;
-			$module_id = !empty($icmsModule) ? $icmsModule->getVar('mid') : 0;
-			$module =& $icmsModule;
+			
+			$module_id = !empty(icms::$module) ? icms::$module->getVar('mid') : 0;
+			$module =& icms::$module;
 		} else {
 			$module_handler = icms::handler('icms_module');
 			$module =& $module_handler->get($module_id);
