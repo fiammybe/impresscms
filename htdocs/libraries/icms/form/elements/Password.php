@@ -163,15 +163,6 @@ class icms_form_elements_Password extends icms_form_Element {
 	 * @return	string	HTML
 	 */
 	public function render() {
-		//global $icmsConfigUser;
-		$ele_name = $this->getName();
-		return "<input class='" . $this->getClassName()
-			. "' type='password' name='" . $ele_name
-			. "' id='" . $ele_name
-			. "' size='" . $this->getSize()
-			. "' maxlength='" . $this->getMaxlength()
-			. "' value='" . $this->getValue() . "'" . $this->getExtra() . " " . ($this->autoComplete ? "" : "autocomplete='off' ")
-			. "/>";
 
 		$this->_tpl = new icms_view_Tpl();
 		$this->_tpl->assign('ele_name', $this->getName());
