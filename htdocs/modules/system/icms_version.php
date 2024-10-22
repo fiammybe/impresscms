@@ -218,4 +218,7 @@ $modversion['templates'] = array(
 	array('file' => 'system_popup_imagemanager_editimg.html', 'description' => ''),
 	array('file' => 'system_popup_imagemanager_img.html', 'description' => ''),
 	array('file' => 'system_popup_imagemanager_imglist.html', 'description' => ''),
-	array('file' => 'system_popup_imagemanager.html', 'description' => ''));
+	array('file' => 'system_popup_imagemanager.html', 'description' => ''),
+	array('file' => 'icms_form_elements_button_display.html', 'description' => 'Display template for a button'),
+	array('file' => 'icms_form_elements_checkbox_display.html', 'description' => 'Display template for a checkbox')
+);
