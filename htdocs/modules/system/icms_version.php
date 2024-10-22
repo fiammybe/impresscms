@@ -221,5 +221,6 @@ $modversion['templates'] = array(
 	array('file' => 'system_popup_imagemanager.html', 'description' => ''),
 	array('file' => 'icms_form_elements_button_display.html', 'description' => 'Display template for a button'),
 	array('file' => 'icms_form_elements_checkbox_display.html', 'description' => 'Display template for a checkbox'),
-	array('file' => 'icms_form_elements_text_display.html', 'description' => 'Display template for a text')
+	array('file' => 'icms_form_elements_text_display.html', 'description' => 'Display template for a text'),
+	array('file' => 'icms_form_elements_password_display.html', 'description' => 'Display template for a password field')
 );
