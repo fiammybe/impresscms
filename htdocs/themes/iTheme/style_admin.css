@@ -217,3 +217,15 @@ h6 {font-size: .8em;}
 
 /* ---------- Image Manager / Folder not writeable ------------ */
 tr.blocked td {background-color: #FF0000;}
+
+/* ---------- Coming from icms.css ------------ */
+.CPbigTitle {
+  font-size: 20px;
+  color: #1E90FF;
+  background: no-repeat left top;
+    background-image: none;
+  font-weight: bold;
+  height: 40px;
+  vertical-align: middle;
+  padding: 10px 0 0 50px;
+  border-bottom: 3px solid #1E90FF;
