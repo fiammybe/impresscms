@@ -492,7 +492,7 @@ function &icms_getModuleInfo($moduleName = false)
 		$ret =& $icmsModules[$moduleName];
 		return $ret;
 	}
-	
+
 	if(!$moduleName)
 	{
 		if(isset(icms::$module) && is_object(icms::$module))
@@ -605,7 +605,7 @@ function icms_userIsAdmin($module = false)
 	static $icms_isAdmin;
 	if(!$module)
 	{
-		
+
 		$module = icms::$module->getVar('dirname');
 	}
 	if(isset ($icms_isAdmin[$module])) {return $icms_isAdmin[$module];}
@@ -830,7 +830,7 @@ function icms_cleanTags($sSource, $aAllowedTags = array('<h1>','<b>','<u>','<a>'
 									' '),
 							stripslashes($matches[1]))
 							. '>';
-							
+
 		},
 		strip_tags($body, implode('', $aAllowedTags))
 		);
@@ -1007,7 +1007,7 @@ function icms_sanitizeContentCss($text) {
 				$css[$k] = icms_cleanTags(trim($v),array()) . "\r\n";
 			}
 		}
-		
+
 		$text = implode($css);
 	}
 	return $text;
@@ -1592,11 +1592,17 @@ function &icms_getModuleHandler($name = null, $module_dir = null, $module_basena
 	static $handlers;
 	// if $module_dir is not specified
 	if (!isset($module_dir)) {
-		//if a module is loaded
-		if (isset(icms::$module) && is_object(icms::$module)) {
-			$module_dir = icms::$module->getVar('dirname');
-		} else {
-			trigger_error(_CORE_NOMODULE, E_USER_ERROR);
+		try {
+			//if a module is loaded
+			if (isset(icms::$module) && is_object(icms::$module)) {
+				$module_dir = icms::$module->getVar('dirname');
+			} else {
+				throw new \Exception(_CORE_NOMODULE);
+				//trigger_error(_CORE_NOMODULE, E_USER_ERROR);
+			}
+		}
+		catch (\Exception $e) {
+			icms_core_Message::error($e->getMessage());
 		}
 	} else {
 		$module_dir = trim($module_dir);
@@ -1622,8 +1628,13 @@ function &icms_getModuleHandler($name = null, $module_dir = null, $module_basena
 			}
 		}
 	}
-	if (!isset($handlers[$module_dir][$name]) && !$optional) {
-		trigger_error(sprintf(_CORE_MODULEHANDLER_NOTAVAILABLE, $module_dir, $name), E_USER_ERROR);
+	try {
+		if (!isset($handlers[$module_dir][$name]) && !$optional) {
+			throw new \Exception(sprintf(_CORE_MODULEHANDLER_NOTAVAILABLE, $module_dir, $name));
+		}
+	}
+	catch (\Exception $e) {
+		icms_core_Message::error($e->getMessage());
 	}
 	if (isset($handlers[$module_dir][$name])) {return $handlers[$module_dir][$name];}
 	$inst = false;
@@ -1639,7 +1650,7 @@ function &icms_getModuleHandler($name = null, $module_dir = null, $module_basena
  * @todo Move to a static class method - HTTP or URI
  */
 function icms_getModuleAdminLink($moduleName=false) {
-	
+
 	if (!$moduleName && (isset (icms::$module) && is_object(icms::$module))) {
 		$moduleName = icms::$module->getVar('dirname');
 	}
@@ -1797,7 +1808,7 @@ function icms_random_str($numchar){
  * @todo Move to a static class method - module
  */
 function icms_adminMenu($currentoption = 0, $breadcrumb = '') {
-	
+
 	icms::$module->displayAdminMenu( $currentoption, icms::$module->name() . ' | ' . $breadcrumb );
 }
 
@@ -1816,7 +1827,7 @@ function icms_loadCommonLanguageFile() {
  * @todo Move to a static class method - Module
  */
 function icms_getModuleNameForSEO($moduleName = false) {
-	
+
 	$icmsModuleConfig = & icms_getModuleConfig($moduleName);
 	if (isset ($icmsModuleConfig['seo_module_name'])) {
 		return $icmsModuleConfig['seo_module_name'];
@@ -1833,7 +1844,7 @@ function icms_getModuleNameForSEO($moduleName = false) {
  * @todo Move to a static class method - Module
  */
 function icms_getModuleModeSEO($moduleName = false) {
-	
+
 	$icmsModuleConfig = & icms_getModuleConfig($moduleName);
 	return isset ($icmsModuleConfig['seo_mode']) ? $icmsModuleConfig['seo_mode'] : false;
 }
@@ -1846,7 +1857,7 @@ function icms_getModuleModeSEO($moduleName = false) {
  * @todo Move to a static class method - Module
  */
 function icms_getModuleIncludeIdSEO($moduleName = false) {
-	
+
 	$icmsModuleConfig = & icms_getModuleConfig($moduleName);
 	return !empty ($icmsModuleConfig['seo_inc_id']);
 }
@@ -1989,7 +2000,7 @@ function icms_makeSmarty($items) {
  */
 function icms_moduleAction($dirname = 'system')
 {
-	
+
 	$ret = @(
 	// action module 'system'
 	!empty(icms::$module) && 'system' == icms::$module->getVar('dirname', 'n')
@@ -2014,7 +2025,7 @@ function icms_moduleAction($dirname = 'system')
 if (!function_exists("mod_constant")) {
 	function mod_constant($name)
 	{
-		
+
 		if (!empty($GLOBALS["VAR_PREFIXU"]) && @defined($GLOBALS["VAR_PREFIXU"]."_".strtoupper($name))) {
 			return CONSTANT($GLOBALS["VAR_PREFIXU"]."_".strtoupper($name));
 		} elseif (!empty(icms::$module) && @defined(strtoupper(icms::$module->getVar("dirname", "n")."_".$name))) {
@@ -2035,7 +2046,7 @@ if (!function_exists("mod_constant")) {
  * @todo Move to a static class method
  */
 function icms_collapsableBar($id = '', $title = '', $dsc = '') {
-	
+
 	echo "<h3 style=\"color: #2F5376; font-weight: bold; font-size: 14px; margin: 6px 0 0 0; \"><a href='javascript:;' onclick=\"togglecollapse('" . $id . "'); toggleIcon('" . $id . "_icon')\";>";
 	echo "<img id='" . $id . "_icon' src=" . ICMS_URL . "/images/close12.gif alt='' /></a>&nbsp;" . $title . "</h3>";
 	echo "<div id='" . $id . "'>";
@@ -2053,7 +2064,7 @@ function icms_collapsableBar($id = '', $title = '', $dsc = '') {
  * @todo Move to a static class method
  */
 function icms_ajaxCollapsableBar($id = '', $title = '', $dsc = '') {
-	
+
 	$onClick = "ajaxtogglecollapse('$id')";
 	//$onClick = "togglecollapse('$id'); toggleIcon('" . $id . "_icon')";
 	echo '<h3 style="border: 1px solid; color: #2F5376; font-weight: bold; font-size: 14px; margin: 6px 0 0 0; " onclick="' . $onClick . '">';
@@ -2134,7 +2145,7 @@ function icms_getUnameFromUserEmail($email = '')
 function icms_need_do_br($moduleName=false) {
 	global $icmsConfig;
 
-	if (!$moduleName) {		
+	if (!$moduleName) {
 		$theModule = icms::$module;
 		$moduleName = $theModule->getVar('dirname');
 	} else {
