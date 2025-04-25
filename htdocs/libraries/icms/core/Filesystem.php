@@ -80,32 +80,58 @@ class icms_core_Filesystem {
 	 *
 	 * Removes the content of a folder.
 	 * Replaces icms_clean_folders()
-	 * @todo	Rewrite with SPL Directory Iterators
+	 * Rewritten with SPL Directory Iterators
 	 *
 	 * @author	Steve Kenow (aka skenow) <skenow@impresscms.org>
 	 * @author	modified by Vaughan <vaughan@impresscms.org>
 	 * @author	modified by Sina Asghari (aka stranger) <pesian_stranger@users.sourceforge.net>
+     * @author	modified by David (fiammybe) Janssens <david.j@impresscms.org>
+	 *
 	 * @param	string	$dir	The folder path to cleaned. Must be an array like: array('templates_c' => ICMS_COMPILE_PATH . "/");
 	 * @param	bool  $remove_admin_cache	  True to remove admin cache, if required.
-	 */
-	static public function cleanFolders($dir, $remove_admin_cache = FALSE) {
-		global $icmsConfig;
-		foreach ($dir as $d) {
-			$dd = opendir($d);
-			while ($file = readdir($dd)) {
-				$files_array = $remove_admin_cache
-						? ($file != 'index.html' && $file != 'php.ini' && $file != '.htaccess'
-							&& $file != '.svn')
-						: ($file != 'index.html' && $file != 'php.ini' && $file != '.htaccess'
-							&& $file != '.svn' && $file != 'adminmenu_' . $icmsConfig['language'] . '.php');
-				if (is_file($d . $file) && $files_array) {
-					unlink($d . $file);
-				}
-			}
-			closedir($dd);
-		}
-		return true;
-	}
+	 * @return bool Returns true on success
+ */
+static public function cleanFolders($dirs, $remove_admin_cache = FALSE) {
+    global $icmsConfig;
+    
+    foreach ($dirs as $dirPath) {
+        if (!is_dir($dirPath)) {
+            continue;
+        }
+        
+        try {
+            $iterator = new \DirectoryIterator($dirPath);
+            
+            foreach ($iterator as $fileInfo) {
+                // Skip if it's a directory or dot file
+                if ($fileInfo->isDot() || $fileInfo->isDir()) {
+                    continue;
+                }
+                
+                $filename = $fileInfo->getFilename();
+                
+                // Files to preserve
+                $preserveFiles = array('index.html', 'php.ini', '.htaccess', '.svn');
+                
+                // Add admin menu file to preserve list if not removing admin cache
+                if (!$remove_admin_cache) {
+                    $preserveFiles[] = 'adminmenu_' . $icmsConfig['language'] . '.php';
+                }
+                
+                // Delete file if it's not in the preserve list
+                if (!in_array($filename, $preserveFiles)) {
+                    unlink($fileInfo->getPathname());
+                }
+            }
+        } catch (\Exception $e) {
+            // Handle any exceptions that might occur
+            error_log('Error cleaning folder ' . $dirPath . ': ' . $e->getMessage());
+            continue;
+        }
+    }
+    
+    return true;
+}
 
 	/**
 	 *
@@ -123,41 +149,51 @@ class icms_core_Filesystem {
 	}
 
 	/**
-	 *
-	 * Copy a file, or a folder and its contents
-	 * Replaces icms_copyr()
-	 * @todo	Can be rewritten with SPL Directory Iterators
-	 *
-	 * @author	Aidan Lister <aidan@php.net>
-	 * @param	string	$source	The source
-	 * @param	string	$dest	The destination
-	 * @return	boolean	Returns true on success, false on failure
-	 */
-	static public function copyRecursive($source, $dest) {
-		// Simple copy for a file
-		if (is_file($source)) {return copy($source, $dest);}
+ * Copy a file, or recursively copy a folder and its contents
+ *
+ * @param string $source Source path
+ * @param string $dest Destination path
+ * @return bool Returns true on success, false on failure
+ */
+static public function copyRecursive($source, $dest) {
+    // Simple copy for a file
+    if (is_file($source)) {
+        return copy($source, $dest);
+    }
 
-		// Make destination directory
-		if (!is_dir($dest)) {
-			self::mkdir($dest, 0777, '');
-		}
-
-		// Loop through the folder
-		$dir = dir($source);
-		while (false !== $entry = $dir->read()) {
-			// Skip pointers
-			if ($entry == '.' || $entry == '..') {continue;}
-			// Deep copy directories
-			if (is_dir("$source/$entry") && ($dest !== "$source/$entry")) {
-				self::copyRecursive("$source/$entry", "$dest/$entry");
-			} else {
-				copy("$source/$entry", "$dest/$entry");
-			}
-		}
-		// Clean up
-		$dir->close();
-		return true;
-	}
+    // Make destination directory
+    if (!is_dir($dest)) {
+        self::mkdir($dest, 0777, '');
+    }
+    
+    try {
+        // Use RecursiveDirectoryIterator and RecursiveIteratorIterator for directory traversal
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+        
+        foreach ($iterator as $item) {
+            $targetPath = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
+            
+            if ($item->isDir()) {
+                // Skip if the destination is the same as the source to prevent infinite recursion
+                if ($targetPath !== $source) {
+                    if (!is_dir($targetPath)) {
+                        self::mkdir($targetPath, 0777, '');
+                    }
+                }
+            } else {
+                copy($item->getPathname(), $targetPath);
+            }
+        }
+        
+        return true;
+    } catch (\Exception $e) {
+        // Handle any exceptions that might occur during directory traversal
+        return false;
+    }
+}
 
 	/**
 	 *
