@@ -181,9 +181,10 @@ abstract class icms_core_Versionchecker implements icms_core_VersioncheckerInter
 	/**
 	 * Get the latest version status
 	 *
-	 * @return	int
+	 * @return    int|null
 	 */
-	public function getLatestStatus() {
+	public function getLatestStatus(): ?int
+	{
 		return $this->latest['status'];
 	}
 

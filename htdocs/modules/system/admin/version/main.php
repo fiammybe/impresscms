@@ -31,14 +31,42 @@ if (isset($_GET['mid'])) {
 
 
 /**
+ * Handle update actions
+ */
+if (isset($_POST['action']) && $_POST['action'] === 'update' && icms_core_Update::canUpdate()) {
+	$updater = new icms_core_Update();
+	$expectedHash = isset($_POST['hash']) && !empty(trim($_POST['hash'])) ? trim($_POST['hash']) : null;
+
+	if ($updater->performUpdate($expectedHash)) {
+		$updateSuccess = true;
+		$updateMessages = $updater->getMessages(true);
+	} else {
+		$updateSuccess = false;
+		$updateErrors = $updater->getErrors(true);
+		$updateMessages = $updater->getMessages(true);
+	}
+}
+
+/**
  * Now here is the version checker :-)
  */
 global $icmsAdminTpl, $xoTheme;
 $icmsVersionChecker = icms_core_Versioncheckergithub::getInstance();
 icms_cp_header();
 
-if ($icmsVersionChecker->check()) {
+// Assign update-related variables
+if (isset($updateSuccess)) {
+	$icmsAdminTpl->assign('update_success', $updateSuccess);
+	$icmsAdminTpl->assign('update_messages', $updateMessages);
+	if (isset($updateErrors)) {
+		$icmsAdminTpl->assign('update_errors', $updateErrors);
+	}
+}
 
+// Check if user can perform updates
+$icmsAdminTpl->assign('can_update', icms_core_Update::canUpdate());
+
+if ($icmsVersionChecker->check()) {
 
 	$icmsAdminTpl->assign('latest', $icmsVersionChecker->getLatest());
 	$icmsAdminTpl->assign('installed', $icmsVersionChecker->getInstalled());

@@ -66,9 +66,9 @@ interface icms_core_VersioncheckerInterface {
 	/**
 	 * Get the latest version status
 	 *
-	 * @return	int
+	 * @return    int|null
 	 */
-	public function getLatestStatus();
+	public function getLatestStatus(): ?int;
 
 	/**
 	 * Get the latest version URL

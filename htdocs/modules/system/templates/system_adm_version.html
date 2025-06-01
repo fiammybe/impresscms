@@ -18,6 +18,39 @@
 	    </div>
     </div>
 
+    <{if $can_update}>
+    <div class="even">
+        <h3><{$smarty.const._AM_VERSION_UPDATE_INSTALL}></h3>
+        <{if $update_success}>
+            <div class="successMsg">
+                <strong><{$smarty.const._AM_VERSION_UPDATE_SUCCESS}></strong><br />
+                <{$update_messages}>
+            </div>
+        <{elseif isset($update_errors)}>
+            <div class="errorMsg">
+                <strong><{$smarty.const._AM_VERSION_UPDATE_FAILED}></strong><br />
+                <{$update_errors}><br />
+                <{$update_messages}>
+            </div>
+        <{else}>
+            <form method="post" action="" onsubmit="return confirm('<{$smarty.const._AM_VERSION_UPDATE_CONFIRM}>');">
+                <input type="hidden" name="action" value="update" />
+                <div style="margin-bottom: 10px;">
+                    <label for="hash"><{$smarty.const._AM_VERSION_UPDATE_HASH_OPTIONAL}>:</label><br />
+                    <input type="text" name="hash" id="hash" placeholder="<{$smarty.const._AM_VERSION_UPDATE_HASH_PLACEHOLDER}>" style="width: 400px;" />
+                </div>
+                <input type="submit" value="<{$smarty.const._AM_VERSION_UPDATE_START}>" class="formButton" />
+            </form>
+        <{/if}>
+    </div>
+    <{else}>
+    <div class="even">
+        <div class="errorMsg">
+            <{$smarty.const._AM_VERSION_UPDATE_PERMISSION_DENIED}>
+        </div>
+    </div>
+    <{/if}>
+
     <div class="odd">
 	    <h2><{$latest.version_name}> <{$smarty.const._AM_VERSION_CHANGELOG}></h2>
    		<p><{$latest.changelog}></p>
@@ -34,6 +67,9 @@
     </div>
 <{/if}>
 <a href="#" onclick ="jQuery('div#system_info').slideToggle();" name='show_info'  id='show_info' value=''><{$smarty.const._AM_VERSION_SYSTEM_INFO}></a>
+<{if $can_update}>
+| <a href="update_test.php">Test Update System</a>
+<{/if}>
 <div class="system_info" name="system_info" id="system_info" style="padding: 2px; margin-bottom: 5px; display: none;">
     <table>
   <tbody>
