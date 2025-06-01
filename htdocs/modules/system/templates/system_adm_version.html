@@ -68,6 +68,7 @@
 <{/if}>
 <a href="#" onclick ="jQuery('div#system_info').slideToggle();" name='show_info'  id='show_info' value=''><{$smarty.const._AM_VERSION_SYSTEM_INFO}></a>
 <{if $can_update}>
+| <a href="backup_manager.php">Backup Manager</a>
 | <a href="update_test.php">Test Update System</a>
 <{/if}>
 <div class="system_info" name="system_info" id="system_info" style="padding: 2px; margin-bottom: 5px; display: none;">

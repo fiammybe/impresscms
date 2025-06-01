@@ -62,17 +62,23 @@ class icms_core_Update {
 	 * Constructor
 	 *
 	 * @param icms_core_Versionchecker $versionChecker Version checker instance
+	 * @param icms_core_Backup $backup Backup instance (optional)
 	 */
-	public function __construct($versionChecker = null) {
+	public function __construct($versionChecker = null, $backup = null) {
 		if ($versionChecker === null) {
 			$this->versionChecker = icms_core_Versioncheckergithub::getInstance();
 		} else {
 			$this->versionChecker = $versionChecker;
 		}
 
+		if ($backup === null) {
+			$this->backup = new icms_core_Backup();
+		} else {
+			$this->backup = $backup;
+		}
+
 		$this->tempDir = ICMS_CACHE_PATH . '/updates';
-		$this->backupDir = ICMS_CACHE_PATH . '/backups';
-		
+
 		// Ensure directories exist
 		$this->createDirectories();
 	}
@@ -84,15 +90,8 @@ class icms_core_Update {
 	 */
 	private function createDirectories() {
 		if (!is_dir($this->tempDir)) {
-			if (!mkdir($this->tempDir, 0755, true)) {
+			if (!icms_core_Filesystem::mkdir($this->tempDir, 0755, '')) {
 				$this->errors[] = "Failed to create temporary directory: " . $this->tempDir;
-				return false;
-			}
-		}
-
-		if (!is_dir($this->backupDir)) {
-			if (!mkdir($this->backupDir, 0755, true)) {
-				$this->errors[] = "Failed to create backup directory: " . $this->backupDir;
 				return false;
 			}
 		}
@@ -206,55 +205,25 @@ class icms_core_Update {
 	 * @return bool
 	 */
 	public function createBackup() {
-		$backupName = 'backup-' . date('Y-m-d-H-i-s') . '.tar.gz';
-		$backupPath = $this->backupDir . '/' . $backupName;
+		$backupName = 'update-backup-' . date('Y-m-d-H-i-s');
 
-		$this->messages[] = "Creating backup: " . $backupName;
+		$this->messages[] = "Creating backup before update...";
 
-		try {
-			$tar = new icms_file_TarFileHandler();
+		$backupPath = $this->backup->createBackup($backupName, true);
 
-			// Add core files to backup (excluding cache, uploads, etc.)
-			$excludeDirs = array('cache', 'uploads', 'templates_c');
-			$iterator = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator(ICMS_ROOT_PATH),
-				RecursiveIteratorIterator::LEAVES_ONLY
-			);
-
-			foreach ($iterator as $file) {
-				if ($file->isFile()) {
-					$relativePath = str_replace(ICMS_ROOT_PATH . DIRECTORY_SEPARATOR, '', $file->getPathname());
-					$relativePath = str_replace('\\', '/', $relativePath); // Normalize path separators
-
-					// Skip excluded directories
-					$skip = false;
-					foreach ($excludeDirs as $excludeDir) {
-						if (strpos($relativePath, $excludeDir . '/') === 0) {
-							$skip = true;
-							break;
-						}
-					}
-
-					if (!$skip) {
-						$fileContent = file_get_contents($file->getPathname());
-						if ($fileContent !== false) {
-							$tar->addFile($fileContent, $relativePath, filemtime($file->getPathname()));
-						}
-					}
-				}
+		if ($backupPath) {
+			// Merge backup messages with update messages
+			$backupMessages = $this->backup->getMessages(false);
+			foreach ($backupMessages as $message) {
+				$this->messages[] = $message;
 			}
-
-			// Save backup
-			if ($tar->toTar($backupPath, true)) {
-				$this->messages[] = "Backup created successfully: " . $backupPath;
-				return true;
-			} else {
-				$this->errors[] = "Failed to create backup";
-				return false;
+			return true;
+		} else {
+			// Merge backup errors with update errors
+			$backupErrors = $this->backup->getErrors(false);
+			foreach ($backupErrors as $error) {
+				$this->errors[] = $error;
 			}
-
-		} catch (Exception $e) {
-			$this->errors[] = "Backup creation failed: " . $e->getMessage();
 			return false;
 		}
 	}
@@ -276,7 +245,7 @@ class icms_core_Update {
 			// Extract to temporary directory first
 			$extractDir = $this->tempDir . '/extract';
 			if (!is_dir($extractDir)) {
-				mkdir($extractDir, 0755, true);
+				icms_core_Filesystem::mkdir($extractDir, 0755, '');
 			}
 
 			// Try to extract using ZipArchive first, fallback to alternative methods
@@ -357,27 +326,14 @@ class icms_core_Update {
 	 */
 	private function copyFiles($source, $destination) {
 		try {
-			$iterator = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
-				RecursiveIteratorIterator::SELF_FIRST
-			);
-
-			foreach ($iterator as $item) {
-				$target = $destination . '/' . $iterator->getSubPathName();
-				
-				if ($item->isDir()) {
-					if (!is_dir($target)) {
-						mkdir($target, 0755, true);
-					}
-				} else {
-					if (!copy($item, $target)) {
-						$this->errors[] = "Failed to copy file: " . $item . " to " . $target;
-						return false;
-					}
-				}
+			// Use icms_core_Filesystem::copyRecursive for consistency
+			if (icms_core_Filesystem::copyRecursive($source, $destination)) {
+				$this->messages[] = "Files copied successfully from " . basename($source) . " to " . basename($destination);
+				return true;
+			} else {
+				$this->errors[] = "Failed to copy files from " . $source . " to " . $destination;
+				return false;
 			}
-
-			return true;
 
 		} catch (Exception $e) {
 			$this->errors[] = "File copy failed: " . $e->getMessage();
@@ -424,7 +380,7 @@ class icms_core_Update {
 	 */
 	public function cleanup() {
 		if (file_exists($this->downloadedFile)) {
-			unlink($this->downloadedFile);
+			icms_core_Filesystem::deleteFile($this->downloadedFile);
 		}
 
 		$extractDir = $this->tempDir . '/extract';
@@ -469,6 +425,47 @@ class icms_core_Update {
 			$ret .= $message . '<br />';
 		}
 		return $ret;
+	}
+
+	/**
+	 * Get the backup instance
+	 *
+	 * @return icms_core_Backup
+	 */
+	public function getBackup() {
+		return $this->backup;
+	}
+
+	/**
+	 * List available backups
+	 *
+	 * @return array
+	 */
+	public function listBackups() {
+		return $this->backup->listBackups();
+	}
+
+	/**
+	 * Delete a backup
+	 *
+	 * @param string $backupName Backup filename
+	 * @return bool
+	 */
+	public function deleteBackup($backupName) {
+		$result = $this->backup->deleteBackup($backupName);
+
+		// Merge backup messages/errors
+		$backupMessages = $this->backup->getMessages(false);
+		foreach ($backupMessages as $message) {
+			$this->messages[] = $message;
+		}
+
+		$backupErrors = $this->backup->getErrors(false);
+		foreach ($backupErrors as $error) {
+			$this->errors[] = $error;
+		}
+
+		return $result;
 	}
 
 	/**
