@@ -20,4 +20,28 @@ define("_AM_VERSION_MYSQL_SYSTEM", 'Your Database Version:');
 define("_AM_VERSION_PHP_SYSTEM", 'Your PHP Version:');
 define("_AM_VERSION_API_SYSTEM", 'Your API name:');
 define("_AM_VERSION_SYSTEM_INFO", 'Click here to view your System information');
+
+// Update functionality constants
+define("_AM_VERSION_UPDATE_DOWNLOAD", 'Download Update');
+define("_AM_VERSION_UPDATE_INSTALL", 'Install Update');
+define("_AM_VERSION_UPDATE_BACKUP", 'Create Backup');
+define("_AM_VERSION_UPDATE_VERIFY", 'Verify Download');
+define("_AM_VERSION_UPDATE_PROGRESS", 'Update Progress');
+define("_AM_VERSION_UPDATE_SUCCESS", 'Update completed successfully!');
+define("_AM_VERSION_UPDATE_FAILED", 'Update failed. Please check the error messages below.');
+define("_AM_VERSION_UPDATE_BACKUP_CREATED", 'Backup created successfully');
+define("_AM_VERSION_UPDATE_DOWNLOAD_COMPLETE", 'Download completed');
+define("_AM_VERSION_UPDATE_INSTALL_COMPLETE", 'Installation completed');
+define("_AM_VERSION_UPDATE_HASH_VERIFY", 'Hash verification');
+define("_AM_VERSION_UPDATE_CONFIRM", 'Are you sure you want to update ImpressCMS? This will overwrite your current installation.');
+define("_AM_VERSION_UPDATE_PERMISSION_DENIED", 'You do not have permission to perform updates.');
+define("_AM_VERSION_UPDATE_NO_UPDATE", 'No update available to install.');
+define("_AM_VERSION_UPDATE_HASH_OPTIONAL", 'Hash verification (optional)');
+define("_AM_VERSION_UPDATE_HASH_PLACEHOLDER", 'Enter SHA256 hash to verify download (optional)');
+define("_AM_VERSION_UPDATE_START", 'Start Update Process');
+define("_AM_VERSION_UPDATE_STEP_BACKUP", 'Step 1: Creating backup...');
+define("_AM_VERSION_UPDATE_STEP_DOWNLOAD", 'Step 2: Downloading update...');
+define("_AM_VERSION_UPDATE_STEP_VERIFY", 'Step 3: Verifying download...');
+define("_AM_VERSION_UPDATE_STEP_INSTALL", 'Step 4: Installing update...');
+define("_AM_VERSION_UPDATE_STEP_CLEANUP", 'Step 5: Cleaning up...');
 ?>
