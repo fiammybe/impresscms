@@ -56,6 +56,30 @@ if ($updater->installUpdate()) {
 $updater->cleanup();
 ```
 
+### Backup Class Usage
+
+```php
+// Create backup instance
+$backup = new icms_core_Backup();
+
+// Create a backup
+$backupPath = $backup->createBackup('my-backup', true);
+
+// List available backups
+$backups = $backup->listBackups();
+
+// Delete a backup
+$backup->deleteBackup('backup-2023-12-01.tar.gz');
+
+// Configure exclusions
+$backup->addExcludeDir('logs');
+$backup->addExcludeFile('*.cache');
+$backup->setMaxFileSize(100 * 1024 * 1024); // 100MB
+
+// Generate checksum file for integrity verification
+$backup->generateChecksum();
+```
+
 ## System Requirements
 
 - **PHP Extensions**: ZipArchive (preferred) or system unzip command
@@ -75,7 +99,9 @@ $updater->cleanup();
 ## File Structure
 
 - `htdocs/libraries/icms/core/Update.php` - Main update class
+- `htdocs/libraries/icms/core/Backup.php` - Backup management class
 - `htdocs/modules/system/admin/version/main.php` - Admin interface integration
+- `htdocs/modules/system/admin/version/backup_manager.php` - Backup management interface
 - `htdocs/modules/system/templates/system_adm_version.html` - Template with update UI
 - `htdocs/modules/system/language/english/admin/version.php` - Language constants
 
@@ -107,7 +133,9 @@ Use the test script at `htdocs/modules/system/admin/version/update_test.php` to 
 - File permissions
 - Directory creation
 
-## Integration with Version Checker
+## Integration with ImpressCMS Core Classes
+
+### Version Checker Integration
 
 The update system integrates with the existing `icms_core_Versioncheckergithub` class to:
 
@@ -115,6 +143,23 @@ The update system integrates with the existing `icms_core_Versioncheckergithub` 
 - Get download URLs
 - Retrieve version information
 - Access release notes
+
+### Filesystem Class Integration
+
+Both Update and Backup classes leverage `icms_core_Filesystem` for file operations:
+
+**Directory Operations:**
+- `icms_core_Filesystem::mkdir()` - Create directories with proper permissions
+- `icms_core_Filesystem::deleteRecursive()` - Recursively delete directories
+
+**File Operations:**
+- `icms_core_Filesystem::deleteFile()` - Safe file deletion
+- `icms_core_Filesystem::copyRecursive()` - Recursive file/directory copying
+
+**Iteration and Checksums:**
+- Uses same `RecursiveDirectoryIterator` patterns as `generateChecksum()`
+- Consistent exclusion logic for cache and templates_c directories
+- Compatible with existing ImpressCMS file integrity checking
 
 ## Best Practices
 
