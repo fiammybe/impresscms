@@ -7,6 +7,12 @@
  * @copyright	The ImpressCMS Project http://www.impresscms.org/
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
  */
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+include_once '../../../../mainfile.php';
+include_once ICMS_ROOT_PATH . '/include/cp_functions.php';
 
 // Security check
 if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin()) {
@@ -49,11 +55,11 @@ switch ($action) {
 			$error = "Permission denied";
 		}
 		break;
-		
+
 	case 'delete':
 		if (icms_core_Backup::canCreateBackup() && isset($_GET['file'])) {
 			$filename = basename($_GET['file']); // Security: only filename, no path
-			
+
 			if ($backup->deleteBackup($filename)) {
 				$message = "Backup deleted successfully: " . $filename;
 			} else {
@@ -130,7 +136,7 @@ icms_cp_header();
 					<td style="padding: 8px; border: 1px solid #ddd;"><?php echo $backupInfo['created_formatted']; ?></td>
 					<td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
 						<?php if (icms_core_Backup::canCreateBackup()): ?>
-						<a href="?action=delete&file=<?php echo urlencode($backupInfo['name']); ?>" 
+						<a href="?action=delete&file=<?php echo urlencode($backupInfo['name']); ?>"
 						   onclick="return confirm('Are you sure you want to delete this backup?');"
 						   style="color: red;">Delete</a>
 						<?php else: ?>
