@@ -157,6 +157,7 @@ icms_cp_header();
 <div class="even">
 	<p><strong>Backup Directory:</strong> <?php echo htmlspecialchars($backup->getBackupDir()); ?></p>
 	<p><strong>Source Directory:</strong> <?php echo htmlspecialchars($backup->getSourceDir()); ?></p>
+	<p><strong>Backup Format:</strong> ZIP (compressed)</p>
 	<p><strong>Excluded Directories:</strong> cache, uploads, templates_c, backups</p>
 	<p><strong>Excluded Files:</strong> *.log, *.tmp, .DS_Store, Thumbs.db</p>
 	<p><strong>Maximum File Size:</strong> 50MB</p>
