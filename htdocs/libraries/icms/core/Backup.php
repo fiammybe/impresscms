@@ -218,15 +218,15 @@ class icms_core_Backup {
 			$backupName = 'backup-' . date('Y-m-d-H-i-s');
 		}
 
-		$extension = $useGzip ? '.tar.gz' : '.tar';
+		$extension = '.zip';
 		$backupPath = $this->backupDir . '/' . $backupName . $extension;
 
 		$this->messages[] = "Creating backup: " . $backupName . $extension;
 		$this->messages[] = "Source directory: " . $this->sourceDir;
 
 		try {
-			// Use streaming backup approach to avoid memory issues
-			return $this->createStreamingBackup($backupPath, $useGzip);
+			// Use ZIP backup approach
+			return $this->createZipBackup($backupPath);
 
 		} catch (Exception $e) {
 			$this->errors[] = "Backup creation failed: " . $e->getMessage();
@@ -235,31 +235,17 @@ class icms_core_Backup {
 	}
 
 	/**
-	 * Create backup using streaming approach to avoid memory exhaustion
+	 * Create backup using ZIP format
 	 *
 	 * @param string $backupPath Path to save backup file
-	 * @param bool $useGzip Use gzip compression
 	 * @return string|false Backup file path on success, false on failure
 	 */
-	private function createStreamingBackup($backupPath, $useGzip) {
+	private function createZipBackup($backupPath) {
 		$fileCount = 0;
 		$totalSize = 0;
 
-		// Open output file for streaming
-		if ($useGzip) {
-			if (!function_exists("gzopen")) {
-				$this->errors[] = "Gzip support not available";
-				return false;
-			}
-			$fp = gzopen($backupPath, "wb");
-		} else {
-			$fp = fopen($backupPath, "wb");
-		}
-
-		if (!$fp) {
-			$this->errors[] = "Cannot open backup file for writing: " . $backupPath;
-			return false;
-		}
+		// Create ZIP handler
+		$zip = new icms_file_ZipFileHandler();
 
 		// Use RecursiveDirectoryIterator similar to icms_core_Filesystem::generateChecksum()
 		$rootdir = preg_replace('#[\|/]#', DIRECTORY_SEPARATOR, $this->sourceDir);
@@ -288,8 +274,10 @@ class icms_core_Backup {
 					continue;
 				}
 
-				// Write file directly to archive without loading into memory
-				if ($this->writeFileToArchive($fp, $filePath, $relativePath, $item, $useGzip)) {
+				// Read file content and add to ZIP
+				$fileContent = file_get_contents($filePath);
+				if ($fileContent !== false) {
+					$zip->addFile($fileContent, $relativePath, $item->getMTime());
 					$fileCount++;
 					$totalSize += $fileSize;
 
@@ -297,21 +285,18 @@ class icms_core_Backup {
 					if ($fileCount % 100 === 0) {
 						$this->messages[] = "Processed " . $fileCount . " files (" . $this->formatFileSize($totalSize) . ")";
 					}
+
+					// Free memory immediately
+					unset($fileContent);
+				} else {
+					$this->messages[] = "Warning: Could not read file: " . $relativePath;
 				}
 			}
 		}
 
-		// Write EOF marker
-		$eof = str_repeat(chr(0), 512);
-		if ($useGzip) {
-			gzwrite($fp, $eof);
-			gzclose($fp);
-		} else {
-			fwrite($fp, $eof);
-			fclose($fp);
-		}
-
-		if (file_exists($backupPath)) {
+		// Generate ZIP file content and save
+		$zipContent = $zip->file();
+		if (file_put_contents($backupPath, $zipContent) !== false) {
 			$backupSize = filesize($backupPath);
 			$this->messages[] = "Backup created successfully: " . basename($backupPath);
 			$this->messages[] = "Files included: " . $fileCount;
@@ -319,113 +304,18 @@ class icms_core_Backup {
 			$this->messages[] = "Backup size: " . $this->formatFileSize($backupSize);
 			$this->messages[] = "Compression ratio: " . round((1 - $backupSize / max($totalSize, 1)) * 100, 1) . "%";
 
+			// Free memory
+			unset($zipContent);
+			unset($zip);
+
 			return $backupPath;
 		} else {
-			$this->errors[] = "Failed to create backup archive";
+			$this->errors[] = "Failed to write backup file: " . $backupPath;
 			return false;
 		}
 	}
 
-	/**
-	 * Write a single file directly to the archive stream
-	 *
-	 * @param resource $fp Archive file pointer
-	 * @param string $filePath Full path to source file
-	 * @param string $relativePath Relative path for archive
-	 * @param SplFileInfo $item File information object
-	 * @param bool $useGzip Whether using gzip compression
-	 * @return bool Success status
-	 */
-	private function writeFileToArchive($fp, $filePath, $relativePath, $item, $useGzip) {
-		// Generate TAR header
-		$header = str_pad($relativePath, 100, chr(0));
-		$header .= str_pad(decoct($item->getPerms()), 7, "0", STR_PAD_LEFT) . chr(0);
-		$header .= str_pad(decoct($item->getOwner()), 7, "0", STR_PAD_LEFT) . chr(0);
-		$header .= str_pad(decoct($item->getGroup()), 7, "0", STR_PAD_LEFT) . chr(0);
-		$header .= str_pad(decoct($item->getSize()), 11, "0", STR_PAD_LEFT) . chr(0);
-		$header .= str_pad(decoct($item->getMTime()), 11, "0", STR_PAD_LEFT) . chr(0);
-		$header .= str_repeat(" ", 8);
-		$header .= "0";
-		$header .= str_repeat(chr(0), 100);
-		$header .= str_pad("ustar", 6, chr(32));
-		$header .= chr(32) . chr(0);
-		$header .= str_pad("", 32, chr(0)); // user name
-		$header .= str_pad("", 32, chr(0)); // group name
-		$header .= str_repeat(chr(0), 8);
-		$header .= str_repeat(chr(0), 8);
-		$header .= str_repeat(chr(0), 155);
-		$header .= str_repeat(chr(0), 12);
 
-		// Compute header checksum
-		$checksum = $this->computeUnsignedChecksum($header);
-		$checksumStr = str_pad(decoct($checksum), 6, "0", STR_PAD_LEFT);
-		for ($i=0; $i<6; $i++) {
-			$header[(148 + $i)] = substr($checksumStr, $i, 1);
-		}
-		$header[154] = chr(0);
-		$header[155] = chr(32);
-
-		// Write header
-		if ($useGzip) {
-			gzwrite($fp, $header);
-		} else {
-			fwrite($fp, $header);
-		}
-
-		// Write file content in chunks to avoid memory issues
-		$sourceFile = fopen($filePath, 'rb');
-		if (!$sourceFile) {
-			$this->messages[] = "Warning: Could not read file: " . $relativePath;
-			return false;
-		}
-
-		$bytesWritten = 0;
-		$fileSize = $item->getSize();
-
-		while (!feof($sourceFile) && $bytesWritten < $fileSize) {
-			$chunk = fread($sourceFile, 8192); // 8KB chunks
-			if ($chunk === false) break;
-
-			if ($useGzip) {
-				gzwrite($fp, $chunk);
-			} else {
-				fwrite($fp, $chunk);
-			}
-			$bytesWritten += strlen($chunk);
-		}
-		fclose($sourceFile);
-
-		// Pad to 512-byte boundary
-		$padding = (512 - ($fileSize % 512)) % 512;
-		if ($padding > 0) {
-			$paddingData = str_repeat(chr(0), $padding);
-			if ($useGzip) {
-				gzwrite($fp, $paddingData);
-			} else {
-				fwrite($fp, $paddingData);
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Compute unsigned checksum for TAR header
-	 *
-	 * @param string $header TAR header
-	 * @return int Checksum value
-	 */
-	private function computeUnsignedChecksum($header) {
-		$checksum = 0;
-		for ($i=0; $i<512; $i++) {
-			$checksum += ord($header[$i]);
-		}
-		for ($i=0; $i<8; $i++) {
-			$checksum -= ord($header[148 + $i]);
-		}
-		$checksum += ord(" ") * 8;
-		return $checksum;
-	}
 
 	/**
 	 * Get relative path from absolute path
@@ -451,7 +341,7 @@ class icms_core_Backup {
 			return $backups;
 		}
 
-		$files = glob($this->backupDir . '/*.{tar,tar.gz}', GLOB_BRACE);
+		$files = glob($this->backupDir . '/*.zip');
 		
 		foreach ($files as $file) {
 			$backups[] = array(
