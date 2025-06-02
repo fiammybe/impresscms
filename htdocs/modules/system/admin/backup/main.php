@@ -36,7 +36,9 @@ switch ($action) {
 				? trim($_POST['backup_name'])
 				: 'manual-backup-' . date('Y-m-d-H-i-s');
 
-			$backupPath = $backup->createBackup($backupName, true);
+			$includeUploads = isset($_POST['include_uploads']) ? (bool)$_POST['include_uploads'] : false;
+
+			$backupPath = $backup->createBackup($backupName, true, $includeUploads);
 
 			if ($backupPath) {
 				$message = "Backup created successfully: " . basename($backupPath);
@@ -126,7 +128,19 @@ icms_cp_header();
 			<label for="backup_name">Backup Name (optional):</label><br />
 			<input type="text" name="backup_name" id="backup_name" placeholder="Leave empty for auto-generated name" style="width: 300px;" />
 		</div>
-		<input type="submit" value="Create Backup" class="formButton" onclick="return confirm('This may take several minutes. Continue?');" />
+
+		<div style="margin-bottom: 15px;">
+			<label>
+				<input type="checkbox" name="include_uploads" value="1" id="include_uploads" />
+				Include uploads directory in backup
+			</label>
+			<div style="margin-left: 20px; margin-top: 5px; color: #666; font-size: 12px;">
+				<strong>Note:</strong> Including uploads may significantly increase backup size and creation time.<br />
+				Uploads typically contain user-uploaded files like images, documents, and media files.
+			</div>
+		</div>
+
+		<input type="submit" value="Create Backup" class="formButton" onclick="return confirmBackupCreation();" />
 	</form>
 
 	<form method="post" action="" style="margin-top: 10px;">
@@ -189,7 +203,8 @@ icms_cp_header();
 	<p><strong>Backup Directory:</strong> <?php echo htmlspecialchars($backup->getBackupDir()); ?></p>
 	<p><strong>Source Directory:</strong> <?php echo htmlspecialchars($backup->getSourceDir()); ?></p>
 	<p><strong>Backup Format:</strong> ZIP (compressed)</p>
-	<p><strong>Excluded Directories:</strong> cache, uploads, templates_c, backups</p>
+	<p><strong>Default Excluded Directories:</strong> cache, templates_c, backups</p>
+	<p><strong>Uploads Directory:</strong> Excluded by default (can be included via checkbox)</p>
 	<p><strong>Excluded Files:</strong> *.log, *.tmp, .DS_Store, Thumbs.db</p>
 	<p><strong>Maximum File Size:</strong> 50MB</p>
 </div>
@@ -272,6 +287,24 @@ function showRestoreForm(backupName) {
 
 function hideRestoreForm() {
 	document.getElementById('restoreForm').style.display = 'none';
+}
+
+function confirmBackupCreation() {
+	var includeUploads = document.getElementById('include_uploads').checked;
+
+	var message = 'Create a new backup?\n\n';
+
+	if (includeUploads) {
+		message += 'Including uploads directory: YES\n';
+		message += 'Note: This may significantly increase backup size and creation time.\n\n';
+	} else {
+		message += 'Including uploads directory: NO\n';
+		message += 'Note: User-uploaded files will not be included in this backup.\n\n';
+	}
+
+	message += 'This operation may take several minutes to complete.';
+
+	return confirm(message);
 }
 
 function confirmRestore() {

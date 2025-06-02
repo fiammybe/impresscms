@@ -67,6 +67,12 @@ class icms_core_Backup {
 	private $maxFileSize;
 
 	/**
+	 * Whether to include uploads directory in backup
+	 * @var bool
+	 */
+	private $includeUploads;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $sourceDir Source directory to backup (defaults to ICMS_ROOT_PATH)
@@ -75,12 +81,13 @@ class icms_core_Backup {
 	public function __construct($sourceDir = null, $backupDir = null) {
 		$this->sourceDir = $sourceDir ?: ICMS_ROOT_PATH;
 		$this->backupDir = $backupDir ?: ICMS_CACHE_PATH . '/backups';
-		
+
 		// Default exclusions for ImpressCMS
 		$this->excludeDirs = array('cache', 'uploads', 'templates_c', 'backups');
 		$this->excludeFiles = array('*.log', '*.tmp', '.DS_Store', 'Thumbs.db');
 		$this->maxFileSize = 50 * 1024 * 1024; // 50MB default limit
-		
+		$this->includeUploads = false; // Exclude uploads by default
+
 		// Ensure backup directory exists
 		$this->createBackupDirectory();
 	}
@@ -156,6 +163,35 @@ class icms_core_Backup {
 	}
 
 	/**
+	 * Set whether to include uploads directory in backup
+	 *
+	 * @param bool $include Whether to include uploads directory
+	 */
+	public function setIncludeUploads($include) {
+		$this->includeUploads = (bool)$include;
+
+		// Update exclude directories list based on uploads setting
+		if ($include) {
+			// Remove 'uploads' from exclude list if it exists
+			$this->excludeDirs = array_diff($this->excludeDirs, array('uploads'));
+		} else {
+			// Add 'uploads' to exclude list if not already there
+			if (!in_array('uploads', $this->excludeDirs)) {
+				$this->excludeDirs[] = 'uploads';
+			}
+		}
+	}
+
+	/**
+	 * Get whether uploads directory is included in backup
+	 *
+	 * @return bool
+	 */
+	public function getIncludeUploads() {
+		return $this->includeUploads;
+	}
+
+	/**
 	 * Check if a file should be excluded from backup
 	 *
 	 * @param string $relativePath Relative path of the file
@@ -208,11 +244,17 @@ class icms_core_Backup {
 	 *
 	 * @param string $backupName Optional backup name (auto-generated if not provided)
 	 * @param bool $useGzip Use gzip compression (ignored, always uses ZIP)
+	 * @param bool $includeUploads Whether to include uploads directory
 	 * @return string|false Backup file path on success, false on failure
 	 */
-	public function createBackup($backupName = null, $useGzip = true) {
+	public function createBackup($backupName = null, $useGzip = true, $includeUploads = null) {
 		if (!$this->createBackupDirectory()) {
 			return false;
+		}
+
+		// Set uploads inclusion if specified
+		if ($includeUploads !== null) {
+			$this->setIncludeUploads($includeUploads);
 		}
 
 		// Generate backup name if not provided
@@ -225,6 +267,7 @@ class icms_core_Backup {
 
 		$this->messages[] = "Creating backup: " . $backupName . $extension;
 		$this->messages[] = "Source directory: " . $this->sourceDir;
+		$this->messages[] = "Include uploads: " . ($this->includeUploads ? 'Yes' : 'No');
 
 		try {
 			// Use streaming ZIP backup approach
