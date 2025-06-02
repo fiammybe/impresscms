@@ -123,7 +123,7 @@ class icms_file_TarFileHandler {
 	 *
 	 */
 	private function __computeUnsignedChecksum($bytestring) {
-		$unsigned_chksum = '';
+		$unsigned_chksum = 0; // Initialize as integer, not string
 		for ($i=0; $i<512; $i++) {
 			$unsigned_chksum += ord($bytestring[$i]);
 		}
@@ -294,8 +294,10 @@ class icms_file_TarFileHandler {
 	 *
 	 */
 	private function __generateTAR() {
-		// Clear any data currently in $this->tar_file
-		unset($this->tar_file);
+		// Initialize tar_file if not set
+		if (!isset($this->tar_file)) {
+			$this->tar_file = '';
+		}
 
 		// Generate Records for each directory, if we have directories
 		if ($this->numDirectories > 0) {
@@ -337,7 +339,7 @@ class icms_file_TarFileHandler {
 
 		// Generate Records for each file, if we have files (We should...)
 		if ($this->numFiles > 0) {
-			$this->tar_file = '';
+			// Don't clear $this->tar_file here as it may contain directory entries
 			foreach ($this->files as $key => $information) {
 				unset($header);
 
@@ -567,6 +569,45 @@ class icms_file_TarFileHandler {
 	}
 
 	/**
+	 * Add file content directly to the tar archive (without requiring a physical file)
+	 *
+	 * @param   string  $content    File content to add
+	 * @param   string  $filename   Name for the file in the archive
+	 * @param   integer $time       File modification time (unix timestamp)
+	 * @param   integer $mode       File permissions (default: 0644)
+	 * @param   integer $uid        User ID (default: 0)
+	 * @param   integer $gid        Group ID (default: 0)
+	 * @return  bool
+	 */
+	public function addFileFromContent($content, $filename, $time = 0, $mode = 0644, $uid = 0, $gid = 0) {
+		// Make sure there are no other files in the archive that have this same filename
+		if (self::containsFile($filename)) {
+			return false;
+		}
+
+		// Use current time if not provided
+		if ($time == 0) {
+			$time = time();
+		}
+
+		// Add file to processed data
+		$this->numFiles++;
+		$activeFile = &$this->files[];
+		$activeFile["name"] = $filename;
+		$activeFile["mode"] = $mode;
+		$activeFile["user_id"] = $uid;
+		$activeFile["group_id"] = $gid;
+		$activeFile["size"] = strlen($content);
+		$activeFile["time"] = $time;
+		$activeFile["checksum"] = '';
+		$activeFile["user_name"] = "";
+		$activeFile["group_name"] = "";
+		$activeFile["file"] = $content; // Don't trim content as it may be binary
+
+		return true;
+	}
+
+	/**
 	 * Remove a file from the tar archive
 	 *
 	 * @param   string  $filename
@@ -632,27 +673,146 @@ class icms_file_TarFileHandler {
 			return false;
 		}
 
-		// Encode processed files into TAR file format
-		self::__generateTar();
+		// Use streaming approach for memory efficiency
+		return $this->toTarStreaming($filename, $useGzip);
+	}
 
-		// GZ Compress the data if we need to
+	/**
+	 * Create tar archive using streaming approach to avoid memory issues
+	 *
+	 * @param   string  $filename
+	 * @param   bool    $useGzip    Use GZ compression?
+	 * @return  bool
+	 */
+	private function toTarStreaming($filename, $useGzip) {
+		// Open output file
 		if ($useGzip) {
-			// Make sure we have gzip support
-			if (!function_exists("gzencode")) {
+			if (!function_exists("gzopen")) {
 				return false;
 			}
-
-			$file = gzencode($this->tar_file);
+			$fp = gzopen($filename, "wb");
 		} else {
-			$file = $this->tar_file;
+			$fp = fopen($filename, "wb");
 		}
 
-		// Write the TAR file
-		$fp = fopen($filename, "wb");
-		fwrite($fp, $file);
-		fclose($fp);
+		if (!$fp) {
+			return false;
+		}
+
+		// Write directories first
+		if ($this->numDirectories > 0) {
+			foreach ($this->directories as $key => $information) {
+				$header = $this->generateDirectoryHeader($information);
+				if ($useGzip) {
+					gzwrite($fp, $header);
+				} else {
+					fwrite($fp, $header);
+				}
+			}
+		}
+
+		// Write files
+		if ($this->numFiles > 0) {
+			foreach ($this->files as $key => $information) {
+				$header = $this->generateFileHeader($information);
+				$file_contents = str_pad($information["file"], (ceil($information["size"] / 512) * 512), chr(0));
+
+				if ($useGzip) {
+					gzwrite($fp, $header . $file_contents);
+				} else {
+					fwrite($fp, $header . $file_contents);
+				}
+
+				// Free memory immediately after writing
+				unset($information["file"]);
+			}
+		}
+
+		// Write EOF marker
+		$eof = str_repeat(chr(0), 512);
+		if ($useGzip) {
+			gzwrite($fp, $eof);
+			gzclose($fp);
+		} else {
+			fwrite($fp, $eof);
+			fclose($fp);
+		}
 
 		return true;
+	}
+
+	/**
+	 * Generate TAR header for a directory
+	 *
+	 * @param array $information Directory information
+	 * @return string TAR header
+	 */
+	private function generateDirectoryHeader($information) {
+		// Generate tar header for this directory
+		$header = str_pad($information["name"], 100, chr(0));
+		$header .= str_pad(decoct($information["mode"]), 7, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_pad(decoct($information["user_id"]), 7, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_pad(decoct($information["group_id"]), 7, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_pad(decoct(0), 11, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_pad(decoct($information["time"]), 11, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_repeat(" ", 8);
+		$header .= "5";
+		$header .= str_repeat(chr(0), 100);
+		$header .= str_pad("ustar", 6, chr(32));
+		$header .= chr(32) . chr(0);
+		$header .= str_pad("", 32, chr(0));
+		$header .= str_pad("", 32, chr(0));
+		$header .= str_repeat(chr(0), 8);
+		$header .= str_repeat(chr(0), 8);
+		$header .= str_repeat(chr(0), 155);
+		$header .= str_repeat(chr(0), 12);
+
+		// Compute header checksum
+		$checksum = str_pad(decoct($this->__computeUnsignedChecksum($header)), 6, "0", STR_PAD_LEFT);
+		for ($i=0; $i<6; $i++) {
+			$header[(148 + $i)] = substr($checksum, $i, 1);
+		}
+		$header[154] = chr(0);
+		$header[155] = chr(32);
+
+		return $header;
+	}
+
+	/**
+	 * Generate TAR header for a file
+	 *
+	 * @param array $information File information
+	 * @return string TAR header
+	 */
+	private function generateFileHeader($information) {
+		// Generate the TAR header for this file
+		$header = str_pad($information["name"], 100, chr(0));
+		$header .= str_pad(decoct($information["mode"]), 7, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_pad(decoct($information["user_id"]), 7, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_pad(decoct($information["group_id"]), 7, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_pad(decoct($information["size"]), 11, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_pad(decoct($information["time"]), 11, "0", STR_PAD_LEFT) . chr(0);
+		$header .= str_repeat(" ", 8);
+		$header .= "0";
+		$header .= str_repeat(chr(0), 100);
+		$header .= str_pad("ustar", 6, chr(32));
+		$header .= chr(32) . chr(0);
+		$header .= str_pad($information["user_name"], 32, chr(0));
+		$header .= str_pad($information["group_name"], 32, chr(0));
+		$header .= str_repeat(chr(0), 8);
+		$header .= str_repeat(chr(0), 8);
+		$header .= str_repeat(chr(0), 155);
+		$header .= str_repeat(chr(0), 12);
+
+		// Compute header checksum
+		$checksum = str_pad(decoct($this->__computeUnsignedChecksum($header)), 6, "0", STR_PAD_LEFT);
+		for ($i=0; $i<6; $i++) {
+			$header[(148 + $i)] = substr($checksum, $i, 1);
+		}
+		$header[154] = chr(0);
+		$header[155] = chr(32);
+
+		return $header;
 	}
 
 	/**
