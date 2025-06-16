@@ -1,0 +1,12 @@
+Hallo {X_UNAME},
+
+Jouw nieuwe account op {SITENAME} is geactiveerd door de sitebeheerder.
+
+Je kan nu inloggen vanaf de volgende URL met het wachtwoord dat je bij de registratie hebt opgegeven.
+
+{SITEURL}/user.php
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}
