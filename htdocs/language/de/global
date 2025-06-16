@@ -1,0 +1,332 @@
+<?php
+// $Id: global.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: global.php 12229 2013-07-19 08:08:05Z fiammy $
+//%%%%%%	File Name mainfile.php 	%%%%%
+define('_PLEASEWAIT','Bitte warten');
+define('_FETCHING','Lade...');
+define('_TAKINGBACK','Automatische Rückleitung auf die zuletzt besuchte Seite....');
+define('_LOGOUT','Abmelden');
+define('_SUBJECT','Betreff: ');
+define('_MESSAGEICON','Nachrichtensymbol');
+define('_COMMENTS','Kommentare');
+define('_POSTANON','Beitrag anonym verfassen');
+define('_DISABLESMILEY','Smileys deaktivieren');
+define('_DISABLEHTML','HTML deaktivieren');
+define('_PREVIEW','Vorschau');
+
+define('_GO','Speichern');
+define('_NESTED','Verschachtelt');
+define('_NOCOMMENTS','Keine Kommentare');
+define('_FLAT','Flach');
+define('_THREADED','Diskussion');
+define('_OLDESTFIRST','Älteste zuerst');
+define('_NEWESTFIRST','Neueste zuerst');
+define('_MORE','mehr...');
+define('_IFNOTRELOAD','Wenn die Seite nicht automatisch neu lädt, bitte <a href=%s>HIER</a> klicken');
+define('_WARNINSTALL2','WARNUNG: Das Verzeichnis %s existiert noch auf dem Server. Bitte dieses Verzeichnis aus Sicherheitsgründen entfernen.');
+define('_WARNINWRITEABLE','WARNUNG: Datei %s ist durch den Server beschreibbar.<br />Bitte aus Sicherheitsgründen die Zugriffsrechte für diese Datei ändern.<br /> unter Unix (444, unter Win32 (schreibgeschützt))');
+define('_WARNINNOTWRITEABLE','HINWEIS: Datei %s ist durch den Server nicht beschreibbar. <br />Bitte die Zugriffsrechte auf diese Datei ändern um einen ordnungsgemäße Funktion zu gewährleisten.<br /> unter Unix (777), unter Win32 (beschreibbar)');
+
+// Error messages issued by icms_core_Object::cleanVars()
+define( '_XOBJ_ERR_REQUIRED', '%s ist erforderlich' );
+define( '_XOBJ_ERR_SHORTERTHAN', '%s muss weniger als %d Zeichen haben.' );
+
+//%%%%%%	File Name themeuserpost.php 	%%%%%
+define('_PROFILE','Profil');
+define('_POSTEDBY','Verfasst von');
+define('_VISITWEBSITE','Webseite besuchen');
+define('_SENDPMTO','Private Nachricht an %s senden');
+define('_SENDEMAILTO','E-Mail an %s senden');
+define('_ADD','Hinzufügen');
+define('_REPLY','Antwort');
+define('_DATE','Datum');   // Posted date
+
+//%%%%%%	File Name admin_functions.php 	%%%%%
+define('_MAIN','Übersicht');
+define('_MANUAL','Manuell');
+define('_INFO','Infos');
+define('_CPHOME','Administration');
+define('_YOURHOME','Zurück zur Startseite');
+
+//%%%%%%	File Name misc.php (who's-online popup)	%%%%%
+define('_WHOSONLINE','Wer ist online?');
+define('_GUESTS', 'Gäste');
+define('_MEMBERS', 'Mitglieder');
+define('_ONLINEPHRASE','<b>%s</b> Benutzer sind online');
+define('_ONLINEPHRASEX','<b>%s</b> Benutzer im Bereich <b>%s</b>');
+define('_CLOSE','Schließen');  // Close window
+
+//%%%%%%	File Name module.textsanitizer.php 	%%%%%
+define('_QUOTEC','Zitat:');
+
+//%%%%%%	File Name admin.php 	%%%%%
+define("_NOPERM","Es fehlen die erforderlichen Rechte um auf diesen Bereich zuzugreifen");
+
+//%%%%%		Common Phrases		%%%%%
+define("_NO","Nein");
+define("_YES","Ja");
+define("_EDIT","Bearbeiten");
+define("_DELETE","Löschen");
+define("_SUBMIT","Absenden");
+define("_MODULENOEXIST","Ausgewähltes Modul existiert nicht.");
+define("_ALIGN","Ausrichtung");
+define("_LEFT","Links");
+define("_CENTER","Zentriert");
+define("_RIGHT","Rechts");
+define("_FORM_ENTER", "Bitte %s eingeben");
+// %s represents file name
+define("_MUSTWABLE","Datei %s muss durch den Server beschreibbar sein!");
+// Module info
+define('_PREFERENCES', 'Einstellungen');
+define("_VERSION", "Versionierung");
+define("_DESCRIPTION", "Beschreibung");
+define("_ERRORS", "Fehler");
+define("_NONE", "Keine");
+define('_ON','am');
+define('_READS','gelesen');
+define('_SEARCH','Suchen');
+define('_ALL', 'Alle');
+define('_TITLE', 'Titel');
+define('_OPTIONS', 'Optionen');
+define('_QUOTE', 'Zitat');
+define('_HIDDENC', 'Verborgener Inhalt:');
+define('_HIDDENTEXT', 'This content is hidden for anonymous users, please <a href="'.ICMS_URL.'/register.php" title="Registeration at ' . htmlspecialchars ( $icmsConfig ['sitename'], ENT_QUOTES ) . '">register</a> to be able to see it.');
+define('_LIST', 'Liste');
+define('_LOGIN','Benutzeranmeldung');
+define('_USERNAME','Benutzername: ');
+define('_PASSWORD','Passwort:');
+define("_SELECT","Auswählen");
+define("_IMAGE","mit Bild");
+define("_SEND","Senden");
+define("_CANCEL","Abbrechen");
+define("_ASCENDING","Aufsteigende Reihenfolge");
+define("_DESCENDING","Absteigende Reihenfolge");
+define('_BACK', 'Zurück');
+define('_NOTITLE', 'Kein Titel');
+
+/* Image manager */
+define('_IMGMANAGER','Bilderverwaltung');
+define('_NUMIMAGES', '%s Bilder');
+define('_ADDIMAGE','Bilddatei hinzufügen');
+define('_IMAGENAME','Name:');
+define('_IMGMAXSIZE','Erlaubte Größe (in Byte):');
+define('_IMGMAXWIDTH','Erlaubte Breite (in Pixel):');
+define('_IMGMAXHEIGHT','Erlaubte Höhe (in Pixel):');
+define('_IMAGECAT','Kategorie:');
+define('_IMAGEFILE','Bilddatei:');
+define('_IMGWEIGHT','Reihenfolge:');
+define('_IMGDISPLAY','Dieses Bild anzeigen?');
+define('_IMAGEMIME','MIME-Type:');
+define('_FAILFETCHIMG', 'Hochgeladenes Bild %s konnte nicht ermittelt werden');
+define('_FAILSAVEIMG', 'Das Bild %s konnte der Datenbank nicht hinzugefügt werden');
+define('_NOCACHE', 'Kein Cache');
+define('_CLONE', 'Vervielfältigen');
+define('_INVISIBLE', 'Unsichtbar');
+
+//%%%%%	File Name class/xoopsform/formmatchoption.php 	%%%%%
+define("_STARTSWITH", "Beginnt mit");
+define("_ENDSWITH", "Endet mit");
+define("_MATCHES", "Übereinstimmungen");
+define("_CONTAINS", "Enthält");
+
+//%%%%%%	File Name commentform.php 	%%%%%
+define("_REGISTER","Registrieren");
+
+//%%%%%%	File Name xoopscodes.php 	%%%%%
+define("_SIZE","Größe");  // font size
+define("_FONT","Schriftart");  // font family
+define("_COLOR","Farbe");  // font color
+define("_EXAMPLE","Beispiel");
+define("_ENTERURL","Den URL des Links, der hinzugefügt werden soll, eingeben:");
+define("_ENTERWEBTITLE","Den Titel der Webseite eingeben:");
+define("_ENTERIMGURL","Den URL des Bildes, das hinzugefügt werden soll, eingeben:");
+define("_ENTERIMGPOS","Jetzt die Position des Bildes eingeben.");
+define("_IMGPOSRORL","'R' oder 'r' für rechts, 'L' oder 'l' für links, 'C' oder 'c' mit mittig oder frei lassen.");
+define("_ERRORIMGPOS","FEHLER! Die Position des Bildes eintragen.");
+define("_ENTEREMAIL","Die E-Mail Adresse, die hinzugefügt werden soll, eingeben.");
+define("_ENTERCODE","Den Code, der hinzugefügt werden soll, eingeben.");
+define("_ENTERQUOTE","Den Text, der zitiert werden soll, angeben.");
+define("_ENTERHIDDEN","Einen Text, der für anonyme Besucher unsichtbar sein soll, eingeben.");
+define("_ENTERTEXTBOX","Bitte Text in das Eingabefeld eintragen.");
+
+//%%%%%		TIME FORMAT SETTINGS   %%%%%
+define('_SECOND', '1 Sekunde');
+define('_SECONDS', '%s Sekunden');
+define('_MINUTE', '1 Minute');
+define('_MINUTES', '%s Minuten');
+define('_HOUR', '1 Stunde');
+define('_HOURS', '%s Stunden');
+define('_DAY', '1 Tag');
+define('_DAYS', '%s Tage');
+define('_WEEK', '1 Woche');
+define('_MONTH', '1 Monat');
+
+define("_DATESTRING","d.m.Y H:i:s");
+define("_MEDIUMDATESTRING","d.m.Y");
+define("_SHORTDATESTRING","d.m.Y");
+/*
+ The following characters are recognized in the format string:
+ a - "am" or "pm"
+ A - "AM" or "PM"
+ d - day of the month, 2 digits with leading zeros; i.e. "01" to "31"
+ D - day of the week, textual, 3 letters; i.e. "Fri"
+ F - month, textual, long; i.e. "January"
+ h - hour, 12-hour format; i.e. "01" to "12"
+ H - hour, 24-hour format; i.e. "00" to "23"
+ g - hour, 12-hour format without leading zeros; i.e. "1" to "12"
+ G - hour, 24-hour format without leading zeros; i.e. "0" to "23"
+ i - minutes; i.e. "00" to "59"
+ j - day of the month without leading zeros; i.e. "1" to "31"
+ l (lowercase 'L') - day of the week, textual, long; i.e. "Friday"
+ L - boolean for whether it is a leap year; i.e. "0" or "1"
+ m - month; i.e. "01" to "12"
+ n - month without leading zeros; i.e. "1" to "12"
+ M - month, textual, 3 letters; i.e. "Jan"
+ s - seconds; i.e. "00" to "59"
+ S - English ordinal suffix, textual, 2 characters; i.e. "th", "nd"
+ t - number of days in the given month; i.e. "28" to "31"
+ T - Timezone setting of this machine; i.e. "MDT"
+ U - seconds since the epoch
+ w - day of the week, numeric, i.e. "0" (Sunday) to "6" (Saturday)
+ Y - year, 4 digits; i.e. "1999"
+ y - year, 2 digits; i.e. "99"
+ z - day of the year; i.e. "0" to "365"
+ Z - timezone offset in seconds (i.e. "-43200" to "43200")
+ */
+
+//%%%%%		LANGUAGE SPECIFIC SETTINGS   %%%%%
+define('_CHARSET', 'UTF-8');
+define('_LANGCODE', 'de');
+
+// change 0 to 1 if this language is a multi-bytes language
+define("XOOPS_USE_MULTIBYTES", "0");
+// change 0 to 1 if this language is a RTL (right to left) language
+define("_ADM_USE_RTL","0");
+
+define('_MODULES','Module');
+define('_SYSTEM','System Modul');
+define('_IMPRESSCMS_NEWS','Neuigkeiten');
+define('_ABOUT','ImpressCMS Projekt');
+define('_IMPRESSCMS_HOME','Hauptseite des Projekts');
+define('_IMPRESSCMS_COMMUNITY','Community (engl.)');
+define('_IMPRESSCMS_ADDONS','Erweiterungen');
+define('_IMPRESSCMS_WIKI','Wiki (engl.)');
+define('_IMPRESSCMS_BLOG','Blog (engl.)');
+define('_IMPRESSCMS_DONATE','Spenden! (engl.)');
+define("_IMPRESSCMS_SUPPORT","Unterstütze das Projekt!");
+define('_IMPRESSCMS_ADMIN','Administration von');
+/** The default separator used in icms_view_Tree::getNicePathFromId */
+define('_BRDCRMB_SEP','&nbsp;:&nbsp;');
+//Content Manager
+define('_CT_NAV','Startseite');
+define('_CT_RELATEDS','Ähnliche Seiten');
+//Security image (captcha)
+define("_SECURITYIMAGE_GETCODE","Bitte den Sicherheitscode eingeben");
+define("_QUERIES", "Abfragen");
+define("_BLOCKS", "Blöcke");
+define("_EXTRA", "Extra");
+define("_TIMERS", "Ladezeiten");
+define("_CACHED", "Zwischengespeichert");
+define("_REGENERATES", "Alle %s Sekunden neu erstellen");
+define("_TOTAL", "Insgesamt :");
+define("_ERR_NR", "Fehlernummer:");
+define("_ERR_MSG", "Fehlermeldung:");
+define("_NOTICE", "Hinweis");
+define("_WARNING", "Warnung");
+define("_STRICT", "Strikt");
+define("_ERROR", "Fehler");
+define("_TOOKXLONG", " benötigte %s Sekunden zum Laden.");
+define("_BLOCK", "Blöcke");
+define("_WARNINGUPDATESYSTEM","Glückwunsch, die Seite wurde auf die letzte Version von ImpressCMS aktualisiert!<br />Um den Vorgang abzuschließen muss das System Modul ebenfalls aktualisiert werden.<br />Hier klicken um die Aktualisierung durchzuführen.");
+
+// This shows local support site in ImpressCMS menu, (if selected language is not English)
+define('_IMPRESSCMS_LOCAL_SUPPORT','http://www.impresscms.de'); //add the local support site's URL
+define('_IMPRESSCMS_LOCAL_SUPPORT_TITLE','Regionale Support Webseite');
+define("_ALLEFTCON","Einen Text eingeben der linksbündig erscheinen soll.");
+define("_ALCENTERCON","Einen Text eingeben der zentriert erscheinen soll.");
+define("_ALRIGHTCON","Einen Text eingeben der rechtsbündig erscheinen soll.");
+define( "_TRUST_PATH_HELP", "Warnung: Das System konnte den trust path nicht erreichen.<br />Beim trust path handelt es sich um ein Verzeichnis, in dem ImpressCMS und Module aus Sicherheitsgründen sensiblen Code und Daten ablegen.<br />Dieses Verzeichnis sollte außerhalb des Wurzelverzeichnisses liegen damit ein Zugriff durch einen Browser nicht möglich ist.<br /><a target='_blank' href='http://wiki.impresscms.org/index.php?title=Trust_Path'>Hier</a> klicken um mehr über den Trust Path  und wie er angelegt werden kann zu erfahren." );
+define( "_PROTECTOR_NOT_FOUND", "Achtung: Das System konnte nicht ermitteln ob das Protector Modul installiert oder aktiv ist.<br />Wir empfehlen dringend Protector zu installieren bzw. zu aktivieren um die Sicherheit der Seite zu erhöhen.<br /><a target='_blank' href='http://wiki.impresscms.org/index.php?title=Protector'>Hier klicken um mehr über das Protector Modul zu erfahren.</a><br /><a target='_blank' href='http://xoops.peak.ne.jp/modules/mydownloads/singlefile.php?lid=105&cid=1'>Hier klicken die aktuellste Version des Protector Moduls herunterzuladen.</a>" );
+
+define('_MODABOUT_ABOUT', 'Über');
+// if you have troubles with this font on your language or it is not working, download tcpdf from: http://www.tecnick.com/public/code/cp_dpage.php?aiocp_dp=tcpdf and add the required font in libraries/tcpdf/fonts then write down the font name here. system will then load this font for your language.
+define('_PDF_LOCAL_FONT', '');
+define('_CALENDAR_TYPE',''); // this value is for the local calendar used in this system, if you're not sure about this leave this value as it is!
+define('_CALENDAR','Kalender');
+define('_RETRYPOST','Entschuldigung, es ist eine Unterbrechung aufgetreten. Soll erneut gesendet werden?'); // autologin hack GIJ
+
+############# added since 1.2 #############
+define('_QSEARCH','Schnelle Suche');
+define('_PREV','Zurück');
+define('_NEXT','Weiter');
+define('_LCL_NUM0','0');
+define('_LCL_NUM1','1');
+define('_LCL_NUM2','2');
+define('_LCL_NUM3','3');
+define('_LCL_NUM4','4');
+define('_LCL_NUM5','5');
+define('_LCL_NUM6','6');
+define('_LCL_NUM7','7');
+define('_LCL_NUM8','8');
+define('_LCL_NUM9','9');
+// change 0 to 1 if your language has a different numbering than latin`s alphabet
+define("_USE_LOCAL_NUM","0");
+define("_ICMS_DBUPDATED","Die Datenbank wurde erfolgreich aktualisiert!");
+define('_MD_AM_DBUPDATED',_ICMS_DBUPDATED);
+
+define('_TOGGLETINY','Editor umschalten');
+define("_ENTERHTMLCODE","Den HTML Code, der hinzugefügt werden soll, eingeben:");
+define("_ENTERPHPCODE","Den PHP Code, der hinzugefügt werden soll, eingeben:");
+define("_ENTERCSSCODE","Den CSS Code, der hinzugefügt werden soll, eingeben:");
+define("_ENTERJSCODE","Den JavaScript Code, der hinzugefügt werden soll, eingeben:");
+define("_ENTERWIKICODE","Den Wiki Begriff, der hinzugefügt werden soll, eingeben:");
+define("_ENTERLANGCONTENT","Den Text, der %s hinzugefügt werden soll, eingeben:");
+define('_LANGNAME', 'Deutsch');
+define('_ENTERYOUTUBEURL', 'Einen YouTube URL eingeben:');
+define('_ENTERHEIGHT', 'Höhe des Frames eingeben');
+define('_ENTERWIDTH', 'Breite des Frames eingeben');
+define('_ENTERMEDIAURL', 'Einen URL für Medien eingeben:');
+// !!IMPORTANT!! insert '\' before any char among reserved chars: "a", "A", "B", "c", "d", "D", "F", "g", "G", "h", "H", "i", "I", "j", "l", "L", "m", "M", "n", "O", "r", "s", "S", "t", "T", "U", "w", "W", "Y", "y", "z", "Z"
+// insert double '\' before 't', 'r', 'n'
+define("_TODAY", "\\H\\u\\t H:i");
+define("_YESTERDAY", "\\G\e\\s\\t\e\\r\\n H:i");
+define("_MONTHDAY", "d.m.Y H:i");
+define("_YEARMONTHDAY", "d.m.Y");
+define("_ELAPSE", "vor %s");
+define('_VISIBLE', 'Sichtbar');
+define('_UP', 'Nach oben');
+define('_DOWN', 'Nach unten');
+define('_CONFIGURE', 'Konfigurieren');
+
+// Added in 1.2.2
+define('_CSSTIDY_VULN', 'WARNUNG: Die Datei %s existiert auf dem Server. <br />Bitte diese Datei manuell entfernen');
+define('_FILE_DELETED', 'Datei %s wurde erfolgreich gelöscht');
+
+// added in 1.3
+define('_CHECKALL', 'Alles markieren');
+define('_COPYRIGHT', 'Urheberrecht');
+define("_LONGDATESTRING", "j F Y, H:i");
+define('_AUTHOR', 'Autor');
+define("_CREDITS", "Danksagung");
+define("_LICENSE", "Lizenz");
+define("_LOCAL_FOOTER",'Powered by ImpressCMS &copy; 2007-' . date('Y', time()) . ' <a href=\"http://www.impresscms.org/\" rel=\"external\">The ImpressCMS Project</a>'); //footer Link to local support site
+define("_BLOCK_ID", "Block-ID");
+define('_IMPRESSCMS_PROJECT','Projekt Entwicklung');
+
+// added in 1.3.5
+define("_FILTERS","Mehrere Filter");
+define("_FILTER","Filter");
+define("_FILTERS_MSG1","Eingabefilter: ");
+define("_FILTERS_MSG2","Eingabefilter (HTMLPurifier): ");
+define("_FILTERS_MSG3","Ausgabefilter: ");
+define("_FILTERS_MSG4","Ausgabefilter (HTMLPurifier): ");
+
+// added in 1.4.0
+define("_OUTDATED_PHP", "Ihre aktuelle PHP-Version (%s) wird nicht mehr gewartet. Bitte aktualisieren Sie aus Sicherheitsgründen!");
+
+// added in 1.5.0
+define('_FCK_DEFAULT_WARNING', 'FCKeditor is selected as the default editor for at least 1 module - change it and then remove it from your server');
+define('_FCK_PRESENT_WARNING', 'FCKeditor is present - remove it from your server');
+
+define('_TinyMCE_DEFAULT_WARNING', 'TinyMCE is selected as the default editor for at least 1 module - change it and then remove it from your server');
+define('_TinyMCE_PRESENT_WARNING', 'TinyMCE is present - remove it from your server');
