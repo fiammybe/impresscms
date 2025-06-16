@@ -1,0 +1,84 @@
+<?php
+// $Id: install2.php 9920 2010-03-27 17:46:23Z skenow $
+define("_INSTALL_WEBMASTER","Webmaster");
+define("_INSTALL_WEBMASTERD","Webmaster di questo sito");
+define("_INSTALL_REGUSERS","Utenti registrati");
+define("_INSTALL_REGUSERSD","Gruppo Utenti Registrati");
+define("_INSTALL_ANONUSERS","Utenti anonimi");
+define("_INSTALL_ANONUSERSD","Gruppo Utenti Anonimi");
+
+define("_INSTALL_L165","Il sito è attualmente chiuso per manutenzione. Si prega di tornare più tardi.");
+
+define("_INSTALL_ANON","Anonimo");
+
+define("_INSTALL_DISCLMR", "Mentre gli amministratori e i moderatori di questo sito tenteranno di rimuovere o modificare qualsiasi materiale generalmente discutibile il più presto possibile, non è possibile rivedere ogni messaggio. Dunque riconosci che tutti i post fatti in questo sito esprimono le opinioni e le opinioni dell'autore e non degli amministratori, moderatori o webmaster (eccetto i messaggi di queste persone) e quindi non saranno ritenuti responsabili.
+
+Accetti di non pubblicare materiale abusivo, osceno, volgare, diffamatorio, odio, minaccioso, orientato sessualmente o qualsiasi altro materiale che possa violare le leggi applicabili. Ciò potrebbe portare alla tua immediata e permanente esclusione (e informazione sul tuo fornitore di servizio). L'indirizzo IP di tutti i post viene registrato agli aiuti per l'applicazione di queste condizioni. Non è consentito creare account multipli per un singolo utente. L'utente accetta che il webmaster, l'amministratore e i moderatori di questo sito hanno il diritto di rimuovere, modifica, muovi o chiudi qualsiasi argomento in qualsiasi momento se lo riterrà opportuno. Come utente accetti che tutte le informazioni che hai inserito siano memorizzate in un database. Mentre queste informazioni non verranno divulgate a terze parti senza il tuo consenso al webmaster, amministratore e moderatori non possono essere ritenuti responsabili di qualsiasi tentativo di hacking che possa compromettere i dati.
+
+Questo sistema di sito utilizza i cookie per memorizzare informazioni sul tuo computer locale. Questi cookie non contengono nessuna delle informazioni che hai inserito sopra, servono solo a migliorare il tuo piacere. L'indirizzo email viene utilizzato solo per confermare i dati di registrazione e la password (e per l'invio di nuove password se dimentichi quella corrente).
+
+Cliccando su Registrati qui sotto accetti di essere vincolato a queste condizioni.");
+
+define("_INSTALL_PRIVPOLICY", "<p>La presente informativa sulla privacy stabilisce come {X_SITENAME} utilizza e protegge le informazioni che fornisci quando utilizzi questo sito web. {X_SITENAME} si impegna a garantire la protezione della tua privacy. Qualora ti chiedessimo di fornire determinate informazioni che possano identificarti durante l'utilizzo di questo sito web, puoi essere certo che tali informazioni verranno utilizzate esclusivamente in conformità con la presente informativa sulla privacy. {X_SITENAME} potrebbe modificare la presente informativa periodicamente aggiornando questa pagina. Ti consigliamo di consultare periodicamente questa pagina per assicurarti di essere d'accordo con le modifiche.
+</p><p>
+La presente informativa è in vigore dal [data]. </p>
+<h2>Cosa raccogliamo</h2>
+<p>
+Potremmo raccogliere le seguenti informazioni:
+<ul>
+<li>Nome e qualifica professionale</li>
+<li>Informazioni di contatto, incluso l'indirizzo email</li>
+<li>Informazioni demografiche come codice postale, preferenze e interessi</li>
+<li>Altre informazioni rilevanti per sondaggi e/o offerte per i clienti</li></ul>
+</p>
+<h2>Cosa facciamo con le informazioni che raccogliamo</h2>
+<p>
+Richiediamo queste informazioni per comprendere le tue esigenze e offrirti un servizio migliore, in particolare per i seguenti motivi:
+<ul>
+<li>Conservazione dei registri interni.</li>
+<li>Potremmo utilizzare le informazioni per migliorare i nostri prodotti e servizi.</li>
+<li>Potremmo inviare periodicamente email promozionali su nuovi prodotti, offerte speciali o altre informazioni che riteniamo possano interessarti utilizzando l'indirizzo email che hai fornito.</li>
+<li>Di tanto in tanto, potremmo anche utilizzare le tue informazioni per contattarti per ricerche di mercato. Potremmo contattarti via e-mail.</li>
+<li>Potremmo utilizzare le informazioni per personalizzare il sito web in base ai tuoi interessi.</li></ul>
+</p>
+<h2>Sicurezza</h2>
+<p>
+Ci impegniamo a garantire la sicurezza delle tue informazioni. Per prevenire l'accesso o la divulgazione non autorizzati, abbiamo implementato adeguate procedure fisiche, elettroniche e gestionali per salvaguardare e proteggere le informazioni che raccogliamo online.
+</p>
+<h2>Come utilizziamo i cookie</h2>
+<p>
+Un cookie è un piccolo file che richiede il permesso di essere salvato sul disco rigido del tuo computer. Una volta che acconsenti, il file viene aggiunto e il cookie aiuta ad analizzare il traffico web o ti informa quando visiti un sito specifico. I cookie consentono alle applicazioni web di rispondere a te come individuo. L'applicazione web può adattare il suo funzionamento alle tue esigenze, ai tuoi gusti e alle tue preferenze raccogliendo e memorizzando informazioni sulle tue preferenze.
+</p><p>
+Utilizziamo i cookie del registro del traffico per identificare quali pagine vengono utilizzate e per autenticarti come utente registrato. Questo ci aiuta ad analizzare i dati sul traffico delle pagine web e a migliorare il nostro sito web per adattarlo alle esigenze dei clienti. Utilizziamo queste informazioni solo per scopi di analisi statistica e poi i dati vengono rimossi dal sistema. In generale, i cookie ci aiutano a fornirti un sito web migliore, consentendoci di monitorare quali pagine ritieni utili e quali no. Un cookie non ci fornisce in alcun modo accesso al tuo computer o a informazioni su di te, a parte i dati che scegli di condividere con noi.
+</p><p>
+Puoi scegliere di accettare o rifiutare i cookie. La maggior parte dei browser web accetta automaticamente i cookie, ma di solito puoi modificare le impostazioni del browser per rifiutarli, se preferisci. Questo potrebbe impedirti di sfruttare appieno il sito web, inclusa la registrazione e l'accesso.
+</p>
+<h2>Link ad altri siti web</h2>
+<p>
+Il nostro sito web potrebbe contenere link che ti consentono di visitare facilmente altri siti web di tuo interesse. Tuttavia, una volta utilizzati questi link per abbandonare il nostro sito, tieni presente che non abbiamo alcun controllo su tale altro sito web. Pertanto, non possiamo essere ritenuti responsabili della protezione e della riservatezza delle informazioni fornite durante la visita di tali siti, i quali non sono regolati dalla presente informativa sulla privacy. Si consiglia di prestare attenzione e di consultare l'informativa sulla privacy applicabile al sito web in questione.
+</p>
+<h2>Controllo delle informazioni personali</h2>
+<p>
+È possibile scegliere di limitare la raccolta o l'utilizzo delle proprie informazioni personali nei seguenti modi:
+<ul>
+<li>Ogni volta che viene richiesto di compilare un modulo sul sito web, cercare la casella su cui cliccare per indicare che non si desidera che le informazioni vengano utilizzate da nessuno per finalità di marketing diretto</li>
+<li>Se in precedenza si è acconsentito all'utilizzo delle proprie informazioni personali per finalità di marketing diretto, è possibile cambiare idea in qualsiasi momento scrivendoci o inviandoci un'e-mail all'indirizzo [indirizzo e-mail]</li></ul>
+</p><p>
+Non venderemo, distribuiremo o cederemo le proprie informazioni personali a terzi a meno che non si abbia la vostra autorizzazione o non siamo tenuti a farlo per legge. Potremmo utilizzare i tuoi dati personali per inviarti informazioni promozionali su terze parti che riteniamo possano interessarti, previa tua esplicita autorizzazione. Puoi richiedere i dettagli dei tuoi dati personali in nostro possesso ai sensi del Data Protection Act del 1998. Verrà richiesto il pagamento di un piccolo contributo. Se desideri una copia dei dati in nostro possesso, ti preghiamo di scrivere a [indirizzo].
+</p>
+<p>
+Se ritieni che le informazioni in nostro possesso su di te siano errate o incomplete, ti preghiamo di scriverci o inviarci un'e-mail il prima possibile all'indirizzo sopra indicato. Correggeremo tempestivamente qualsiasi informazione ritenuta errata.
+</p>");
+define("_WELCOME_MSG_CONTENT", "Welcome {UNAME},
+
+Your account has been successfully activated on {X_SITENAME}. As a member of our site, you will benefit from all the features reserved to registered members !
+
+Once again, welcome to our site. Visit us often !
+
+If you did not registered to our site, please contact us at the following address {X_ADMINMAIL}, and we will fix the situation.
+
+-----------
+Yours truly,
+{X_SITENAME}
+
+{X_SITEURL}");
