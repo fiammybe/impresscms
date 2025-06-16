@@ -54,7 +54,7 @@ define("THEME_MODULE1_SUB5","Category 5"); //*** the SUB are for sub-menu in glo
 define("THEME_MODULE2","Forum");
 define("THEME_MODULE2_DESC","Visiter nos forums");
 
-define("THEME_MODULE3","Gallery");
+define("THEME_MODULE3","Gallerie");
 define("THEME_MODULE3_DESC","Visiter notre gallerie");
 
 define("THEME_MODULE3_SUB1","Gallerie 1"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
