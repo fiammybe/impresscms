@@ -1,0 +1,66 @@
+<?php
+// $Id: admin.php 11023 2011-02-15 01:30:36Z skenow $
+//%%%%%%	File Name  admin.php 	%%%%%
+//define('_MD_AM_CONFIG','System Configuration');
+define('_INVALID_ADMIN_FUNCTION', 'Fonction administration non valide');
+
+// Admin Module Names
+define('_MD_AM_ADGS','Groupes');
+define('_MD_AM_BKAD','Blocs');
+define('_MD_AM_MDAD','Modules');
+define('_MD_AM_SMLS','Emotic&ocirc;nes');
+define('_MD_AM_RANK','Classement des membres');
+define('_MD_AM_USER','Modifier un membre');
+define('_MD_AM_FINDUSER', 'Rechercher un membre');
+define('_MD_AM_PREF','Pr&eacute;f&eacute;rences');
+define('_MD_AM_VRSN','Version');
+define('_MD_AM_MLUS', 'Envoyer un mail');
+define('_MD_AM_IMAGES', 'Gestion des images');
+define('_MD_AM_AVATARS', 'Avatars');
+define('_MD_AM_TPLSETS', 'Templates');
+define('_MD_AM_COMMENTS', 'Commentaires');
+define('_MD_AM_BKPOSAD','Positions des blocs');
+define('_MD_AM_PAGES','Gestion des liens');
+define('_MD_AM_CUSTOMTAGS', 'Gestion des Tags');
+
+// Group permission phrases
+define('_MD_AM_PERMADDNG', 'Could not add %s permission to %s for group %s');
+define('_MD_AM_PERMADDOK','Added %s permission to %s for group %s');
+define('_MD_AM_PERMRESETNG','Impossible de r&eacute;-initialiser la permission de groupe pour le module %s');
+define('_MD_AM_PERMADDNGP', 'Tous les &eacute;l&eacute;ments parents doivent &ecirc;tre s&eacute;lectionn&eacute;s.');
+
+// added in 1.2
+if (!defined('_MD_AM_AUTOTASKS')) {define('_MD_AM_AUTOTASKS', 'Taches automatiques');}
+define('_MD_AM_ADSENSES', 'Adsenses');
+define('_MD_AM_RATINGS', 'Cotations');
+define('_MD_AM_MIMETYPES', 'Mime Types');
+
+// added in 1.3
+define("_MD_AM_GROUPS_ADVERTISING", "Advertising");
+define("_MD_AM_GROUPS_CONTENT", "Contenu");
+define("_MD_AM_GROUPS_LAYOUT", "Layout");
+define("_MD_AM_GROUPS_MEDIA", "Media");
+define("_MD_AM_GROUPS_SITECONFIGURATION", "Site Configuration");
+define("_MD_AM_GROUPS_SYSTEMTOOLS", "System Tools");
+define("_MD_AM_GROUPS_USERSANDGROUPS", "Users and Groups");
+define('_MD_AM_ADSENSES_DSC', 'Adsenses are tags that you can define and use anywhere on your website.');
+define('_MD_AM_AUTOTASKS_DSC', 'Auto Tasks allow you to create a schedule of actions that the system will perform automatically.');
+define('_MD_AM_AVATARS_DSC', 'Manage the avatars available to the users of your website.');
+define('_MD_AM_BKPOSAD_DSC', 'Manage and create blocks positions that are used within the themes on your website.');
+define('_MD_AM_BKAD_DSC', 'Manage and create blocks used throughout your website.');
+define('_MD_AM_COMMENTS_DSC', 'Manage the comments made by users on your website.');
+define('_MD_AM_CUSTOMTAGS_DSC', 'Custom Tags are tags that you can define and use anywhere on your website.');
+define('_MD_AM_USER_DSC', 'Create, Modify or Delete registered users.');
+define('_MD_AM_FINDUSER_DSC', 'Search through registered users with filters.');
+define('_MD_AM_ADGS_DSC', 'Manage permissions, members, visibility and access rights of groups of users.');
+define('_MD_AM_IMAGES_DSC', 'Create groups of images and manage the permissions for each group. Crop and resize uploaded photos.');
+define('_MD_AM_MLUS_DSC', 'Send mail to users of whole groups - or filter recipients based on matching criteria.');
+define('_MD_AM_MIMETYPES_DSC', 'Manage the allowed extensions for files uploaded to your website.');
+define('_MD_AM_MDAD_DSC', 'Manage modules menu weight, status, name or update modules as needed.');
+define('_MD_AM_RATINGS_DSC', 'With using this tool, you can add a new rating method to your modules, and control the results through this section!');
+define('_MD_AM_SMLS_DSC', 'Manage the available smilies and define the code associatted with each.');
+define('_MD_AM_PAGES_DSC', 'Symlink allows you to create a unique link based on any page of your website, which can be used for blocks specific to a page URL, or to link directly within the content of a module.');
+define('_MD_AM_TPLSETS_DSC', 'Templates are sets of html/css files that render the screen layout of modules.');
+define('_MD_AM_RANK_DSC', 'User ranks are picture, used to make difference between users in different levels of your website!');
+define('_MD_AM_VRSN_DSC', 'Use this tool to check your system for updates.');
+define('_MD_AM_PREF_DSC',"ImpressCMS Site Preferences");
