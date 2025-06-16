@@ -23,7 +23,7 @@ define('_OLDESTFIRST','Oudste Eerst');
 define('_NEWESTFIRST','Nieuwste Eerst');
 define('_MORE','meer...');
 define('_IFNOTRELOAD','Indien de pagina niet automatisch vernieuwt, klik dan <a href=%s>HIER</a>');
-define('_WARNINSTALL2','WARNING: Directory %s exists on your server. <br />Please remove this directory for security reasons.');
+define('_WARNINSTALL2','WAARSCHUWING: de map %s staat nog op uw server. <br />Verwijder deze om veiligheidsredenen.');
 define('_WARNINWRITEABLE','WAARSCHUWING: Bestand %s is overschrijfbaar door de server. <br />Verander de rechten voor dit bestand vanwege veiligheidsredenen.<br /> in Unix (444), in Win32 (alleen-lezen)');
 define('_WARNINNOTWRITEABLE','WAARSCHUWING: Bestand %s is niet overschrijfbaar door de server. <br />Verander de rechten voor dit bestand vanwege functionaliteitsredenen.<br /> in Unix (777), in Win32 (schrijfbaar)');
 
@@ -327,8 +327,8 @@ define("_FILTERS_MSG4","Uitvoerfilter (HTMLPurifier):");
 define("_OUTDATED_PHP", "Uw huidige PHP versie (%s) wordt niet langer onderhouden. Gelieve up te graden voor veiligheidsredenen!");
 
 // added in 1.5.0
-define('_FCK_DEFAULT_WARNING', 'FCKeditor is selected as the default editor for at least 1 module - change it and then remove it from your server');
-define('_FCK_PRESENT_WARNING', 'FCKeditor is present - remove it from your server');
+define('_FCK_DEFAULT_WARNING', 'FCKeditor is geselecteerd als standaard editor voor ten minste 1 module - verander deze en verwijder deze vervolgens van uw server');
+define('_FCK_PRESENT_WARNING', 'FCKeditor is aanwezig - verwijder het van uw server');
 
-define('_TinyMCE_DEFAULT_WARNING', 'TinyMCE is selected as the default editor for at least 1 module - change it and then remove it from your server');
-define('_TinyMCE_PRESENT_WARNING', 'TinyMCE is present - remove it from your server');
+define('_TinyMCE_DEFAULT_WARNING', 'TinyMCE is geselecteerd als de standaard editor voor ten minste 1 module - verander het en verwijder het vervolgens van uw server');
+define('_TinyMCE_PRESENT_WARNING', 'TinyMCE is aanwezig - verwijder het van uw server');
