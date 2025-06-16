@@ -1,65 +1,65 @@
 <?php
 // formselectuser.php
 
-define("_MA_USER_MORE", "Search users");
-define("_MA_USER_REMOVE", "Remove unselected users");
+define("_MA_USER_MORE", "Zoek gebruikers");
+define("_MA_USER_REMOVE", "Verwijder niet geselecteerde gebruikers");
 
 //%%%%%%	File Name findusers.php 	%%%%%
-define("_MA_USER_ADD_SELECTED", "Add selected users");
+define("_MA_USER_ADD_SELECTED", "Geselecteerde gebruikers toevoegen");
 
-define("_MA_USER_GROUP", "Group");
-define("_MA_USER_LEVEL", "Level");
-define("_MA_USER_LEVEL_ACTIVE", "Active");
-define("_MA_USER_LEVEL_INACTIVE", "Inactive");
-define("_MA_USER_LEVEL_DISABLED", "Disabled");
-define("_MA_USER_RANK", "Rank");
+define("_MA_USER_GROUP", "Gebruiker groep");
+define("_MA_USER_LEVEL", "Status");
+define("_MA_USER_LEVEL_ACTIVE", "Actief");
+define("_MA_USER_LEVEL_INACTIVE", "Inactief");
+define("_MA_USER_LEVEL_DISABLED", "Uitgeschakeld");
+define("_MA_USER_RANK", "Niveau");
 
-define("_MA_USER_FINDUS","Find Users");
-define("_MA_USER_REALNAME","Real Name");
-define("_MA_USER_REGDATE","Joined Date");
-define("_MA_USER_EMAIL","Email");
-define("_MA_USER_PREVIOUS","Previous");
-define("_MA_USER_NEXT","Next");
-define("_MA_USER_USERSFOUND","%s user(s) found");
+define("_MA_USER_FINDUS","Zoek gebruikers");
+define("_MA_USER_REALNAME","Echte naam");
+define("_MA_USER_REGDATE","Lid sinds");
+define("_MA_USER_EMAIL","E-mail");
+define("_MA_USER_PREVIOUS","Vorige");
+define("_MA_USER_NEXT","Volgende");
+define("_MA_USER_USERSFOUND","%s gebruiker(s) gevonden");
 
-define("_MA_USER_ACTUS", "Active Users: %s");
-define("_MA_USER_INACTUS", "Inactive Users: %s");
-define("_MA_USER_NOFOUND","No Users Found");
-define("_MA_USER_UNAME","User Name");
-define("_MA_USER_ICQ","ICQ Number");
-define("_MA_USER_AIM","AIM Handle");
-define("_MA_USER_YIM","YIM Handle");
-define("_MA_USER_MSNM","MSNM Handle");
-define("_MA_USER_LOCATION","Location contains");
-define("_MA_USER_OCCUPATION","Occupation contains");
-define("_MA_USER_INTEREST","Interest contains");
-define("_MA_USER_URLC","URL contains");
-define("_MA_USER_SORT","Sort by");
-define("_MA_USER_ORDER","Order");
-define("_MA_USER_LASTLOGIN","Last login");
-define("_MA_USER_POSTS","Number of posts");
-define("_MA_USER_ASC","Ascending order");
-define("_MA_USER_DESC","Descending order");
-define("_MA_USER_LIMIT","Number of users per page");
-define("_MA_USER_RESULTS", "Search results");
-define("_MA_USER_SHOWMAILOK", "Type of users to show");
-define("_MA_USER_MAILOK","Only users that accept mail");
-define("_MA_USER_MAILNG","Only users that don't accept mail");
-define("_MA_USER_BOTH", "All");
+define("_MA_USER_ACTUS", "Actieve gebruikers: %s");
+define("_MA_USER_INACTUS", "Inactieve gebruikers: %s");
+define("_MA_USER_NOFOUND","Geen gebruikers gevonden");
+define("_MA_USER_UNAME","Gebruikersnaam");
+define("_MA_USER_ICQ","ICQ");
+define("_MA_USER_AIM","AIM");
+define("_MA_USER_YIM","YIM");
+define("_MA_USER_MSNM","MSN");
+define("_MA_USER_LOCATION","Lokatie");
+define("_MA_USER_OCCUPATION","Beroep");
+define("_MA_USER_INTEREST","Interesses");
+define("_MA_USER_URLC","Website");
+define("_MA_USER_SORT","Gesorteerd op");
+define("_MA_USER_ORDER","Volgorde");
+define("_MA_USER_LASTLOGIN","Laatste keer ingelogd");
+define("_MA_USER_POSTS","Aantal berichten");
+define("_MA_USER_ASC","Oplopend");
+define("_MA_USER_DESC","Aflopend");
+define("_MA_USER_LIMIT","Aantal gebruikers per pagina");
+define("_MA_USER_RESULTS", "Zoekresultaten");
+define("_MA_USER_SHOWMAILOK", "Toon gebruikers die");
+define("_MA_USER_MAILOK","Alleen gebruikers die e-mail accepteren");
+define("_MA_USER_MAILNG","Alleen gebruikers die geen e-mail accepteren");
+define("_MA_USER_BOTH", "Alle gebruikers");
 
-define("_MA_USER_RANGE_LAST_LOGIN","Logged in past <span style='color:#ff0000;'>X</span>days");
-define("_MA_USER_RANGE_USER_REGDATE","Registered in past <span style='color:#ff0000;'>X</span>days");
-define("_MA_USER_RANGE_POSTS","Posts");
+define("_MA_USER_RANGE_LAST_LOGIN","Ingelogd in het verleden <span style='color:#ff0000;'>X</span>dagen");
+define("_MA_USER_RANGE_USER_REGDATE","Geregistreerd in het verleden <span style='color:#ff0000;'>X</span>dagen");
+define("_MA_USER_RANGE_POSTS","Berichten");
 
-define("_MA_USER_HASAVATAR", "Has avatar");
-define("_MA_USER_MODE_SIMPLE", "Simple mode");
-define("_MA_USER_MODE_ADVANCED", "Advanced mode");
-define("_MA_USER_MODE_QUERY", "Query mode");
-define("_MA_USER_QUERY", "Query");
+define("_MA_USER_HASAVATAR", "Heeft pasfoto");
+define("_MA_USER_MODE_SIMPLE", "Eenvoudige modus");
+define("_MA_USER_MODE_ADVANCED", "Geavanceerde modus");
+define("_MA_USER_MODE_QUERY", "Query modus");
+define("_MA_USER_QUERY", "Zoekopdracht");
 
-define("_MA_USER_SEARCHAGAIN", "Search again");
-define("_MA_USER_NOUSERSELECTED", "No user selected");
-define("_MA_USER_USERADDED", "Users have been added");
+define("_MA_USER_SEARCHAGAIN", "Opnieuw zoeken");
+define("_MA_USER_NOUSERSELECTED", "Geen gebruiker geselecteerd");
+define("_MA_USER_USERADDED", "Gebruikers zijn toegevoegd");
 
-define("_MA_USER_SENDMAIL","Send Email");
+define("_MA_USER_SENDMAIL","Verstuur e-mail");
 ?>
