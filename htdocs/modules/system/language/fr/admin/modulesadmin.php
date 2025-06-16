@@ -1,0 +1,162 @@
+<?php
+// $Id: modulesadmin.php 11129 2011-03-29 00:57:50Z skenow $
+//%%%%%%	File Name  modulesadmin.php 	%%%%%
+define("_MD_AM_MODADMIN","Administration des modules");
+define("_MD_AM_MODULE","Module");
+define("_MD_AM_VERSION","Version");
+define("_MD_AM_LASTUP","Derni&egrave;re mise &agrave; jour");
+define("_MD_AM_DEACTIVATED","D&eacute;sactiv&eacute;");
+define("_MD_AM_ACTION","Actions");
+define("_MD_AM_DEACTIVATE","D&eacute;sactiver");
+define("_MD_AM_ACTIVATE","Activer");
+define("_MD_AM_UPDATE","Mise &agrave; jour");
+define("_MD_AM_DUPEN","Entr&eacute;e dupliqu&eacute;e dans la table modules !");
+define("_MD_AM_DEACTED","Le module s&eacute;lectionn&eacute; a &eacute;t&eacute; d&eacute;sactiv&eacute;. Vous pouvez maintenant le d&eacute;sinstaller sans risque.");
+define("_MD_AM_ACTED","Le module s&eacute;lectionn&eacute; a &eacute;t&eacute; activ&eacute; !");
+define("_MD_AM_UPDTED","Le module s&eacute;lectionn&eacute; a &eacute;t&eacute; mis &agrave; jour !");
+define("_MD_AM_SYSNO","Le module Syst&egrave;me ne peut &ecirc;tre d&eacute;sactiv&eacute;.");
+define("_MD_AM_STRTNO","Ce module est d&eacute;fini comme votre page d'accueil par d&eacute;faut. Merci de changer tout d'abord le module d'accueil dans les pr&eacute;f&eacute;rences.");
+
+// added in RC2
+define("_MD_AM_PCMFM","Merci de confirmer :");
+
+// added in RC3
+define("_MD_AM_ORDER","Ordre");
+define("_MD_AM_ORDER0","(0 = cach&eacute;)");
+define("_MD_AM_ACTIVE","Actif");
+define("_MD_AM_INACTIVE","Inactif");
+define("_MD_AM_NOTINSTALLED","Non install&eacute;");
+define("_MD_AM_NOCHANGE","Pas de changement");
+define("_MD_AM_INSTALL","Installer");
+define("_MD_AM_UNINSTALL","D&eacute;sinstaller");
+define("_MD_AM_SUBMIT","Valider");
+define("_MD_AM_CANCEL","Annuler");
+define("_MD_AM_DBUPDATE","Base de donn&eacute;es mise &agrave; jour avec succ&agrave;s !");
+define("_MD_AM_BTOMADMIN","Retour &agrave; la page d'administration des modules");
+
+// %s represents module name
+define("_MD_AM_FAILINS","Impossible d'installer %s.");
+define("_MD_AM_FAILACT","Impossible d'activer %s.");
+define("_MD_AM_FAILDEACT","Impossible de d&eacute;sactiver %s.");
+
+define("_MD_AM_FAILUNINS","Impossible de d&eacute;sinstaller %s.");
+define("_MD_AM_FAILORDER","Impossible de r&eacute;-ordonner %s.");
+define("_MD_AM_FAILWRITE","Impossible d'&eacute;crire dans le menu principal.");
+define("_MD_AM_ALEXISTS","Le module %s existe d&eacute;j&agrave;.");
+define("_MD_AM_ERRORSC", "Erreur(s):");
+define("_MD_AM_OKINS","Le module %s a &eacute;t&eacute; install&eacute; avec succ&egrave;s.");
+define("_MD_AM_OKACT","Le module %s a &eacute;t&eacute; activ&eacute; avec succ&egrave;s.");
+define("_MD_AM_OKDEACT","Le module %s a &eacute;t&eacute; d&eacute;sactiv&eacute; avec succ&egrave;s.");
+define("_MD_AM_OKUPD","Le module %s a &eacute;t&eacute; mis &agrave; jour avec succ&egrave;s.");
+define("_MD_AM_OKUNINS","Le module %s a &eacute;t&eacute; d&eacute;sinstall&eacute; avec succ&egrave;s.");
+define("_MD_AM_OKORDER","Le module %s a &eacute;t&eacute; r&eacute;-ordonn&eacute; avec succ&egrave;s.");
+
+define('_MD_AM_RUSUREINS', 'Pressez le bouton ci-dessous pour installer ce module');
+define('_MD_AM_RUSUREUPD', 'Pressez le bouton ci-dessous pour mettre &agrave; jour ce module');
+define('_MD_AM_RUSUREUNINS', '&Ecirc;tes-vous s&ucirc;r de vouloir d&eacute;sinstaller ce module ?');
+define('_MD_AM_LISTUPBLKS', 'Les blocs suivants vont &ecirc;tre mis &agrave; jour.<br />S&eacute;lectionnez les blocs dont le contenu (template et options) peuvent &ecirc;tre &eacute;cras&eacute;s.<br />');
+define('_MD_AM_NEWBLKS', 'Nouveaux blocs');
+define('_MD_AM_DEPREBLKS', 'Blocs rejet&eacute;s');
+
+define('_MD_AM_MODULESADMIN_SUPPORT', 'Site de support du module');
+define('_MD_AM_MODULESADMIN_STATUS', '&Eacute;tat');
+define('_MD_AM_MODULESADMIN_MODULENAME', 'Nom du module');
+define('_MD_AM_MODULESADMIN_MODULETITLE', 'Titre du module');
+######################## Added in 1.2 ###################################
+define('_MD_AM_MOD_DATA_UPDATED',' Module data updated.');
+define('_MD_AM_MOD_REBUILD_BLOCKS','Rebuilding blocks...');
+define('_MD_AM_INSTALLED', 'Modules install&eacute;s');
+define('_MD_AM_NONINSTALL', 'UnInstalled Modules');
+define('_MD_AM_IMAGESFOLDER_UPDATE_TITLE', 'Image Manager folder needs to be writable');
+define('_MD_AM_IMAGESFOLDER_UPDATE_TEXT', 'The new version of the Image Manager changed the storage location of your images. This update will try to move your images to the right place, but this requires that the storage folder has write permission. Please set the correct permission in the folder <strong>and refresh this page</strong> before clicking on the Update button below.<br /><strong>Image Manager folder</strong>: %s');
+define('_MD_AM_PLUGINSFOLDER_UPDATE_TITLE', 'Plugins/Preloads folder needs to be writable');
+define('_MD_AM_PLUGINSFOLDER_UPDATE_TEXT', 'The new version of ImpressCMS changed the storage location of the preloads. This update will try to move your preloads to the right place, but this requires that the storage folder for plugins and preloads has write permission. Please set the correct permission in the folder <strong>and refresh this page</strong> before clicking on the Update button below.<br /><strong>Plugins folder</strong>: %s<br /><strong>Preloads folder</strong>: %s');
+
+// Added and Changed in 1.3
+define("_MD_AM_UPDATE_FAIL","Unable to update %s.");
+define('_MD_AM_FUNCT_EXEC','Function %s is successfully executed.');
+define('_MD_AM_FAIL_EXEC','Failed to execute %s.');
+define('_MD_AM_INSTALLING','Installing ');
+define('_MD_AM_SQL_NOT_FOUND', 'SQL file not found at %s');
+define('_MD_AM_SQL_FOUND', "SQL file found at %s . <br  /> Creating tables...");
+define('_MD_SQL_NOT_VALID', ' is not valid SQL!');
+define('_MD_AM_TABLE_CREATED', 	'Table %s cr&eacute;&eacute;e.');
+define('_MD_AM_DATA_INSERT_SUCCESS', 'Data inserted to table %s.');
+define('_MD_AM_RESERVED_TABLE', '%s is a reserved table!');
+define('_MD_AM_DATA_INSERT_FAIL', 'Could not insert %s to database.');
+define('_MD_AM_CREATE_FAIL', 'ERROR: Could not create %s');
+
+define('_MD_AM_MOD_DATA_INSERT_SUCCESS', 'Module data inserted successfully. Module ID: %s');
+
+define('_MD_AM_BLOCK_UPDATED', 'Block %s updated. Block ID: %s.');
+define('_MD_AM_BLOCK_CREATED', 'Block %s created. Block ID: %s.');
+
+define('_MD_AM_BLOCKS_ADDING', 'Adding blocks...');
+define('_MD_AM_BLOCKS_ADD_FAIL', 'ERROR: Could not add block %1$s to the database! Database error: %2$s');
+define('_MD_AM_BLOCK_ADDED', 'Block %1$s added. Block ID: %2$s');
+define('_MD_AM_BLOCKS_DELETE', 'Deleting block...');
+define('_MD_AM_BLOCK_DELETE_FAIL', 'ERROR: Could not delete block %1$s. Block ID: %2$s');
+define('_MD_AM_BLOCK_DELETED', 'Block %1$s deleted. Block ID: %2$s');
+define('_MD_AM_BLOCK_TMPLT_DELETE_FAILED', 'ERROR: Could not delete block template %1$s  from the database. Template ID: %2$s');
+define('_MD_AM_BLOCK_TMPLT_DELETED', 'Block template %1$s  deleted from the database. Template ID: %2$s');
+define('_MD_AM_BLOCK_ACCESS_FAIL', 'ERROR: Could not add block access right. Block ID: %1$s  Group ID: %2$s');
+define('_MD_AM_BLOCK_ACCESS_ADDED', 'Added block access right. Block ID: %1$s, Group ID: %2$s');
+
+define('_MD_AM_CONFIG_ADDING', 'Adding module config data...');
+define('_MD_AM_CONFIGOPTION_ADDED', 'Config option added. Name: %1$s Value: %2$s');
+define('_MD_AM_CONFIG_ADDED', 'Config %s  added to the database.');
+define('_MD_AM_CONFIG_ADD_FAIL', 'ERROR: Could not insert config %s to the database.');
+
+define('_MD_AM_PERMS_ADDING', 'Setting group rights...');
+define('_MD_AM_ADMIN_PERM_ADD_FAIL', 'ERROR: Could not add admin access right for Group ID %s');
+define('_MD_AM_ADMIN_PERM_ADDED', 'Added admin access right for Group ID %s');
+define('_MD_AM_USER_PERM_ADD_FAIL', 'ERROR: Could not add user access right for Group ID: %s');
+define('_MD_AM_USER_PERM_ADDED', 'Added user access right for Group ID: %s');
+
+define('_MD_AM_AUTOTASK_FAIL', 'ERROR: Could not insert autotask to db. Name: %s');
+define('_MD_AM_AUTOTASK_ADDED', 'Added task to autotasks list. Task Name: %s');
+define('_MD_AM_AUTOTASK_UPDATE', 'Updating autotasks...');
+define('_MD_AM_AUTOTASKS_DELETE', 'Deleting Autotasks...');
+
+define('_MD_AM_SYMLINKS_DELETE', 'Deleting links from Symlink Manager...');
+define('_MD_AM_SYMLINK_DELETE_FAIL', 'ERROR: Could not delete link %1$s from the database. Link ID: %2$s');
+define('_MD_AM_SYMLINK_DELETED', 'Link %1$s deleted from the database. Link ID: %2$s');
+
+define('_MD_AM_DELETE_FAIL', 'ERROR: Could not delete %s');
+
+define('_MD_AM_MOD_UP_TEM','Updating templates...');
+define('_MD_AM_TEMPLATE_INSERT_FAIL','ERROR: Could not insert template %s to the database.');
+define('_MD_AM_TEMPLATE_UPDATE_FAIL','ERROR: Could not update template %s.');
+define('_MD_AM_TEMPLATE_INSERTED','Template %s added to the database. (ID: %s)');
+define('_MD_AM_TEMPLATE_COMPILE_FAIL','ERROR: Failed compiling template %s.');
+define('_MD_AM_TEMPLATE_COMPILED','Template %s compiled.');
+define('_MD_AM_TEMPLATE_RECOMPILED','Template %s recompiled.');
+define('_MD_AM_TEMPLATE_RECOMPILE_FAIL','ERROR: Could not recompile template %s.');
+
+define('_MD_AM_TEMPLATES_ADDING', 'Adding templates...');
+define('_MD_AM_TEMPLATES_DELETE', 'Deleting templates...');
+define('_MD_AM_TEMPLATE_DELETE_FAIL', 'ERROR: Could not delete template %1$s from the database. Template ID: %2$s');
+define('_MD_AM_TEMPLATE_DELETED', 'Template %1$s  deleted from the database. Template ID: %2$s');
+define('_MD_AM_TEMPLATE_UPDATED', 'Template %s updated.');
+
+define('_MD_AM_MOD_TABLES_DELETE', 'Deleting module tables...');
+define('_MD_AM_MOD_TABLE_DELETE_FAIL', 'ERROR: Could not drop table %s');
+define('_MD_AM_MOD_TABLE_DELETED', 'Table %s supprim&eacute;e.');
+define('_MD_AM_MOD_TABLE_DELETE_NOTALLOWED', 'ERROR: Not allowed to drop table %s!');
+
+define('_MD_AM_COMMENTS_DELETE', 'Deleting comments...');
+define('_MD_AM_COMMENT_DELETE_FAIL', 'ERROR: Could not delete comments');
+define('_MD_AM_COMMENT_DELETED', 'Comments deleted');
+
+define('_MD_AM_NOTIFICATIONS_DELETE', 'Deleting notifications...');
+define('_MD_AM_NOTIFICATION_DELETE_FAIL', 'ERROR: Could not delete notifications');
+define('_MD_AM_NOTIFICATION_DELETED', 'Notifications deleted');
+
+define('_MD_AM_GROUPPERM_DELETE', 'Deleting group permissions...');
+define('_MD_AM_GROUPPERM_DELETE_FAIL', 'ERROR: Could not delete group permissions');
+define('_MD_AM_GROUPPERM_DELETED', 'Group permissions deleted');
+
+define('_MD_AM_CONFIGOPTIONS_DELETE', 'Deleting module config options...');
+define('_MD_AM_CONFIGOPTION_DELETE_FAIL', 'ERROR: Could not delete config data from the database. Config ID: %s');
+define('_MD_AM_CONFIGOPTION_DELETED', 'Config data deleted from the database. Config ID: %s');
+
