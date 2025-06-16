@@ -1,0 +1,35 @@
+<?php
+// $Id: timezone.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: timezone.php 12229 2013-07-19 08:08:05Z fiammy $
+//%%%%%		Time Zone	%%%%
+define("_TZ_GMTM12", "(UTC-12:00) IDLW - International Date Line West");
+define("_TZ_GMTM11", "(UTC-11:00) NT- Nome Time");
+define("_TZ_GMTM10", "(UTC-10:00) HST/CAT - Hawaii Standard Time/Central Alaska Time");
+define("_TZ_GMTM9", "(UTC-9:00) AKST - Alaska Standard Time");
+define("_TZ_GMTM8", "(UTC-8:00) PST - Pacific Standard Time");
+define("_TZ_GMTM7", "(UTC-7:00) MST - Mountain Standard Time");
+define("_TZ_GMTM6", "(UTC-6:00) CST - Central Standard Time");
+define("_TZ_GMTM5", "(UTC-5:00) EST - Eastern Standard Time");
+define("_TZ_GMTM4", "(UTC-4:00) AST - Atlantic Standard Time");
+define("_TZ_GMTM35", "(UTC-3:30) NST - Newfoundland Standard Time");
+define("_TZ_GMTM3", "(UTC-3:00) ART/BRT/UYT - Argentina Time/Brazil Time/Uruguay Time");
+define("_TZ_GMTM2", "(UTC-2:00) FNT - Fernando Noronha Time");
+define("_TZ_GMTM1", "(UTC-1:00) AT - Azores Time");
+define("_TZ_GMT0", "(UTC)      WGMT/UTC/WET - Greenwich Mean Time/Universal Coordinated Time/Western European Time");
+define("_TZ_GMTP1", "(UTC+1:00) CET/MEZ - Central European Time/Mitteleuropäische Zeit");
+define("_TZ_GMTP2", "(UTC+2:00) EET/CAT/SAST  - Eastern European Time/Central Africa Time/South Africa Standard Time");
+define("_TZ_GMTP3", "(UTC+3:00) BT/EAT/MSK - Baghdad Time/East African Time/Moscow Time");
+define("_TZ_GMTP35", "(UTC+3:30) IRT - Iran Time");
+define("_TZ_GMTP4", "(UTC+4:00) SAMT - Samara Time");
+define("_TZ_GMTP45", "(UTC+4:30) Afghanistan");
+define("_TZ_GMTP5", "(UTC+5:00) TMT/TJT Turkmanistan Time/Tadjikistan Time");
+define("_TZ_GMTP55", "(UTC+5:30) IST - Indian Standard Time");
+define("_TZ_GMTP6", "(UTC+6:00) NOVT/LKT - Novosibirsk Time/Lankan Time");
+define("_TZ_GMTP7", "(UTC+7:00) WAST - West Australien Time");
+define("_TZ_GMTP8", "(UTC+8:00) CCT/CIT/AWST - China Standard Time/Central Indonesia Time/Australian Western Standard Time");
+define("_TZ_GMTP9", "(GMT+9:00) JST/KST/EIT - Japan Standard Time/Korea Standard Time/East Indonesia Time");
+define("_TZ_GMTP95", "(GMT+9:30) ACST - Australian Central Standard Time");
+define("_TZ_GMTP10", "(GMT+10:00) EAST/GST - East Australian Standard Time/Guam Standard Time");
+define("_TZ_GMTP11", "(GMT+11:00) MAGT - Magadan");
+define("_TZ_GMTP12", "(GMT+12:00) NZST/IDLE - New Zealand Standard Time/International Date Line East");
+?>
