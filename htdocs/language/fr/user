@@ -175,7 +175,7 @@ define('_US_UNCHOOSEAVT', 'En attendant, nous vous proposons de choisir un avata
 
 define('_US_ALREADY_LOGED_IN', 'Vous &ecirc;tes d&eacute;jà connect&eacute;, nous sommes d&eacute;sol&eacute;, mais, vous ne pouvez vous inscrire pendant que vous &ecirc;tes connect&eacute; sur le site');
 define('_US_SERVER_PROBLEM_OCCURRED','Il y a eu un problème pendant le contrôle de la liste spam!');
-define('_US_INVALIDIP','ERROR: This IP address is not allowed to register');
+define('_US_INVALIDIP','ERREUR: Cette adresse IP n\'a pas l\' autorisation de s\'enregistrer');
 
 ######################## Added in 1.2 ###################################
 define('_US_LOGIN_NAME', "Nom de connection");
