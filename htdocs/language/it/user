@@ -175,7 +175,7 @@ define('_US_UNCHOOSEAVT', 'Finch&eacute; non raggiungi questo numero di posts no
 
 define('_US_ALREADY_LOGED_IN', 'Tu sei un utente registrato e, siamo spiacenti per questo, non &egrave; possibile registrarti finch&eacute; sei loggato.');
 define('_US_SERVER_PROBLEM_OCCURRED','Si è verificato un problema nel controllo della lista degli spammer!');
-define('_US_INVALIDIP','ERROR: This IP address is not allowed to register');
+define('_US_INVALIDIP','ERROR: A questo indirizzo IP non è consentito registrarsi');
 
 ######################## Added in 1.2 ###################################
 define('_US_LOGIN_NAME', "Nome login");
