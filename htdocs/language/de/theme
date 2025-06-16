@@ -1,0 +1,101 @@
+<?php
+// general
+define("THEME_UPTOP","Zurück nach Oben");
+define("THEME_VALIDCSS","Dieses Theme ist nach W3C für CSS 1 und 2 geprüft");
+define("THEME_VALIDXHTML","Dieses Theme ist nach W3C für XHTML 1.01 geprüft");
+define("THEME_LICENSE","Siehe Creative Commons Lizenz");
+define("THEME_W3C","Geprüft nach W3C - XHTML 1.01 und CSS 1/2/3");
+
+// userbar.html
+define("THEME_REGISTER","Registrieren");
+define("THEME_REGISTERATION",'Benutzer Registrierung');
+define("THEME_REMEMBER","Anmeldung merken?");
+define("THEME_PSEUDO"," Anmelden");
+define("THEME_DESC_PSEUDO"," Benutzernamen angeben");
+define("THEME_PASSWORD","Passwort");
+define("THEME_DESC_PASSWORD","Passwort angeben");
+
+define("THEME_WELLCOME","Willkommen");
+define("THEME_PROFILE","Profil");
+define("THEME_NOTIFICATION","Lesezeichen");
+define("THEME_MESSAGE","Posteingang anzeigen");
+define("THEME_INBOX","Posteingang");
+define("THEME_YOUHAVE","Es liegen ");
+define("THEME_NOTREAD"," ungelesene Nachricht(en) vor");
+define("THEME_MYACCOUNT","Eigenes Profil");
+define("THEME_LOGOUT","Abmelden");
+define("THEME_ADMIN","Adminstration");
+define("THEME_OR","oder");
+
+// searchbar.html
+define("THEME_SEARCH","Suchen");
+define("THEME_DESC_SEARCH","Diese Webseite durchsuchen");
+define("THEME_KEYWORDS","Suchwörter angeben");
+
+// globalnav.html
+define("THEME_CONTACT","Kontakt");
+define("THEME_CONTACT_DESC","Kontaktieren?");
+define("THEME_SITEMAP","Sitemap");
+define("THEME_RSS","RSS");
+
+define("THEME_NAVTITLE","Navigation");
+define("THEME_HOME","Startseite");
+define("THEME_HOME_DESC","Zurück zur Startseite");
+
+define("THEME_MODULE1","Neuigkeiten");
+define("THEME_MODULE1_DESC","Neuigkeiten lesen");
+
+define("THEME_MODULE1_SUB1","Kategorie 1"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE1_SUB2","Kategorie 2"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE1_SUB3","Kategorie 3"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE1_SUB4","Kategorie 4"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE1_SUB5","Kategorie 5"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+
+define("THEME_MODULE2","Forum");
+define("THEME_MODULE2_DESC","Foren besuchen");
+
+define("THEME_MODULE3","Galerie");
+define("THEME_MODULE3_DESC","Die Galerie besuchen");
+
+define("THEME_MODULE3_SUB1","Galerie 1"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE3_SUB2","Galerie 2"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE3_SUB3","Galerie 3"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE3_SUB4","Galerie 4"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE3_SUB5","Galerie 5"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+
+define("THEME_MODULE4","Videos");
+define("THEME_MODULE4_DESC","Videos ansehen");
+
+define("THEME_MODULE4_SUB1","Video 1");
+define("THEME_MODULE4_SUB2","Video 2"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE4_SUB3","Video 3"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE4_SUB4","Video 4"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE4_SUB5","Video 5"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+
+define("THEME_MODULE5","Web-Links");
+define("THEME_MODULE5_DESC","Web Links besuchen");
+
+define("THEME_MODULE6","Downloads");
+define("THEME_MODULE6_DESC","Dateien herunterladen");
+
+define("THEME_MODULE7","XoopsInfo");
+define("THEME_MODULE7_DESC","XoopsInfo Modul benutzen");
+
+define("THEME_MODULE8","Protector");
+define("THEME_MODULE8_DESC","Protector Modul benutzen");
+
+// Theme accessibility
+define("THEME_Aa","Aa");
+define("THEME_Amin","-");
+define("THEME_Aplus","+");
+
+// ImpressCMS Description Links
+define("THEME_Support_DESC","Unterstütze das Projekt!");
+define("THEME_Blogs_DESC","In den Blogs der Entwickler lesen (engl. + deutsch)");
+define("THEME_Wiki_DESC","Das ImpressCMS Wiki (engl.) besuchen");
+define("THEME_Addons_DESC","Module, Designs und Dokumentation herunterladen (engl.)");
+define("THEME_Community_DESC","Der ImpressCMS Community beitreten (engl.)");
+define("THEME_ImpressCMS_DESC","Die ImpressCMS Hauptseite (engl.) besuchen");
+define("THEME_FEEDS","Feeds");
+define("THEME_PARTNERS","Partner");
+?>
