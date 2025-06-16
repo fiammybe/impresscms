@@ -9,17 +9,17 @@ define("_MA_USER_ADD_SELECTED", "Add selected users");
 
 define("_MA_USER_GROUP", "Group");
 define("_MA_USER_LEVEL", "Level");
-define("_MA_USER_LEVEL_ACTIVE", "Active");
+define("_MA_USER_LEVEL_ACTIVE", "激活");
 define("_MA_USER_LEVEL_INACTIVE", "Inactive");
 define("_MA_USER_LEVEL_DISABLED", "Disabled");
-define("_MA_USER_RANK", "Rank");
+define("_MA_USER_RANK", "等级");
 
 define("_MA_USER_FINDUS","Find Users");
-define("_MA_USER_REALNAME","Real Name");
+define("_MA_USER_REALNAME","真实姓名");
 define("_MA_USER_REGDATE","Joined Date");
-define("_MA_USER_EMAIL","Email");
-define("_MA_USER_PREVIOUS","Previous");
-define("_MA_USER_NEXT","Next");
+define("_MA_USER_EMAIL","电子邮箱");
+define("_MA_USER_PREVIOUS","上一页");
+define("_MA_USER_NEXT","下一页");
 define("_MA_USER_USERSFOUND","%s user(s) found");
 
 define("_MA_USER_ACTUS", "Active Users: %s");
@@ -38,18 +38,18 @@ define("_MA_USER_SORT","Sort by");
 define("_MA_USER_ORDER","Order");
 define("_MA_USER_LASTLOGIN","Last login");
 define("_MA_USER_POSTS","Number of posts");
-define("_MA_USER_ASC","Ascending order");
-define("_MA_USER_DESC","Descending order");
+define("_MA_USER_ASC","按字母排序");
+define("_MA_USER_DESC","按字母降序");
 define("_MA_USER_LIMIT","Number of users per page");
 define("_MA_USER_RESULTS", "Search results");
 define("_MA_USER_SHOWMAILOK", "Type of users to show");
 define("_MA_USER_MAILOK","Only users that accept mail");
 define("_MA_USER_MAILNG","Only users that don't accept mail");
-define("_MA_USER_BOTH", "All");
+define("_MA_USER_BOTH", "全部");
 
 define("_MA_USER_RANGE_LAST_LOGIN","Logged in past <span style='color:#ff0000;'>X</span>days");
 define("_MA_USER_RANGE_USER_REGDATE","Registered in past <span style='color:#ff0000;'>X</span>days");
-define("_MA_USER_RANGE_POSTS","Posts");
+define("_MA_USER_RANGE_POSTS","留言");
 
 define("_MA_USER_HASAVATAR", "Has avatar");
 define("_MA_USER_MODE_SIMPLE", "Simple mode");
