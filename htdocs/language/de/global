@@ -325,8 +325,8 @@ define("_FILTERS_MSG4","Ausgabefilter (HTMLPurifier): ");
 define("_OUTDATED_PHP", "Ihre aktuelle PHP-Version (%s) wird nicht mehr gewartet. Bitte aktualisieren Sie aus Sicherheitsgründen!");
 
 // added in 1.5.0
-define('_FCK_DEFAULT_WARNING', 'FCKeditor is selected as the default editor for at least 1 module - change it and then remove it from your server');
-define('_FCK_PRESENT_WARNING', 'FCKeditor is present - remove it from your server');
+define('_FCK_DEFAULT_WARNING', 'FCKeditor ist als Standard-Editor für mindestens 1 Modul ausgewählt - Ändern Sie ihn und entfernen Sie ihn dann von Ihrem Server');
+define('_FCK_PRESENT_WARNING', 'FCKeditor ist vorhanden - entfernen Sie ihn von Ihrem Server');
 
-define('_TinyMCE_DEFAULT_WARNING', 'TinyMCE is selected as the default editor for at least 1 module - change it and then remove it from your server');
-define('_TinyMCE_PRESENT_WARNING', 'TinyMCE is present - remove it from your server');
+define('_TinyMCE_DEFAULT_WARNING', 'TinyMCE ist als Standard-Editor für mindestens 1 Modul ausgewählt - Ändern Sie es und entfernen Sie es dann von Ihrem Server');
+define('_TinyMCE_PRESENT_WARNING', 'TinyMCE ist vorhanden - Entfernen Sie es von Ihrem Server');
