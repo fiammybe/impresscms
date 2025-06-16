@@ -84,17 +84,17 @@ define('_US_INVITEDBERR','Door een interne fout was het niet mogelijk om u wregi
 define('_US_INVITESENT','Een e-mail, die de registratie link bevat, is verzonden naar het e-mailadres dat u heeft opgegeven. Volg alstublieft de instructie op die in de e-mail staan om u als lid te registreren. Dit kan een paar minuten duren, een ogenblik geduld alstublieft.');
 
 // %s (%s) is your site name (site URL)
-define('_US_INVITEREGLINK','Registration invitation from %s (%s)');
+define('_US_INVITEREGLINK','Uitnodiging om u te registreren van %s (%s)');
 
 // %s (%s) is your site name (site URL)
-define('_US_NEWPWDREQ','New Password Request at %s (%s)');
-define('_US_YOURACCOUNT', 'Your account at %s (%s)');
+define('_US_NEWPWDREQ','Verzoek tot een nieuw wachtwoord voor %s (%s)');
+define('_US_YOURACCOUNT', 'Uw account bij %s (%s)');
 
 define('_US_MAILPWDNG','mail_wachtwoord: Kan gebruiker niet bijwerken. Neem contact op met de webmaster.');
 define('_US_RESETPWDNG','reset_wachtwoord: Kan gebruiker invoer niet bijwerken. Neem contact op met de webmaster');
 
 // %s (%s) is your site name (site URL)
-define('_US_RESETPWDREQ','Reset Password Request at %s (%s)');
+define('_US_RESETPWDREQ','Verzoek tot een wachtwoord reset voor %s (%s)');
 define('_US_MAILRESETPWDNG','reset_wachtwoord: Kan gebruiker invoer niet bijwerken. Neem contact op met de webmaster');
 define('_US_NEWPASSWORD','Nieuw wachtwoord');
 define('_US_YOURUSERNAME','Uw gebruikersnaam');
@@ -175,7 +175,7 @@ define('_US_UNCHOOSEAVT', 'Totdat u dit aantal bereikt kunt u een avatar/pasfoto
 
 define('_US_ALREADY_LOGED_IN', 'U bent reeds ingelogd. U kunt zich niet registreren zolang u bent ingelogd op deze website');
 define('_US_SERVER_PROBLEM_OCCURRED','Er was een probleem tijdens de controle tav spammers lijsten!');
-define('_US_INVALIDIP','ERROR: This IP address is not allowed to register');
+define('_US_INVALIDIP','FOUT: Het is met dit IP adres niet toegestaan te registreren');
 
 ######################## Added in 1.2 ###################################
 define('_US_LOGIN_NAME', "Loginnaam");
