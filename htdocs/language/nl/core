@@ -1,0 +1,63 @@
+<?php
+/**
+ * Core constants
+ *
+ * This file has all core errors and warning constants.
+ *
+ * @copyright	The ImpressCMS Project http://www.impresscms.org/
+ * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
+ * @package		languages
+ * @since		1.2
+ * @author	    Sina Asghari (aka stranger) <pesian_stranger@users.sourceforge.net>
+ * @version		$Id
+ */
+
+define('_CORE_MEMORYUSAGE', 'Geheugen gebruik');
+define('_CORE_BYTES', 'bytes');
+define('_CORE_KILOBYTES', 'Kilobytes');
+define('_CORE_MEGABYTES', 'Megabytes');
+define('_CORE_GIGABYTES', 'Gigabytes');
+define('_CORE_KILOBYTES_SHORTEN', 'kB');
+define('_CORE_MEGABYTES_SHORTEN', 'MB');
+define('_CORE_GIGABYTES_SHORTEN', 'GB');
+define('_CORE_MODULEHANDLER_NOTAVAILABLE', 'Handler bestaat niet<br />Module: %s<br />Naam: %s');
+define('_CORE_COREHANDLER_NOTAVAILABLE', 'Klasse <b>%s</b> bestaat niet<br />Handler Naam: %s');
+define('_CORE_NOMODULE', 'Er is geen module geladen');
+define('_CORE_PAGENOTDISPLAYED', 'Deze pagina kan niet worden weergegeven door een interne fout.<br/><br/>U kunt de volgende informatie verstrekken aan de beheerder van deze website om het probleem te helpen oplossen:<br /><br />Fout: %s<br />');
+define('_CORE_TOKEN', 'ICMS_TOKEN');
+define('_CORE_TOKENVALID', 'Teken beoordelen');
+define('_CORE_TOKENNOVALID', 'Geen geldig teken in het verzoek/sessie gevonden');
+define('_CORE_TOKENINVALID', 'Geen geldig teken in het verzoek/sessie gevonden');
+define('_CORE_TOKENISVALID', 'Geldig teken gevonden');
+define('_CORE_TOKENEXPIRED', 'Geldig teken is verlopen');
+define('_CORE_CLASSNOTINSTANIATED', 'Deze class kan niet worden verzocht!');
+define('_CORE_DB_NOTRACE', 'notrace:mysql extensie niet geladen');
+define('_CORE_DB_NOTALLOWEDINGET', 'Database updates are not allowed during processing of a GET request');
+define('_CORE_DB_NOTRACEDB', 'notrace:Unable to connect to database');
+define('_CORE_DB_INVALIDEMAIL', 'Invalid Email');
+define('_CORE_PASSLEVEL1','Too short');
+define('_CORE_PASSLEVEL2','Weak');
+define('_CORE_PASSLEVEL3','Good');
+define('_CORE_PASSLEVEL4','Strong');
+define('_CORE_UNAMEPASS_IDENTIC','Username and Password identical.');
+
+/* Added in 1.3 */
+
+define('_CORE_CHECKSUM_FILES_ADDED',' files have been added');
+define('_CORE_CHECKSUM_FILES_REMOVED',' files have been removed');
+define('_CORE_CHECKSUM_ALTERED_REMOVED',' files have been altered or removed');
+define('_CORE_CHECKSUM_CHECKFILE','Checking against the file ');
+define('_CORE_CHECKSUM_PERMISSIONS_ALTERED',' files have had their permissions altered');
+define('_CORE_CHECKSUM_CHECKFILE_UNREADABLE', 'The file containing the checksums is unavailable or unreadable. Validation cannot be completed');
+define('_CORE_CHECKSUM_ADDING',' Adding');
+define('_CORE_CHECKSUM_CHECKSUM',' Checksum');
+define('_CORE_CHECKSUM_PERMISSIONS',' Permissions');
+
+define('_CORE_DEPRECATED', 'Deprecated');
+define('_CORE_DEPRECATED_REPLACEMENT', 'use %s instead');
+define('_CORE_DEPRECATED_CALLSTACK', '<br />Call Stack: <br />');
+define('_CORE_DEPRECATED_MSG', '%s in %s, line %u <br />');
+define('_CORE_DEPRECATED_CALLEDBY', 'Called by: ');
+define('_CORE_REMOVE_IN_VERSION', 'This will be removed in version %s');
+define('_CORE_DEBUG', 'Debug');
+define('_CORE_DEVELOPER_DASHBOARD', 'Developer Dashboard');
