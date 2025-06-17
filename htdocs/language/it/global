@@ -222,9 +222,9 @@ define('_CT_NAV','Homepage');
 define('_CT_RELATEDS','Pagine correlate');
 //Security image (captcha)
 define("_SECURITYIMAGE_GETCODE","Inserisci il codice di sicurezza");
-define("_QUERIES", "Queries");
+define("_QUERIES", "Domande");
 define("_BLOCKS", "Blocchi");
-define("_EXTRA", "Extra");
+define("_EXTRA", "Supplementare");
 define("_TIMERS", "Timers");
 define("_CACHED", "Cached");
 define("_REGENERATES", "Rigenera ogni %s secondi");
@@ -325,8 +325,8 @@ define("_FILTERS_MSG4","Filtro output (HTMLPurifier): ");
 define("_OUTDATED_PHP", "La vostra versione di PHP (%s) non è piu mantenuto. Si prega di fare l'update per ragioni di securità!");
 
 // added in 1.5.0
-define('_FCK_DEFAULT_WARNING', 'FCKeditor is selected as the default editor for at least 1 module - change it and then remove it from your server');
-define('_FCK_PRESENT_WARNING', 'FCKeditor is present - remove it from your server');
+define('_FCK_DEFAULT_WARNING', 'FCKeditor è selezionato come editor predefinito per almeno 1 modulo - cambialo e poi rimuovilo dal tuo server');
+define('_FCK_PRESENT_WARNING', 'FCKeditor è presente: rimuoverlo dal server');
 
-define('_TinyMCE_DEFAULT_WARNING', 'TinyMCE is selected as the default editor for at least 1 module - change it and then remove it from your server');
-define('_TinyMCE_PRESENT_WARNING', 'TinyMCE is present - remove it from your server');
+define('_TinyMCE_DEFAULT_WARNING', 'TinyMCE è selezionato come editor predefinito per almeno 1 modulo - cambiarlo e poi rimuoverlo dal server');
+define('_TinyMCE_PRESENT_WARNING', 'TinyMCE è presente - rimuoverlo dal server');
