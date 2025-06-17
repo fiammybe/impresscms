@@ -416,7 +416,7 @@ define("_MD_AM_CAPTCHA_SKIPMEMBER", "Captcha Free Groups");
 define("_MD_AM_CAPTCHA_SKIPMEMBERDSC", "Select groups which are not requiring a captcha. These groups will never see the captcha field.");
 define("_MD_AM_CAPTCHA_CASESENS", "Case sensitive");
 define("_MD_AM_CAPTCHA_CASESENSDSC", "Characters in image mode are case-sensitive");
-define("_MD_AM_CAPTCHA_MAXATTEMP", "Maximum attempts");
+define("_MD_AM_CAPTCHA_MAXATTEMP", "Massimo n. tentativi");
 define("_MD_AM_CAPTCHA_MAXATTEMPDSC", "Maximum attempts for each session");
 define("_MD_AM_CAPTCHA_NUMCHARS", "Maximum characters?");
 define("_MD_AM_CAPTCHA_NUMCHARSDSC", "Maximum number of characters to be generated");
