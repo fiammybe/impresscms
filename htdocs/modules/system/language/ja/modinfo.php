@@ -36,7 +36,7 @@ define('_MI_SYSTEM_BNAME18', "Share this page!");
 
 // Names of admin menu items
 define("_MI_SYSTEM_ADMENU2","Blocks");
-define("_MI_SYSTEM_ADMENU3","Groups");
+define("_MI_SYSTEM_ADMENU3","グループ");
 define("_MI_SYSTEM_ADMENU5","モジュール");
 define("_MI_SYSTEM_ADMENU6","基本設定");
 define("_MI_SYSTEM_ADMENU7","スマイリー");
