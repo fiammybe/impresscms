@@ -1,20 +1,20 @@
-Hello {X_USERLOGINNAME},
+Ciao {X_USERLOGINNAME},
 
-Thanks for subscribing to {X_SITENAME}. As a registered member your can:
-- Send private messages among members
-- Participate in discussion boards
-- Get the latest news
-- Submit content
-- Much, much more....
+Grazie per essersi iscritto a {X_SITENAME}. Come membro registrato puoi:
+- Invia messaggi privati tra i membri
+- Partecipa a tavole di discussione
+- Ricevi le ultime notizie
+- Invia contenuto
+- Molto altro ancora....
 
-The email address ({X_UEMAIL}) has been used to register an account.
+L'indirizzo email ({X_UEMAIL}) è stato utilizzato per registrare un account.
 
-To become a member of {X_SITENAME}, please confirm your
-request by clicking on the link below:
+Per diventare membro di {X_SITENAME}, conferma il tuo
+richiedere cliccando sul link qui sotto:
 
 {X_UACTLINK}
 
 -----------
-Best Regards
+Cordiali Saluti
 {X_SITENAME}
 {X_ADMINMAIL}
