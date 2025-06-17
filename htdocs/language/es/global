@@ -7,14 +7,14 @@ define('_FETCHING','Loading...');
 define('_TAKINGBACK','Taking you back to where you were....');
 define('_LOGOUT','Salir');
 define('_SUBJECT','Asunto');
-define('_MESSAGEICON','Message Icon');
+define('_MESSAGEICON','Icono del mensaje');
 define('_COMMENTS','Comments');
 define('_POSTANON','Envío anónimo');
 define('_DISABLESMILEY','Disable smiley');
 define('_DISABLEHTML','Disable html');
 define('_PREVIEW','Preview');
 
-define('_GO','Go!');
+define('_GO','Ir!');
 define('_NESTED','Nested');
 define('_NOCOMMENTS','No Comments');
 define('_FLAT','Plana');
@@ -57,7 +57,7 @@ define('_ONLINEPHRASEX','<b>%s</b> user(s) are browsing <b>%s</b>');
 define('_CLOSE','Close');  // Close window
 
 //%%%%%%	File Name module.textsanitizer.php 	%%%%%
-define('_QUOTEC','Quote:');
+define('_QUOTEC','Citar:');
 
 //%%%%%%	File Name admin.php 	%%%%%
 define("_NOPERM","Sorry, you don't have permission to access this area.");
@@ -93,8 +93,8 @@ define('_HIDDENC', 'Hidden Content:');
 define('_HIDDENTEXT', 'This content is hidden for anonymous users, please <a href="'.ICMS_URL.'/register.php" title="Registeration at ' . htmlspecialchars ( $icmsConfig ['sitename'], ENT_QUOTES ) . '">register</a> to be able to see it.');
 define('_LIST', 'List');
 define('_LOGIN','User Login');
-define('_USERNAME','Username: ');
-define('_PASSWORD','Password: ');
+define('_USERNAME','Usuario: ');
+define('_PASSWORD','Contraseña: ');
 define("_SELECT","Select");
 define("_IMAGE","Image");
 define("_SEND","Send");
@@ -108,13 +108,13 @@ define('_NOTITLE', 'No title');
 define('_IMGMANAGER','Image Manager');
 define('_NUMIMAGES', '%s images');
 define('_ADDIMAGE','Add Image File');
-define('_IMAGENAME','Name:');
+define('_IMAGENAME','Nombre:');
 define('_IMGMAXSIZE','Max size allowed (bytes):');
 define('_IMGMAXWIDTH','Max width allowed (pixels):');
 define('_IMGMAXHEIGHT','Max height allowed (pixels):');
 define('_IMAGECAT','Category:');
 define('_IMAGEFILE','Image file:');
-define('_IMGWEIGHT','Order:');
+define('_IMGWEIGHT','Reordenar:');
 define('_IMGDISPLAY','Display this image?');
 define('_IMAGEMIME','MIME type:');
 define('_FAILFETCHIMG', 'Could not get uploaded file %s');
