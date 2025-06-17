@@ -134,7 +134,7 @@ define('_CO_ICMS_SEND_SUCCESS', "The message has been sent successfully.");
 define('_CO_ICMS_SEND_SUCCESS_INFO', "Thank you for sharing your interest for our site with your contacts.");
 define('_CO_ICMS_SHORT_URL', 'Short URL');
 define('_CO_ICMS_SHORT_URL_DSC', 'When using the SEO features of this module, you can specify a Short URL for this category. This field is optional.');
-define('_CO_ICMS_SORT', "Sort by :");
+define('_CO_ICMS_SORT', "Ordenar por :");
 define('_CO_ICMS_SORT_ASC', 'Ascending ');
 define('_CO_ICMS_SORT_DESC', 'Descending ');
 define('_CO_ICMS_SUBJECT_DEFAULT', "A link from %s");
