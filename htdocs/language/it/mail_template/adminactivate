@@ -1,7 +1,7 @@
-Hello {X_UNAME},
+Ciao {X_UNAME},
 
-A new user {USERNAME} (login name: {USERLOGINNAME}) (E-mail address: {USEREMAIL}) has just registered an account at {X_SITENAME}.
-Clicking on the link below will activate the account of this user:
+Un nuovo utente {USERNAME} (nome di login: {USERLOGINNAME}) (indirizzo e-mail: {USEREMAIL}) ha appena registrato un account su {X_SITENAME}.
+Cliccando sul link qui sotto si attiverà l'account di questo utente:
 
 {USERACTLINK}
 
