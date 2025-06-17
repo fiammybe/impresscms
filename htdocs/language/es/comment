@@ -2,7 +2,7 @@
 // $Id: comment.php 12229 2013-07-19 08:08:05Z fiammy $
 // $Id: comment.php 12229 2013-07-19 08:08:05Z fiammy $
 define('_CM_TITLE','Título');
-define('_CM_MESSAGE','Message');
+define('_CM_MESSAGE','Mensaje');
 define('_CM_DOSMILEY','Enable Smiley Icons');
 define('_CM_DOHTML','Enable HTML Tags');
 define('_CM_DOAUTOWRAP','Enable Linebreaks');
@@ -16,7 +16,7 @@ define('_CM_POSTCOMMENT','Post Comment');
 define('_CM_REPLIES','Respuestas');
 define('_CM_PARENT','Parent');
 define('_CM_TOP','Arriba');
-define('_CM_ONLINE','Online!');
+define('_CM_ONLINE','En línea!');
 define('_CM_POSTED','Posted'); // Posted date
 define('_CM_UPDATED', 'Updated');
 define('_CM_THREAD','Tema');
