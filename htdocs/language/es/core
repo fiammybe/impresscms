@@ -51,7 +51,7 @@ define('_CORE_CHECKSUM_PERMISSIONS_ALTERED',' files have had their permissions a
 define('_CORE_CHECKSUM_CHECKFILE_UNREADABLE', 'The file containing the checksums is unavailable or unreadable. Validation cannot be completed');
 define('_CORE_CHECKSUM_ADDING',' Adding');
 define('_CORE_CHECKSUM_CHECKSUM',' Checksum');
-define('_CORE_CHECKSUM_PERMISSIONS',' Permissions');
+define('_CORE_CHECKSUM_PERMISSIONS',' Permisos');
 
 define('_CORE_DEPRECATED', 'Deprecated');
 define('_CORE_DEPRECATED_REPLACEMENT', 'use %s instead');
