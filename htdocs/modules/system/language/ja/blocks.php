@@ -37,9 +37,9 @@ define("_MB_SYSTEM_PRIVPOLICY", "プライバシーポリシー");
  * Added in 1.2
  */
 
-define("_MB_SYSTEM_TOTAL_USERS", "Total Users");
+define("_MB_SYSTEM_TOTAL_USERS", "合計ユーザー");
 define("_MB_SYSTEM_ACT_USERS", "Active Users");
-define("_MB_SYSTEM_INACT_USERS", "Inactive Users");
+define("_MB_SYSTEM_INACT_USERS", "アクティブじゃないユーザ数");
 define("_MB_SYSTEM_DISPLAYTOT","Display total members information?");
 // waiting content
 define("_MB_SYSTEM_NOWAITING_DISPLAY","Always displayed");
