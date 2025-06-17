@@ -10,9 +10,9 @@ define("THEME_W3C","Valid W3C - XHTML 1.01 and CSS 1/2/3");
 define("THEME_REGISTER","Registrarse");
 define("THEME_REGISTERATION",'User Registration');
 define("THEME_REMEMBER"," Remember me ?");
-define("THEME_PSEUDO"," Login");
+define("THEME_PSEUDO"," Ingreso");
 define("THEME_DESC_PSEUDO"," Write your login");
-define("THEME_PASSWORD"," Password");
+define("THEME_PASSWORD"," Contraseña");
 define("THEME_DESC_PASSWORD"," Write your password");
 
 define("THEME_WELLCOME","Welcome");
