@@ -1,13 +1,13 @@
-Hello {X_UNAME},
+Ciao {X_UNAME},
 
-A web user from {IP} has just requested that password be sent.
-Here are your login details at {SITENAME}.
+Un utente web di {IP} ha appena richiesto che la password venga inviata.
+Ecco i tuoi dati di accesso su {SITENAME}.
 
 Username: {X_USERLOGINNAME}
-New Password: {NEWPWD}
+Nuova Password: {NEWPWD}
 
-You can change it after you login at {SITEURL}/user.php.
-If you didn't ask for this, don't worry. You are seeing this message, not 'them'. If this was an error, we are really sorry but please login with your new password.
+Puoi cambiarlo dopo aver effettuato il login su {SITEURL}/user.php.
+Se non avete chiesto questo, non preoccupatevi. Stai vedendo questo messaggio, non 'loro'. Se questo è stato un errore, siamo davvero spiacenti, ma per favore accedi con la tua nuova password.
 
 -----------
 {SITENAME} ({SITEURL}) 
