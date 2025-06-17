@@ -80,7 +80,7 @@ define('_MD_AM_INSTALLING','Installing ');
 define('_MD_AM_SQL_NOT_FOUND', 'SQL file not found at %s');
 define('_MD_AM_SQL_FOUND', "SQL file found at %s . <br  /> Creating tables...");
 define('_MD_SQL_NOT_VALID', ' is not valid SQL!');
-define('_MD_AM_TABLE_CREATED', 	'Table %s created.');
+define('_MD_AM_TABLE_CREATED', 	'Tabella %s creata.');
 define('_MD_AM_DATA_INSERT_SUCCESS', 'Data inserted to table %s.');
 define('_MD_AM_RESERVED_TABLE', '%s is a reserved table!');
 define('_MD_AM_DATA_INSERT_FAIL', 'Could not insert %s to database.');
