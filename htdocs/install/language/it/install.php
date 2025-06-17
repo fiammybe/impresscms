@@ -10,226 +10,226 @@
  * @package 		installer
  */
 
-define("SHOW_HIDE_HELP", "Show/hide help text");
+define("SHOW_HIDE_HELP", "Mostra/Nascondi testo di aiuto");
 
-define("ALTERNATE_LANGUAGE_MSG", "Download an alternate language pack from the ImpressCMS website");
-define("ALTERNATE_LANGUAGE_LNK_MSG", "Select another language not listed here.");
+define("ALTERNATE_LANGUAGE_MSG", "Scarica un pacchetto linguistico alternativo dal sito ImpressCMS");
+define("ALTERNATE_LANGUAGE_LNK_MSG", "Seleziona un'altra lingua non elencata qui.");
 define("ALTERNATE_LANGUAGE_LNK_URL", "https://sourceforge.net/projects/impresscms/files/ImpressCMS%20Languages/");
 // Configuration check page
-define("SERVER_API", "Server API");
-define("PHP_EXTENSION", "%s extension");
-define("CHAR_ENCODING", "Character encoding");
+define("SERVER_API", "API Server");
+define("PHP_EXTENSION", "Estensione %s");
+define("CHAR_ENCODING", "Codifica dei caratteri");
 define("XML_PARSING", "XML parsing");
-define("REQUIREMENTS", "Requirements");
-define("_PHP_VERSION", "PHP version");
-define("RECOMMENDED_SETTINGS", "Recommended settings");
-define("RECOMMENDED_EXTENSIONS", "Recommended extensions");
-define("SETTING_NAME", "Setting name");
-define("RECOMMENDED", "Recommended");
-define("CURRENT", "Current");
-define("RECOMMENDED_EXTENSIONS_MSG", "These extensions are not required for normal use, but may be necessary to exploit
-	some specific features (like the multi-language or RSS support). Thus, it is recommended to have them installed.");
+define("REQUIREMENTS", "Requisiti");
+define("_PHP_VERSION", "Versione PHP");
+define("RECOMMENDED_SETTINGS", "Impostazioni consigliate");
+define("RECOMMENDED_EXTENSIONS", "Estensioni consigliate");
+define("SETTING_NAME", "Impostazione nome");
+define("RECOMMENDED", "Consigliato");
+define("CURRENT", "Corrente");
+define("RECOMMENDED_EXTENSIONS_MSG", "Queste estensioni non sono richieste per l'uso normale, ma possono essere necessarie per sfruttare
+	<unk> alcune caratteristiche specifiche (come il supporto multi-lingua o RSS). Così, si consiglia di farli installare.");
 define("NONE", "Nessuno");
-define("SUCCESS", "Success");
+define("SUCCESS", "Successo");
 define("WARNING", "Attenzione");
-define("FAILED", "Failed");
+define("FAILED", "Fallito");
 
 // Titles (main and pages)
-define("XOOPS_INSTALL_WIZARD", " %s - Installation Wizard");
-define("INSTALL_STEP", "Step");
-define("INSTALL_H3_STEPS", "Steps");
-define("INSTALL_OUTOF", " out of ");
+define("XOOPS_INSTALL_WIZARD", " %s - Installazione Guidata");
+define("INSTALL_STEP", "Passo");
+define("INSTALL_H3_STEPS", "Passi");
+define("INSTALL_OUTOF", " fuori da ");
 define("INSTALL_COPYRIGHT", "Copyright &copy; 2007-" . date('Y', time()) . " <a href=\"https://www.impresscms.org\" target=\"_blank\">The ImpressCMS Project</a>");
 
-define("LANGUAGE_SELECTION", "Language selection");
-define("LANGUAGE_SELECTION_TITLE", "Choose your language");		// L128
-define("INTRODUCTION", "Introduction");
-define("INTRODUCTION_TITLE", "Welcome to the ImpressCMS installation assistant");		// L0
-define("CONFIGURATION_CHECK", "Configuration check");
-define("CONFIGURATION_CHECK_TITLE", "Checking your server configuration");
-define("PATHS_SETTINGS", "Paths settings");
-define("PATHS_SETTINGS_TITLE", "Paths settings");
-define("DATABASE_CONNECTION", "Database connection");
-define("DATABASE_CONNECTION_TITLE", "Database connection");
-define("DATABASE_CONFIG", "Database configuration");
-define("DATABASE_CONFIG_TITLE", "Database configuration");
-define("CONFIG_SAVE", "Configuration save");
-define("CONFIG_SAVE_TITLE", "Saving your system configuration");
-define("TABLES_CREATION", "Tables creation");
-define("TABLES_CREATION_TITLE", "Database tables creation");
-define("INITIAL_SETTINGS", "Initial settings");
-define("INITIAL_SETTINGS_TITLE", "Please enter your initial settings");
-define("DATA_INSERTION", "Data insertion");
-define("DATA_INSERTION_TITLE", "Saving your settings to the database");
+define("LANGUAGE_SELECTION", "Selezione lingua");
+define("LANGUAGE_SELECTION_TITLE", "Scegli la tua lingua");		// L128
+define("INTRODUCTION", "Introduzione");
+define("INTRODUCTION_TITLE", "Benvenuto nell'assistente di installazione ImpressCMS");		// L0
+define("CONFIGURATION_CHECK", "Controllo configurazione");
+define("CONFIGURATION_CHECK_TITLE", "Controllo della configurazione del server");
+define("PATHS_SETTINGS", "Impostazioni tracciati");
+define("PATHS_SETTINGS_TITLE", "Impostazioni tracciati");
+define("DATABASE_CONNECTION", "Connessione al database");
+define("DATABASE_CONNECTION_TITLE", "Connessione al database");
+define("DATABASE_CONFIG", "Configurazione database");
+define("DATABASE_CONFIG_TITLE", "Configurazione database");
+define("CONFIG_SAVE", "Salvataggio configurazione");
+define("CONFIG_SAVE_TITLE", "Salvataggio della configurazione di sistema");
+define("TABLES_CREATION", "Creazione tabelle");
+define("TABLES_CREATION_TITLE", "Creazione tabelle database");
+define("INITIAL_SETTINGS", "Impostazioni iniziali");
+define("INITIAL_SETTINGS_TITLE", "Inserisci le impostazioni iniziali");
+define("DATA_INSERTION", "Inserimento dati");
+define("DATA_INSERTION_TITLE", "Salvataggio delle impostazioni nel database");
 define("WELCOME", "Benvenuto");
-define("NO_PHP5", "No PHP 7");
-define("WELCOME_TITLE", "Installation of ImpressCMS completed");		// L0
-define("MODULES_INSTALL", "Install modules");
-define("MODULES_INSTALL_TITLE", "Installation of modules ");
-define("NO_PHP5_TITLE", "No PHP 7");
-define("NO_PHP5_CONTENT", "PHP 7.4.0 minimum is required (PHP 8.3 is recommended) for ImpressCMS to function properly - your installation cannot continue. Please work with your hosting provider to upgrade your environment to a version of PHP that is newer than 7.4.0 (8.3 is recommended) before attempting to install again.");
-define("SAFE_MODE", "Safe Mode On");
-define("SAFE_MODE_TITLE", "Safe Mode On");
-define("SAFE_MODE_CONTENT", "ImpressCMS has detected PHP is running in Safe Mode. Because of this, your installation cannot continue. Please work with your hosting provider to change your environment before attempting to install again.");
+define("NO_PHP5", "Nessun PHP 5");
+define("WELCOME_TITLE", "Installazione di ImpressCMS completata");		// L0
+define("MODULES_INSTALL", "Installa moduli");
+define("MODULES_INSTALL_TITLE", "Installazione di moduli ");
+define("NO_PHP5_TITLE", "Nessun PHP 5");
+define("NO_PHP5_CONTENT", "PHP 5.6.0 minimum is required (PHP 7.2 is recommended) affinchè ImpressCMS funzioni correttamente - l'installazione non può continuare. Lavora con il tuo provider di hosting per aggiornare il tuo ambiente a una versione di PHP più recente di 5. .0 (5.6.0 + è raccomandato) prima di tentare di installare di nuovo.");
+define("SAFE_MODE", "Modalità Sicura Accesa");
+define("SAFE_MODE_TITLE", "Modalità Sicura Accesa");
+define("SAFE_MODE_CONTENT", "ImpressCMS ha rilevato che PHP è in esecuzione in modalità sicura. Per questo motivo, l'installazione non può continuare. Si prega di lavorare con il provider di hosting per cambiare l'ambiente prima di tentare di installare di nuovo.");
 
 // Settings (labels and help text)
-define("XOOPS_ROOT_PATH_LABEL", "ImpressCMS documents root physical path"); // L55
-define("XOOPS_ROOT_PATH_HELP", "This is the physical path of the ImpressCMS documents folder, the very web root of your ImpressCMS application"); // L59
-define("_INSTALL_TRUST_PATH_HELP", "This is the physical location of your ImpressCMS trust path. The trust path is a folder where ImpressCMS and its modules will store some sensible code and information for more security. It is recommended that this folder be outside of the web root, making it not accessible by a browser. If the folder does not exist, ImpressCMS will try and create it. If this is not possible, you will need to create it.<br /><br /><a target='_blank' href='https://www.impresscms.org/modules/simplywiki/index.php?page=Trust_Path'>Click here</a> to learn more about the Trust path."); // L59
+define("XOOPS_ROOT_PATH_LABEL", "ImpressCMS documenti percorso fisico radice"); // L55
+define("XOOPS_ROOT_PATH_HELP", "Questo è il percorso fisico della cartella di documenti ImpressCMS, la radice web della vostra applicazione ImpressCMS"); // L59
+define("_INSTALL_TRUST_PATH_HELP", "Questa è la posizione fisica del tuo percorso di fiducia ImpressCMS. Il percorso di fiducia è una cartella in cui ImpressCMS e i suoi moduli memorizzeranno un codice e informazioni ragionevoli per una maggiore sicurezza. Si raccomanda che questa cartella sia al di fuori della radice web, rendendola non accessibile da un browser. Se la cartella non esiste, ImpressCMS proverà a crearla. Se ciò non è possibile, sarà necessario crearla.<br /><br /><a target='_blank' href='https://www.impresscms.org/modules/simplywiki/index.php?page=Trust_Path'>Clicca qui</a> per saperne di più sul percorso di Trust"); // L59
 
-define("XOOPS_URL_LABEL", "Website location (URL)"); // L56
-define("XOOPS_URL_HELP", "Main URL that will be used to access your ImpressCMS installation"); // L58
+define("XOOPS_URL_LABEL", "Posizione sito web (URL)"); // L56
+define("XOOPS_URL_HELP", "URL principale che verrà utilizzato per accedere alla tua installazione ImpressCMS"); // L58
 
-define("LEGEND_CONNECTION", "Server connection");
+define("LEGEND_CONNECTION", "Connessione al server");
 define("LEGEND_DATABASE", "Database"); // L51
 
-define("DB_HOST_LABEL", "Server hostname");	// L27
-define("DB_HOST_HELP",  "Hostname of the database server. If you are unsure, <em>localhost</em> works in most cases"); // L67
-define("DB_USER_LABEL", "User name");	// L28
-define("DB_USER_HELP",  "Name of the user account that will be used to connect to the database server"); // L65
+define("DB_HOST_LABEL", "Nome host server");	// L27
+define("DB_HOST_HELP",  "Hostname del server del database. Se non sei sicuro, <em>localhost</em> funziona nella maggior parte dei casi"); // L67
+define("DB_USER_LABEL", "Nome utente");	// L28
+define("DB_USER_HELP",  "Nome dell'account utente che verrà utilizzato per connettersi al server del database"); // L65
 define("DB_PASS_LABEL", "Password");	// L52
-define("DB_PASS_HELP",  "Password of your database user account"); // L68
-define("DB_NAME_LABEL", "Database name");	// L29
-define("DB_NAME_HELP",  "The name of database on the host. The installer will attempt to create a database if one does not exist"); // L64
-define("DB_CHARSET_LABEL", "Database character set, we STRONGLY recommend you to use UTF-8 as default.");
-define("DB_CHARSET_HELP",  "MySQL includes character set support that enables you to store data using a variety of character sets and perform comparisons according to a variety of collations.");
-define("DB_COLLATION_LABEL", "Database collation");
-define("DB_COLLATION_HELP",  "A collation is a set of rules for comparing characters in a character set.");
-define("DB_PREFIX_LABEL", "Table prefix");	// L30
-define("DB_PREFIX_HELP",  "This prefix will be added to all new tables created to avoid name conflicts in the database. If you are unsure, just keep the default"); // L63
-define("DB_PCONNECT_LABEL", "Use persistent connection");	// L54
+define("DB_PASS_HELP",  "Password del tuo account utente database"); // L68
+define("DB_NAME_LABEL", "Nome del database");	// L29
+define("DB_NAME_HELP",  "Il nome del database sull'host. L'installatore tenterà di creare un database se non esiste"); // L64
+define("DB_CHARSET_LABEL", "Set di caratteri del database, consigliamo vivamente di utilizzare UTF-8 come predefinito.");
+define("DB_CHARSET_HELP",  "MySQL include il supporto al set di caratteri che consente di memorizzare i dati utilizzando una varietà di set di caratteri ed eseguire confronti in base a una varietà di collazioni.");
+define("DB_COLLATION_LABEL", "Collazione del database");
+define("DB_COLLATION_HELP",  "Un ordinamento è un insieme di regole per confrontare i caratteri in un set di caratteri.");
+define("DB_PREFIX_LABEL", "Prefisso tabella");	// L30
+define("DB_PREFIX_HELP",  "Questo prefisso sarà aggiunto a tutte le nuove tabelle create per evitare conflitti di nomi nel database. Se non sei sicuro, tieni il prefisso predefinito"); // L63
+define("DB_PCONNECT_LABEL", "Usa connessione persistente");	// L54
 
 define("DB_SALT_LABEL", "Password Salt Key");	// L98
-define("DB_SALT_HELP",  "This salt key will be appended to passwords in function icms_encryptPass(), and is used to create a totally unique secure password. Do Not change this key once your site is live, doing so will render ALL passwords invalid. If you are unsure, just keep the default"); // L97
+define("DB_SALT_HELP",  "Questa chiave salina sarà aggiunta alle password nella funzione icms_encryptPass(), e viene utilizzata per creare una password sicura completamente unica. Non cambiare questa chiave una volta che il tuo sito è live, in questo modo renderanno TUTTE le password non valide. Se non sei sicuro, tieni solo il valore predefinito"); // L97
 
-define("LEGEND_ADMIN_ACCOUNT", "Administrator account");
-define("ADMIN_LOGIN_LABEL", "Admin login"); // L37
+define("LEGEND_ADMIN_ACCOUNT", "Account amministratore");
+define("ADMIN_LOGIN_LABEL", "Accesso amministratore"); // L37
 define("ADMIN_EMAIL_LABEL", "Admin e-mail"); // L38
-define("ADMIN_PASS_LABEL", "Admin password"); // L39
-define("ADMIN_CONFIRMPASS_LABEL", "Confirm password"); // L74
+define("ADMIN_PASS_LABEL", "Password amministratore"); // L39
+define("ADMIN_CONFIRMPASS_LABEL", "Conferma password"); // L74
 define("ADMIN_SALT_LABEL", "Password Salt Key"); // L99
 
 // Buttons
-define("BUTTON_PREVIOUS", "<< Precedente"); // L42
-define("BUTTON_NEXT", "Successiva >>"); // L47
-define("BUTTON_FINISH", "Termina la iscrizione");
+define("BUTTON_PREVIOUS", "Precedente"); // L42
+define("BUTTON_NEXT", "Successivo"); // L47
+define("BUTTON_FINISH", "Termina");
 define("BUTTON_REFRESH", "Aggiorna");
-define("BUTTON_SHOW_SITE", "Show my site");
+define("BUTTON_SHOW_SITE", "Mostra il mio sito");
 
 // Messages
-define("XOOPS_FOUND", "%s found");
-define("CHECKING_PERMISSIONS", "Checking file and directory permissions..."); // L82
-define("IS_NOT_WRITABLE", "%s is NOT writable."); // L83
-define("IS_WRITABLE", "%s is writable."); // L84
-define("ALL_PERM_OK", "All Permissions are correct.");
+define("XOOPS_FOUND", "%s trovato");
+define("CHECKING_PERMISSIONS", "Controllo dei permessi di file e directory..."); // L82
+define("IS_NOT_WRITABLE", "%s NON è scrivibile."); // L83
+define("IS_WRITABLE", "%s è scrivibile."); // L84
+define("ALL_PERM_OK", "Tutti i permessi sono corretti.");
 
-define("READY_CREATE_TABLES", "No ImpressCMS tables were detected.<br />The installer is now ready to create the ImpressCMS system tables.<br />Press <em>next</em> to proceed.");
-define("XOOPS_TABLES_FOUND", "The ImpressCMS system tables already exists in your database.<br />Press <em>next</em> to go to the next step."); // L131
-define("READY_INSERT_DATA", "The installer is now ready to insert initial data into your database.");
-define("READY_SAVE_MAINFILE", "The installer is now ready to save the specified settings to <em>mainfile.php</em>.<br />Press <em>next</em> to proceed.");
-define("DATA_ALREADY_INSERTED", "ImpressCMS data is stored in your database already. No further data will be stored by this action.<br />Press <em>next</em> to go to the next step.");
+define("READY_CREATE_TABLES", "Non sono state rilevate tabelle ImpressCMS.<br />L'installatore è ora pronto per creare le tabelle di sistema ImpressCMS.<br />Premere <em>successivo</em> per procedere.");
+define("XOOPS_TABLES_FOUND", "Le tabelle di sistema ImpressCMS esistono già nel tuo database.<br />Premi <em>il prossimo</em> per passare al passo successivo."); // L131
+define("READY_INSERT_DATA", "Il programma di installazione è ora pronto per inserire i dati iniziali nel database.");
+define("READY_SAVE_MAINFILE", "L'installatore è ora pronto per salvare le impostazioni specificate su <em>mainfile.php</em>.<br />Premere <em>il prossimo</em> per procedere.");
+define("DATA_ALREADY_INSERTED", "I dati ImpressCMS sono già memorizzati nel database. Nessun altro dato sarà memorizzato da questa azione.<br />Premi <em>il prossimo</em> per andare al passo successivo.");
 
 // %s is database name
-define("DATABASE_CREATED", "Database %s created!"); // L43
+define("DATABASE_CREATED", "Database %s creato!"); // L43
 // %s is table name
-define("TABLE_NOT_CREATED", "Unable to create table %s"); // L118
-define("TABLE_CREATED", "Table %s created."); // L45
-define("ROWS_INSERTED", "%d entries inserted to table %s."); // L119
-define("ROWS_FAILED", "Failed inserting %d entries to table %s."); // L120
-define("TABLE_ALTERED", "Table %s updated."); // L133
-define("TABLE_NOT_ALTERED", "Failed updating table %s."); // L134
-define("TABLE_DROPPED", "Table %s dropped."); // L163
-define("TABLE_NOT_DROPPED", "Failed deleting table %s."); // L164
+define("TABLE_NOT_CREATED", "Impossibile creare la tabella %s"); // L118
+define("TABLE_CREATED", "Tabella %s creata."); // L45
+define("ROWS_INSERTED", "%d voci inserite nella tabella %s."); // L119
+define("ROWS_FAILED", "Inserimento delle voci %d nella tabella %s non riuscito."); // L120
+define("TABLE_ALTERED", "Tabella %s aggiornata."); // L133
+define("TABLE_NOT_ALTERED", "Impossibile aggiornare la tabella %s."); // L134
+define("TABLE_DROPPED", "Tabella %s eliminata."); // L163
+define("TABLE_NOT_DROPPED", "Impossibile eliminare la tabella %s."); // L164
 
 // Error messages
-define("ERR_COULD_NOT_ACCESS", "Could not access the specified folder. Please verify that it exists and is readable by the server.");
-define("ERR_NO_XOOPS_FOUND", "No ImpressCMS installation could be found in the specified folder.");
-define("ERR_INVALID_EMAIL", "Email non valida"); // L73
-define("ERR_REQUIRED", "Please enter all the required info."); // L41
-define("ERR_PASSWORD_MATCH", "The two passwords do not match");
-define("ERR_NEED_WRITE_ACCESS", "The server must be given write access to the following files and folders<br />(i.e. <em>chmod 777 directory_name</em> on a UNIX/LINUX server)"); // L72
-define("ERR_NO_DATABASE", "Could not create database. Contact the server administrator for details."); // L31
-define("ERR_NO_DBCONNECTION", "Could not connect to the database server."); // L106
-define("ERR_WRITING_CONSTANT", "Failed writing constant %s."); // L122
+define("ERR_COULD_NOT_ACCESS", "Impossibile accedere alla cartella specificata. Si prega di verificare che esista ed è leggibile dal server.");
+define("ERR_NO_XOOPS_FOUND", "Nessuna installazione ImpressCMS è stata trovata nella cartella specificata.");
+define("ERR_INVALID_EMAIL", "Invalid Email"); // L73
+define("ERR_REQUIRED", "Inserisci tutte le informazioni richieste."); // L41
+define("ERR_PASSWORD_MATCH", "Le due password non corrispondono");
+define("ERR_NEED_WRITE_ACCESS", "Al server deve essere dato l'accesso in scrittura ai seguenti file e cartelle<br />(cioè <em>chmod 777 directory_name</em> su un server UNIX/LINUX)"); // L72
+define("ERR_NO_DATABASE", "Impossibile creare il database. Contatta l'amministratore del server per i dettagli."); // L31
+define("ERR_NO_DBCONNECTION", "Impossibile connettersi al server del database."); // L106
+define("ERR_WRITING_CONSTANT", "Scrittura costante %s non riuscita."); // L122
 
-define("ERR_COPY_MAINFILE", "Could not copy the distribution file to mainfile.php");
-define("ERR_WRITE_MAINFILE", "Could not write into mainfile.php. Please check the file permission and try again.");
-define("ERR_READ_MAINFILE", "Could not open mainfile.php for reading");
+define("ERR_COPY_MAINFILE", "Impossibile copiare il file di distribuzione su mainfile.php");
+define("ERR_WRITE_MAINFILE", "Impossibile scrivere in mainfile.php. Si prega di controllare i permessi del file e riprovare.");
+define("ERR_READ_MAINFILE", "Impossibile aprire mainfile.php in lettura");
 
-define("ERR_WRITE_SDATA", "Could not write into sdata.php. Please check the file permission and try again.");
-define("ERR_READ_SDATA", "Could not open sdata.php for reading");
-define("ERR_INVALID_DBCHARSET", "The charset '%s' is not supported.");
-define("ERR_INVALID_DBCOLLATION", "The collation '%s' is not supported.");
-define("ERR_CHARSET_NOT_SET", "Default character set is not set for ImpressCMS database.");
+define("ERR_WRITE_SDATA", "Impossibile scrivere in sdata.php. Si prega di controllare i permessi del file e riprovare.");
+define("ERR_READ_SDATA", "Impossibile aprire sdata.php in lettura");
+define("ERR_INVALID_DBCHARSET", "Il set di caratteri '%s' non è supportato.");
+define("ERR_INVALID_DBCOLLATION", "L'ordinamento '%s' non è supportato.");
+define("ERR_CHARSET_NOT_SET", "Il set di caratteri predefinito non è impostato per il database ImpressCMS.");
 
 //
-define("_INSTALL_SELECT_MODS_INTRO", 'From the list below, please select the modules that you wish to install on this site. <br /><br />
-All the installed modules are accessible by the Administrators group and the Registered Users group by default. <br /><br />
-If you need to set permissions for Anonymous Users please do so in the Administration Panel after you complete this installer. <br /><br />
-For more information regarding Group Administration, please visit the <a href="https://www.impresscms.org/modules/simplywiki/index.php?page=Permissions" rel="external">wiki</a>.');
+define("_INSTALL_SELECT_MODS_INTRO", 'Dall\'elenco qui sotto, seleziona i moduli che desideri installare su questo sito. <br /><br />
+Tutti i moduli installati sono accessibili dal gruppo Administrators e dal gruppo Utenti registrati per impostazione predefinita. <br /><br />
+Se è necessario impostare i permessi per gli utenti anonimi, si prega di farlo nel Pannello di amministrazione dopo aver completato questo programma di installazione. <br /><br />
+Per ulteriori informazioni sull\'Amministrazione di Gruppo, visita il wiki <a href="https://www.impresscms.org/modules/simplywiki/index.php?page=Permissions" rel="external"></a>.');
 
-define("_INSTALL_SELECT_MODULES", 'Select modules to be installed');
-define("_INSTALL_SELECT_MODULES_ANON_VISIBLE", 'Select modules visible to visitors');
-define("_INSTALL_IMPOSSIBLE_MOD_INSTALL", "Module %s could not be installed.");
+define("_INSTALL_SELECT_MODULES", 'Seleziona i moduli da installare');
+define("_INSTALL_SELECT_MODULES_ANON_VISIBLE", 'Seleziona i moduli visibili ai visitatori');
+define("_INSTALL_IMPOSSIBLE_MOD_INSTALL", "Impossibile installare il modulo %s.");
 define("_INSTALL_ERRORS", 'Errori');
-define("_INSTALL_MOD_ALREADY_INSTALLED", "Module %s has already been installed");
-define("_INSTALL_FAILED_TO_EXECUTE", "Failed to execute ");
-define("_INSTALL_EXECUTED_SUCCESSFULLY", "Executed correctly");
+define("_INSTALL_MOD_ALREADY_INSTALLED", "Il modulo %s è già stato installato");
+define("_INSTALL_FAILED_TO_EXECUTE", "Esecuzione non riuscita ");
+define("_INSTALL_EXECUTED_SUCCESSFULLY", "Eseguito correttamente");
 
-define("_INSTALL_MOD_INSTALL_SUCCESSFULLY", "Module %s has been installed succesfully.");
-define("_INSTALL_MOD_INSTALL_FAILED", "The wizard could not install module %s.");
-define("_INSTALL_NO_PLUS_MOD", "No modules were selected for installation. Please continue the installation by clicking next.");
-define("_INSTALL_INSTALLING", "Installing %s module");
+define("_INSTALL_MOD_INSTALL_SUCCESSFULLY", "Il modulo %s è stato installato correttamente.");
+define("_INSTALL_MOD_INSTALL_FAILED", "La procedura guidata non può installare il modulo %s.");
+define("_INSTALL_NO_PLUS_MOD", "Nessun modulo è stato selezionato per l'installazione. Si prega di continuare l'installazione facendo clic su successivo.");
+define("_INSTALL_INSTALLING", "Installazione del modulo %s");
 
-define("_INSTALL_TRUST_PATH", "Trust path");
-define("_INSTALL_TRUST_PATH_LABEL", "ImpressCMS physical trust path");
-define("_INSTALL_WEB_LOCATIONS", "Web location");
-define("_INSTALL_WEB_LOCATIONS_LABEL", "Web location");
+define("_INSTALL_TRUST_PATH", "Percorso di fiducia");
+define("_INSTALL_TRUST_PATH_LABEL", "ImpressCMS percorso di fiducia fisica");
+define("_INSTALL_WEB_LOCATIONS", "Posizione web");
+define("_INSTALL_WEB_LOCATIONS_LABEL", "Posizione web");
 
-define("_INSTALL_TRUST_PATH_FOUND", "Trust path found.");
-define("_INSTALL_ERR_NO_TRUST_PATH_FOUND", "Trust path was not found.");
+define("_INSTALL_TRUST_PATH_FOUND", "Percorso di fiducia trovato.");
+define("_INSTALL_ERR_NO_TRUST_PATH_FOUND", "Percorso di fiducia non trovato.");
 
-define("_INSTALL_COULD_NOT_INSERT", "The wizard was unable to install module %s the database.");
+define("_INSTALL_COULD_NOT_INSERT", "L'assistente non è stato in grado di installare il modulo %s del database.");
 define("_INSTALL_CHARSET", "utf-8");
 
-define("_INSTALL_PHYSICAL_PATH", "Physical path");
+define("_INSTALL_PHYSICAL_PATH", "Percorso fisico");
 
-define("TRUST_PATH_VALIDATE", "A suggested name for the Trust path has been created above for you. If you wish to use an alternative name, please replace the above location with your choice of name.<br /><br />When done, please click on the Create Trust Path button.");
-define("TRUST_PATH_NEED_CREATED_MANUALLY", "It was not possible to create the trust path. Please create it manually and click on the following Refresh button.");
-define("BUTTON_CREATE_TUST_PATH", "Create Trust Path");
-define("TRUST_PATH_SUCCESSFULLY_CREATED", "The trust path was successfully created.");
+define("TRUST_PATH_VALIDATE", "Un nome suggerito per il percorso di Trust è stato creato sopra per te. Se si desidera utilizzare un nome alternativo, si prega di sostituire la posizione sopra con il nome scelto.<br /><br />Quando finito, fare clic sul pulsante Crea tracciato di fiducia.");
+define("TRUST_PATH_NEED_CREATED_MANUALLY", "Non è stato possibile creare il percorso di fiducia. Si prega di crearlo manualmente e fare clic sul seguente pulsante Aggiorna.");
+define("BUTTON_CREATE_TUST_PATH", "Crea Tracciato Di Trust");
+define("TRUST_PATH_SUCCESSFULLY_CREATED", "Il percorso di fiducia è stato creato con successo.");
 
 // welcome custom blocks
 define("WELCOME_WEBMASTER", "Benvenuto Webmaster !");
-define("WELCOME_ANONYMOUS", "Benvenuto in un sito web fatto con ImpressCMS!");
-define("_MD_AM_MULTLOGINMSG_TXT", 'Non è possibile fare il login sul sito!<br />
+define("WELCOME_ANONYMOUS", "Benvenuto in un sito web alimentato ImpressCMS !");
+define("_MD_AM_MULTLOGINMSG_TXT", 'Non è stato possibile effettuare il login sul sito!! <br />
         <p align="left" style="color:red;">
         Possibili cause:<br />
-         - Sei già registrato nel sito.<br />
-         - Qualcun altro è registrato nel sito usando il tuo nome utente e password.<br />
-         - Hai lasciato il sito o chiuso la finestra del browser senza cliccare il bottone "Esci".<br />
+         - Sei già connesso sul sito.<br />
+         - Qualcun altro ha effettuato l\'accesso al sito utilizzando il tuo nome utente e password.<br />
+         - Hai lasciato il sito o chiudi la finestra del browser senza fare clic sul pulsante di logout.<br />
         </p>
-        Attendi alcuni minuti e prova ancora. Se il problema persiste contatta l\'amministratore del sito.');
+        Attendi qualche minuto e riprova più tardi. Se i problemi persistono contattare l\'amministratore del sito.');
 define("_MD_AM_RSSLOCALLINK_DESC", 'https://www.impresscms.org/modules/news/rss.php'); //Link to the rrs of local support site
 define("_INSTALL_LOCAL_SITE", 'https://www.impresscms.org/'); //Link to local support site
 define("_LOCAOL_STNAME", 'ImpressCMS'); //Link to local support site
-define("_LOCAL_SLOCGAN", 'Fai un\'impressione durevole'); //Link to local support site
+define("_LOCAL_SLOCGAN", 'Fai un\'impressione duratura'); //Link to local support site
 define("_LOCAL_FOOTER", 'Powered by ImpressCMS &copy; 2007-' . date('Y', time()) . ' <a href=\"https://www.impresscms.org/\" rel=\"external\">The ImpressCMS Project</a>'); //footer Link to local support site
 define("_LOCAL_SENSORTXT", '#OOPS#'); //Add local translation
 define("_ADM_USE_RTL", "0"); // turn this to 1 if your language is right to left
-define("_DEF_LANG_TAGS", 'en,fr,it,nl'); //Add local translation
-define("_DEF_LANG_NAMES", 'english,french,italian,dutch'); //Add local translation
-define("_LOCAL_LANG_NAMES", 'English,français,Italiano,Nederlands'); //Add local translation
+define("_DEF_LANG_TAGS", 'it,de'); //Add local translation
+define("_DEF_LANG_NAMES", 'inglese, tedesco'); //Add local translation
+define("_LOCAL_LANG_NAMES", 'Inglese,Deutsch'); //Add local translation
 define("_EXT_DATE_FUNC", "0"); // change 0 to 1 if this language has an extended date function
 
 ######################## Added in 1.2 ###################################
-define("ADMIN_DISPLAY_LABEL", "Admin Display Name"); // L37
+define("ADMIN_DISPLAY_LABEL", "Nome Visualizzazione Amministratore"); // L37
 define('_CORE_PASSLEVEL1', 'Troppo breve');
 define('_CORE_PASSLEVEL2', 'Debole');
-define('_CORE_PASSLEVEL3', 'Buona');
+define('_CORE_PASSLEVEL3', 'Buono');
 define('_CORE_PASSLEVEL4', 'Forte');
-define('DB_PCONNECT_HELP', "Persistent connections are useful with slower internet connections. They are not generally required for most installations. Default is 'NO'. Choose 'NO' if you are unsure"); // L69
-define("DB_PCONNECT_HELPS",  "Persistent connections are useful with slower internet connections. They are not generally required for most installations."); // L69
+define('DB_PCONNECT_HELP', "Le connessioni persistenti sono utili con connessioni internet più lente. Non sono generalmente richieste per la maggior parte delle installazioni. Il valore predefinito è 'NO'. Scegli 'NO' se non sei sicuro"); // L69
+define("DB_PCONNECT_HELPS",  "Le connessioni persistenti sono utili con connessioni internet più lente. Non sono generalmente richieste per la maggior parte delle installazioni."); // L69
 
 // Added in 1.3
-define("FILE_PERMISSIONS", "File Permissions");
+define("FILE_PERMISSIONS", "Permessi File");
