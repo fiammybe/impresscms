@@ -14,7 +14,7 @@ define('_AM_ADDSMILE','Add a Smilie');
 define('_AM_EDITSMILE','Edit a Smilie');
 define('_AM_SMILECODE','Smilie Code:');
 define('_AM_SMILEURL','Image URL:');
-define('_AM_SMILEEMOTION','Description:');
+define('_AM_SMILEEMOTION','説明:');
 define('_AM_ADD','Add');
 define('_AM_SAVE','Save');
 define('_AM_WAYSYWTDTS','WARNING: Are you sure you want to delete this Smile?');
