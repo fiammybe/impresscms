@@ -1,21 +1,21 @@
 #
-# Dumping data for table `ranks`
+# Tabeldate voor `ranks`
 #
 
-INSERT INTO ranks VALUES (1, 'Just popping in', 0, 20, 0, 'rank3e632f95e81ca.gif')
-, (2, 'Not too shy to talk', 21, 40, 0, 'rank3dbf8e94a6f72.gif')
+INSERT INTO ranks VALUES (1, 'Even komen piepen', 0, 20, 0, 'rank3e632f95e81ca.gif')
+, (2, 'Niet bang om te spreken', 21, 40, 0, 'rank3dbf8e94a6f72.gif')
 , (3, 'Quite a regular', 41, 70, 0, 'rank3dbf8e9e7d88d.gif')
-, (4, 'Just can not stay away', 71, 150, 0, 'rank3dbf8ea81e642.gif')
-, (5, 'Home away from home', 151, 10000, 0, 'rank3dbf8eb1a72e7.gif')
+, (4, 'Kan gewoon niet wegblijven', 71, 150, 0, 'rank3dbf8ea81e642.gif')
+, (5, 'Mijn tweede thuis', 151, 10000, 0, 'rank3dbf8eb1a72e7.gif')
 , (6, 'Moderator', 0, 0, 1, 'rank3dbf8edf15093.gif')
 , (7, 'Webmaster', 0, 0, 1, 'rank3dbf8ee8681cd.gif');
 
 #
-# Dumping data for table `smiles`
+# tabel data voor `smiles`
 #
 
-INSERT INTO smiles VALUES (1, ':-D', 'smil3dbd4d4e4c4f2.gif', 'Very Happy', 1)
-, (2, ':-)', 'smil3dbd4d6422f04.gif', 'Smile', 1)
+INSERT INTO smiles VALUES (1, ':-D', 'smil3dbd4d4e4c4f2.gif', 'Super Blij', 1)
+, (2, ':-)', 'smil3dbd4d6422f04.gif', 'Lach', 1)
 , (3, ':-(', 'smil3dbd4d75edb5e.gif', 'Sad', 1)
 , (4, ':-o', 'smil3dbd4d8676346.gif', 'Surprised', 1)
 , (5, ':-?', 'smil3dbd4d99c6eaa.gif', 'Confused', 1)
