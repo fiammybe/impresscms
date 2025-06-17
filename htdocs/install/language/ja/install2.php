@@ -2,7 +2,7 @@
 // $Id: install2.php 9920 2010-03-27 17:46:23Z skenow $
 define("_INSTALL_WEBMASTER","Webmasters");
 define("_INSTALL_WEBMASTERD","Webmasters of this site");
-define("_INSTALL_REGUSERS","Registered Users");
+define("_INSTALL_REGUSERS","登録ユーザー");
 define("_INSTALL_REGUSERSD","Registered Users Group");
 define("_INSTALL_ANONUSERS","匿名ユーザー");
 define("_INSTALL_ANONUSERSD","Anonymous Users Group");
