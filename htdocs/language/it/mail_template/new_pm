@@ -1,20 +1,20 @@
-Hello {X_UNAME},
+Ciao {X_UNAME},
 
-"{X_FROMUNAME}" just sent you a Private Message :
+"{X_FROMUNAME}" ti ha appena inviato un Messaggio Privato :
 
-SUBJECT : {X_SUBJECT}
+OGGETTO : {X_SUBJECT}
 
 {X_MESSAGE}
 
 -----------
-Click on the following link to view, reply or delete this message :
+Fare clic sul seguente link per visualizzare, rispondere o eliminare questo messaggio :
 {X_ITEM_URL}
 
 -----------
 
-You received this notification because you selected email notification method.
+Hai ricevuto questa notifica perché hai selezionato il metodo di notifica via email.
 
-Please do not reply to this message.
+Non rispondere a questo messaggio.
 
 -----------
 {X_SITENAME} ({X_SITEURL})
