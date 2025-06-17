@@ -62,11 +62,11 @@ define("INITIAL_SETTINGS_TITLE", "Indtast venligst dine oprindelige indstillinge
 define("DATA_INSERTION", "Indsættelse af data");
 define("DATA_INSERTION_TITLE", "Gemmer dine indstillinger til databasen");
 define("WELCOME", "Velkommen");
-define("NO_PHP5", "No PHP 7");
+define("NO_PHP5", "Ingen PHP 7");
 define("WELCOME_TITLE", "Installation af ImpressCMS afsluttet");		// L0
 define("MODULES_INSTALL", "Installer moduler");
 define("MODULES_INSTALL_TITLE", "Installation af moduler ");
-define("NO_PHP5_TITLE", "No PHP 7");
+define("NO_PHP5_TITLE", "Ingen PHP 7");
 define("NO_PHP5_CONTENT", "PHP 7.4.0 minimum is required (PHP 8.3 is recommended) for ImpressCMS to function properly - your installation cannot continue. Please work with your hosting provider to upgrade your environment to a version of PHP that is newer than 7.4.0 (8.3 is recommended) before attempting to install again.");
 define("SAFE_MODE", "Safe Mode On");
 define("SAFE_MODE_TITLE", "Safe Mode On");
