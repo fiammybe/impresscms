@@ -47,7 +47,7 @@ define('_MD_IMAGECATSTYPE', 'Store Type');
 define('_MD_IMAGECATATUORESIZE', 'Auto Resize');
 define('_MD_IMAGECATWEIGHT', 'Weight');
 define('_MD_IMAGECATOPTIONS', 'Options');
-define('_MD_IMAGECATQTDE', '# Images');
+define('_MD_IMAGECATQTDE', '# イメージ');
 define('_IMAGEFILTERS', 'Select a filter:');
 define('_IMAGEAPPLYFILTERS', 'Apply filters in image');
 define('_IMAGEFILTERSSAVE', 'Overwrite original image?');
