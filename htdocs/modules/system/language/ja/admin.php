@@ -5,7 +5,7 @@
 define('_INVALID_ADMIN_FUNCTION', 'Invalid Admin Function');
 
 // Admin Module Names
-define('_MD_AM_ADGS','Groups');
+define('_MD_AM_ADGS','グループ');
 define('_MD_AM_BKAD','Blocks');
 define('_MD_AM_MDAD','Modules Admin');
 define('_MD_AM_SMLS','スマイリー');
