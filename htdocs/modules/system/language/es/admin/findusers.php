@@ -34,7 +34,7 @@ define("_AM_POSTSLESS","Number of Posts is less than <span style='color:#ff0000;
 define("_AM_SORT","Ordenar por");
 define("_AM_ORDER","Reordenar");
 define("_AM_LASTLOGIN","Last login");
-define("_AM_POSTS","Number of posts");
+define("_AM_POSTS","Número de mensajes a mostrar");
 define("_AM_ASC","Orden ascendente");
 define("_AM_DESC","Orden descendente");
 define("_AM_LIMIT","Number of users per page");
@@ -48,7 +48,7 @@ define("_AM_INACTIVE","Only inactive users");
 define("_AM_BOTH", "All users");
 define("_AM_SENDMAIL", "Send mail");
 define("_AM_ADD2GROUP", "Add users to %s group");
-define("_AM_GROUPS", "Groups");
+define("_AM_GROUPS", "Grupos");
 
 ######################## Added in 1.2 ###################################
 define("_AM_LOGINNAME","Login Name");
