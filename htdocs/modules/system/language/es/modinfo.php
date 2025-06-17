@@ -36,7 +36,7 @@ define('_MI_SYSTEM_BNAME18', "Share this page!");
 
 // Names of admin menu items
 define("_MI_SYSTEM_ADMENU2","Bloques");
-define("_MI_SYSTEM_ADMENU3","Groups");
+define("_MI_SYSTEM_ADMENU3","Grupos");
 define("_MI_SYSTEM_ADMENU5","Modules");
 define("_MI_SYSTEM_ADMENU6","Preferences");
 define("_MI_SYSTEM_ADMENU7","Smilies");
