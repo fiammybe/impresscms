@@ -69,7 +69,7 @@ define('_AM_CLONEBLOCK', 'Create a clone block');
 define('_AM_NOTSELNG', "'%s' is not selected!"); // error message
 define('_AM_EDITTPL', 'Edit Template');
 define('_AM_MODULE', 'Module');
-define('_AM_GROUP', 'Group');
+define('_AM_GROUP', 'Grupo');
 define('_AM_UNASSIGNED', 'Unassigned');
 
 define('_AM_CHANGESTS', 'Change the block visibility');
