@@ -10,7 +10,7 @@ define("_MI_SYSTEM_DESC","For administration of core settings of the site.");
 
 // Names of blocks for this module (Not all module has blocks)
 define("_MI_SYSTEM_BNAME2","User Menu");
-define("_MI_SYSTEM_BNAME3","Login");
+define("_MI_SYSTEM_BNAME3","Accesso");
 define("_MI_SYSTEM_BNAME4","Cerca");
 define("_MI_SYSTEM_BNAME5","Waiting Contents");
 define("_MI_SYSTEM_BNAME6","Main Menu");
