@@ -72,10 +72,10 @@ define("THEME_MODULE4_SUB3","Video 3"); //*** the SUB are for sub-menu in global
 define("THEME_MODULE4_SUB4","Video 4"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
 define("THEME_MODULE4_SUB5","Video 5"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
 
-define("THEME_MODULE5","Web Links");
+define("THEME_MODULE5","Collegamenti Web");
 define("THEME_MODULE5_DESC","Visita i nostri web links");
 
-define("THEME_MODULE6","Downloads");
+define("THEME_MODULE6","Scaricamenti");
 define("THEME_MODULE6_DESC","Download i nostri files");
 
 define("THEME_MODULE7","XoopsInfo");
