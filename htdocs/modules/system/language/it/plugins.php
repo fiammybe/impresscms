@@ -6,7 +6,7 @@
 //
 define("_PI_WAITING_WAITINGS","Waitings");
 define("_PI_WAITING_SUBMITTED","Submitted");
-define("_PI_WAITING_INACTIVE_USERS","Inactive Users");
+define("_PI_WAITING_INACTIVE_USERS","Utenti non attivi");
 define("_PI_WAITING_BROKENS","Brokens");
 define("_PI_WAITING_MODREQS","Modreqs");
 define("_PI_WAITING_REQUESTS","Requests");
