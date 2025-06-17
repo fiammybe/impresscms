@@ -37,7 +37,7 @@ define("_MB_SYSTEM_PRIVPOLICY", "Privacy Policy");
  * Added in 1.2
  */
 
-define("_MB_SYSTEM_TOTAL_USERS", "Total Users");
+define("_MB_SYSTEM_TOTAL_USERS", "Total de usuarios");
 define("_MB_SYSTEM_ACT_USERS", "Active Users");
 define("_MB_SYSTEM_INACT_USERS", "Inactive Users");
 define("_MB_SYSTEM_DISPLAYTOT","Display total members information?");
