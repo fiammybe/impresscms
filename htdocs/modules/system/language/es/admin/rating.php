@@ -16,7 +16,7 @@ define('_CO_ICMS_RATING_SUCCESS', 'Your rating has been stored. Thank for your c
 define('_CO_ICMS_RATING_RATE_THIS', 'Was this useful ? (1 being <i>Not useful</i> and 5 being <i>Very useful</i>)');
 define('_CO_ICMS_RATING_ALREADY_RATED', 'Your rate: ');
 define('_CO_ICMS_RATING_VOTERS_TOTAL', 'Voters total: ');
-define('_CO_ICMS_RATING_AVERAGE', 'Average: ');
+define('_CO_ICMS_RATING_AVERAGE', 'Normal: ');
 define('_CO_ICMS_RATINGS', 'Rating');
 define('_CO_ICMS_RATINGS_DSC', 'Here is a list of the ratings added in the system.');
 define('_CO_ICMS_RATING', 'Rating');
