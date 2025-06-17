@@ -39,7 +39,7 @@ define("_MB_SYSTEM_PRIVPOLICY", "Informativa sul trattamento dei dati personali 
 
 define("_MB_SYSTEM_TOTAL_USERS", "Total Users");
 define("_MB_SYSTEM_ACT_USERS", "Active Users");
-define("_MB_SYSTEM_INACT_USERS", "Inactive Users");
+define("_MB_SYSTEM_INACT_USERS", "Utenti non attivi");
 define("_MB_SYSTEM_DISPLAYTOT","Display total members information?");
 // waiting content
 define("_MB_SYSTEM_NOWAITING_DISPLAY","Always displayed");
