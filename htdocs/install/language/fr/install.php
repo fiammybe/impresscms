@@ -61,11 +61,11 @@ define("INITIAL_SETTINGS_TITLE", "Veuillez entrer votre configuration initiale")
 define("DATA_INSERTION", "Insertion de donn&eacute;es");
 define("DATA_INSERTION_TITLE", "Sauvegarde de votre configuration dans la base de donn&eacute;es");
 define("WELCOME", "Bienvenue");
-define("NO_PHP5", "No PHP 7");
+define("NO_PHP5", "Pas de PHP 7");
 define("WELCOME_TITLE", "Installation du site compl&eacute;te");		// L0
 define("MODULES_INSTALL", "Installation des scripts");
 define("MODULES_INSTALL_TITLE", "Installation des scripts ");
-define("NO_PHP5_TITLE", "No PHP 7");
+define("NO_PHP5_TITLE", "Pas de PHP 7");
 define("NO_PHP5_CONTENT", "PHP 7.4.0 minimum is required (PHP 8.3 is recommended) for ImpressCMS to function properly - your installation cannot continue. Please work with your hosting provider to upgrade your environment to a version of PHP that is newer than 7.4.0 (8.3 is recommended) before attempting to install again.");
 define("SAFE_MODE", "Safe Mode activé");
 define("SAFE_MODE_TITLE", "Safe Mode activé");
