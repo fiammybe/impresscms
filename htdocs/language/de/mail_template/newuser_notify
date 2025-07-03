@@ -1,0 +1,11 @@
+Hallo Administrator,
+
+Ein neuer Benutzer hat sich registriert am {X_SITENAME}
+
+Benutzername: {UNAME}
+Email : {EMAIL}
+
+-----------
+Herzlich,
+{X_SITENAME}
+{X_SITEURL}
