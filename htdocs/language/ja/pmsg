@@ -1,0 +1,47 @@
+<?php
+// $Id: pmsg.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: pmsg.php 12229 2013-07-19 08:08:05Z fiammy $
+//%%%%%%	File Name readpmsg.php 	%%%%%
+define("_PM_DELETED","メッセージを削除しました。");
+define("_PM_PRIVATEMESSAGE","プライベートメッセージ");
+define("_PM_INBOX","受信箱");
+define("_PM_FROM","送信者");
+define("_PM_YOUDONTHAVE","メッセージはありません");
+define("_PM_FROMC","送信者: ");
+define("_PM_SENTC","送信日: "); // The date of message sent
+define("_PM_PROFILE","プロフィール");
+
+// %s is a username
+define("_PM_PREVIOUS","前のメッセージ");
+define("_PM_NEXT","次のメッセージ");
+
+//%%%%%%	File Name pmlite.php 	%%%%%
+define("_PM_SORRY","申し訳ありません。あなたはこのサイトに登録していません。");
+define("_PM_REGISTERNOW","登録する！");
+define("_PM_GOBACK","戻る");
+define("_PM_USERNOEXIST","そのユーザは現在いらっしゃいません。");
+define("_PM_PLZTRYAGAIN","ユーザ名を確認してください。");
+define("_PM_MESSAGEPOSTED","送信しました。");
+define("_PM_CLICKHERE","ここをクリックするとメッセージを見る事ができます");
+define("_PM_ORCLOSEWINDOW","ここをクリックするとウインドウを閉じます。");
+define("_PM_USERWROTE","%s さんは書きました:");
+define("_PM_TO","宛先: ");
+define("_PM_SUBJECTC","表題: ");
+define("_PM_MESSAGEC","本文: ");
+define("_PM_CLEAR","クリア");
+define("_PM_CANCELSEND","中止");
+define("_PM_SUBMIT","送信");
+
+//%%%%%%	File Name viewpmsg.php 	%%%%%
+define("_PM_SUBJECT","題名");
+define("_PM_DATE","送信日");
+define("_PM_NOTREAD","未読");
+define("_PM_SEND","送信");
+define("_PM_DELETE","削除");
+define("_PM_REPLY", "返信");
+define("_PM_PLZREG","プライベートメッセージを利用するにはユーザ登録が必要です。");
+
+define("_PM_ONLINE", "オンライン");
+
+define("_PM_MESSAGEPOSTED_EMAILSUBJ","[%s] プライベートメッセージ通知");
+?>
