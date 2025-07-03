@@ -1,0 +1,11 @@
+Ciao amministratore,
+
+Un nuovo utente registrato su {X_SITENAME}
+
+Nome Utente: {UNAME}
+Email : {EMAIL}
+
+-----------
+Cordialmente,
+{X_SITENAME}
+{X_SITEURL}
