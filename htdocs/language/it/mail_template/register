@@ -1,0 +1,20 @@
+Ciao {X_USERLOGINNAME},
+
+Grazie per essersi iscritto a {X_SITENAME}. Come membro registrato puoi:
+- Invia messaggi privati tra i membri
+- Partecipa a tavole di discussione
+- Ricevi le ultime notizie
+- Invia contenuto
+- Molto altro ancora....
+
+L'indirizzo email ({X_UEMAIL}) è stato utilizzato per registrare un account.
+
+Per diventare membro di {X_SITENAME}, conferma il tuo
+richiedere cliccando sul link qui sotto:
+
+{X_UACTLINK}
+
+-----------
+Cordiali Saluti
+{X_SITENAME}
+{X_ADMINMAIL}
