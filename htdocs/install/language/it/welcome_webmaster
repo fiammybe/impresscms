@@ -1,0 +1,14 @@
+Benvenuto nel tuo nuovo sito web alimentato ImpressCMS. Se non lo hai già fatto, elimina la cartella [b]install[/b] dal server e assicurati che [b]mainfile.php[/b] non sia scrivibile (chmod 444).
+
+Per iniziare a amministrare il tuo nuovo sito web alimentato da ImpressCMS, puoi cliccare sul link del menu [b]Amministrazione[/b] che si trova sulla sinistra di questa pagina.
+
+Per iniziare a modificare il tuo sito web [b]Preferenze[/b]: Nel pannello di amministrazione, passa sopra il menu a tendina [b]System[/b] e seleziona [b]Preferenze.[/b]
+
+In seguito puoi iniziare ad aggiungere i Moduli [b][/b] e [b]Temi[/b].
+Molti dei moduli e temi disponibili per ImpressCMS, sono disponibili presso la sezione [url=https://www.impresscms.org/modules/downloads]Addons[/url] del sito web [url=https://www.impresscms.org]del progetto ImpressCMS[/url].
+
+Dovrai anche iniziare ad usare [b]Blocchi[/b]. Puoi iniziare rimuovendo questo blocco. Per farlo, naviga a System Admin > Blocchi, e la selezione "Webmasters" nella casella di selezione [b]Gruppi[/b]. Sarai quindi in grado di vedere i blocchi disponibili per il gruppo Webmasters, e anche questo blocco!
+
+Per ulteriori informazioni su come lavoro con ImpressCMS, si prega di utilizzare i link qui sotto.
+<ul><li>[url=https://www.impresscms.org/modules/simplywiki/index.php?page=English#Using_ImpressCMS]Using ImpressCMS[/url]</li><li>[url=https://www.impresscms.org/modules/simplywiki/index.php?page=English#Customizing_ImpressCMS]Customizing ImpressCMS[/url]</li><li>[url=https://www.impresscms.org/modules/simplywiki/index.php?page=English#Developing_for_ImpressCMS]Developing for ImpressCMS[/url]</li></ul>
+Ti invitiamo caldamente a unirti a [url=https://www.impresscms.org/modules/iforum/]La Comunità ImpressCMS[/url] - Dove puoi fornire contributi, ottenere aiuto, aiutare altri, ecc...
