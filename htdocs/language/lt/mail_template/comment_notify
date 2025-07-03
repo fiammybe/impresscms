@@ -1,0 +1,20 @@
+Sveiki {X_UNAME},
+
+Būtina, kad komentaras pridėtas į {X_ITEM_TYPE} "{X_ITEM_NAME}" iš jūsų monitoruotų irakstoĮ {X_MODULE} modulėje vartotojo turinio lange. Komentaras galima peržiūoti tą patį nuorodą:
+
+Jūs galite peržiūrėti komentarą šiame veidu:
+{X_COMMENT_URL}
+
+-----------
+
+Jūsu pranešiamas tą patį taikomą, kad atsiskiriama, kad pridėta komentarai į šį {X_ITEM_TYPE}.
+
+Jei šis yra klaida ar galima, kad nukreipėsi vėl taip pat taisyklinti suskripuotį įtaisant viešąją nuorodą: 
+{X_UNSUBSCRIBE_URL}
+
+Neteikokite atsąjungą į šį pranešimą.
+
+-----------
+{X_SITENAME} ({X_SITEURL}) 
+webmaster
+{X_ADMINMAIL}

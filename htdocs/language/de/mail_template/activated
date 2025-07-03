@@ -1,0 +1,12 @@
+Hallo {X_UNAME},
+
+Ihr Profil auf {X_SITENAME} wurde vom Administrator aktiviert.
+
+Sie können sich nun auf der folgenden URL mit Ihrem Benutzernamen und Kennwort einloggen.
+
+{SITEURL}/user.php
+
+-----------
+{SITENAME} ({SITEURL}) 
+Der Webmaster
+{ADMINMAIL}

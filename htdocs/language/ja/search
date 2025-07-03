@@ -1,0 +1,26 @@
+<?php
+// $Id: search.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: search.php 12229 2013-07-19 08:08:05Z fiammy $
+//%%%%%%	File Name search.php 	%%%%%
+define("_SR_SEARCH","検索");
+define("_SR_PLZENTER","必要な情報を入力してください。");
+define("_SR_SEARCHRESULTS","検索結果");
+define("_SR_NOMATCH","検索条件に当てはまるデータはありません。");
+//define("_SR_FOUND","Found <b>%s</b> match(es)");
+define("_SR_SHOWING","(%d - %d を表示)");
+define("_SR_ANY","いずれか (OR)");
+define("_SR_ALL","すべて (AND)");
+define("_SR_EXACT","正確にマッチ");
+define("_SR_SHOWALLR","結果を表示する");
+define("_SR_NEXT","次のデータ >>");
+define("_SR_PREVIOUS","<< 前のデータ");
+define("_SR_KEYWORDS","キーワード");
+define("_SR_TYPE","種類");
+define("_SR_SEARCHIN","検索するモジュール");
+define('_SR_KEYTOOSHORT', 'キーワードは <b>%s</b> 文字以上でお願いします。');
+define('_SR_KEYIGNORE', '<b>%s</b> 文字以下のキーワードは無視します。');
+define('_SR_SEARCHRULE', '検索ルール');
+define('_SR_IGNOREDWORDS', '次の検索キーワードは文字数が短すぎる(%u 文字)なので検索条件に含んでいません:');
+############# added since 1.2 #############
+define('_SR_HITSRETURNED', 'ヒットが返ってきました');
+?>

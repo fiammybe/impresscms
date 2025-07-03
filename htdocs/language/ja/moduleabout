@@ -1,0 +1,35 @@
+<?php
+define('_MODABOUT_DEVELOPER_CONTRIBUTOR', '寄稿者');
+define('_MODABOUT_DEVELOPER_CREDITS', 'クレジット');
+define('_MODABOUT_DEVELOPER_EMAIL', 'メール');
+define('_MODABOUT_DEVELOPER_WEBSITE', 'ウエブサイト');
+define('_MODABOUT_GOTOMODULE', 'モジュール実行');
+define('_MODABOUT_MODULE_BUG', 'このモジュールのバグをレポートする');
+define('_MODABOUT_MODULE_DEMO', 'デモサイト');
+define('_MODABOUT_MODULE_DISCLAIMER', '免責事項');
+define('_MODABOUT_MODULE_FEATURE', 'このモジュールの新しい機能を提案する');
+define('_MODABOUT_MODULE_INFO', 'モジュール開発情報');
+define('_MODABOUT_MODULE_RELEASE_DATE', 'リリース日');
+define('_MODABOUT_MODULE_STATUS', '状態');
+define('_MODABOUT_MODULE_SUBMIT_BUG', 'バグ情報を送信');
+define('_MODABOUT_MODULE_SUBMIT_FEATURE', '新機能を要望');
+define('_MODABOUT_MODULE_SUPPORT', '公式サイト');
+define('_MODABOUT_UPDATE_MODULE', 'モジュールアップデート');
+define('_MODABOUT_VERSION_HISTORY', '更新履歴');
+define('_MODABOUT_WARNING_BETA', "このモジュールはβバージョンです。動作保証はできません。βバージョンは現在開発中と言う意味を表しています。この公開はあくまでも<b>開発中のもののテストの目的</b>, です。現在運用しているサイトに正式な使用は<b>まだお控えいただくことを</b>おすすめします。");
+define('_MODABOUT_WARNING_FINAL', "このモジュールの動作保証はできません。確かに公開バージョンですが、様々な問題がある可能性は否定できません。そのためお使いになる際には十分にご注意の上、それぞれの責任の下にお使いいただくようお願いします。いかなる動作不具合もモジュール作者は責任を負うことはできませんことをご了承ください。");
+define('_MODABOUT_WARNING_RC', "このモジュールはＲＣバージョンです。動作保証はできません。ＲＣバージョンは評価用のバージョンと言う意味を表しています。この公開はあくまでも<b>最終チェックのため</b>, です。現在運用しているサイトに正式な使用は<b>まだお控えいただくことを</b>おすすめします。");
+define('_MODABOUT_BY', '提供者');
+define('_MODABOUT_PEOPLE_DEVELOPERS', '開発者');
+define('_MODABOUT_PEOPLE_TESTERS', 'チェックしてくださった方');
+define('_MODABOUT_PEOPLE_DOCUMENTERS', '文章作成者');
+define('_MODABOUT_PEOPLE_TRANSLATERS', '翻訳者');
+define('_MODABOUT_PEOPLE_OTHER', 'その他のバックアップ');
+define('_MODABOUT_AUTHOR_INFO', 'お世話になった方々');
+define('_MODABOUT_AUTHOR_WORD', '作者の言葉');
+############# added since 1.2 #############
+define('_MODABOUT_WARNING_ALPHA', "このモジュールはαバージョンです。動作保証はできません。αバージョンは現在開発中と言う意味を表しています。この公開はあくまでも<b>開発中のもののテストの目的</b>, です。現在運用しているサイトに正式な使用は<b>まだお控えいただくことを</b>おすすめします。");
+define('_MODABOUT_MODULE_LICENSE', 'ライセンス');
+define('_MODABOUT_MANUAL', 'マニュアル');
+define('_MODABOUT_MANUAL_WIKI', 'ImpressCMS Wiki');
+?>

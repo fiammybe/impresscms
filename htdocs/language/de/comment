@@ -1,0 +1,46 @@
+<?php
+// $Id: comment.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: comment.php 12229 2013-07-19 08:08:05Z fiammy $
+define('_CM_TITLE','Titel');
+define('_CM_MESSAGE','Nachricht');
+define('_CM_DOSMILEY','Smileys aktivieren');
+define('_CM_DOHTML','HTML-Tags aktivieren');
+define('_CM_DOAUTOWRAP','Zeilenumbrüche aktivieren');
+define('_CM_DOXCODE','iCMS Codes aktivieren');
+define('_CM_REFRESH','Aktualisieren');
+define('_CM_PENDING','Wartet');
+define('_CM_HIDDEN','Versteckt');
+define('_CM_ACTIVE','Aktiv');
+define('_CM_STATUS','Status');
+define('_CM_POSTCOMMENT','Kommentar verfassen');
+define('_CM_REPLIES','Antworten');
+define('_CM_PARENT','Übergeordnet');
+define('_CM_TOP','Oben');
+define('_CM_ONLINE','Online!');
+define('_CM_POSTED','Verfasst am'); // Posted date
+define('_CM_UPDATED', 'Aktualisiert');
+define('_CM_THREAD','Diskussionsfaden');
+define('_CM_POSTER','Verfasser');
+define('_CM_JOINED','Registriert am');
+define('_CM_POSTS','Beiträge');
+define('_CM_FROM','aus');
+define('_CM_COMDELETED', 'Kommentar(e) wurden gelöscht.');
+define('_CM_COMDELETENG', 'Der Kommentar konnte nicht gelöscht werden.');
+define('_CM_DELETESELECT' , 'Sollen alle untergeordneten Kommentare gelöscht werden?');
+define('_CM_DELETEONE' , 'Nein, nur dieser Kommentar soll gelöscht werden');
+define('_CM_DELETEALL', 'Ja, alle Kommentare sollen geöscht werden');
+define('_CM_THANKSPOST', 'Vielen Dank für den Beitrag!');
+define('_CM_NOTICE', "Die Kommentare stellen die Meinung des jeweiligen Verfassers dar. Wir sind nicht für deren Inhalte verantwortlich.");
+define('_CM_COMRULES','Regeln für die Veröffentlichung');
+define('_CM_COMAPPROVEALL','Kommentare werden immer akzeptiert');
+define('_CM_COMAPPROVEUSER','Kommentare von registrierten Benutzern werden immer akzeptiert');
+define('_CM_COMAPPROVEADMIN','Alle Kommentare müssen von einem Adminstrator freigeschaltet werden');
+define('_CM_COMANONPOST','Kommentare von anonymen Gästen erlauben?');
+define('_CM_COMNOCOM','Kommentarfunktion deaktivieren');
+define('_CM_RE','Aw');
+############# added since 1.2 #############
+define('_CM_COULDNOTCHANGEPIDTOID', 'Die übergeordnete Kommentar ID konnte von <b>%s</b> bis <b>%s</b> nicht geändert werden. (ID: %s)');
+define('_CM_COULDNOTCHANGEROOTID', 'Die Haupt ID konnte von <b>%s</b> bis  <b>%s</b> nicht geändert werden.');
+define('_CM_COULDNOTCHANGEPAID', 'Die übergeordnete Kommentar ID konnte von <b>%s</b> bis <b>%s</b> nicht geändert werden.');
+define('_CM_COULDNOTUPDATEPOSTS', 'Die Beiträge der Benutzer konnten nicht aktualisiert werden.');
+?>

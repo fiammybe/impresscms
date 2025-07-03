@@ -1,0 +1,26 @@
+<?php
+// $Id: search.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: search.php 12229 2013-07-19 08:08:05Z fiammy $
+//%%%%%%	File Name search.php 	%%%%%
+define("_SR_SEARCH","Suchen");
+define("_SR_PLZENTER","Bitte alle erforderlichen Angaben tätigen!");
+define("_SR_SEARCHRESULTS","Ergebnis der Suche");
+define("_SR_NOMATCH","Zu dieser Abfrage konnten keine Übereinstimmungen gefunden werden");
+//define("_SR_FOUND","Found <b>%s</b> match(es)");
+define("_SR_SHOWING","(Zeige %d - %d)");
+define("_SR_ANY","Jeder (ODER)");
+define("_SR_ALL","Alle (UND)");
+define("_SR_EXACT","Exakte Übereinstimmung");
+define("_SR_SHOWALLR","Alle Resultate anzeigen");
+define("_SR_NEXT","Weiter");
+define("_SR_PREVIOUS","Zurück");
+define("_SR_KEYWORDS","Suchbegriff(e)");
+define("_SR_TYPE","Art der Suche");
+define("_SR_SEARCHIN","Suchen in");
+define('_SR_KEYTOOSHORT', 'Der Suchbegriff muss mindestens <b>%s</b> Zeichen lang sein');
+define('_SR_KEYIGNORE', 'Suchbegriffe die kürzer als <b>%s</b> Zeichen sind werden ignoriert');
+define('_SR_SEARCHRULE', 'Regel für die Suche');
+define('_SR_IGNOREDWORDS', 'Folgende Worte sind kürzer als die erlaubte Mindestlänge (%u Zeichen) und wurden deshalb bei der Suche nicht berücksichtigt:');
+############# added since 1.2 #############
+define('_SR_HITSRETURNED', 'Treffer');
+?>

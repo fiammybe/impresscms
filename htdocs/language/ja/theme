@@ -1,0 +1,101 @@
+<?php
+// general
+define("THEME_UPTOP","トップに戻る");
+define("THEME_VALIDCSS","このテンプレートはCSS1と2のためにW3Cで有効化されています。");
+define("THEME_VALIDXHTML","このテーマテンプレートはXHTML 1.01のためにW3Cで有効化されています");
+define("THEME_LICENSE","クリエーティブコモンズライセンスを見る");
+define("THEME_W3C","W3C有効 - XHTML 1.01 and CSS 1/2/3");
+
+// userbar.html
+define("THEME_REGISTER","登録");
+define("THEME_REGISTERATION",'ユーザ登録');
+define("THEME_REMEMBER"," 登録情報を保存する?");
+define("THEME_PSEUDO","ログイン");
+define("THEME_DESC_PSEUDO"," ユーザIDを記入します");
+define("THEME_PASSWORD","パスワード");
+define("THEME_DESC_PASSWORD"," パスワードを記入します。");
+
+define("THEME_WELLCOME","ようこそ");
+define("THEME_PROFILE","あなたのプロフィール");
+define("THEME_NOTIFICATION","ブックマーク");
+define("THEME_MESSAGE","受信箱の中身を見る");
+define("THEME_INBOX","受信箱");
+define("THEME_YOUHAVE","メッセージ ");
+define("THEME_NOTREAD","未読メッセージ");
+define("THEME_MYACCOUNT","プロフィール");
+define("THEME_LOGOUT","ログアウト");
+define("THEME_ADMIN","管理者");
+define("THEME_OR","または");
+
+// searchbar.html
+define("THEME_SEARCH","検索");
+define("THEME_DESC_SEARCH","このサイトで検索");
+define("THEME_KEYWORDS","キーワード");
+
+// globalnav.html
+define("THEME_CONTACT","コンタクト");
+define("THEME_CONTACT_DESC","サイト管理者にコンタクトしますか？");
+define("THEME_SITEMAP","サイトマップ");
+define("THEME_RSS","RSS");
+
+define("THEME_NAVTITLE","ナビゲーション");
+define("THEME_HOME","ホーム");
+define("THEME_HOME_DESC","ホームに戻る");
+
+define("THEME_MODULE1","ニュース");
+define("THEME_MODULE1_DESC","ニュースを見る");
+
+define("THEME_MODULE1_SUB1","カテゴリー 1"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE1_SUB2","カテゴリー 2"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE1_SUB3","カテゴリー 3"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE1_SUB4","カテゴリー 4"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE1_SUB5","カテゴリー 5"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+
+define("THEME_MODULE2","フォーラム");
+define("THEME_MODULE2_DESC","フォーラムに行く");
+
+define("THEME_MODULE3","写真館");
+define("THEME_MODULE3_DESC","写真館に行く");
+
+define("THEME_MODULE3_SUB1","ギャラリー 1"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE3_SUB2","ギャラリー 2"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE3_SUB3","ギャラリー 3"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE3_SUB4","ギャラリー 4"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE3_SUB5","ギャラリー 5"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+
+define("THEME_MODULE4","動画");
+define("THEME_MODULE4_DESC","動画を見る");
+
+define("THEME_MODULE4_SUB1","動画 1");
+define("THEME_MODULE4_SUB2","動画 2"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE4_SUB3","動画 3"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE4_SUB4","動画 4"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+define("THEME_MODULE4_SUB5","動画 5"); //*** the SUB are for sub-menu in globalnav.html 'dynamic'
+
+define("THEME_MODULE5","Web Links");
+define("THEME_MODULE5_DESC","リンクページに行く");
+
+define("THEME_MODULE6","ダウンロード");
+define("THEME_MODULE6_DESC","ダウンロードに行く");
+
+define("THEME_MODULE7","XoopsInfo");
+define("THEME_MODULE7_DESC","XoopsInfoモジュール");
+
+define("THEME_MODULE8","Protector");
+define("THEME_MODULE8_DESC","Protector Module");
+
+// Theme accessibility
+define("THEME_Aa","Aa");
+define("THEME_Amin","-");
+define("THEME_Aplus","+");
+
+// ImpressCMS Description Links
+define("THEME_Support_DESC","ImpressCMS プロジェクトを応援してください！");
+define("THEME_Blogs_DESC","ImpressCMSブログを読む");
+define("THEME_Wiki_DESC","ImpressCMSのコミュニティWIKIでもっと情報を得る");
+define("THEME_Addons_DESC","モジュール・テーマその他をダウンロードする");
+define("THEME_Community_DESC","ImpressCMSコミュニティに登録する");
+define("THEME_ImpressCMS_DESC","ImpressCMSメインサイトを訪問する");
+define("THEME_FEEDS","フィード");
+define("THEME_PARTNERS","パートナー");
+?>

@@ -1,0 +1,11 @@
+Hallo beheerder,
+
+Een nieuwe gebruiker heeft zich geregistreerd op {X_SITENAME}
+
+Gebruikersnaam: {UNAME}
+Email : {EMAIL}
+
+-----------
+Vriendelijke groeten,
+{X_SITENAME}
+{X_SITEURL}

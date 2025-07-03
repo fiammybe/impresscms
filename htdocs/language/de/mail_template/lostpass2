@@ -1,0 +1,15 @@
+Hallo {X_UNAME},
+
+Ein Webbenutzer von {IP} hat soeben ein neues Passwort für Ihr Konto bei  angefordert.
+Hier sind Ihre Login-Daten unter {SITENAME}.
+
+Benutzername: {X_USERLOGINNAME}
+Neues Passwort: {NEWPWD}
+
+Du kannst es ändern, nachdem du dich bei {SITEURL}/user.php angemeldet hast.
+Wenn Sie nicht darum gebeten haben, keine Sorge. Sie sehen diese Botschaft, nicht "sie". Wenn dies ein Fehler war, entschuldigen wir wirklich, aber bitte melden Sie sich mit Ihrem neuen Passwort an.
+
+-----------
+{SITENAME} ({SITEURL}) 
+Der Webmaster
+{ADMINMAIL}
