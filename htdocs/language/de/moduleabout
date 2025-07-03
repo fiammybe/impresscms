@@ -1,0 +1,35 @@
+<?php
+define('_MODABOUT_DEVELOPER_CONTRIBUTOR', 'Mitwirkende(r))');
+define('_MODABOUT_DEVELOPER_CREDITS', 'Danksagung');
+define('_MODABOUT_DEVELOPER_EMAIL', 'E-Mail');
+define('_MODABOUT_DEVELOPER_WEBSITE', 'Webseite');
+define('_MODABOUT_GOTOMODULE', 'Zum Modul wechseln');
+define('_MODABOUT_MODULE_BUG', 'Einen Fehler in diesem Modul melden');
+define('_MODABOUT_MODULE_DEMO', 'Demo Webseite');
+define('_MODABOUT_MODULE_DISCLAIMER', 'Haftungsausschluss');
+define('_MODABOUT_MODULE_FEATURE', 'Eine neue Funktion für dieses Modul vorschlagen');
+define('_MODABOUT_MODULE_INFO', 'Informationen über die Entwicklung dieses Moduls');
+define('_MODABOUT_MODULE_RELEASE_DATE', 'Datum der Veröffentlichung');
+define('_MODABOUT_MODULE_STATUS', 'Status');
+define('_MODABOUT_MODULE_SUBMIT_BUG', 'Einen Fehler melden');
+define('_MODABOUT_MODULE_SUBMIT_FEATURE', 'Eine Funktion vorschlagen');
+define('_MODABOUT_MODULE_SUPPORT', 'Offizielle Support Webseite');
+define('_MODABOUT_UPDATE_MODULE', 'Das Modul aktualisieren');
+define('_MODABOUT_VERSION_HISTORY', 'Werdegang');
+define('_MODABOUT_WARNING_BETA', "Dieses Modul wird so wie es ist, unter Ausschluss jeglicher Garantie oder Gewährleistung, angeboten. Dieses Modul hat noch BETA Status, d. h. es befindet sich noch in der Entwicklung. Diese Veröffentlichung dient ausschließlich <b>Testzwecken</b> und es wird <b>dringend</b> empfohlen es nicht auf einer aktiven Webseite oder in einer produktiven Umgebung einzusetzen.");
+define('_MODABOUT_WARNING_FINAL', "Dieses Modul wird so wie es ist, unter Ausschluss jeglicher Garantie oder Gewährleistung, angeboten. Obwohl dieses Modul den BETA Status bereits verlassen hat, befindet es sich noch in einem aktiven Entwicklungsprozess. Diese Veröffentlichung kann auf eigene Gefahr und ohne Verantwortung durch den Entwickler auf einer aktiven Webseite oder in einer produktiven Umgebung eingesetzt werden.");
+define('_MODABOUT_WARNING_RC', "Dieses Modul wird so wie es ist, unter Ausschluss jeglicher Garantie oder Gewährleistung, angeboten. Diese Veröffentlichung ist eine Vorab-Version des endgültigen Moduls und sollte nicht  auf einer aktiven Webseite oder in einer produktiven Umgebung eingesetzt werden. Das Modul befindet sich noch in einem aktiven Entwicklungsprozess, die Nutzung erfolgt auf eigene Gefahr und ohne Verantwortung des Entwicklers.");
+define('_MODABOUT_BY', 'Von');
+define('_MODABOUT_PEOPLE_DEVELOPERS', 'Entwickler');
+define('_MODABOUT_PEOPLE_TESTERS', 'Prüfer');
+define('_MODABOUT_PEOPLE_DOCUMENTERS', 'Dokumentation');
+define('_MODABOUT_PEOPLE_TRANSLATERS', 'Übersetzer');
+define('_MODABOUT_PEOPLE_OTHER', 'Weitere Mitwirkende');
+define('_MODABOUT_AUTHOR_INFO', 'Informationen zu den Mitwirkenden');
+define('_MODABOUT_AUTHOR_WORD', 'Hinweise des Autors');
+############# added since 1.2 #############
+define('_MODABOUT_WARNING_ALPHA', "Dieses Modul wird so wie es ist, unter Ausschluss jeglicher Garantie oder Gewährleistung, angeboten. Dieses Modul hat noch ALPHA Status, d. h. es befindet sich noch in der Entwicklung. Diese Veröffentlichung dient ausschließlich <b>Entwicklungs- und Testzwecken</b> und es wird <b>dringend</b> empfohlen es nicht auf einer aktiven Webseite oder in einer produktiven Umgebung einzusetzen.");
+define('_MODABOUT_MODULE_LICENSE', 'Lizenz');
+define('_MODABOUT_MANUAL', 'Benutzerhandbuch');
+define('_MODABOUT_MANUAL_WIKI', 'ImpressCMS Wiki');
+?>
