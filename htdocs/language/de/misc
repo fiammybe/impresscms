@@ -1,0 +1,25 @@
+<?php
+// $Id: misc.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: misc.php 12229 2013-07-19 08:08:05Z fiammy $
+define("_MSC_YOURNAMEC","Eigener Name: ");
+define("_MSC_YOUREMAILC","Eigene E-Mail Adresse: ");
+define("_MSC_FRIENDNAMEC","Name des Freundes: ");
+define("_MSC_FRIENDEMAILC","E-Mail Adresse des Freundes: ");
+define("_MSC_RECOMMENDSITE","Diese Webseite einem Freund empfehlen");
+// %s is your site name
+define("_MSC_INTSITE","Interessante Webseite: %s");
+define("_MSC_REFERENCESENT","Die Empfehlung wurde versandt! Vielen Dank!");
+define("_MSC_ENTERYNAME","Bitte den eigenen Namen eingeben");
+define("_MSC_ENTERFNAME","Bitte den Namen des Freundes eingeben");
+define("_MSC_ENTERFMAIL","Bitte die E-Mail Adresse des Freundes eingeben");
+define("_MSC_NEEDINFO","Bitte alle erforderlichen Angaben tätigen!");
+define("_MSC_INVALIDEMAIL1","Die eingegebene E-Mail Adresse ist ungültig.");
+define("_MSC_INVALIDEMAIL2","Bitte die E-Mail Adresse überprüfen und noch einmal versuchen.");
+
+define("_MSC_AVAVATARS","Verfügbare Profilbilder");
+
+define("_MSC_SMILIES","Smileys");
+define("_MSC_CLICKASMILIE","Einen Smiley anklicken um ihn in die Nachricht einzufügen.");
+define("_MSC_CODE","Code");
+define("_MSC_EMOTION","Emoticon");
+?>
