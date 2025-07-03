@@ -1,0 +1,10 @@
+Hallo {X_UNAME},
+
+Ihr Passwort für {SITENAME} wurde erfolgreich zurückgesetzt.
+
+Wenn Sie nicht darum gebeten haben, wenden Sie sich bitte an einen Administrator..
+
+-----------
+{SITENAME} ({SITEURL}) 
+Der Webmaster
+{ADMINMAIL}
