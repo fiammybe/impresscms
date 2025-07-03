@@ -1,140 +1,88 @@
-// ** I18N
+<?php
+// $Id: calendar.php 9538 2009-11-13 18:59:32Z pesianstranger $
+//%%%%%		Time Zone	%%%%
+define("_CAL_SUNDAY", "星期天");
+define("_CAL_MONDAY", "星期一");
+define("_CAL_TUESDAY", "星期二");
+define("_CAL_WEDNESDAY", "星期三");
+define("_CAL_THURSDAY", "星期四");
+define("_CAL_FRIDAY", "星期五");
+define("_CAL_SATURDAY", "星期六");
+define("_CAL_JANUARY", "一月");
+define("_CAL_FEBRUARY", "二月");
+define("_CAL_MARCH", "三月");
+define("_CAL_APRIL", "四月");
+define("_CAL_MAY", "五月");
+define("_CAL_JUNE", "六月");
+define("_CAL_JULY", "七月");
+define("_CAL_AUGUST", "八月");
+define("_CAL_SEPTEMBER", "九月");
+define("_CAL_OCTOBER", "十月");
+define("_CAL_NOVEMBER", "十一月");
+define("_CAL_DECEMBER", "十二月");
+define("_CAL_TGL1STD", "设置每周的第一天");
+define("_CAL_PREVYR", "上一. 年");
+define("_CAL_PREVMNTH", "上一. 月");
+define("_CAL_GOTODAY", "跳到今天");
+define("_CAL_NXTMNTH", "下一月");
+define("_CAL_NEXTYR", "下一年");
+define("_CAL_SELDATE", "选择日期");
+define("_CAL_DRAGMOVE", "拖拽移动");
+define("_CAL_TODAY", "今天");
+define("_CAL_DISPM1ST", "首先显示星期一");
+define("_CAL_DISPS1ST", "首先显示星期天");
 
-// Calendar EN language
-// Author: Mihai Bazon, <mihai_bazon@yahoo.com>
-// Encoding: any
-// Distributed under the same terms as the calendar itself.
-
-// For translators: please use UTF-8 if possible.  We strongly believe that
-// Unicode is the answer to a real internationalized world.  Also please
-// include your contact information in the header, as can be seen above.
-
-// full day names
-Calendar._DN = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-
-// Please note that the following array of short day names (and the same goes
-// for short month names, _SMN) isn't absolutely necessary.  We give it here
-// for exemplification on how one can customize the short day names, but if
-// they are simply the first N letters of the full name you can simply say:
-//
-//   Calendar._SDN_len = N; // short day name length
-//   Calendar._SMN_len = N; // short month name length
-//
-// If N = 3 then this is not needed either since we assume a value of 3 if not
-// present, to be compatible with translation files that were written before
-// this feature.
-
-// short day names
-Calendar._SDN = new Array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
-
-// First day of the week. "0" means display Sunday first, "1" means display
-// Monday first, etc.
-Calendar._FD = 1;
-
-// full month names
-Calendar._MN = new Array(
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-);
-
-// short month names
-Calendar._SMN = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-
-// full month names
-Calendar._JMN = new Array(
-    'Farvardin',
-    'Ordibehest',
-    'Khordad',
-    'Tir',
-    'Mordad',
-    'Shahrivar',
-    'Mehr',
-    'Aban',
-    'Azar',
-    'Day',
-    'Bahman',
-    'Esfand'
-);
-
-// short month names
-Calendar._JSMN = new Array(
-    'Farvardin',
-    'Ordibehest',
-    'Khordad',
-    'Tir',
-    'Mordad',
-    'Shahrivar',
-    'Mehr',
-    'Aban',
-    'Azar',
-    'Day',
-    'Bahman',
-    'Esfand'
-);
-
-// tooltips
-Calendar._TT = {};
-Calendar._TT['INFO'] = 'About the calendar';
-Calendar._TT['ABOUT'] =
-    'DHTML Date/Time Selector\n' +
-    '(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n' +
-    // don't translate this this ;-)
-    'For latest version visit: http://www.dynarch.com/projects/calendar/\n' +
-    'Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details.' +
-    '\n\n' +
-    'Date selection:\n' +
-    '- Use the «, » buttons to select year\n' +
-    '- Use the ' +
-    String.fromCharCode(0x2039) +
-    ', ' +
-    String.fromCharCode(0x203a) +
-    ' buttons to select month\n' +
-    '- Hold mouse button on any of the above buttons for faster selection.';
-Calendar._TT['ABOUT_TIME'] =
-    '\n\n' +
-    'Time selection:\n' +
-    '- Click on any of the time parts to increase it\n' +
-    '- or Shift-click to decrease it\n' +
-    '- or click and drag for faster selection.';
-Calendar._TT['PREV_YEAR'] = 'Prev. year (hold for menu)';
-Calendar._TT['PREV_MONTH'] = 'Prev. month (hold for menu)';
-Calendar._TT['GO_TODAY'] = '跳到今天';
-Calendar._TT['NEXT_MONTH'] = 'Next month (hold for menu)';
-Calendar._TT['NEXT_YEAR'] = 'Next year (hold for menu)';
-Calendar._TT['SEL_DATE'] = '选择日期';
-Calendar._TT['DRAG_TO_MOVE'] = '拖拽移动';
-Calendar._TT['PART_TODAY'] = ' (today)';
-
-// the following is to inform that "%s" is to be the first day of week
-// %s will be replaced with the day name.
-Calendar._TT['DAY_FIRST'] = '首先显示 %s ';
-
-// This may be locale-dependent.  It specifies the week-end days, as an array
+############# added since 1.1.2 #############
+define("_CAL_SUN", "日");
+define("_CAL_MON", "一");
+define("_CAL_TUE", "二");
+define("_CAL_WED", "三");
+define("_CAL_THU", "四");
+define("_CAL_FRI", "五");
+define("_CAL_SAT", "六");
+// First day of the week. "0" means display Sunday first, "1" means display Monday first, etc...
+define("_CAL_FIRSTDAY", "0");
+define("_CAL_JAN", "一月");
+define("_CAL_FEB", "二月");
+define("_CAL_MAR", "三月");
+define("_CAL_APR", "四月");
+define("_CAL_JUN", "六月");
+define("_CAL_JUL", "七月");
+define("_CAL_AUG", "八月");
+define("_CAL_SEP", "九月");
+define("_CAL_OCT", "十月");
+define("_CAL_NOV", "十一月");
+define("_CAL_DEC", "十二月");
+// Direction of the calendar, ltr for left to right and rtl for roght to left (for Persian, Arabic, etc.)
+define("_CAL_DIRECTION", "ltr");
+define("_CAL_AM", "上午");
+define("_CAL_AM_CAPS", "上午");
+define("_CAL_PM", "下午");
+define("_CAL_PM_CAPS", "下午");
+define("_CAL_TIME", "时间");
+define("_CAL_WK", "周"); // shorten of week-end
+// This may be local-dependent.  It specifies the week-end days, as an array
 // of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
 // means Monday, etc.
-Calendar._TT['WEEKEND'] = '0,6';
-Calendar._TT['CLOSE'] = 'Close';
-Calendar._TT['TODAY'] = '今天';
-Calendar._TT['TIME_PART'] = '(Shift-)Click or drag to change value';
+define("_CAL_WEEKEND", "0,6");
+define("_CAL_DSPFIRST", "首先显示 %s ");
+//This constants are for the jalali calendar included in the library
+define('_CAL_FARVARDIN','Farvardin');
+define('_CAL_ORDIBEHESHT','Ordibehest');
+define('_CAL_KHORDAD','Khordad');
+define('_CAL_TIR','Tir');
+define('_CAL_MORDAD','Mordad');
+define('_CAL_SHAHRIVAR','Shahrivar');
+define('_CAL_MEHR','Mehr');
+define('_CAL_ABAN','Aban');
+define('_CAL_AZAR','Azar');
+define('_CAL_DEY','Day');
+define('_CAL_BAHMAN','Bahman');
+define('_CAL_ESFAND','Esfand');
+define("_CAL_NUMS_ARRAY", "'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'"); // numeric values can differ in different languages
 
-// date formats
-Calendar._TT['DEF_DATE_FORMAT'] = '%Y-%m-%d';
-Calendar._TT['TT_DATE_FORMAT'] = '%a, %b %e';
-Calendar._TT['WK'] = '周';
-Calendar._TT['TIME'] = 'Time:';
-Calendar._TT['LAM'] = '上午';
-Calendar._TT['AM'] = '上午';
-Calendar._TT['LPM'] = '下午';
-Calendar._TT['PM'] = '下午';
-Calendar._NUMBERS = null;
-Calendar._DIR = 'ltr';
+############# added since 1.2 #############
+define("_CAL_SUFFIX", "th");
+define('_CAL_AM_LONG','上午');
+define('_CAL_PM_LONG','下午');
+?>
