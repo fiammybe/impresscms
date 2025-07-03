@@ -1,0 +1,14 @@
+Ciao {X_UNAME},
+
+Un utente web di {IP} ha appena richiesto di reimpostare la password per il tuo account su {SITENAME}.
+
+La password verrà reimpostata solo cliccando sul link qui sotto:
+
+{RESETPWD_LINK}
+
+Se non hai richiesto questo, non preoccuparti. Basta eliminare questa email e nulla sarà cambiato.
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}
