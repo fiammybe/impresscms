@@ -1,0 +1,15 @@
+Ciao {X_UNAME},
+
+Un utente web di {IP} ha appena richiesto che la password venga inviata.
+Ecco i tuoi dati di accesso su {SITENAME}.
+
+Username: {X_USERLOGINNAME}
+Nuova Password: {NEWPWD}
+
+Puoi cambiarlo dopo aver effettuato il login su {SITEURL}/user.php.
+Se non avete chiesto questo, non preoccupatevi. Stai vedendo questo messaggio, non 'loro'. Se questo è stato un errore, siamo davvero spiacenti, ma per favore accedi con la tua nuova password.
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}
