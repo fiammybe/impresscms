@@ -122,12 +122,15 @@ class icms_db_criteria_Compo extends icms_db_criteria_Element {
 	/**
 	 * Make the criteria into a SQL "WHERE" clause
 	 *
-	 * @return	string
+	 * @return	nullable string
 	 */
-	public function renderWhere() {
-		$ret = $this->render();
-		$ret = ($ret != '') ? 'WHERE ' . $ret : $ret;
-		return $ret;
+	public function renderWhere(): ?string
+	{
+	    $ret = $this->render();
+	    if ($ret !== '') {
+	        return 'WHERE ' . $ret;
+	    }
+	    return null;
 	}
 
 	/**
