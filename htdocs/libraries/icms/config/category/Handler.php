@@ -63,7 +63,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 	 * @param	bool    $isNew  Flag the new object as "new"?
 	 *
 	 * @return	object  New {@link icms_config_category_Object}
-	 * @see htdocs/kernel/icms_core_ObjectHandler#create()
+	 * @see htdocs/library/icms/core/ObjectHandler.php#create()
 	 */
 	public function &create($isNew = true)	{
 		$confcat = new icms_config_category_Object();
@@ -79,7 +79,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 	 * @param	int $id ConfigCategoryID to get
 	 *
 	 * @return	object|false  {@link icms_config_category_Object}, FALSE on fail
-	 * @see htdocs/kernel/icms_core_ObjectHandler#get($int_id)
+	 * @see htdocs/library/icms/core/ObjectHandler.php#get($int_id)
 	 */
 	public function &get($id) {
 		$confcat = false;
@@ -104,7 +104,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 	 * @param	object   &$confcat  {@link icms_config_category_Object}
 	 *
 	 * @return	bool    TRUE on success
-	 * @see htdocs/kernel/icms_core_ObjectHandler#insert($object)
+	 * @see htdocs/library/icms/core/ObjectHandler.php#insert($object)
 	 */
 	public function insert(&$confcat) {
 		/**
@@ -151,7 +151,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 	 * @param	object  &$confcat   {@link icms_config_category_Object}
 	 *
 	 * @return	bool    TRUE on success
-	 * @see htdocs/kernel/icms_core_ObjectHandler#delete($object)
+	 * @see htdocs/library/icms/core/ObjectHandler.php#delete($object)
 	 */
 	public function delete(&$confcat) {
 		/**

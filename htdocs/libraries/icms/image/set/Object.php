@@ -50,7 +50,7 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  *
  * These sets are managed through a {@link icms_image_set_Handler} object
  *
- * @package     kernel
+ * @package     image
  *
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org

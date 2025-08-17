@@ -82,7 +82,7 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @param   int $id ID
 	 *
 	 * @return  object  {@link icms_data_comment_Object}, FALSE on fail
-	 * @see htdocs/kernel/icms_core_ObjectHandler#get($int_id)
+	 * @see htdocs/library/icms/core/ObjectHandler.php#get($int_id)
 	 **/
 	public function &get($id) {
 		$comment = false;

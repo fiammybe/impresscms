@@ -270,11 +270,7 @@ abstract class icms {
 					// Try old style handler loading (should be removed later, in favor of the
 					// lookup table present in xoops_gethandler)
 					$lower = strtolower(trim($name));
-					if (file_exists($hnd_file = ICMS_ROOT_PATH.'/kernel/' . $lower . '.php')) {
-						require_once $hnd_file;
-					} elseif (file_exists($hnd_file = ICMS_ROOT_PATH.'/class/' . $lower . '.php')) {
-						require_once $hnd_file;
-					}
+
 					if (!class_exists($class = 'Xoops' . ucfirst($lower) . 'Handler', FALSE)) {
 						if (!class_exists($class = 'Icms' . ucfirst($lower) . 'Handler', FALSE)) {
 							// Not found at all
