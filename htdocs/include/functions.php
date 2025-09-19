@@ -641,8 +641,8 @@ function icms_userIsAdmin($module = false)
 function icms_loadLanguageFile($module, $file, $admin=false)
 {
 	global $icmsConfig;
-	if($module == 'core') {$languagePath = ICMS_ROOT_PATH.'/language/';}
-	else {$languagePath = ICMS_ROOT_PATH.'/modules/'.$module.'/language/';}
+	if($module == 'core') { $languagePath = ICMS_ROOT_PATH . '/language/'; }
+	else { $languagePath = icms_module_path($module) . '/language/'; }
 	$extraPath = $admin ? 'admin/' : '';
 	/** @noinspection NullCoalescingOperatorCanBeUsedInspection */
 	$lang = isset($icmsConfig['language']) ? $icmsConfig['language'] : 'english';
@@ -2185,6 +2185,11 @@ function icms_multisite_module_dir_candidates($dirname) {
 	$candidates = array();
 	if ($domain) {
 		$candidates[] = ICMS_MODULES_PATH . '/' . $domain . '/' . $dirname;
+		// also consider www/no-www alias variant
+		$alt = (strpos($domain, 'www.') === 0) ? substr($domain, 4) : ('www.' . $domain);
+		if ($alt !== $domain) {
+			$candidates[] = ICMS_MODULES_PATH . '/' . $alt . '/' . $dirname;
+		}
 	}
 	$candidates[] = ICMS_MODULES_PATH . '/base/' . $dirname;
 	$candidates[] = ICMS_MODULES_PATH . '/' . $dirname;
@@ -2236,7 +2241,12 @@ function icms_modules_available_categorized() {
 		return $list;
 	};
 	if ($domain) {
-		$found['site'] = $scan(ICMS_MODULES_PATH . '/' . $domain);
+		$variants = array($domain);
+		$alt = (strpos($domain, 'www.') === 0) ? substr($domain, 4) : ('www.' . $domain);
+		if ($alt !== $domain) { $variants[] = $alt; }
+		$site = array();
+		foreach ($variants as $d) { $site = array_merge($site, $scan(ICMS_MODULES_PATH . '/' . $d)); }
+		$found['site'] = array_values(array_unique($site));
 	}
 	$found['global'] = $scan(ICMS_MODULES_PATH . '/base');
 	$found['legacy'] = $scan(ICMS_MODULES_PATH);
