@@ -381,16 +381,29 @@ class icms_module_Handler extends icms_core_ObjectHandler {
 	 * @return	array	List of folder names in the modules directory
 	 */
 	static public function getAvailable() {
-		$dirtyList = $cleanList = array();
-		$dirtyList = icms_core_Filesystem::getDirList(ICMS_MODULES_PATH . '/');
-		foreach ($dirtyList as $item) {
-			if (file_exists(ICMS_MODULES_PATH . '/' . $item . '/icms_version.php')) {
-				$cleanList[$item] = $item;
-			} elseif (file_exists(ICMS_MODULES_PATH . '/' . $item . '/xoops_version.php')) {
-				$cleanList[$item] = $item;
+		$cat = icms_modules_available_categorized();
+		$ordered = array();
+		foreach (array('site','global','legacy') as $k) {
+			if (!empty($cat[$k]) && is_array($cat[$k])) {
+				foreach ($cat[$k] as $dir) {
+					$ordered[$dir] = $dir;
+				}
 			}
 		}
-		return $cleanList;
+		return $ordered;
+	}
+
+	/**
+	 * Returns available modules categorized by scope: site, global, legacy
+	 * @since 1.5 multisite
+	 * @return array
+	 */
+	static public function getAvailableCategorized() {
+		$cat = icms_modules_available_categorized();
+		foreach (array('site','global','legacy') as $k) {
+			if (!isset($cat[$k]) || !is_array($cat[$k])) $cat[$k] = array();
+		}
+		return $cat;
 	}
 
 	/**

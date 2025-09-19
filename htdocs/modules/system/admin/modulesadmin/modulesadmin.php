@@ -69,6 +69,8 @@ function xoops_module_list() {
 	$icmsAdminTpl->assign('lang_install', _MD_AM_INSTALL);
 	$icmsAdminTpl->assign('lang_installed', _MD_AM_INSTALLED);
 	$icmsAdminTpl->assign('lang_noninstall', _MD_AM_NONINSTALL);
+	$icmsAdminTpl->assign('lang_noninstall_global', 'Global Modules');
+	$icmsAdminTpl->assign('lang_noninstall_site', 'Site-Specific Modules');
 
 	$module_handler = icms::handler('icms_module');
 	$installed_mods = $module_handler->getObjects();
@@ -76,11 +78,13 @@ function xoops_module_list() {
 	foreach ($installed_mods as $module) {
 		$module->registerClassPath(FALSE);
 		$module->getInfo();
-		$mod = array('mid' => $module->getVar('mid'),
+		$mod = array(
+			'mid' => $module->getVar('mid'),
 			'dirname' => $module->getVar('dirname'),
 			'name' => $module->getInfo('name'),
 			'title' => $module->getVar('name'),
 			'image' => $module->getInfo('image'),
+			'image_url' => icms_module_url($module->getVar('dirname')) . '/' . $module->getInfo('image'),
 			'adminindex' => $module->getInfo('adminindex'),
 			'hasadmin' => $module->getVar('hasadmin'),
 			'hasmain' => $module->getVar('hasmain'),
@@ -89,24 +93,38 @@ function xoops_module_list() {
 			'status' => ($module->getInfo('status')) ? $module->getInfo('status') : '&nbsp;',
 			'last_update' => ($module->getVar('last_update') != 0) ? formatTimestamp($module->getVar('last_update'), 'm') : '&nbsp;',
 			'weight' => $module->getVar('weight'),
-			'support_site_url' => $module->getInfo('support_site_url'));
+			'support_site_url' => $module->getInfo('support_site_url')
+		);
 		$icmsAdminTpl->append('modules', $mod);
 		$listed_mods[] = $module->getVar('dirname');
 	}
 
-	$dirlist = icms_module_Handler::getAvailable();
-	$uninstalled = array_diff($dirlist, $listed_mods);
-	foreach ($uninstalled as $file) {
-		clearstatcache();
-		$file = trim($file);
-		$module = &$module_handler->create();
-		if (!$module->loadInfo($file, FALSE)) {
-			continue;
+	$categorized = icms_module_Handler::getAvailableCategorized();
+	$installed = $listed_mods;
+	$assignUninstalled = function($dirnames, $targetVar) use ($module_handler, $icmsAdminTpl, $installed) {
+		foreach ((array)$dirnames as $file) {
+			if (in_array($file, $installed)) continue;
+			clearstatcache();
+			$file = trim($file);
+			$module = $module_handler->create();
+			if (!$module->loadInfo($file, FALSE)) {
+				continue;
+			}
+			$dirname = $module->getInfo('dirname');
+			$mod = array(
+				'dirname' => $dirname,
+				'name' => $module->getInfo('name'),
+				'image' => $module->getInfo('image'),
+				'image_url' => icms_module_url($dirname) . '/' . $module->getInfo('image'),
+				'version' => $module->getInfo('version'),
+				'status' => $module->getInfo('status')
+			);
+			$icmsAdminTpl->append($targetVar, $mod);
+			unset($module);
 		}
-		$mod = array('dirname' => $module->getInfo('dirname'), 'name' => $module->getInfo('name'), 'image' => $module->getInfo('image'), 'version' => $module->getInfo('version'), 'status' => $module->getInfo('status'));
-		$icmsAdminTpl->append('avmodules', $mod);
-		unset($module);
-	}
+	};
+	$assignUninstalled(isset($categorized['global']) ? $categorized['global'] : array(), 'avmodules_global');
+	$assignUninstalled(isset($categorized['site']) ? $categorized['site'] : array(), 'avmodules_site');
 
 	return $icmsAdminTpl->fetch('db:system_adm_modulesadmin.html');
 }
@@ -177,7 +195,7 @@ function xoops_module_install($dirname) {
 			} else {
 				$driver = XOOPS_DB_TYPE;
 			}
-			$sql_file_path = ICMS_MODULES_PATH . "/" . $dirname . "/" . $sqlfile[$driver];
+			$sql_file_path = icms_module_path($dirname) . "/" . $sqlfile[$driver];
 			if (!file_exists($sql_file_path)) {
 				$errs[] = sprintf(_MD_AM_SQL_NOT_FOUND, '<strong>' . $sql_file_path . '</strong>');
 				$error = TRUE;
@@ -514,7 +532,7 @@ function xoops_module_install($dirname) {
 			$install_script = $module->getInfo('onInstall');
 			$ModName = ($module->getInfo('modname') != '') ? trim($module->getInfo('modname')) : $dirname;
 			if (FALSE !== $install_script && trim($install_script) != '') {
-				include_once ICMS_MODULES_PATH . '/' . $dirname . '/' . trim($install_script);
+				include_once icms_module_path($dirname) . '/' . trim($install_script);
 
 				$is_IPF = $module->getInfo('object_items');
 				if (!empty($is_IPF)) {
@@ -574,9 +592,9 @@ function &xoops_module_gettemplate($dirname, $template, $block = FALSE) {
 	global $icmsConfig;
 	$ret = '';
 	if ($block) {
-		$path = ICMS_MODULES_PATH . '/' . $dirname . '/templates/blocks/' . $template;
+		$path = icms_module_path($dirname) . '/templates/blocks/' . $template;
 	} else {
-		$path = ICMS_MODULES_PATH . '/' . $dirname . '/templates/' . $template;
+		$path = icms_module_path($dirname) . '/templates/' . $template;
 	}
 	if (!file_exists($path)) {
 		return $ret;
@@ -812,7 +830,7 @@ function xoops_module_uninstall($dirname) {
 			$uninstall_script = $module->getInfo('onUninstall');
 			$ModName = ($module->getInfo('modname') != '') ? trim($module->getInfo('modname')) : $dirname;
 			if (FALSE !== $uninstall_script && trim($uninstall_script) != '') {
-				include_once ICMS_MODULES_PATH . '/' . $dirname . '/' . trim($uninstall_script);
+				include_once icms_module_path($dirname) . '/' . trim($uninstall_script);
 				if (function_exists('xoops_module_uninstall_' . $ModName)) {
 					$func = 'xoops_module_uninstall_' . $ModName;
 					if (!$func($module)) {
@@ -1362,7 +1380,7 @@ function icms_module_update($dirname) {
 		$update_script = $module->getInfo('onUpdate');
 		$ModName = ($module->getInfo('modname') != '') ? trim($module->getInfo('modname')) : $dirname;
 		if (FALSE !== $update_script && trim($update_script) != '') {
-			include_once ICMS_MODULES_PATH . '/' . $dirname . '/' . trim($update_script);
+			include_once icms_module_path($dirname) . '/' . trim($update_script);
 
 			$is_IPF = $module->getInfo('object_items');
 			if (!empty($is_IPF)) {
