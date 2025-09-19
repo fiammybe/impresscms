@@ -312,10 +312,10 @@ abstract class icms {
 
 			$clean_SERVER = icms_core_DataFilter::checkVarArray($_SERVER, $filters, false);
 
-			$phpself = $clean_SERVER['SCRIPT_NAME'];
-			$httphost = $clean_SERVER['HTTP_HOST'];
-			$querystring = $clean_SERVER['QUERY_STRING'];
-			if ($querystring != '' ) {
+			$phpself = isset($clean_SERVER['SCRIPT_NAME']) ? $clean_SERVER['SCRIPT_NAME'] : '';
+			$httphost = isset($clean_SERVER['HTTP_HOST']) ? $clean_SERVER['HTTP_HOST'] : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
+			$querystring = isset($clean_SERVER['QUERY_STRING']) ? $clean_SERVER['QUERY_STRING'] : '';
+			if ($querystring !== '') {
 				$querystring = '?' . $querystring;
 			}
 			$currenturl = $http . $httphost . $phpself . $querystring;

@@ -39,6 +39,20 @@
  * make sure mainfile is included, for security and functionality
  */
 defined("XOOPS_MAINFILE_INCLUDED") or die();
+// Redirect to installer if default template config is detected to avoid 500s before install
+$__script = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
+$__base = defined('XOOPS_ROOT_PATH') ? XOOPS_ROOT_PATH : dirname(__DIR__);
+if (strpos($__script, '/install/') === false && is_dir($__base . '/install')) {
+    $__has_placeholders = false;
+    if (defined('XOOPS_DB_USER') && XOOPS_DB_USER === 'db_user') $__has_placeholders = true;
+    if (defined('XOOPS_DB_NAME') && XOOPS_DB_NAME === 'db_name') $__has_placeholders = true;
+    if (defined('XOOPS_URL') && XOOPS_URL === 'http://example.local') $__has_placeholders = true;
+    if ($__has_placeholders) {
+        header('Location: ' . (isset($_SERVER['HTTP_HOST']) ? ( (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] : '') . '/install/index.php');
+        exit();
+    }
+}
+
 
 // -- Include common functions and constants file
 require_once ICMS_ROOT_PATH . "/include/constants.php";
