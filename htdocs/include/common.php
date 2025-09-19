@@ -54,6 +54,20 @@ if (strpos($__script, '/install/') === false && is_dir($__base . '/install')) {
 }
 
 
+
+// Ensure per-request ICMS_URL reflects the current HTTP host to avoid cross-domain URLs
+if (!defined('ICMS_URL')) {
+	$https = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
+		|| (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+	$scheme = $https ? 'https' : 'http';
+	$host = isset($_SERVER['HTTP_HOST']) ? strtolower($_SERVER['HTTP_HOST']) : '';
+	if ($host) {
+		$pos = strpos($host, ':');
+		if ($pos !== false) $host = substr($host, 0, $pos);
+		define('ICMS_URL', $scheme . '://' . $host);
+	}
+}
+
 // -- Include common functions and constants file
 require_once ICMS_ROOT_PATH . "/include/constants.php";
 include_once ICMS_INCLUDE_PATH . "/functions.php";

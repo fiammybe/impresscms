@@ -276,20 +276,22 @@ function xoops_getenv($key)
  */
 function xoops_getcss($theme = '')
 {
-	if($theme == '') {$theme = $GLOBALS['icmsConfig']['theme_set'];}
+	if ($theme == '') { $theme = $GLOBALS['icmsConfig']['theme_set']; }
 	$uagent = xoops_getenv('HTTP_USER_AGENT');
-	if(stristr($uagent, 'mac')) {$str_css = 'styleMAC.css';}
-	elseif(preg_match("/MSIE ([0-9]\.[0-9]{1,2})/i", $uagent)) {$str_css = 'style.css';}
-	else {$str_css = 'styleNN.css';}
-	if(is_dir(ICMS_THEME_PATH.'/'.$theme))
-	{
-		if(file_exists(ICMS_THEME_PATH.'/'.$theme.'/'.$str_css)) {return ICMS_THEME_URL.'/'.$theme.'/'.$str_css;}
-		elseif(file_exists(ICMS_THEME_PATH.'/'.$theme.'/style.css')) {return ICMS_THEME_URL.'/'.$theme.'/style.css';}
+	if (stristr($uagent, 'mac')) { $str_css = 'styleMAC.css'; }
+	elseif (preg_match("/MSIE ([0-9]\.[0-9]{1,2})/i", $uagent)) { $str_css = 'style.css'; }
+	else { $str_css = 'styleNN.css'; }
+
+	$basePath = icms_theme_path($theme);
+	$baseUrl  = icms_theme_url($theme);
+
+	if (is_dir($basePath)) {
+		if (file_exists($basePath . '/' . $str_css)) { return $baseUrl . '/' . $str_css; }
+		elseif (file_exists($basePath . '/style.css')) { return $baseUrl . '/style.css'; }
 	}
-	if(is_dir(ICMS_THEME_PATH.'/'.$theme.'/css'))
-	{
-		if(file_exists(ICMS_THEME_PATH.'/'.$theme.'/css/'.$str_css)) {return ICMS_THEME_URL.'/'.$theme.'/css/'.$str_css;}
-		elseif(file_exists(ICMS_THEME_PATH.'/'.$theme.'/css/style.css')) {return ICMS_THEME_URL.'/'.$theme.'/css/style.css';}
+	if (is_dir($basePath . '/css')) {
+		if (file_exists($basePath . '/css/' . $str_css)) { return $baseUrl . '/css/' . $str_css; }
+		elseif (file_exists($basePath . '/css/style.css')) { return $baseUrl . '/css/style.css'; }
 	}
 	return '';
 }
@@ -2239,4 +2241,64 @@ function icms_modules_available_categorized() {
 	$found['global'] = $scan(ICMS_MODULES_PATH . '/base');
 	$found['legacy'] = $scan(ICMS_MODULES_PATH);
 	return $found;
+}
+
+
+// --- Multisite helpers: theme path/URL resolution (site-specific, global, legacy) ---
+/**
+ * Candidates for theme directory lookup in priority order:
+ * 1) /themes/{domain}/{name}
+ * 2) /themes/base/{name}
+ * 3) /themes/{name} (legacy single-site)
+ */
+function icms_multisite_theme_dir_candidates($name) {
+	$domain = icms_multisite_get_domain();
+	$candidates = array();
+	if ($domain) {
+		$candidates[] = ICMS_THEME_PATH . '/' . $domain . '/' . $name;
+	}
+	$candidates[] = ICMS_THEME_PATH . '/base/' . $name;
+	$candidates[] = ICMS_THEME_PATH . '/' . $name;
+	return $candidates;
+}
+
+/**
+ * Resolve filesystem path for a theme across multisite directories.
+ */
+function icms_theme_path($name) {
+	foreach (icms_multisite_theme_dir_candidates($name) as $path) {
+		if (is_dir($path)) return $path;
+	}
+	// best effort fallback to legacy path
+	return ICMS_THEME_PATH . '/' . $name;
+}
+
+/**
+ * Resolve public URL base for a theme across multisite directories.
+ */
+function icms_theme_url($name) {
+	$domain = icms_multisite_get_domain();
+	if ($domain && is_dir(ICMS_THEME_PATH . '/' . $domain . '/' . $name)) {
+		return ICMS_THEME_URL . '/' . $domain . '/' . $name;
+	}
+	if (is_dir(ICMS_THEME_PATH . '/base/' . $name)) {
+		return ICMS_THEME_URL . '/base/' . $name;
+	}
+	return ICMS_THEME_URL . '/' . $name;
+}
+
+/**
+ * Resolve relative URL prefix for a theme for resource linking (without ICMS_URL prefix).
+ * Returns strings like:
+ *   themes/{domain}/{name} OR themes/base/{name} OR themes/{name}
+ */
+function icms_theme_relurl_prefix($name) {
+	$domain = icms_multisite_get_domain();
+	if ($domain && is_dir(ICMS_THEME_PATH . '/' . $domain . '/' . $name)) {
+		return 'themes/' . $domain . '/' . $name;
+	}
+	if (is_dir(ICMS_THEME_PATH . '/base/' . $name)) {
+		return 'themes/base/' . $name;
+	}
+	return 'themes/' . $name;
 }
