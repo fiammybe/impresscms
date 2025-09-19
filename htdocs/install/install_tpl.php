@@ -131,14 +131,7 @@ if (defined('_ADM_USE_RTL') && _ADM_USE_RTL) {
 								 title="<?php echo BUTTON_PREVIOUS; ?>" width="16"/>
 						</button>
 					<?php } ?>
-					<?php if ($wizard->currentPage == 11) { ?>
-						<button id="hmo" title="<?php echo BUTTON_SHOW_SITE; ?>" type="button"
-								onclick="location.href='<?php echo $wizard->pageURI('11'); ?>?success=true'"
-								class="finish">
-							<img src="img/Home.png" alt="<?php echo BUTTON_SHOW_SITE; ?>"
-								 title="<?php echo BUTTON_SHOW_SITE; ?>" width="32"/>
-						</button>
-					<?php } ?>
+
 					<?php if ($wizard->pages[$wizard->currentPage] == $wizard->secondlastpage) { ?>
 					<?php if (@$pageHasForm) { ?>
 					<button type="submit">

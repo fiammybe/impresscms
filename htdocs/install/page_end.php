@@ -22,13 +22,11 @@
 require_once 'common.inc.php';
 if (!defined( 'XOOPS_INSTALL' ) )	exit();
 include_once "../mainfile.php";
-$success = isset($_GET['success'])?trim($_GET['success']):false;
+$success = isset($_GET['success']) ? trim($_GET['success']) : false;
 if ($success) {
-	if (is_dir(ICMS_ROOT_PATH.'/install')) {
-		icms_core_Filesystem::deleteRecursive(ICMS_ROOT_PATH.'/install', true);
-		header('Location: '.ICMS_URL.'/');
-	}
-	$_SESSION = array();
+	// In the new flow, proceed to the cleanup step for explicit confirmation
+	$wizard->redirectToPage('+1');
+	exit();
 }
 
 $wizard->setPage( 'end' );

@@ -53,6 +53,7 @@ class IcmsInstallWizard {
 			$this->pages[] = 'tablesfill';
 			$this->pages[] = 'modulesinstall';
 			$this->pages[] = 'end';
+			$this->pages[] = 'cleanup';
 		}
 
 		$this->lastpage = end($this->pages);
@@ -74,6 +75,7 @@ class IcmsInstallWizard {
 			$this->pagesNames[] = DATA_INSERTION;
 			$this->pagesNames[] = MODULES_INSTALL;
 			$this->pagesNames[] = WELCOME;
+			$this->pagesNames[] = CLEANUP;
 		}
 
 		if ($this->no_php5) {
@@ -93,6 +95,7 @@ class IcmsInstallWizard {
 			$this->pagesTitles[] = DATA_INSERTION_TITLE;
 			$this->pagesTitles[] = MODULES_INSTALL_TITLE;
 			$this->pagesTitles[] = WELCOME_TITLE;
+			$this->pagesTitles[] = CLEANUP_TITLE;
 		}
 
 		$this->setPage(0);

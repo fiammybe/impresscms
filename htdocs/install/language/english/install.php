@@ -233,3 +233,11 @@ define("DB_PCONNECT_HELPS",  "Persistent connections are useful with slower inte
 
 // Added in 1.3
 define("FILE_PERMISSIONS", "File Permissions");
+
+
+// Cleanup step
+define("CLEANUP", "Cleanup");
+define("CLEANUP_TITLE", "Installer cleanup");
+define("CLEANUP_PROMPT", "Do you want to remove the installer directory now? You can also do this later for security.");
+define("BUTTON_REMOVE_INSTALLER", "Remove installer now");
+define("BUTTON_KEEP_INSTALLER", "Keep installer");
