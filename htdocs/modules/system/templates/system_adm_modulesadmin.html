@@ -17,10 +17,10 @@
         <div id="modlogo" style="float: <{$smarty.const._GLOBAL_LEFT}>; padding: 2px;">
           <{if $module.hasadmin == 1 && $module.isactive == '1'}>
             <a href="<{$xoops_url}>/modules/<{$module.dirname}>/<{$module.adminindex}>">
-              <img src="<{$xoops_url}>/modules/<{$module.dirname}>/<{$module.image}>" alt="<{$module.name}>" title="<{$module.name}>" border="0" />
+              <img src="<{if $module.image_url != ''}><{$module.image_url}><{else}><{$xoops_url}>/modules/<{$module.dirname}>/<{$module.image}><{/if}>" alt="<{$module.name}>" title="<{$module.name}>" border="0" />
             </a>
           <{else}>
-            <img src="<{$xoops_url}>/modules/<{$module.dirname}>/<{$module.image}>" alt="<{$module.name}>" title="<{$module.name}>" border="0" />
+            <img src="<{if $module.image_url != ''}><{$module.image_url}><{else}><{$xoops_url}>/modules/<{$module.dirname}>/<{$module.image}><{/if}>" alt="<{$module.name}>" title="<{$module.name}>" border="0" />
           <{/if}>&nbsp;
         </div>
         <div id="modlogo" style="float: <{$smarty.const._GLOBAL_LEFT}>; padding-top: 2px;">
@@ -62,7 +62,7 @@
         <a href="<{$xoops_url}>/modules/system/admin.php?fct=modulesadmin&amp;op=update&amp;module=<{$module.dirname}>"><img src="<{$xoops_url}>/modules/system/images/update.png" alt="<{$lang_update}>" title="<{$lang_update}>"/></a>
         <{if $module.isactive != '1'}>
           <a href="<{$xoops_url}>/modules/system/admin.php?fct=modulesadmin&amp;op=uninstall&amp;module=<{$module.dirname}>"><img src="<{$xoops_url}>/modules/system/images/uninstall.png" alt="<{$lang_unistall}>" title="<{$lang_unistall}>" /></a>
-        <{/if}>  
+        <{/if}>
         <a href='javascript:openWithSelfMain("<{$xoops_url}>/modules/system/admin.php?fct=version&amp;mid=<{$module.mid}>","Info",300,230);'><img src="<{$xoops_url}>/modules/system/images/info.png" alt="<{$lang_info}>" title="<{$lang_info}>" /></a>
         <input type="hidden" name="module[]" value="<{$module.mid}>" />
       </td>
@@ -79,6 +79,7 @@
 </form>
 <br />
 <h2><{$lang_noninstall}></h2>
+<h3><{$lang_noninstall_global}></h3>
 <table width='100%' border='0' class='outer' cellpadding='4' cellspacing='1'>
   <tr align='center'>
     <th><{$lang_module}></th>
@@ -86,10 +87,34 @@
     <th><{$lang_modstatus}></th>
     <th width='130px'><{$lang_action}></th>
   </tr>
-  <{foreach item=module from=$avmodules}>
+  <{foreach item=module from=$avmodules_global}>
     <tr valign='middle'class="<{cycle values="even,odd"}>">
       <td>
-        <div id="modlogo" style="padding: 2px;"><img src="<{$xoops_url}>/modules/<{$module.dirname}>/<{$module.image}>" alt="<{$module.name}>" alt="<{$module.name}>" border="0" />&nbsp;</div>
+        <div id="modlogo" style="padding: 2px;"><img src="<{if $module.image_url != ''}><{$module.image_url}><{else}><{$xoops_url}>/modules/<{$module.dirname}>/<{$module.image}><{/if}>" alt="<{$module.name}>" border="0" />&nbsp;</div>
+	    <div id="modlogo" style="padding-top: 10px;"> <b><{$lang_modulename}>: </b><{$module.name}><br /> </div>
+      </td>
+      <td align='center'><{$module.version}></td>
+      <td align='center'><{$module.status}></td>
+      <td width='130px' align='center'>
+        <a href="<{$xoops_url}>/modules/system/admin.php?fct=modulesadmin&op=install&module=<{$module.dirname}>"><img src="<{$xoops_url}>/modules/system/images/install.png" alt="<{$lang_install}>" title="<{$lang_install}>" /></a>
+        <a href='javascript:openWithSelfMain("<{$xoops_url}>/modules/system/admin.php?fct=version&mid=<{$module.dirname}>","Info",300,230);'><img src="<{$xoops_url}>/modules/system/images/info.png" alt="<{$lang_info}>" title="<{$lang_info}>" /></a>
+      </td>
+    </tr>
+  <{/foreach}>
+</table>
+<h3><{$lang_noninstall_site}></h3>
+
+<table width='100%' border='0' class='outer' cellpadding='4' cellspacing='1'>
+  <tr align='center'>
+    <th><{$lang_module}></th>
+    <th><{$lang_version}></th>
+    <th><{$lang_modstatus}></th>
+    <th width='130px'><{$lang_action}></th>
+  </tr>
+  <{foreach item=module from=$avmodules_site}>
+    <tr valign='middle'class="<{cycle values="even,odd"}>">
+      <td>
+        <div id="modlogo" style="padding: 2px;"><img src="<{if $module.image_url != ''}><{$module.image_url}><{else}><{$xoops_url}>/modules/<{$module.dirname}>/<{$module.image}><{/if}>" alt="<{$module.name}>" border="0" />&nbsp;</div>
 	    <div id="modlogo" style="padding-top: 10px;"> <b><{$lang_modulename}>: </b><{$module.name}><br /> </div>
       </td>
       <td align='center'><{$module.version}></td>
