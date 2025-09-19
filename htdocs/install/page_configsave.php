@@ -92,17 +92,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$dbinfo_in_trust_path = false;
 	}
 
-	if (!copy($vars['ROOT_PATH'] . '/install/templates/mainfile.dist.php', $vars['ROOT_PATH'] . '/mainfile.php')) {
+	// Decide where to write the generated mainfile (support multisite bootstrap)
+	$rootMainfile = $vars['ROOT_PATH'] . '/mainfile.php';
+	$targetMainfile = $rootMainfile;
+	$is_multisite_stub = false;
+	if (is_file($rootMainfile)) {
+		$mf = @file_get_contents($rootMainfile);
+		if ($mf !== false && strpos($mf, 'multi-site bootstrap stub') !== false) {
+			$is_multisite_stub = true;
+		}
+	}
+	if ($is_multisite_stub) {
+		// Canonicalize current host to choose per-domain config filename
+		$host = isset($_SERVER['HTTP_HOST']) ? strtolower($_SERVER['HTTP_HOST']) : '';
+		if ($host !== '') {
+			$p = strpos($host, ':');
+			if ($p !== false) $host = substr($host, 0, $p);
+			if (strpos($host, 'www.') === 0) $host = substr($host, 4);
+		}
+		$targetMainfile = $vars['ROOT_PATH'] . '/' . ($host !== '' ? 'mainfile.' . $host . '.php' : 'mainfile.default.php');
+	}
+
+	if (!copy($vars['ROOT_PATH'] . '/install/templates/mainfile.dist.php', $targetMainfile)) {
 		$error = ERR_COPY_MAINFILE;
 	} else {
 		clearstatcache();
 
 		$rewrite = array('GROUP_ADMIN' => 1, 'GROUP_USERS' => 2, 'GROUP_ANONYMOUS' => 3);
 		$rewrite = array_merge($rewrite, $vars);
-		if (!$file = fopen($vars['ROOT_PATH'] . '/mainfile.php', "r")) {
+		if (!$file = fopen($targetMainfile, "r")) {
 			$error = ERR_READ_MAINFILE;
 		} else {
-			$content = fread($file, filesize($vars['ROOT_PATH'] . '/mainfile.php'));
+			$content = fread($file, filesize($targetMainfile));
 			fclose($file);
 
 			if ($dbinfo_in_trust_path) {
@@ -129,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 					// $this->report .= _NGIMG.sprintf( ERR_WRITING_CONSTANT, "<b>$val</b>")."<br />\n";
 				}
 			}
-			if (!$file = fopen($vars['ROOT_PATH'] . '/mainfile.php', "w")) {
+			if (!$file = fopen($targetMainfile, "w")) {
 				$error = ERR_WRITE_MAINFILE;
 			} else {
 				if (fwrite($file, $content) == -1) {
@@ -172,7 +193,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	exit();
 }
 
+
+// Multisite banner detection for UI
+$__ms_banner = '';
+$__ms_rootMainfile = $vars['ROOT_PATH'] . '/mainfile.php';
+if (is_file($__ms_rootMainfile)) {
+    $__ms_mf = @file_get_contents($__ms_rootMainfile);
+    if ($__ms_mf !== false && strpos($__ms_mf, 'multi-site bootstrap stub') !== false) {
+        $__ms_host = isset($_SERVER['HTTP_HOST']) ? strtolower($_SERVER['HTTP_HOST']) : '';
+        if ($__ms_host !== '') {
+            $__p = strpos($__ms_host, ':'); if ($__p !== false) $__ms_host = substr($__ms_host, 0, $__p);
+            if (strpos($__ms_host, 'www.') === 0) $__ms_host = substr($__ms_host, 4);
+        }
+        $__ms_filename = ($__ms_host !== '' ? 'mainfile.' . $__ms_host . '.php' : 'mainfile.default.php');
+        $__ms_banner = '<div class="x2-note info">' .
+            'Multisite bootstrap detected. The installer will save configuration to <strong>' . $__ms_filename . '</strong> and keep <strong>mainfile.php</strong> unchanged.' .
+            '</div>';
+    }
+}
+
 ob_start();
+if (!empty($__ms_banner)) echo $__ms_banner;
 ?>
 <p class="x2-note"><?php
 
