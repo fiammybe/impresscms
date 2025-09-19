@@ -2155,3 +2155,88 @@ function icms_need_do_br($moduleName=false) {
 		return true;
 	}
 }
+
+
+
+// --- Multisite helpers: domain detection and module path/URL resolution ---
+/**
+ * Returns the normalized current host (domain) used for multisite selection.
+ * Examples: example.com, sub.example.com, impresscms.be
+ */
+function icms_multisite_get_domain() {
+	$host = isset($_SERVER['HTTP_HOST']) ? strtolower($_SERVER['HTTP_HOST']) : '';
+	if ($host === '') return '';
+	// strip port if present
+	$pos = strpos($host, ':');
+	if ($pos !== false) $host = substr($host, 0, $pos);
+	return $host;
+}
+
+/**
+ * Candidates for module directory lookup in priority order:
+ * 1) /modules/{domain}/{dirname}
+ * 2) /modules/base/{dirname}
+ * 3) /modules/{dirname} (legacy single-site)
+ */
+function icms_multisite_module_dir_candidates($dirname) {
+	$domain = icms_multisite_get_domain();
+	$candidates = array();
+	if ($domain) {
+		$candidates[] = ICMS_MODULES_PATH . '/' . $domain . '/' . $dirname;
+	}
+	$candidates[] = ICMS_MODULES_PATH . '/base/' . $dirname;
+	$candidates[] = ICMS_MODULES_PATH . '/' . $dirname;
+	return $candidates;
+}
+
+/**
+ * Resolve filesystem path for a module dirname across multisite directories.
+ */
+function icms_module_path($dirname) {
+	foreach (icms_multisite_module_dir_candidates($dirname) as $path) {
+		if (is_dir($path)) return $path;
+	}
+	// best effort fallback to legacy path
+	return ICMS_MODULES_PATH . '/' . $dirname;
+}
+
+/**
+ * Resolve URL base for a module dirname across multisite directories.
+ */
+function icms_module_url($dirname) {
+	$domain = icms_multisite_get_domain();
+	if ($domain && is_dir(ICMS_MODULES_PATH . '/' . $domain . '/' . $dirname)) {
+		return ICMS_MODULES_URL . '/' . $domain . '/' . $dirname;
+	}
+	if (is_dir(ICMS_MODULES_PATH . '/base/' . $dirname)) {
+		return ICMS_MODULES_URL . '/base/' . $dirname;
+	}
+	return ICMS_MODULES_URL . '/' . $dirname;
+}
+
+/**
+ * Discover available (uninstalled) modules categorized by scope.
+ * Returns an associative array with keys: 'site', 'global', 'legacy'
+ */
+function icms_modules_available_categorized() {
+	$found = array('site' => array(), 'global' => array(), 'legacy' => array());
+	$domain = icms_multisite_get_domain();
+	// helper to scan a root for module dirs containing icms_version.php or xoops_version.php
+	$scan = function($root) {
+		$list = array();
+		if (!is_dir($root)) return $list;
+		$dirs = icms_core_Filesystem::getDirList($root . '/');
+		foreach ($dirs as $item) {
+			if (file_exists($root . '/' . $item . '/icms_version.php') || file_exists($root . '/' . $item . '/xoops_version.php')) {
+				$list[] = $item;
+			}
+		}
+		return $list;
+	};
+	if ($domain) {
+		$found['site'] = $scan(ICMS_MODULES_PATH . '/' . $domain);
+	}
+	$found['global'] = $scan(ICMS_MODULES_PATH . '/base');
+	$found['legacy'] = $scan(ICMS_MODULES_PATH);
+	return $found;
+}
