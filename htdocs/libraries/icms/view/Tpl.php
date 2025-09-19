@@ -85,11 +85,33 @@ class icms_view_Tpl extends Smarty {
 				$this->debugging = true;
 			}
 		}
-		
+
 		parent::__construct();
 		if (defined('_ADM_USE_RTL') && _ADM_USE_RTL) {
 			$this->assign('icms_rtl', true);
 		}
+
+			// Per-domain template compile/cache directories for multisite
+			if (function_exists('icms_multisite_get_domain')) {
+				$__domain = icms_multisite_get_domain();
+				if ($__domain) {
+					$__compileDir = ICMS_COMPILE_PATH . '/' . $__domain;
+					$__cacheDir = ICMS_CACHE_PATH . '/' . $__domain;
+					if (!is_dir($__compileDir)) {
+						// allow dots in domain folder names; avoid replacing '.'
+						icms_core_Filesystem::mkdir($__compileDir, 0777, '', array('[', '?', '"', '<', '>', '|', ' '));
+					}
+					if (!is_dir($__cacheDir)) {
+						icms_core_Filesystem::mkdir($__cacheDir, 0777, '', array('[', '?', '"', '<', '>', '|', ' '));
+					}
+					$this->compile_dir = $__compileDir;
+					$this->cache_dir = $__cacheDir;
+					// Strengthen compile_id with domain to avoid any cross-hit
+					$this->compile_id = $__domain . '-' . $this->compile_id;
+					$this->_compile_id = $this->compile_id;
+				}
+			}
+
 
 		$this->assign(
 			array(
@@ -111,6 +133,8 @@ class icms_view_Tpl extends Smarty {
 			)
 		);
 	}
+
+
 
 	/**
 	 * Renders output from template data
