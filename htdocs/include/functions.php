@@ -2212,8 +2212,14 @@ function icms_module_path($dirname) {
  */
 function icms_module_url($dirname) {
 	$domain = icms_multisite_get_domain();
-	if ($domain && is_dir(ICMS_MODULES_PATH . '/' . $domain . '/' . $dirname)) {
-		return ICMS_MODULES_URL . '/' . $domain . '/' . $dirname;
+	if ($domain) {
+		if (is_dir(ICMS_MODULES_PATH . '/' . $domain . '/' . $dirname)) {
+			return ICMS_MODULES_URL . '/' . $domain . '/' . $dirname;
+		}
+		$alt = (strpos($domain, 'www.') === 0) ? substr($domain, 4) : ('www.' . $domain);
+		if ($alt !== $domain && is_dir(ICMS_MODULES_PATH . '/' . $alt . '/' . $dirname)) {
+			return ICMS_MODULES_URL . '/' . $alt . '/' . $dirname;
+		}
 	}
 	if (is_dir(ICMS_MODULES_PATH . '/base/' . $dirname)) {
 		return ICMS_MODULES_URL . '/base/' . $dirname;
@@ -2311,4 +2317,102 @@ function icms_theme_relurl_prefix($name) {
 		return 'themes/base/' . $name;
 	}
 	return 'themes/' . $name;
+}
+
+/**
+ * Resolve relative URL prefix for a module for resource linking (without ICMS_URL prefix).
+ * Returns strings like:
+ *   modules/{domain}/{dirname} OR modules/base/{dirname} OR modules/{dirname}
+ */
+function icms_module_relurl_prefix($dirname) {
+	$domain = icms_multisite_get_domain();
+	if ($domain) {
+		if (is_dir(ICMS_MODULES_PATH . '/' . $domain . '/' . $dirname)) {
+			return 'modules/' . $domain . '/' . $dirname;
+		}
+		$alt = (strpos($domain, 'www.') === 0) ? substr($domain, 4) : ('www.' . $domain);
+		if ($alt !== $domain && is_dir(ICMS_MODULES_PATH . '/' . $alt . '/' . $dirname)) {
+			return 'modules/' . $alt . '/' . $dirname;
+		}
+	}
+	if (is_dir(ICMS_MODULES_PATH . '/base/' . $dirname)) {
+		return 'modules/base/' . $dirname;
+	}
+	return 'modules/' . $dirname;
+}
+
+/**
+ * Resolve a legacy module URL (absolute or site-relative) to the correct multisite URL.
+ * Examples:
+ *  - /modules/content/content.php -> /modules/{domain}/content/content.php or /modules/base/content/content.php
+ *  - https://host/modules/content/foo.png -> preserves scheme/host, rewrites path only
+ */
+function icms_resolve_legacy_module_url($url) {
+	$parsed = @parse_url($url);
+	$path = isset($parsed['path']) ? $parsed['path'] : $url;
+	// normalize leading slash and ICMS_URL prefix
+	$prefix = '';
+	if (strpos($path, ICMS_URL) === 0) {
+		$prefix = ICMS_URL;
+		$path = substr($path, strlen(ICMS_URL));
+	}
+	if ($path === '' || $path[0] !== '/') {
+		$path = '/' . ltrim($path, '/');
+	}
+	if (strpos($path, '/modules/') !== 0) return $url;
+	$rest = substr($path, strlen('/modules/'));
+	$parts = explode('/', $rest, 2);
+	if (count($parts) < 1 || $parts[0] === '') return $url;
+	$dirname = $parts[0];
+	$tail = (count($parts) === 2) ? $parts[1] : '';
+	$relprefix = icms_module_relurl_prefix($dirname);
+	$newPath = '/' . $relprefix . ($tail !== '' ? '/' . $tail : '');
+	if ($prefix !== '') return $prefix . $newPath;
+	return $newPath;
+}
+
+/**
+ * Rewrite legacy module URLs inside an HTML string to multisite-aware URLs.
+ * It updates href/src/action attributes that start with ICMS_URL/modules/ or /modules/.
+ */
+function icms_multisite_rewrite_legacy_module_urls_in_html($html) {
+	$replacer = function($m) {
+		$attr = $m[1];
+		$q = $m[2];
+		$u = $m[3];
+		return $attr . '=' . $q . icms_resolve_legacy_module_url($u) . $q;
+	};
+	$pattern = '/\b(href|src|action)=("|\')(?:' . preg_quote(ICMS_URL, '/') . ')?\/modules\/[^"\']*\2/i';
+	return preg_replace_callback($pattern, function($match) use ($replacer) {
+		// Extract and pass original pieces to replacer
+		$attr = preg_replace('/=.*/', '', $match[0]);
+		$quote = $match[0][strlen($attr)+1];
+		$url = trim(substr($match[0], strlen($attr)+2), $quote);
+		return $replacer(array(1=>$attr,2=>$quote,3=>$url));
+	}, $html);
+}
+
+
+/**
+ * Smarty output filter adapter: rewrite legacy module URLs in rendered HTML.
+ */
+function icms_smarty_outputfilter_multisite_module_urls($tpl_output, &$smarty) {
+	return icms_multisite_rewrite_legacy_module_urls_in_html($tpl_output);
+}
+
+/**
+ * Header callback to rewrite Location redirects pointing to legacy module URLs.
+ */
+function icms_multisite_rewrite_location_headers() {
+	$headers = headers_list();
+	foreach ($headers as $h) {
+		if (stripos($h, 'Location:') === 0) {
+			$url = trim(substr($h, strlen('Location:')));
+			$new = icms_resolve_legacy_module_url($url);
+			if ($new !== $url) {
+				if (function_exists('header_remove')) header_remove('Location');
+				header('Location: ' . $new);
+			}
+		}
+	}
 }

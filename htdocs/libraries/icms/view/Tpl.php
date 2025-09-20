@@ -132,6 +132,12 @@ class icms_view_Tpl extends Smarty {
 			'xoops_upload_url' => ICMS_UPLOAD_URL
 			)
 		);
+
+			// Rewrite legacy module URLs in rendered HTML to multisite-aware URLs
+			if (function_exists('icms_smarty_outputfilter_multisite_module_urls')) {
+				$this->register_outputfilter('icms_smarty_outputfilter_multisite_module_urls');
+			}
+
 	}
 
 

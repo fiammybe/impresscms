@@ -84,6 +84,12 @@ require_once ICMS_LIBRARIES_PATH . "/icms.php";
 icms::setup();
 icms::boot();
 
+
+// Rewrite legacy module URLs in Location headers (redirects) to multisite-aware URLs
+if (function_exists('header_register_callback') && function_exists('icms_multisite_rewrite_location_headers')) {
+	header_register_callback('icms_multisite_rewrite_location_headers');
+}
+
 // -- Easiest ML by Gijoe (no longer needed here)
 
 // Disable gzip compression if PHP is run under CLI mode or if multi-language is enabled
