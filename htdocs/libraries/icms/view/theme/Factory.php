@@ -92,7 +92,7 @@ class icms_view_theme_Factory {
 		$options['path'] =
 			(is_dir(ICMS_MODULES_PATH . '/system/themes/' . $options['folderName']))
 			? ICMS_MODULES_PATH . '/system/themes/' . $options['folderName']
-			: ICMS_THEME_PATH . '/' . $options['folderName'];
+			: icms_theme_path($options['folderName']);
 		$inst = new icms_view_theme_Object();
 		foreach ($options as $k => $v) {
 			$inst->$k = $v;
@@ -109,22 +109,30 @@ class icms_view_theme_Factory {
 	public function isThemeAllowed($name) {
 		return (empty($this->allowedThemes) || in_array($name, $this->allowedThemes));
 	}
-	
+
 	/**
 	 * Gets list of themes folder from themes directory, excluding any directories that do not have theme.html
 	 * @return	array
 	 */
 	static public function getThemesList() {
-		$dirtyList = $cleanList = array();
-		$dirtyList = icms_core_Filesystem::getDirList(ICMS_THEME_PATH . '/');
-		foreach ($dirtyList as $item) {
-			if (file_exists(ICMS_THEME_PATH . '/' . $item . '/theme.html')) {
-				$cleanList[$item] = $item;
+		$cleanList = array();
+		$domain = icms_multisite_get_domain();
+		$roots = array();
+		if ($domain) $roots[] = ICMS_THEME_PATH . '/' . $domain;
+		$roots[] = ICMS_THEME_PATH . '/base';
+		$roots[] = ICMS_THEME_PATH;
+		foreach ($roots as $root) {
+			if (!is_dir($root)) continue;
+			$dirs = icms_core_Filesystem::getDirList($root . '/');
+			foreach ($dirs as $item) {
+				if (!isset($cleanList[$item]) && file_exists($root . '/' . $item . '/theme.html')) {
+					$cleanList[$item] = $item;
+				}
 			}
 		}
 		return $cleanList;
 	}
-	
+
 	/**
 	 * Gets list of administration themes folder from themes directory, excluding any directories that do not have theme_admin.html
 	 * @return	array

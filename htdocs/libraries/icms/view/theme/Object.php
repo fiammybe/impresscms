@@ -143,12 +143,16 @@ class icms_view_theme_Object {
 	public function xoInit($options = array()) {
 		global $xoops;
 
-		$this->path = (is_dir(ICMS_MODULES_PATH . '/system/themes/' . $this->folderName))
-			? ICMS_MODULES_PATH . '/system/themes/' . $this->folderName
-			: ICMS_THEME_PATH . '/' . $this->folderName;
-		$this->url = (is_dir(ICMS_MODULES_PATH . '/system/themes/' . $this->folderName))
-			? ICMS_MODULES_URL . '/system/themes/' . $this->folderName
-			: ICMS_THEME_URL . '/' . $this->folderName;
+		if (is_dir(ICMS_MODULES_PATH . '/system/themes/' . $this->folderName)) {
+			$this->path = ICMS_MODULES_PATH . '/system/themes/' . $this->folderName;
+			$this->url = ICMS_MODULES_URL . '/system/themes/' . $this->folderName;
+			$this->relUrlPrefix = '';
+		} else {
+			$this->path = icms_theme_path($this->folderName);
+			$this->url = icms_theme_url($this->folderName);
+			// derive relative URL prefix (themes/... variant) for resourcePath()
+			$this->relUrlPrefix = icms_theme_relurl_prefix($this->folderName);
+		}
 
 		$this->template = new icms_view_Tpl();
 		$this->template->currentTheme =& $this;
@@ -161,7 +165,7 @@ class icms_view_theme_Object {
 				'icms_theme' => $this->folderName,
 				'icms_imageurl' => (is_dir(ICMS_MODULES_PATH . '/system/themes/' . $this->folderName . '/'))
 					? ICMS_MODULES_URL . '/system/themes/' . $this->folderName . '/'
-					: ICMS_THEME_URL . '/' . $this->folderName . '/',
+					: $this->url . '/',
 				'icms_themecss'=> xoops_getcss($this->folderName),
 				'icms_requesturi' => htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES),
 				'icms_sitename' => htmlspecialchars($icmsConfig['sitename'], ENT_QUOTES),
@@ -698,6 +702,9 @@ class icms_view_theme_Object {
 			$path = substr($path, 1);
 		}
 		if (file_exists("$this->path/$path")) {
+			if (!empty($this->relUrlPrefix)) {
+				return $this->relUrlPrefix . '/' . $path;
+			}
 			return "themes/$this->folderName/$path";
 		}
 		return $path;
