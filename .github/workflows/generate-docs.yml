@@ -1,0 +1,55 @@
+name: Generate and Update Documentation
+
+on:
+    push:
+        branches: [ autodoc-for-llm ]
+        paths:
+            - 'htdocs/libraries/icms/**'
+    workflow_dispatch:
+
+jobs:
+    generate-docs:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout ImpressCMS repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  tools: composer
+
+            - name: Install phpDocumentor
+              run: |
+                  composer require --dev phpdocumentor/phpdocumentor
+
+            - name: Generate Documentation
+              run: |
+                  mkdir -p docs
+                  vendor/bin/phpdoc \
+                    --directory=htdocs/libraries/icms \
+                    --target=docs \
+                    --template="markdown" \
+                    --force \
+                    --ignore="*/tests/*" \
+                    --ignore="*/vendor/*"
+
+            - name: Checkout Wiki
+              uses: actions/checkout@v4
+              with:
+                  repository: ImpressCMS/impresscms.wiki
+                  path: wiki
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Copy Documentation to Wiki
+              run: |
+                  cp -r docs/* wiki/
+                  cd wiki
+                  git config user.name "github-actions"
+                  git config user.email "github-actions@github.com"
+                  git add .
+                  git commit -m "Update documentation from ImpressCMS"
+                  git push
