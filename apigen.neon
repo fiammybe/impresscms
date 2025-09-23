@@ -1,0 +1,68 @@
+# ApiGen configuration for ImpressCMS
+
+source:
+    - htdocs/libraries/icms
+
+destination: docs
+
+title: "ImpressCMS API Documentation"
+baseUrl: "https://github.com/ImpressCMS/impresscms/wiki"
+
+# Generate Markdown
+templateConfig:
+    - ApiGen\Template\MarkdownTemplateConfiguration
+
+# Group classes by namespace
+groups: true
+
+# Include private/protected methods (set to false to exclude)
+accessLevels:
+    - public
+    - protected
+    - private
+
+# Ignore specific directories
+exclude:
+    - */tests/*
+    - */vendor/*
+    - */node_modules/*
+
+# Include annotations
+annotations:
+    - author
+    - copyright
+    - deprecated
+    - internal
+    - link
+    - method
+    - param
+    - property
+    - return
+    - see
+    - throws
+    - todo
+    - uses
+    - var
+
+# Generate TOC
+toc:
+    - name: "ImpressCMS"
+      link: "index.md"
+      items:
+          - name: "Ipf"
+            link: "Ipf.md"
+          - name: "View"
+            link: "Ipf/View.md"
+          - name: "icms_ipf_view"
+            link: "Ipf/View/icms_ipf_view.md"
+
+# Main index file
+index:
+    - "README.md"
+
+# Include source code in documentation
+sourceCode: true
+
+# Use GitHub-flavored Markdown
+markdown:
+    flavor: "github"
