@@ -1,0 +1,24 @@
+{
+  "name": "fiammybe/impresscms",
+  "description": "ImpressCMS core CMS framework",
+  "type": "library",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "ImpressCMS Contributors",
+      "homepage": "https://github.com/fiammybe/impresscms"
+    }
+  ],
+  "autoload": {
+    "classmap": [
+      "htdocs/libraries/icms/"
+    ]
+  },
+  "require": {
+    "php": ">=7.4"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}
