@@ -263,7 +263,10 @@ class SystemBlocksadminHandler extends icms_view_block_Handler {
 	}
 
 	public function getContentTypeArray() {
-		return array('H' => _AM_HTML, 'P' => _AM_PHP, 'S' => _AM_AFWSMILE, 'T' => _AM_AFNOSMILE);
+		// Add Markdown (M) alongside legacy types
+		$types = array('H' => _AM_HTML, 'P' => _AM_PHP, 'S' => _AM_AFWSMILE, 'T' => _AM_AFNOSMILE);
+		$types['M'] = defined('_AM_MARKDOWN') ? _AM_MARKDOWN : 'Markdown';
+		return $types;
 	}
 
 	public function getBlockCacheTimeArray() {

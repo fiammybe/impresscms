@@ -107,6 +107,24 @@ class icms_view_block_Object extends icms_ipf_Object {
                     $content = str_replace('{X_SITEURL}', ICMS_URL . '/', $content);
                     $content = str_replace(XOOPS_DB_SALT, '', $content);
 					return $content;
+				} elseif ($c_type == 'M') {
+					// Markdown: render via content type handler and sanitize HTML output
+					$raw = str_replace('{X_SITEURL}', ICMS_URL . '/', $this->getVar('content', 'n'));
+					// Ensure content type runtime is available
+					$base = ICMS_ROOT_PATH . '/libraries/icms/form/content/';
+					if (file_exists($base . 'ContentTypeHandlerInterface.php')) {
+						require_once $base . 'ContentTypeHandlerInterface.php';
+						require_once $base . 'AbstractContentTypeHandler.php';
+						require_once $base . 'PlainTextContentTypeHandler.php';
+						require_once $base . 'HtmlContentTypeHandler.php';
+						require_once $base . 'MarkdownContentTypeHandler.php';
+						require_once $base . 'ContentTypeManager.php';
+						$handler = icms_form_content_ContentTypeManager::get('markdown');
+						$html = $handler->renderForOutput($raw, true); // sanitize=true for security
+						return $html;
+					}
+					// Fallback: return sanitized plaintext
+					return icms_core_HTMLFilter::filterHTML(nl2br(htmlspecialchars($raw, ENT_QUOTES)));
 				} elseif ($c_type == 'P') {
 					ob_start();
 					echo eval(icms_core_DataFilter::undoHtmlSpecialChars($this->getVar('content', 'e')));
