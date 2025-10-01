@@ -69,7 +69,7 @@ foreach ($subject_icons as $iconfile) {
 	$icons_radio->addOption($iconfile, '<img src="' . ICMS_URL . '/images/subject/' . $iconfile . '" alt="" />');
 }
 $cform->addElement($icons_radio);
-$cform->addElement(new icms_form_elements_Dhtmltextarea(_CM_MESSAGE, 'com_text', $com_text, 10, 50), true);
+$cform->addElement(new icms_form_elements_Dhtmltextarea(_CM_MESSAGE, 'com_text', $com_text, 10, 50, 'xoopsHiddenText', ['content_type' => 'markdown']), true);
 $option_tray = new icms_form_elements_Tray(_OPTIONS, '<br />');
 
 $button_tray = new icms_form_elements_Tray('' , '&nbsp;');
@@ -97,7 +97,7 @@ if (is_object(icms::$user)) {
 			$button_tray->addElement(new icms_form_elements_Button('', 'com_dodelete', _DELETE, 'submit'));
 		}
 	}
-    
+
     //$cform->addElement(new icms_form_elements_Hidden('dohtml', $dohtml));
     $html_checkbox = new icms_form_elements_Checkbox('', 'dohtml', $dohtml);
     $html_checkbox->addOption(1, _CM_DOHTML);

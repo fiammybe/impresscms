@@ -1,5 +1,16 @@
 # ImpressCMS ChangeLog
 
+## ImpressCMS 2.0.2 RC
+* Date : 23 September 2025
+* DB Version : 48
+* Build Version : 115
+
+### What's Changed
+#### Bugfixes
+*
+#### New
+* Several form controls now use templates instead of hardcoded HTML by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1630
+
 ## ImpressCMS 2.0.2 beta
 * Date : 04 July 2025
 * DB Version : 48
@@ -15,18 +26,18 @@
 * Add function to count files in a directory to icms_core_Filesystem by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1626
 * Adding automatic update of the system module by @skenow in https://github.com/ImpressCMS/impresscms/pull/1629
 * Templated form elements by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1584
-  
-## ImpressCMS 2.0.1 
+
+## ImpressCMS 2.0.1
 * Date : 08 Jan 2025
 * DB Version: 48
 * Build Version : 113
 
-Yes, a quick update to fix an embarassing typo that broke the system module. 
+Yes, a quick update to fix an embarassing typo that broke the system module.
 ### What's Changed
 #### Bugfixes
 * Fix typo by @fiammybe in https://github.com/ImpressCMS/impresscms/issues/1614
 
-## ImpressCMS 2.0.0 
+## ImpressCMS 2.0.0
 * Date : 06 Jan 2025
 * DB Version: 48
 * Build Version : 112
@@ -66,7 +77,7 @@ ImpressCMS 2.0.0 final. This release rises the minimal PHP version to PHP 7.4, a
 * fix:the $icmsModule mentioned here was a local variable and should no… by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1598
 * Fix:Fix the CKEditor Image Manager that couldn't find WideImage by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1601
 * fix:make addslashes parameter nullable by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1600
-    
+
 #### Updates
 * upgrade cssTidy to 2.0.3, with support for PHP 8 by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1398
 * upgrade simplepie to 1.8.0 by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1405
