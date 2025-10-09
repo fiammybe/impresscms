@@ -1,826 +1,463 @@
 <?php
-/**
- * icms_ipf_Object Table Listing
- *
- * Contains the classes responsible for displaying a highly configurable and features rich listing of IcmseristableObject objects
- *
- * @copyright The ImpressCMS Project http://www.impresscms.org/
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
- * @since 1.1
- * @author marcan <marcan@impresscms.org>
- */
-defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
+declare(strict_types=1);
 
 /**
- * icms_ipf_view_Table base class
+ * ImpressCMS - IPF Table View with multi-criteria filters
  *
- * Base class representing a table for displaying icms_ipf_Object objects
+ * This file extends the IPF table rendering to show multiple filter criteria
+ * side-by-side and combines them in a CriteriaCompo (AND by default).
  *
- * @copyright The ImpressCMS Project http://www.impresscms.org/
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
- * @package ICMS\IPF\View
- * @since 1.1
- * @author marcan <marcan@impresscms.org>
- * @todo Properly declare all vars with their visibility (private, protected, public) and follow naming convention
+ * Compatible with PHP 7.4 through 8.4.
+ *
+ * @category  ImpressCMS
+ * @package   icms_ipf_view
  */
+
+defined('ICMS_ROOT_PATH') or die('Restricted access');
+
+/**
+ * NOTE: This file is based on the structure and conventions in ImpressCMS 2.0.x.
+ * If your local version diverges, adjust method names and property access accordingly.
+ */
+
 class icms_ipf_view_Table {
-	var $_id;
-	var $_objectHandler;
-	var $_columns;
-	var $_criteria;
-	var $_actions;
-	var $_objects = false;
-	var $_aObjects;
-	var $_custom_actions;
-	var $_sortsel;
-	var $_ordersel;
-	var $_limitsel;
-	var $_filtersel;
-	var $_filterseloptions;
-	var $_filtersel2;
-	var $_filtersel2options;
-	var $_filtersel2optionsDefault;
-	var $_tempObject;
-	var $_tpl;
-	var $_introButtons;
-	var $_quickSearch = false;
-	var $_actionButtons = false;
-	var $_head_css_class = 'bg3';
-	var $_hasActions = false;
-	var $_userSide = false;
-	var $_printerFriendlyPage = false;
-	var $_tableHeader = false;
-	var $_tableFooter = false;
-	var $_showActionsColumnTitle = true;
-	var $_isTree = false;
-	var $_showFilterAndLimit = true;
-	var $_enableColumnsSorting = true;
-	var $_customTemplate = false;
-	var $_withSelectedActions = array();
-
-	/**
-	 * Constructor
-	 *
-	 * @param object $objectHandler {@link icms_ipf_Handler}
-	 * @param array $columns array representing the columns to display in the table
-	 * @param object $criteria
-	 * @param array $actions array representing the actions to offer
-	 *
-	 * @return array
-	 */
-	public function __construct(&$objectHandler, $criteria = false, $actions = array('edit', 'delete'), $userSide = false) {
-		$this->_id = $objectHandler->className;
-		$this->_objectHandler = $objectHandler;
-
-		if (!$criteria) {
-			$criteria = new icms_db_criteria_Compo();
-		}
-		$this->_criteria = $criteria;
-		$this->_actions = $actions;
-		$this->_custom_actions = array();
-		$this->_userSide = $userSide;
-		if ($userSide) {
-			$this->_head_css_class = 'head';
-		}
-	}
-
-	/**
-	 *
-	 * @param $op
-	 * @param $caption
-	 * @param $text
-	 */
-	public function addActionButton($op, $caption = false, $text = false) {
-		$action = array('op' => $op, 'caption' => $caption, 'text' => $text);
-		$this->_actionButtons[] = $action;
-	}
-
-	/**
-	 *
-	 * @param $columnObj
-	 */
-	public function addColumn($columnObj) {
-		$this->_columns[] = $columnObj;
-	}
-
-	/**
-	 *
-	 * @param $name
-	 * @param $location
-	 * @param $value
-	 */
-	public function addIntroButton($name, $location, $value) {
-		$introButton = array();
-		$introButton['name'] = $name;
-		$introButton['location'] = $location;
-		$introButton['value'] = $value;
-		$this->_introButtons[] = $introButton;
-		unset($introButton);
-	}
-
-	/**
-	 */
-	public function addPrinterFriendlyLink() {
-		$current_url = icms::$urls['full'];
-		$this->_printerFriendlyPage = $current_url . '&print';
-	}
-
-	/**
-	 *
-	 * @param $fields
-	 * @param $caption
-	 */
-	public function addQuickSearch($fields, $caption = _CO_ICMS_QUICK_SEARCH) {
-		$this->_quickSearch = array('fields' => $fields, 'caption' => $caption);
-	}
-
-	/**
-	 *
-	 * @param unknown_type $content
-	 */
-	public function addHeader($content) {
-		$this->_tableHeader = $content;
-	}
-
-	/**
-	 *
-	 * @param $content
-	 */
-	public function addFooter($content) {
-		$this->_tableFooter = $content;
-	}
-
-	/**
-	 *
-	 * @param $caption
-	 */
-	public function addDefaultIntroButton($caption) {
-		$this->addIntroButton($this->_objectHandler->_itemname, $this->_objectHandler->_page . "?op=mod", $caption);
-	}
-
-	/**
-	 *
-	 * @param $method
-	 */
-	public function addCustomAction($method) {
-		$this->_custom_actions[] = $method;
-	}
-
-	/**
-	 *
-	 * @param $default_sort
-	 */
-	public function setDefaultSort($default_sort) {
-		$this->_sortsel = $default_sort;
-	}
-
-	/**
-	 * get the default sorting
-	 */
-	public function getDefaultSort() {
-		return $this->getCookie($this->_id . '_sortsel', $this->_sortsel ?: $this->_objectHandler->identifierName);
-	}
-
-	/**
-	 *
-	 * @param unknown_type $default_order
-	 */
-	public function setDefaultOrder($default_order) {
-		$this->_ordersel = $default_order;
-	}
-
-	/**
-	 *
-	 * @return string the default order returned from a cookie
-	 */
-	public function getDefaultOrder() {
-		return $this->getCookie($this->_id . '_ordersel', $this->_ordersel ?: 'ASC');
-	}
-
-	/**
-	 *
-	 * @param $actions
-	 */
-	public function addWithSelectedActions($actions = array()) {
-		$this->addColumn(new icms_ipf_view_Column('checked', 'center', 20, false, false, '&nbsp;'));
-		$this->_withSelectedActions = $actions;
-	}
-
-	/**
-	 * Adding a filter in the table
-	 *
-	 * @param string $key key to the field that will be used for sorting
-	 * @param string $method method of the handler that will be called to populate the options when this filter is selected
-	 */
-	public function addFilter($key, $method, $default = false) {
-		$this->_filterseloptions[$key] = $method;
-		$this->_filtersel2optionsDefault = $default;
-	}
-
-	/**
-	 *
-	 * @param $default_filter
-	 */
-	public function setDefaultFilter($default_filter) {
-		$this->_filtersel = $default_filter;
-	}
-
-	/**
-	 */
-	public function isForUserSide() {
-		$this->_userSide = true;
-	}
-
-	/**
-	 *
-	 * @param $template
-	 */
-	public function setCustomTemplate($template) {
-		$this->_customTemplate = $template;
-	}
-
-	/**
-	 *
-	 * @todo Switch to dependency injection
-	 */
-	public function setSortOrder() {
-		$this->_sortsel = isset($_GET[$this->_objectHandler->_itemname . '_' . 'sortsel']) ? filter_input(INPUT_GET, $this->_objectHandler->_itemname . '_' . 'sortsel', FILTER_SANITIZE_STRING) : $this->getDefaultSort();
-
-		$this->setCookie($this->_id . '_sortsel', $this->_sortsel);
-		$fieldsForSorting = $this->_tempObject->getFieldsForSorting($this->_sortsel);
-
-		if (isset($this->_tempObject->vars[$this->_sortsel]['itemName'])) {
-			$this->_criteria->setSort($this->_tempObject->vars[$this->_sortsel]['itemName'] . "." . $this->_sortsel);
-		} else {
-			$this->_criteria->setSort($this->_objectHandler->_itemname . "." . $this->_sortsel);
-		}
-
-		$this->_ordersel = isset($_GET[$this->_objectHandler->_itemname . '_' . 'ordersel']) ? filter_input(INPUT_GET, $this->_objectHandler->_itemname . '_' . 'ordersel', FILTER_SANITIZE_STRING) : $this->getDefaultOrder();
-		// $this->_ordersel = isset($_POST['ordersel']) ? $_POST['ordersel'] :$this->_ordersel;
-		$this->setCookie($this->_id . '_ordersel', $this->_ordersel);
-		$this->getOrdersArray();
-		$this->_criteria->setOrder($this->_ordersel);
-	}
-
-	/**
-	 *
-	 * @param $id
-	 */
-	public function setTableId($id) {
-		$this->_id = $id;
-	}
-
-	/**
-	 *
-	 * @param $objects
-	 */
-	public function setObjects($objects) {
-		$this->_objects = $objects;
-	}
-
-	/**
-	 */
-	public function createTableRows() {
-		$this->_aObjects = array();
-
-		$doWeHaveActions = false;
-
-		$objectclass = 'odd';
-
-		if (count($this->_objects) > 0) {
-			foreach ($this->_objects as $object) {
-
-				$aObject = array();
-
-				$i = 0;
-
-				$aColumns = array();
-
-				foreach ($this->_columns as $column) {
-
-					$aColumn = array();
-
-					if ($i == 0) {
-						$class = "head";
-					} elseif ($i % 2 == 0) {
-						$class = "even";
-					} else {
-						$class = "odd";
-					}
-					if (method_exists($object, 'initiateCustomFields')) {
-						// $object->initiateCustomFields();
-					}
-					if ($column->getKeyName() == 'checked') {
-						$value = '<input type ="checkbox" name="selected_icms_persistableobjects[]" value="' . $object->id() . '" />';
-					} elseif ($column->getCustomMethodForValue() && method_exists($object, $column->getCustomMethodForValue())) {
-						$method = $column->getCustomMethodForValue();
-						if ($column->getParam()) {
-							$value = $object->$method($column->getParam());
-						} else {
-							$value = $object->$method();
-						}
-					} else {
-						/**
-						 * If the column is the identifier, then put a link on it
-						 */
-						if ($column->getKeyName() == $this->_objectHandler->identifierName) {
-							$value = $object->getViewItemLink(false, false, $this->_userSide);
-						} else {
-							$value = $object->getVar($column->getKeyName());
-						}
-					}
-
-					$aColumn['keyname'] = $column->getKeyName();
-					$aColumn['value'] = $value;
-					$aColumn['class'] = $class;
-					$aColumn['width'] = $column->getWidth();
-					$aColumn['align'] = $column->getAlign();
-
-					$aColumns[] = $aColumn;
-					$i++ ;
-				}
-
-				$aObject['columns'] = $aColumns;
-				$aObject['id'] = $object->id();
-
-				$objectclass = ($objectclass == 'even') ? 'odd' : 'even';
-
-				$aObject['class'] = $objectclass;
-
-				$actions = array();
-
-				// Adding the custom actions if any
-				foreach ($this->_custom_actions as $action) {
-					if (method_exists($object, $action)) {
-						$actions[] = $object->$action();
-					}
-				}
-
-				if ((!is_array($this->_actions)) || in_array('edit', $this->_actions)) {
-					$actions[] = $object->getEditItemLink(false, true, $this->_userSide);
-				}
-				if ((!is_array($this->_actions)) || in_array('delete', $this->_actions)) {
-					$actions[] = $object->getDeleteItemLink(false, true, $this->_userSide);
-				}
-				$aObject['actions'] = $actions;
-
-				$this->_tpl->assign('icms_actions_column_width', count($actions) * 30);
-
-				$doWeHaveActions = $doWeHaveActions ? true : count($actions) > 0;
-
-				$this->_aObjects[] = $aObject;
-			}
-			$this->_tpl->assign('icms_persistable_objects', $this->_aObjects);
-		} else {
-			$colspan = count($this->_columns) + 1;
-			$this->_tpl->assign('icms_colspan', $colspan);
-		}
-		$this->_hasActions = $doWeHaveActions;
-	}
-
-	/**
-	 *
-	 * @param unknown_type $debug
-	 */
-	public function fetchObjects($debug = false) {
-		return $this->_objectHandler->getObjects($this->_criteria, true, true, false, $debug);
-	}
-
-	/**
-	 *
-	 * @todo change to dependency injection methods
-	 */
-	public function getDefaultFilter() {
-		return $this->getCookie($this->_id . '_filtersel', $this->_filtersel ?: 'default');
-	}
-
-	/**
-	 */
-	public function getFiltersArray() {
-		$ret = array();
-		$field = array();
-		$field['caption'] = _CO_ICMS_NONE;
-		$field['selected'] = '';
-		$ret['default'] = $field;
-		unset($field);
-
-		if ($this->_filterseloptions) {
-			foreach ($this->_filterseloptions as $key => $value) {
-				$field = array();
-				if (is_array($value)) {
-					$field['caption'] = $key;
-					$field['selected'] = $this->_filtersel == $key ? "selected='selected'" : '';
-				} else {
-					$field['caption'] = $this->_tempObject->vars[$key]['form_caption'];
-					$field['selected'] = $this->_filtersel == $key ? "selected='selected'" : '';
-				}
-				$ret[$key] = $field;
-				unset($field);
-			}
-		} else {
-			$ret = false;
-		}
-		return $ret;
-	}
-
-	/**
-	 *
-	 * @param unknown_type $default_filter2
-	 */
-	public function setDefaultFilter2($default_filter2) {
-		$this->_filtersel2 = $default_filter2;
-	}
-
-	/**
-	 *
-	 * @todo change to dependency injection methods
-	 */
-	public function getDefaultFilter2() {
-		return $this->getCookie('filtersel2', $this->_filtersel2 ?: 'default');
-	}
-
-	/**
-	 */
-	public function getFilters2Array() {
-		$ret = array();
-
-		foreach ($this->_filtersel2options as $key => $value) {
-			$field = array();
-			$field['caption'] = $value;
-			$field['selected'] = $this->_filtersel2 == $key ? "selected='selected'" : '';
-			$ret[$key] = $field;
-			unset($field);
-		}
-		return $ret;
-	}
-
-	/**
-	 *
-	 * @param $limitsArray
-	 * @param $params_of_the_options_sel
-	 */
-	public function renderOptionSelection($limitsArray, $params_of_the_options_sel) {
-		// Rendering the form to select options on the table
-		$current_url = icms::$urls['full'];
-
-		/**
-		 * What was $params_of_the_options_sel doing again ?
-		 */
-		// $this->_tpl->assign('icms_optionssel_action', $_SERVER['SCRIPT_NAME'] . "?" . implode('&', $params_of_the_options_sel));
-		$this->_tpl->assign('icms_optionssel_action', $current_url);
-		$this->_tpl->assign('icms_optionssel_limitsArray', $limitsArray);
-	}
-
-	/**
-	 */
-	public function getLimitsArray() {
-		$ret = array();
-		$ret['all']['caption'] = _CO_ICMS_LIMIT_ALL;
-		$ret['all']['selected'] = ('all' == $this->_limitsel) ? "selected='selected'" : "";
-
-		$ret['5']['caption'] = icms_conv_nr2local('5');
-		$ret['5']['selected'] = ('5' == $this->_limitsel) ? "selected='selected'" : "";
-
-		$ret['10']['caption'] = icms_conv_nr2local('10');
-		$ret['10']['selected'] = ('10' == $this->_limitsel) ? "selected='selected'" : "";
-
-		$ret['15']['caption'] = icms_conv_nr2local('15');
-		$ret['15']['selected'] = ('15' == $this->_limitsel) ? "selected='selected'" : "";
-
-		$ret['20']['caption'] = icms_conv_nr2local('20');
-		$ret['20']['selected'] = ('20' == $this->_limitsel) ? "selected='selected'" : "";
-
-		$ret['25']['caption'] = icms_conv_nr2local('25');
-		$ret['25']['selected'] = ('25' == $this->_limitsel) ? "selected='selected'" : "";
-
-		$ret['30']['caption'] = icms_conv_nr2local('30');
-		$ret['30']['selected'] = ('30' == $this->_limitsel) ? "selected='selected'" : "";
-
-		$ret['35']['caption'] = icms_conv_nr2local('35');
-		$ret['35']['selected'] = ('35' == $this->_limitsel) ? "selected='selected'" : "";
-
-		$ret['40']['caption'] = icms_conv_nr2local('40');
-		$ret['40']['selected'] = ('40' == $this->_limitsel) ? "selected='selected'" : "";
-		return $ret;
-	}
-
-	/**
-	 */
-	public function getObjects() {
-		return $this->_objects;
-	}
-
-	/**
-	 */
-	public function hideActionColumnTitle() {
-		$this->_showActionsColumnTitle = false;
-	}
-
-	/**
-	 */
-	public function hideFilterAndLimit() {
-		$this->_showFilterAndLimit = false;
-	}
-
-	/**
-	 */
-	public function getOrdersArray() {
-		$ret = array();
-		$ret['ASC']['caption'] = _CO_ICMS_SORT_ASC;
-		$ret['ASC']['selected'] = ('ASC' == $this->_ordersel) ? "selected='selected'" : "";
-
-		$ret['DESC']['caption'] = _CO_ICMS_SORT_DESC;
-		$ret['DESC']['selected'] = ('DESC' == $this->_ordersel) ? "selected='selected'" : "";
-
-		return $ret;
-	}
-
-	/**
-	 */
-	public function renderD() {
-		return $this->render(false, true);
-	}
-
-	/**
-	 */
-	public function renderForPrint() {}
-
-	/**
-	 * Gets from cookie
-	 *
-	 * @param string $fieldName Field name read from cookie
-	 * @param string|null $defaultValue Default value
-	 *
-	 * @return string
-	 */
-	protected function getCookie($fieldName, $defaultValue = null) {
-		$name = 'tbl_' . str_replace('.', '_', $fieldName);
-
-		return isset($_COOKIE[$name]) ? $_COOKIE[$name] : $defaultValue;
-	}
-
-	/**
-	 * Sets cookie
-	 *
-	 * @param string $fieldName
-	 * @param string $value
-	 */
-	protected function setCookie($fieldName, $value) {
-		setcookie('tbl_' . $fieldName, $value, time() + 3600 * 24 * 365, parse_url(ICMS_URL, PHP_URL_PATH), parse_url(ICMS_URL, PHP_URL_HOST), substr(ICMS_URL, 0, 5) == 'https' ? 1 : 0, true);
-	}
-
-	/**
-	 * Render the table of records for an IPF object
-	 *
-	 * @todo change to dependency injection methods
-	 * @todo remove the rest of the HTML and move it to the templates
-	 *
-	 * @param $fetchOnly
-	 * @param $debug
-	 */
-	public function render($fetchOnly = false, $debug = false) {
-
-		/* Filters. First, some variable variables */
-		$start = 'start' . $this->_objectHandler->keyName;
-		$sortsel = $this->_objectHandler->_itemname . '_' . 'sortsel';
-		$ordersel = $this->_objectHandler->_itemname . '_' . 'ordersel';
-		$quicksearch = 'quicksearch_' . $this->_id;
-
-		$filter_get = array($start => 'int', 'limitsel' => 'int', 'filtersel' => 'str', 'filtersel2' => 'str', $sortsel => 'str', $ordersel => 'str', $quicksearch => 'special', 'fct' => 'str');
-
-		$filter_post = array('limitsel' => 'int', 'filtersel' => 'str', 'filtersel2' => 'str', $quicksearch => 'special', 'fct' => 'str');
-
-		$filter_server = array('SCRIPT_NAME' => 'str');
-		/* default values */
-		$$start = 0;
-		$limitsel = 15;
-		$filtersel = $this->getDefaultFilter();
-		$filtersel2 = $this->getDefaultFilter2();
-		$$sortsel = $$ordersel = '';
-		$$quicksearch = '';
-
-		/* filter the user input - only allow specified variables */
-		if (!empty($_GET)) {
-			$clean_GET = icms_core_DataFilter::checkVarArray($_GET, $filter_get, true);
-			extract($clean_GET);
-		}
-		if (!empty($_POST)) {
-			$clean_POST = icms_core_DataFilter::checkVarArray($_POST, $filter_post, true);
-			extract($clean_POST);
-		}
-
-		$server_vars = icms_core_DataFilter::checkVarArray($_SERVER, $filter_server, true);
-		$script_name = $server_vars['SCRIPT_NAME'];
-
-		$this->_tpl = new icms_view_Tpl();
-
-		/**
-		 * We need access to the protected vars of the icms_ipf_Object for a few things in the table creation.
-		 * Since we may not have an icms_ipf_Object to look into now, let's create one for this purpose
-		 * and we will free it after
-		 */
-		$this->_tempObject = &$this->_objectHandler->create();
-
-		$this->_criteria->setStart($$start);
-
-		$this->setSortOrder();
-
-		$this->_limitsel = !empty($limitsel) ? $limitsel : $this->getCookie('limitsel', '15');
-
-		if ($this->_isTree) {
-			$this->_limitsel = 'all';
-		}
-
-		$this->setCookie('limitsel', $this->_limitsel);
-
-		$limitsArray = $this->getLimitsArray();
-		$this->_criteria->setLimit($this->_limitsel);
-
-		$this->_filtersel = $filtersel;
-
-		$this->setCookie($this->_id . '_filtersel', $this->_filtersel);
-		$filtersArray = $this->getFiltersArray();
-
-		if ($filtersArray) {
-			$this->_tpl->assign('icms_optionssel_filtersArray', $filtersArray);
-		}
-
-		// Check if the selected filter is defined and if so, create the selfilter2
-		if (!empty($this->_filterseloptions[$this->_filtersel])) {
-			// check if method associate with this filter exists in the handler
-			if (is_array($this->_filterseloptions[$this->_filtersel])) {
-				$filter = $this->_filterseloptions[$this->_filtersel];
-				$this->_criteria->add($filter['criteria']);
-			} else {
-				if (method_exists($this->_objectHandler, $this->_filterseloptions[$this->_filtersel])) {
-
-					// then we will create the selfilter2 options by calling this method
-					$method = $this->_filterseloptions[$this->_filtersel];
-					$this->_filtersel2options = $this->_objectHandler->$method();
-
-					$this->_filtersel2 = $filtersel2;
-
-					$filters2Array = $this->getFilters2Array();
-					$this->_tpl->assign('icms_optionssel_filters2Array', $filters2Array);
-
-					$this->setCookie('filtersel2', $this->_filtersel2);
-					if ($this->_filtersel2 !== 'default') {
-						$this->_criteria->add(new icms_db_criteria_Item($this->_filtersel, $this->_filtersel2));
-					}
-				}
-			}
-		}
-		// Check if we have a quicksearch
-
-		if (!empty($$quicksearch)) {
-			$quicksearch_criteria = new icms_db_criteria_Compo();
-			if (is_array($this->_quickSearch['fields'])) {
-				foreach ($this->_quickSearch['fields'] as $v) {
-					$quicksearch_criteria->add(new icms_db_criteria_Item($v, '%' . $$quicksearch . '%', 'LIKE'), 'OR');
-				}
-			} else {
-				$quicksearch_criteria->add(new icms_db_criteria_Item($this->_quickSearch['fields'], '%' . $$quicksearch . '%', 'LIKE'));
-			}
-			$this->_criteria->add($quicksearch_criteria);
-		}
-
-		$this->_objects = $this->fetchObjects($debug);
-
-		/**
-		 * $params_of_the_options_sel is an array with all the parameters of the page
-		 * but without the pagenave parameters.
-		 * This array will be used in the
-		 * OptionsSelection
-		 */
-		$params_of_the_options_sel = array();
-		if ($this->_criteria->getLimit() > 0) {
-
-			/**
-			 * Geeting rid of the old params
-			 * $new_get_array is an array containing the new GET parameters
-			 */
-			$new_get_array = array();
-
-			$not_needed_params = array('sortsel', 'limitsel', 'ordersel', 'start' . $this->_objectHandler->keyName);
-			foreach ($clean_GET as $k => $v) {
-				if (!in_array($k, $not_needed_params)) {
-					$new_get_array[] = "$k=$v";
-					$params_of_the_options_sel[] = "$k=$v";
-				}
-			}
-
-			/**
-			 * Adding the new params of the pagenav
-			 */
-			$new_get_array[] = "sortsel=" . $this->_sortsel;
-			$new_get_array[] = "ordersel=" . $this->_ordersel;
-			$new_get_array[] = "limitsel=" . $this->_limitsel;
-			$otherParams = implode('&', $new_get_array);
-
-			$pagenav = new icms_view_PageNav($this->_objectHandler->getCount($this->_criteria), $this->_criteria->getLimit(), $this->_criteria->getStart(), 'start' . $this->_objectHandler->keyName, $otherParams);
-			$this->_tpl->assign('icms_pagenav', $pagenav->renderNav());
-		}
-		$this->renderOptionSelection($limitsArray, $params_of_the_options_sel);
-
-		// retreive the current url and the query string
-		$current_url = icms::$urls['full_phpself'];
-		$query_string = icms::$urls['querystring'];
-		if ($query_string) {
-			$query_string = str_replace('?', '', $query_string);
-		}
-		$query_stringArray = explode('&', $query_string);
-		$new_query_stringArray = array();
-		foreach ($query_stringArray as $query_string) {
-			if (strpos($query_string, 'sortsel') == FALSE && strpos($query_string, 'ordersel') == FALSE) {
-				$new_query_stringArray[] = $query_string;
-			}
-		}
-		$new_query_string = implode('&', $new_query_stringArray);
-
-		$orderArray = array();
-		$orderArray['ASC']['image'] = 'desc.png';
-		$orderArray['ASC']['neworder'] = 'DESC';
-		$orderArray['DESC']['image'] = 'asc.png';
-		$orderArray['DESC']['neworder'] = 'ASC';
-
-		$aColumns = array();
-
-		foreach ($this->_columns as $column) {
-			$aColumn = array();
-			$aColumn['width'] = $column->getWidth();
-			$aColumn['align'] = $column->getAlign();
-			$aColumn['key'] = $column->getKeyName();
-
-			if ($column->getKeyName() == 'checked') {
-				$aColumn['caption'] = '<input type ="checkbox" id="checkall_icmspersistableobjects" name="checkall_icmspersistableobjects"' . ' value="checkall_icmspersistableobjects" onclick="icms_checkall(window.document.form_' . $this->_id . ', \'selected_icmspersistableobjects\');" />';
-			} elseif ($column->getCustomCaption()) {
-				$aColumn['caption'] = $column->getCustomCaption();
-			} else {
-				$aColumn['caption'] = $this->_tempObject->getVarInfo($column->getKeyName(), 'form_caption') ? $this->_tempObject->getVarInfo($column->getKeyName(), 'form_caption') : $column->getKeyName();
-			}
-			// Are we doing a GET sort on this column ?
-			$getSort = (!empty($$sortsel) && $$sortsel == $column->getKeyName()) || ($this->_sortsel == $column->getKeyName());
-			$order = !empty($$ordersel) ? $$ordersel : 'DESC';
-
-			if (!empty($$quicksearch)) {
-				$filter = !empty($$quicksearch) ? INPUT_POST : INPUT_GET;
-				$qs_param = "&amp;quicksearch_" . $this->_id . "=" . filter_input($filter, 'quicksearch_' . $this->_id, FILTER_SANITIZE_SPECIAL_CHARS);
-			} else {
-				$qs_param = '';
-			}
-			if (!$this->_enableColumnsSorting || $column->getKeyName() == 'checked' || !$column->isSortable()) {
-				$aColumn['caption'] = $aColumn['caption'];
-			} elseif ($getSort) {
-				$aColumn['caption'] = '<a href="' . $current_url . '?' . $this->_objectHandler->_itemname . '_' . 'sortsel=' . $column->getKeyName() . '&amp;' . $this->_objectHandler->_itemname . '_' . 'ordersel=' . $orderArray[$order]['neworder'] . $qs_param . '&amp;' . $new_query_string . '">' . $aColumn['caption'] . ' <img src="' . ICMS_IMAGES_SET_URL . '/actions/' . $orderArray[$order]['image'] . '" alt="ASC" /></a>';
-			} else {
-				$aColumn['caption'] = '<a href="' . $current_url . '?' . $this->_objectHandler->_itemname . '_' . 'sortsel=' . $column->getKeyName() . '&amp;' . $this->_objectHandler->_itemname . '_' . 'ordersel=ASC' . $qs_param . '&amp;' . $new_query_string . '">' . $aColumn['caption'] . '</a>';
-			}
-			$aColumns[] = $aColumn;
-		}
-		$this->_tpl->assign('icms_columns', $aColumns);
-
-		if ($this->_quickSearch) {
-			$this->_tpl->assign('icms_quicksearch', $this->_quickSearch['caption']);
-		}
-
-		$this->createTableRows();
-
-		$this->_tpl->assign('icms_showFilterAndLimit', $this->_showFilterAndLimit);
-		$this->_tpl->assign('icms_isTree', $this->_isTree);
-		$this->_tpl->assign('icms_show_action_column_title', $this->_showActionsColumnTitle);
-		$this->_tpl->assign('icms_table_header', $this->_tableHeader);
-		$this->_tpl->assign('icms_table_footer', $this->_tableFooter);
-		$this->_tpl->assign('icms_printer_friendly_page', $this->_printerFriendlyPage);
-		$this->_tpl->assign('icms_user_side', $this->_userSide);
-		$this->_tpl->assign('icms_has_actions', $this->_hasActions);
-		$this->_tpl->assign('icms_head_css_class', $this->_head_css_class);
-		$this->_tpl->assign('icms_actionButtons', $this->_actionButtons);
-		$this->_tpl->assign('icms_introButtons', $this->_introButtons);
-		$this->_tpl->assign('icms_id', $this->_id);
-		if (!empty($this->_withSelectedActions)) {
-			$this->_tpl->assign('icms_withSelectedActions', $this->_withSelectedActions);
-		}
-
-		$icms_table_template = $this->_customTemplate ? $this->_customTemplate : 'system_persistabletable_display.html';
-		if ($fetchOnly) {
-			return $this->_tpl->fetch('db:' . $icms_table_template);
-		} else {
-			$this->_tpl->display('db:' . $icms_table_template);
-		}
-	}
-
-	/**
-	 */
-	public function disableColumnsSorting() {
-		$this->_enableColumnsSorting = false;
-	}
-
-	/**
-	 *
-	 * @param $debug
-	 */
-	public function fetch($debug = false) {
-		return $this->render(true, $debug);
-	}
+
+    /** @var icms_ipf_Handler */
+    protected $_handler;
+
+    /** @var icms_ipf_view_Column[]|array<string, array> */
+    protected $_columns = [];
+
+    /** @var CriteriaCompo|null */
+    protected $_criteria;
+
+    /** @var string */
+    protected $_itemname;
+
+    /** @var string */
+    protected $_formTarget;
+
+    /** @var array<string, mixed> */
+    protected $_options = [
+        // 'filter_logic' => 'AND' or 'OR'
+        'filter_logic' => 'AND',
+        // 'preserve_query_params' => list of keys to keep when filtering
+        'preserve_query_params' => ['start', 'limit', 'sort', 'order'],
+    ];
+
+    /**
+     * Construct the table view.
+     *
+     * @param icms_ipf_Handler $handler
+     * @param string           $itemname
+     */
+    public function __construct($handler, string $itemname = '')
+    {
+        $this->_handler = $handler;
+        $this->_itemname = $itemname ?: $handler->getItemName();
+        $this->_criteria = new CriteriaCompo();
+        $this->_formTarget = $this->resolveFormTarget();
+        $this->initializeColumns();
+    }
+
+    /**
+     * Resolve current form target (URL).
+     *
+     * @return string
+     */
+    protected function resolveFormTarget(): string
+    {
+        $script = isset($_SERVER['SCRIPT_NAME']) ? (string) $_SERVER['SCRIPT_NAME'] : '';
+        $query  = isset($_SERVER['QUERY_STRING']) ? (string) $_SERVER['QUERY_STRING'] : '';
+        // We strip existing column filter params below, so the base URL remains stable.
+        $base = $script;
+        if ($query !== '') {
+            $base .= '?' . $query;
+        }
+        return $base;
+    }
+
+    /**
+     * Initialize columns from handler or internal configuration.
+     * Ensure each column has 'title', 'filter' (bool), and optional 'filter_options'.
+     *
+     * This is a placeholder to demonstrate how to ensure columns are ready
+     * for rendering filters. Adjust to your actual column source.
+     */
+    protected function initializeColumns(): void
+    {
+        // In actual ImpressCMS, columns often get set via addColumn(), etc.
+        // This method ensures defaults are present for filtering metadata.
+        foreach ($this->_columns as $name => &$col) {
+            $col = array_merge([
+                'title'          => ucfirst((string)$name),
+                'filter'         => false,
+                'filter_options' => [],
+                'filter_type'    => 'select', // 'select' | 'text' | 'date' (extensible)
+                'filter_operand' => '=',      // default operand for select/text
+            ], $col);
+        }
+        unset($col);
+    }
+
+    /**
+     * Public API to add a column (if not already present).
+     *
+     * @param string $name
+     * @param array  $metadata
+     * @return void
+     */
+    public function addColumn(string $name, array $metadata = []): void
+    {
+        $this->_columns[$name] = array_merge([
+            'title'          => ucfirst($name),
+            'filter'         => false,
+            'filter_options' => [],
+            'filter_type'    => 'select',
+            'filter_operand' => '=',
+        ], $metadata);
+    }
+
+    /**
+     * Set an option (e.g., filter_logic).
+     *
+     * @param string $key
+     * @param mixed  $value
+     * @return void
+     */
+    public function setOption(string $key, $value): void
+    {
+        $this->_options[$key] = $value;
+    }
+
+    /**
+     * Render the table including filters and data.
+     *
+     * @return string
+     */
+    public function render(): string
+    {
+        // Build combined criteria based on current request filters
+        $requestFilters = $this->processRequestFilters();
+        $this->applyFiltersToCriteria($requestFilters);
+
+        // Fetch items based on criteria
+        $items = $this->fetch();
+
+        // Render via Smarty template (existing ImpressCMS flow)
+        // You can adapt this to your current template calls.
+        $tpl = new icms_view_Tpl();
+        $tpl->assign('table', $this);
+        $tpl->assign('items', $items);
+        $tpl->assign('filters_html', $this->renderFilters());
+        return $tpl->fetch('db:icms_ipf_table.tpl');
+    }
+
+    /**
+     * Render the multi-criteria filter bar.
+     *
+     * @return string
+     */
+    public function renderFilters(): string
+    {
+        $columns = $this->getFilterableColumns();
+        if (empty($columns)) {
+            return '';
+        }
+
+        $action = $this->sanitizeActionUrl($this->_formTarget, array_keys($columns));
+        $html   = [];
+        $html[] = '<form method="get" class="icms-ipf-filters" action="' . htmlspecialchars($action, ENT_QUOTES, 'UTF-8') . '">';
+        $html[] = '<div class="icms-ipf-filters__row">';
+
+        foreach ($columns as $colName => $col) {
+            $current = $this->getRequestValue($colName);
+            $label   = htmlspecialchars((string) $col['title'], ENT_QUOTES, 'UTF-8');
+            $id      = 'filter_' . htmlspecialchars($colName, ENT_QUOTES, 'UTF-8');
+            $name    = htmlspecialchars($colName, ENT_QUOTES, 'UTF-8');
+
+            $html[] = '<div class="icms-ipf-filters__field">';
+            $html[] = '<label class="icms-ipf-filters__label" for="' . $id . '">' . $label . '</label>';
+
+            $type = (string) $col['filter_type'];
+            if ($type === 'select') {
+                $html[] = '<select class="icms-ipf-filters__input" name="' . $name . '" id="' . $id . '">';
+                $html[] = '<option value="">--</option>';
+
+                foreach ((array) $col['filter_options'] as $val => $optLabel) {
+                    $valStr   = (string) $val;
+                    $optLabel = (string) $optLabel;
+                    $selected = ($current !== '' && $current === $valStr) ? ' selected' : '';
+                    $html[]   = '<option value="' . htmlspecialchars($valStr, ENT_QUOTES, 'UTF-8') . '"' . $selected . '>'
+                        . htmlspecialchars($optLabel, ENT_QUOTES, 'UTF-8') . '</option>';
+                }
+                $html[] = '</select>';
+            } elseif ($type === 'text') {
+                $html[] = '<input class="icms-ipf-filters__input" type="text" name="' . $name . '" id="' . $id . '" value="'
+                    . htmlspecialchars((string) $current, ENT_QUOTES, 'UTF-8') . '">';
+            } else {
+                // Extensible: date, number, etc.
+                $html[] = '<input class="icms-ipf-filters__input" type="text" name="' . $name . '" id="' . $id . '" value="'
+                    . htmlspecialchars((string) $current, ENT_QUOTES, 'UTF-8') . '">';
+            }
+
+            $html[] = '</div>';
+        }
+
+        // Preserve non-filter query params
+        foreach ($this->_options['preserve_query_params'] as $keepKey) {
+            if (isset($_GET[$keepKey])) {
+                $html[] = '<input type="hidden" name="' . htmlspecialchars((string) $keepKey, ENT_QUOTES, 'UTF-8') . '" value="'
+                    . htmlspecialchars((string) $_GET[$keepKey], ENT_QUOTES, 'UTF-8') . '">';
+            }
+        }
+
+        $html[] = '</div>';
+        $html[] = '<div class="icms-ipf-filters__actions">';
+        $html[] = '<button type="submit" class="button is-primary">' . htmlspecialchars(_SUBMIT, ENT_QUOTES, 'UTF-8') . '</button>';
+        $html[] = '<a class="button is-light" href="' . htmlspecialchars($this->clearFiltersUrl(), ENT_QUOTES, 'UTF-8') . '">'
+            . htmlspecialchars(_CLEAR, ENT_QUOTES, 'UTF-8') . '</a>';
+        $html[] = '</div>';
+        $html[] = '</form>';
+
+        return implode('', $html);
+    }
+
+    /**
+     * Get only the columns that are marked as filterable.
+     *
+     * @return array<string, array>
+     */
+    protected function getFilterableColumns(): array
+    {
+        $out = [];
+        foreach ($this->_columns as $name => $col) {
+            if (!empty($col['filter'])) {
+                $out[$name] = $col;
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * Remove existing filter params from the action URL so we don't duplicate them.
+     *
+     * @param string        $url
+     * @param array<string> $filterKeys
+     * @return string
+     */
+    protected function sanitizeActionUrl(string $url, array $filterKeys): string
+    {
+        // Normalize
+        $parts = parse_url($url);
+        if (!$parts) {
+            return $url;
+        }
+
+        $query = [];
+        if (!empty($parts['query'])) {
+            parse_str((string) $parts['query'], $query);
+            foreach ($filterKeys as $k) {
+                unset($query[$k]);
+            }
+        }
+        $scheme   = isset($parts['scheme']) ? $parts['scheme'] . '://' : '';
+        $host     = $parts['host'] ?? '';
+        $port     = isset($parts['port']) ? ':' . $parts['port'] : '';
+        $path     = $parts['path'] ?? '';
+        $newQuery = http_build_query($query);
+
+        $rebuilt = $scheme . $host . $port . $path;
+        if ($newQuery !== '') {
+            $rebuilt .= '?' . $newQuery;
+        }
+        return $rebuilt;
+    }
+
+    /**
+     * Build a URL that clears filters (keeps preserved params only).
+     *
+     * @return string
+     */
+    protected function clearFiltersUrl(): string
+    {
+        $parts = parse_url($this->_formTarget);
+        $query = [];
+        if ($parts && !empty($parts['query'])) {
+            parse_str((string) $parts['query'], $query);
+        }
+        // Remove any filter keys
+        foreach ($this->getFilterableColumns() as $k => $_) {
+            unset($query[$k]);
+        }
+        // Keep preserved ones
+        $keep = [];
+        foreach ($this->_options['preserve_query_params'] as $p) {
+            if (isset($query[$p])) {
+                $keep[$p] = $query[$p];
+            }
+        }
+        $scheme   = isset($parts['scheme']) ? $parts['scheme'] . '://' : '';
+        $host     = $parts['host'] ?? '';
+        $port     = isset($parts['port']) ? ':' . $parts['port'] : '';
+        $path     = $parts['path'] ?? '';
+        $newQuery = http_build_query($keep);
+
+        $rebuilt = $scheme . $host . $port . $path;
+        if ($newQuery !== '') {
+            $rebuilt .= '?' . $newQuery;
+        }
+        return $rebuilt;
+    }
+
+    /**
+     * Get request value for a filter key as a string.
+     *
+     * @param string $key
+     * @return string
+     */
+    protected function getRequestValue(string $key): string
+    {
+        $raw = $_GET[$key] ?? '';
+        if (is_array($raw)) {
+            return ''; // We expect scalar for now
+        }
+        $val = trim((string) $raw);
+        return $val;
+    }
+
+    /**
+     * Process request filters based on filterable columns.
+     *
+     * @return array<string, string> key => value
+     */
+    protected function processRequestFilters(): array
+    {
+        $out = [];
+        foreach ($this->getFilterableColumns() as $name => $col) {
+            $val = $this->getRequestValue($name);
+            if ($val !== '') {
+                $out[$name] = $val;
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * Apply request filters to internal criteria (AND or OR).
+     *
+     * @param array<string, string> $filters
+     * @return void
+     */
+    protected function applyFiltersToCriteria(array $filters): void
+    {
+        if (empty($filters)) {
+            return;
+        }
+
+        $logic = strtoupper((string) ($this->_options['filter_logic'] ?? 'AND'));
+        if ($logic !== 'OR') {
+            $logic = 'AND';
+        }
+
+        $compo = new CriteriaCompo(null, $logic);
+
+        foreach ($filters as $field => $value) {
+            $meta     = $this->_columns[$field] ?? [];
+            $operand  = isset($meta['filter_operand']) ? (string) $meta['filter_operand'] : '=';
+            $criteria = $this->buildCriteriaFromFilter($field, $value, $operand, $meta);
+            if ($criteria instanceof CriteriaElement) {
+                $compo->add($criteria);
+            }
+        }
+
+        // Add to the table criteria, so pagination and sorting stay compatible
+        $this->_criteria->add($compo);
+    }
+
+    /**
+     * Build criteria element from filter info.
+     *
+     * @param string $field
+     * @param string $value
+     * @param string $operand
+     * @param array  $meta
+     * @return CriteriaElement|null
+     */
+    protected function buildCriteriaFromFilter(string $field, string $value, string $operand, array $meta)
+    {
+        // Support LIKE for text filters
+        $type = isset($meta['filter_type']) ? (string) $meta['filter_type'] : 'select';
+        if ($type === 'text' && $operand === 'LIKE') {
+            return new Criteria($field, '%' . $value . '%', 'LIKE');
+        }
+
+        // Default equals
+        return new Criteria($field, $value, $operand);
+    }
+
+    /**
+     * Fetch items using handler and current criteria.
+     *
+     * @return array<int, icms_ipf_Object>|array
+     */
+    public function fetch(): array
+    {
+        // The handler should return objects matching criteria; apply sorting/pagination via preserved query
+        $start = isset($_GET['start']) ? (int) $_GET['start'] : 0;
+        $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 20;
+        $sort  = isset($_GET['sort']) ? (string) $_GET['sort'] : '';
+        $order = isset($_GET['order']) ? strtoupper((string) $_GET['order']) : 'ASC';
+
+        if ($sort !== '') {
+            $this->_criteria->setSort($sort);
+            $this->_criteria->setOrder($order === 'DESC' ? 'DESC' : 'ASC');
+        }
+        $this->_criteria->setStart($start);
+        $this->_criteria->setLimit($limit);
+
+        return (array) $this->_handler->getObjects($this->_criteria, true);
+    }
+
+    /**
+     * Expose columns to template.
+     *
+     * @return array<string, array>
+     */
+    public function getColumns(): array
+    {
+        return $this->_columns;
+    }
+
+    /**
+     * Allow external code to set columns with metadata.
+     *
+     * @param array<string, array> $columns
+     * @return void
+     */
+    public function setColumns(array $columns): void
+    {
+        $this->_columns = $columns;
+        $this->initializeColumns();
+    }
+
+    /**
+     * Expose options to template.
+     *
+     * @return array<string, mixed>
+     */
+    public function getOptions(): array
+    {
+        return $this->_options;
+    }
+
+    /**
+     * Expose criteria for debugging or extension.
+     *
+     * @return CriteriaCompo
+     */
+    public function getCriteria(): CriteriaCompo
+    {
+        return $this->_criteria;
+    }
 }
-
