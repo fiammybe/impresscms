@@ -59,21 +59,22 @@ class icms_core_HTMLFilter extends icms_core_DataFilter {
 	 **/
 	public static function filterHTML($html) {
 		$icmsConfigPurifier = icms::$config->getConfigsByCat(ICMS_CONF_PURIFIER);
-        
+
         $fcomment = '<!-- filtered with htmlpurifier -->';
-        
+
         $purified = strpos($html, $fcomment);
         if ($purified !== FALSE) {
             $html = str_replace($fcomment, '', $html);
         }
 
         if ($icmsConfigPurifier['enable_purifier'] !== 0) {
-			ICMS_PLUGINS_PATH;
-			require_once ICMS_LIBRARIES_PATH . '/htmlpurifier/HTMLPurifier.standalone.php';
-			require_once ICMS_LIBRARIES_PATH . '/htmlpurifier/HTMLPurifier.autoload.php';
+			// HTMLPurifier is now loaded via Composer autoloader
+			// No manual require statements needed - classes are autoloaded on demand
+
 			if ($icmsConfigPurifier['purifier_Filter_ExtractStyleBlocks'] !== 0) {
 				require_once ICMS_PLUGINS_PATH . '/csstidy/class.csstidy.php';
 			}
+
 			// get the Config Data
 			$icmsPurifyConf = self::getHTMLFilterConfig();
 			// uncomment for specific config debug info
@@ -81,10 +82,10 @@ class icms_core_HTMLFilter extends icms_core_DataFilter {
 
             $purifier = new HTMLPurifier($icmsPurifyConf);
 			$html = $purifier->purify($html);
-            
+
             $html .= $fcomment;
 		}
-        
+
 		return $html;
 	}
 
@@ -92,24 +93,37 @@ class icms_core_HTMLFilter extends icms_core_DataFilter {
 
 	/*
 	 * Get list of current custom Filters & return them as objects in array
-	 * Custom Filters are located in libraries/htmlpurifier/standalone/HTMLPurifier/Filter/
+	 * Custom Filters can be located in:
+	 * - libraries/htmlpurifier/standalone/HTMLPurifier/Filter/ (legacy bundled location)
+	 * - vendor/ezyang/htmlpurifier/library/HTMLPurifier/Filter/ (Composer location)
 	 *
 	 * @return	object	array list of filter objects
 	 */
 	private static function getCustomFilterList() {
-		$dirPath = ICMS_LIBRARIES_PATH . '/htmlpurifier/standalone/HTMLPurifier/Filter/';
 		$icmsConfigPurifier = icms::$config->getConfigsByCat(ICMS_CONF_PURIFIER);
 		if ($icmsConfigPurifier['purifier_Filter_AllowCustom'] !== 0) {
 			$filterList = array();
 
-			$fileList = icms_core_Filesystem::getFileList($dirPath, '', array('php'), true);
-			unset($fileList['ExtractStyleBlocks.php'], $fileList['YouTube.php']);
-			$fileList = array_values($fileList);
+			// Check legacy bundled location first for backward compatibility
+			$legacyDirPath = ICMS_LIBRARIES_PATH . '/htmlpurifier/standalone/HTMLPurifier/Filter/';
 
-			foreach ($fileList as &$val) {
-				$val = "HTMLPurifier_Filter_".substr($val, 0,strrpos($val,'.'));
-				$newObject = new $val;
-				$filterList[] = $newObject;
+			// Check Composer vendor location
+			$composerDirPath = ICMS_ROOT_PATH . '/vendor/ezyang/htmlpurifier/library/HTMLPurifier/Filter/';
+
+			// Use whichever location exists, preferring legacy for backward compatibility
+			$dirPath = is_dir($legacyDirPath) ? $legacyDirPath : $composerDirPath;
+
+			if (is_dir($dirPath)) {
+				$fileList = icms_core_Filesystem::getFileList($dirPath, '', array('php'), true);
+				// Exclude built-in filters that are already available
+				unset($fileList['ExtractStyleBlocks.php'], $fileList['YouTube.php']);
+				$fileList = array_values($fileList);
+
+				foreach ($fileList as &$val) {
+					$val = "HTMLPurifier_Filter_".substr($val, 0,strrpos($val,'.'));
+					$newObject = new $val;
+					$filterList[] = $newObject;
+				}
 			}
 		} else {
 			$filterList = '';
@@ -117,14 +131,14 @@ class icms_core_HTMLFilter extends icms_core_DataFilter {
 
 		return $filterList;
 	}
-	
+
 	/**
 	 * Gets Custom Purifier configurations ** this function will improve in time **
 	 * @return  array    $icmsPurifierConf
 	 **/
 	protected static function getHTMLFilterConfig() {
 		$icmsConfigPurifier = icms::$config->getConfigsByCat(ICMS_CONF_PURIFIER);
-        
+
         $IframeRegExp = $icmsConfigPurifier['purifier_URI_SafeIframeRegexp'];
         if ($IframeRegExp !== '') {
             $pos = strpos( $IframeRegExp, '|' );
@@ -134,7 +148,7 @@ class icms_core_HTMLFilter extends icms_core_DataFilter {
                 $IframeRegExp = '%^(' . $IframeRegExp . ')%';
             }
         }
- 
+
 		$icmsPurifierConf = array(
             'HTML.DefinitionID' => $icmsConfigPurifier['purifier_HTML_DefinitionID'],
             'HTML.DefinitionRev' => $icmsConfigPurifier['purifier_HTML_DefinitionRev'],
