@@ -104,6 +104,12 @@ abstract class icms {
 	 */
 	static protected $handlers;
 
+
+		/**
+		 * Global Whoops error handler instance
+		 * @var \Whoops\Run|null
+		 */
+		static protected $whoops = null;
 	/**
 	 * Initialize ImpressCMS before bootstrap
 	 */
@@ -117,6 +123,9 @@ abstract class icms {
 
 		register_shutdown_function(array(__CLASS__, 'shutdown'));
 		self::buildRelevantUrls();
+
+			// Initialize global error handling (Whoops) early to avoid white screens
+			self::initializeErrorHandling();
 	}
 
 	/**
@@ -131,6 +140,8 @@ abstract class icms {
 
 		// Load the compatibility bridge
 		require_once dirname(__FILE__) . '/icms/ComposerAutoloadBridge.php';
+
+
 
 		// Initialize legacy autoloader for backward compatibility
 		require_once dirname(__FILE__) . '/icms/Autoloader.php';
@@ -197,7 +208,69 @@ abstract class icms {
 		while (@ob_end_flush());
 	}
 
-	/**
+		/**
+		 * Initialize global error handling using Whoops
+		 */
+		static private function initializeErrorHandling(): void
+		{
+			// Avoid double-registration
+			if (self::$whoops !== null) {
+				return;
+			}
+			// Only if Whoops is available via Composer
+			if (!class_exists('\Whoops\Run')) {
+				return;
+			}
+			$run = new \Whoops\Run();
+			$isCli = PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg';
+			$accept = isset($_SERVER['HTTP_ACCEPT']) ? strtolower((string) $_SERVER['HTTP_ACCEPT']) : '';
+			$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string) $_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+				|| str_contains($accept, 'application/json');
+
+			if ($isCli) {
+				$run->pushHandler(new \Whoops\Handler\PlainTextHandler());
+			} elseif ($isAjax) {
+				$json = new \Whoops\Handler\JsonResponseHandler();
+				$json->onlyForAjaxRequests(true);
+				$run->pushHandler($json);
+			} else {
+				if (self::isDevelopmentEnvironment()) {
+					$pretty = new \Whoops\Handler\PrettyPageHandler();
+					$pretty->setPageTitle('ImpressCMS - Application Error');
+					$run->pushHandler($pretty);
+				} else {
+					$run->pushHandler(new \Whoops\Handler\CallbackHandler(function () {
+						if (!headers_sent()) {
+							http_response_code(500);
+							header('Content-Type: text/html; charset=UTF-8');
+						}
+						echo '<h1>Something went wrong</h1><p>An unexpected error occurred. Please check the logs.</p>';
+						return \Whoops\Handler\Handler::QUIT;
+					}));
+				}
+			}
+
+			$run->register();
+			self::$whoops = $run;
+		}
+
+		/**
+		 * Best-effort development environment detection before config is available
+		 */
+		static private function isDevelopmentEnvironment(): bool
+		{
+			if (defined('ICMS_ENV')) {
+				return strtolower((string) ICMS_ENV) !== 'production';
+			}
+			$display = ini_get('display_errors');
+			if ($display === '1' || strtolower((string) $display) === 'on') {
+				return true;
+			}
+			return (bool) error_reporting();
+		}
+
+		/**
+
 	 * Creates an object instance from an object definition.
 	 * The factory parameter can be:
 	 * - A fully qualified class name starting with '\': \MyClass or on PHP 5.3+ \ns\sub\MyClass
