@@ -117,15 +117,16 @@ abstract class icms {
 		self::$paths['www']		= array(ICMS_ROOT_PATH, ICMS_URL);
 		self::$paths['modules']	= array(ICMS_ROOT_PATH . '/modules', ICMS_URL . '/modules');
 		self::$paths['themes']	= array(ICMS_THEME_PATH, ICMS_THEME_URL);
+		self::initializeErrorHandling();
 
 		// Initialize autoloading system
 		self::initializeAutoloading();
 
+		// Initialize global error handling (Whoops) early to avoid white screens
+
+
 		register_shutdown_function(array(__CLASS__, 'shutdown'));
 		self::buildRelevantUrls();
-
-			// Initialize global error handling (Whoops) early to avoid white screens
-			self::initializeErrorHandling();
 	}
 
 	/**
@@ -202,6 +203,12 @@ abstract class icms {
 	 * Finalizes all processes as the script exits
 	 */
 	static public function shutdown() {
+		// If a fatal error occurred, let Whoops handle it without interfering
+		$last = error_get_last();
+		if ($last && in_array($last['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR], true)) {
+			return;
+		}
+
 		// Ensure the session service can write data before the DB connection is closed
 		if (session_id()) session_write_close();
 		// Ensure the logger can decorate output before objects are destroyed
