@@ -17,7 +17,18 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 /**
  * icms_preload_Handler
  *
- * Class handling preload events automatically detect from the files in ICMS_PRELOAD_PATH
+ * Class handling preload events automatically detected from files in ICMS_PRELOAD_PATH.
+ *
+ * PSR-14 bridge: Preload methods prefixed with "event" are registered as both legacy delegates
+ * and PSR-14 listeners for ImpressCMS\Events\LegacyEvent, allowing gradual migration.
+ *
+ * Example (PSR-14 listener):
+ *
+ *   icms::$events->subscribeTo(\ImpressCMS\Events\UserLoginSuccessEvent::class, function ($event) {
+ *       // $event is an instance of UserLoginSuccessEvent
+ *   });
+ *
+ * Legacy preload methods continue to work unchanged and will receive the legacy payload.
  *
  * @copyright	The ImpressCMS Project http://www.impresscms.org/
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
@@ -96,8 +107,29 @@ class icms_preload_Handler {
 				if (strpos($method, 'event') === 0) {
 					$preload_event = strtolower(str_replace('event', '', $method));
 
-					$callback = array( $preloadItem, $method );
+					$callback = array($preloadItem, $method);
+					// Legacy delegate registration (backward compatible)
 					icms_Event::attach('icms', $preload_event, $callback);
+
+					// PSR-14 bridge: subscribe preload method to LegacyEvent
+					if (isset(\icms::$events)) {
+						\icms::$events->subscribeTo(\ImpressCMS\Events\LegacyEvent::class, function (\ImpressCMS\Events\LegacyEvent $e) use ($preload_event, $preloadItem, $method) {
+							if (strcasecmp($e->name, $preload_event) !== 0) {
+								return;
+							}
+							// Call method with or without payload depending on signature
+							try {
+								$ref = new \ReflectionMethod($preloadItem, $method);
+								if ($ref->getNumberOfParameters() >= 1) {
+									$preloadItem->$method($e->payload);
+								} else {
+									$preloadItem->$method();
+								}
+							} catch (\Throwable $t) {
+								// Swallow to avoid breaking dispatch; legacy handlers may have varied signatures
+							}
+						});
+					}
 					/*
 					$preload_event_weight_define_name = strtoupper($classname) . '_' . strtoupper($preload_event);
 					if (defined($preload_event_weight_define_name)) {
@@ -157,9 +189,26 @@ class icms_preload_Handler {
 	 *
 	 * @return	TRUE if successful, FALSE if not
 	 */
+	/**
+	 * Trigger an ImpressCMS legacy event and also dispatch a PSR-14 LegacyEvent.
+	 *
+	 * @deprecated Use typed PSR-14 events where available. Legacy string events remain supported.
+	 */
 	public function triggerEvent($event, $array = array()) {
 		$event = strtolower($event);
+		// Deprecated: prefer PSR-14 dispatching
+		if (class_exists('icms_core_Debug')) {
+			icms_core_Debug::setDeprecated(
+				'icms_preload_Handler::triggerEvent',
+				"Deprecated legacy preload event triggering. Use icms::\$events->dispatch(new \\ImpressCMS\\Events\\LegacyEvent(\$event, \$array)); prefer typed PSR-14 events where available."
+			);
+		}
+		// Legacy delegate system
 		icms_Event::trigger('icms', $event, null, $array);
+		// PSR-14 bridge
+		if (isset(\icms::$events)) {
+			\icms::$events->dispatch(new \ImpressCMS\Events\LegacyEvent($event, $array));
+		}
 	}
 
 	/**

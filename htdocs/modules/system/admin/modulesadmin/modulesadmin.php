@@ -550,6 +550,18 @@ function xoops_module_install($dirname) {
 			$ret = '<p><code>' . implode("<br />", $msgs);
 			unset($msgs, $errs);
 			$ret .= '</code><br />' . sprintf(_MD_AM_OKINS, "<strong>" . $module->getVar('name') . "</strong>") . '</p>';
+
+				// PSR-14: dispatch typed ModuleInstalledEvent after successful install
+				if (isset(\icms::$events)) {
+					\icms::$events->dispatch(
+						new \ImpressCMS\Events\ModuleInstalledEvent(
+							$dirname,
+							$module->getVar('mid'),
+							$module
+						)
+					);
+				}
+
 			unset($module);
 			return $ret;
 		} else {

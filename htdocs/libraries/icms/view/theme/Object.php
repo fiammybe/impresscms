@@ -386,8 +386,32 @@ class icms_view_theme_Object {
 		$this->template->assign('icms_pagetitle', $pagetitle);
 
 		// Do not cache the main (theme.html) template output
+
+			// PSR-14: dispatch ThemeRenderEvent before rendering the canvas
+			if (isset(\icms::$events)) {
+				\icms::$events->dispatch(
+					new \ImpressCMS\Events\ThemeRenderEvent(
+						'before',
+						$this->folderName ?? null,
+						['canvasTemplate' => $this->canvasTemplate, 'contentTemplate' => $this->contentTemplate]
+					)
+				);
+			}
+
 		$this->template->caching = 0;
 		$this->template->display($this->path . '/' . $this->canvasTemplate);
+
+			// PSR-14: dispatch ThemeRenderEvent after rendering the canvas
+			if (isset(\icms::$events)) {
+				\icms::$events->dispatch(
+					new \ImpressCMS\Events\ThemeRenderEvent(
+						'after',
+						$this->folderName ?? null,
+						['canvasTemplate' => $this->canvasTemplate, 'contentTemplate' => $this->contentTemplate]
+					)
+				);
+			}
+
 
 		$this->renderCount++;
 		icms::$logger->stopTime('Page rendering');

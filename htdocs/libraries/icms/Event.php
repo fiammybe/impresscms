@@ -31,7 +31,7 @@ class icms_Event {
 	}
 
 	/**
-	 * Registers an event handler
+	 * Registers an event handler (legacy delegate system).
 	 *
 	 * icms_Event::attach( 'icms_db_IConnection', 'connect', 'something' );
 	 * => will call something( $eventParams, $event ) when the event is fired
@@ -45,19 +45,31 @@ class icms_Event {
 	 *    echo 'Executing: ' . $params['sql'];
 	 * } );
 	 *
+	 * @deprecated Prefer PSR-14 listeners via icms::$events->subscribeTo(EventClass::class, $listener)
 	 * @param string $namespace Event namespace
 	 * @param string $name Event name (use * to attach to all signals of $namespace)
 	 * @param mixed $callback
 	 * @return void
 	 */
 	static public function attach($namespace, $name, $callback) {
+
+			// Deprecated: prefer PSR-14 listeners
+			if (class_exists('icms_core_Debug')) {
+				icms_core_Debug::setDeprecated(
+					'icms_Event::attach',
+					'Deprecated legacy delegate registration. Use PSR-14 via icms::$events->subscribeTo(\ImpressCMS\Events\LegacyEvent::class, $listener) for legacy string events, or migrate to typed events and subscribe to their classes.'
+				);
+			}
+
 		if (!isset(self::$handlers[$namespace][$name])) {
 			self::$handlers[$namespace][$name] = array();
 		}
 		self::$handlers[$namespace][$name][] = $callback;
 	}
 	/**
-	 * Detach the specified event handler.
+	 * Detach the specified event handler (legacy delegate system).
+	 *
+	 * @deprecated Prefer removing PSR-14 listeners via your listener registration code
 	 * @param string $namespace
 	 * @param string $name
 	 * @param mixed $callback
@@ -74,7 +86,9 @@ class icms_Event {
 	}
 
 	/**
-	 * Triggers an event.
+	 * Triggers a legacy ImpressCMS event and also dispatches a PSR-14 LegacyEvent.
+	 *
+	 * @deprecated Prefer dispatching typed PSR-14 events via icms::$events
 	 *
 	 * @param string $namespace Event namespace
 	 * @param string $name Event name (use * to attach to all events of $namespace)
@@ -88,6 +102,13 @@ class icms_Event {
 			$cancancel = true;
 			$name = substr($name, 1);
 		}
+		// Deprecated: prefer PSR-14 dispatching
+		if (class_exists('icms_core_Debug')) {
+			icms_core_Debug::setDeprecated(
+				'icms_Event::trigger',
+				"Deprecated legacy event dispatch. Use icms::\$events->dispatch(new \\ImpressCMS\\Events\\LegacyEvent(\$name, \$parameters)) for legacy string events, and prefer dispatching/consuming typed PSR-14 events where available."
+			);
+		}
 		$event = new icms_Event($namespace, $name, $source, $parameters, $cancancel);
 		array_unshift(self::$events, $event);
 		foreach (array("*", $name) as $handlers) {
@@ -97,6 +118,10 @@ class icms_Event {
 					if ($cancancel && $event->canceled) break 2;
 				}
 			}
+		}
+		// Also dispatch through PSR-14 for new listeners
+		if (isset(\icms::$events)) {
+			\icms::$events->dispatch(new \ImpressCMS\Events\LegacyEvent($name, $parameters));
 		}
 		return array_shift(self::$events);
 	}

@@ -869,6 +869,19 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 				return false;
 			}
 		}
+
+			// PSR-14: dispatch a typed ContentSavedEvent after a successful save/insert/update
+			if (isset(\icms::$events)) {
+				\icms::$events->dispatch(
+					new \ImpressCMS\Events\ContentSavedEvent(
+						$this->_moduleName,
+						$this->_itemname,
+						method_exists($obj, 'id') ? $obj->id() : (is_array($this->keyName) ? null : (int)$obj->getVar($this->keyName)),
+						$obj
+					)
+				);
+			}
+
 		return true;
 	}
 

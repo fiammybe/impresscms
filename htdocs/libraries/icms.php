@@ -70,6 +70,14 @@ abstract class icms {
 	 * @var icms_module_Object
 	 */
 	static public $module;
+		/**
+		 * PSR-14 Event Dispatcher (league/event)
+		 *
+		 * Legacy icms_Event remains supported; prefer dispatching PSR-14 events via this dispatcher.
+		 * @var \Psr\EventDispatcher\EventDispatcherInterface|null
+		 */
+		static public $events;
+
 	/**
 	 * Registered services definition
 	 * @var array
@@ -107,6 +115,24 @@ abstract class icms {
 	/**
 	 * Initialize ImpressCMS before bootstrap
 	 */
+		/*
+			// Composer autoload for vendor packages (e.g. league/event)
+			$__vendorAutoload = dirname(ICMS_ROOT_PATH) . '/vendor/autoload.php';
+			if (file_exists($__vendorAutoload)) {
+				require_once $__vendorAutoload;
+			}
+
+			// Register ImpressCMS namespace for new PSR-4 style classes (Events, etc.)
+			if (class_exists('icms_Autoloader')) {
+				icms_Autoloader::register(ICMS_ROOT_PATH . '/libraries', 'ImpressCMS');
+			}
+
+			// Instantiate PSR-14 Event Dispatcher early so preloads can subscribe
+			if (class_exists('League\\Event\\EventDispatcher')) {
+				self::$events = new \League\Event\EventDispatcher();
+				}
+	*/
+
 	static public function setup() {
 		self::$paths['www']		= array(ICMS_ROOT_PATH, ICMS_URL);
 		self::$paths['modules']	= array(ICMS_ROOT_PATH . '/modules', ICMS_URL . '/modules');
@@ -114,6 +140,20 @@ abstract class icms {
 		// Initialize the autoloader
 		require_once dirname(__FILE__ ) . '/icms/Autoloader.php';
 		icms_Autoloader::setup();
+			// Composer autoload for vendor packages (e.g. league/event)
+			$__vendorAutoload = dirname(ICMS_ROOT_PATH) . '/vendor/autoload.php';
+			if (file_exists($__vendorAutoload)) {
+				require_once $__vendorAutoload;
+			}
+
+			// Register ImpressCMS namespace for new PSR-4 style classes (Events, etc.)
+			icms_Autoloader::register(ICMS_ROOT_PATH . '/libraries', 'ImpressCMS');
+
+			// Instantiate PSR-14 Event Dispatcher early so preloads can subscribe
+			if (class_exists('League\\Event\\EventDispatcher')) {
+				self::$events = new \League\Event\EventDispatcher();
+			}
+
 		register_shutdown_function(array(__CLASS__, 'shutdown'));
 		self::buildRelevantUrls();
 	}
@@ -126,6 +166,12 @@ abstract class icms {
 		// We just hardcode the preload first, as we need to trigger an event
 		self::$preload = icms_preload_Handler::getInstance();
 		self::$preload->triggerEvent('startCoreBoot');
+
+
+			// PSR-14: dispatch a system init event at early boot stage
+			if (isset(self::$events)) {
+				self::$events->dispatch(new \ImpressCMS\Events\SystemInitEvent(['stage' => 'boot']));
+			}
 
 		foreach (self::$services['boot'] as $name => $definition) {
 			list($factory, $args) = $definition;
