@@ -1,115 +1,108 @@
 <?php
 /**
- * ImpressCMS Mimetypes
+ * ImpressCMS Mimetypes Administration
  *
- * @copyright The ImpressCMS Project http://www.impresscms.org/
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
- * @package Administration
- * @subpackage Mimetypes
- * @since 1.2
- * @author Sina Asghari (aka stranger) <pesian_stranger@users.sourceforge.net>
- * @version SVN: $Id: main.php 11143 2011-03-30 13:46:23Z m0nty_ $
+ * @copyright   The ImpressCMS Project <https://www.impresscms.org/>
+ * @license     GNU General Public License (GPL) <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
+ * @package     Administration
+ * @subpackage  Mimetypes
+ * @since       1.2
  */
-if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin($icmsModule->getVar('mid'))) {
+
+// Check if the user has admin rights for the current module
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar('mid'))) {
 	exit("Access Denied");
 }
 
-/**
- * Logic and rendering for mimetypes management
- *
- * @param bool $showmenu Doesn't appear to have any current functionality
- * @param int $mimetypeid Unique ID for mimetype entry
- */
-function editmimetype($showmenu = FALSE, $mimetypeid = 0) {
-	global $icms_mimetype_handler, $icmsAdminTpl;
-
-	icms_cp_header();
-	$mimetypeObj = $icms_mimetype_handler->get($mimetypeid);
-
-	if (!$mimetypeObj->isNew()) {
-		$sform = $mimetypeObj->getForm(_CO_ICMS_MIMETYPE_EDIT, 'addmimetype');
-		$sform->assign($icmsAdminTpl);
-
-		$icmsAdminTpl->assign('icms_mimetype_title', _CO_ICMS_MIMETYPE_EDIT_INFO);
-		$icmsAdminTpl->display('db:system_adm_mimetype.html');
-	} else {
-		$mimetypeObj->setVar('mimetypeid', 0);
-		$mimetypeObj->setVar('extension', '');
-
-		$sform = $mimetypeObj->getForm(_CO_ICMS_MIMETYPE_CREATE, 'addmimetype');
-		$sform->assign($icmsAdminTpl);
-
-		$icmsAdminTpl->assign('icms_mimetype_title', _CO_ICMS_MIMETYPE_CREATE_INFO);
-		$icmsAdminTpl->display('db:system_adm_mimetype.html');
-	}
-}
+// Load language files
 icms_loadLanguageFile('system', 'common');
-global $icmsAdminTpl, $icms_mimetype_handler;
 
-$icms_mimetype_handler = icms_getModuleHandler('mimetype');
+// Initialize the mimetype handler
+$mimetypeHandler = icms_getModuleHandler('mimetype', 'system');
 
-/*
- * GET variables
- * (string) op
- *
- * POST variables
- *
- */
+// Filter and validate input
+$filter_get = ['mimetypeid' => 'int', 'op' => 'string'];
+$filter_post = ['mimetypeid' => 'int', 'op' => 'string'];
 
-/* default values */
-$op = '';
-$mimetypeid = 0;
+// Get clean GET/POST variables
+$clean_GET = icms_core_DataFilter::checkVarArray($_GET, $filter_get, false);
+$clean_POST = icms_core_DataFilter::checkVarArray($_POST, $filter_post, false);
 
-$filter_get = array('mimetypeid' => 'int');
+// Extract variables
+$op = isset($clean_GET['op']) ? strtolower($clean_GET['op']) : (isset($clean_POST['op']) ? strtolower($clean_POST['op']) : 'default');
+$mimetypeid = isset($clean_GET['mimetypeid']) ? $clean_GET['mimetypeid'] : (isset($clean_POST['mimetypeid']) ? $clean_POST['mimetypeid'] : 0);
 
-$filter_post = array('mimetypeid' => 'int');
+// Debug output - remove after fixing
+error_log("Mimetype Debug - OP: $op, ID: $mimetypeid, GET: " . print_r($_GET, true));
 
-/* filter the user input */
-if (!empty($_GET)) {
-	// in places where strict mode is not used for checkVarArray, make sure filter_ vars are not overwritten
-	if (isset($_GET['filter_post'])) unset($_GET['filter_post']);
-	$clean_GET = icms_core_DataFilter::checkVarArray($_GET, $filter_get, false);
-	extract($clean_GET);
-}
-
-if (!empty($_POST)) {
-	$clean_POST = icms_core_DataFilter::checkVarArray($_POST, $filter_post, false);
-	extract($clean_POST);
-}
-
+// Main logic based on the 'op' parameter
 switch ($op) {
-	case "mod":
-		editmimetype(TRUE, $mimetypeid);
+	case 'edit':
+	case 'mod':
+		error_log("Entering edit/mod case for ID: $mimetypeid");
+
+		icms_cp_header();
+
+		// Get the mimetype object
+		$mimetypeObj = $mimetypeHandler->get($mimetypeid);
+
+		if (!$mimetypeObj) {
+			error_log("Failed to get mimetype object for ID: $mimetypeid");
+			redirect_header('admin.php?fct=mimetype', 3, 'Mimetype not found');
+			exit;
+		}
+
+		error_log("Got mimetype object, isNew: " . ($mimetypeObj->isNew() ? 'true' : 'false'));
+
+		// Use IPF auto-generated form
+		if (!$mimetypeObj->isNew()) {
+			$sform = $mimetypeObj->getForm(_CO_ICMS_MIMETYPE_EDIT, 'save');
+			$formTitle = _CO_ICMS_MIMETYPE_EDIT_INFO;
+		} else {
+			$mimetypeObj->setVar('mimetypeid', 0);
+			$mimetypeObj->setVar('extension', '');
+			$sform = $mimetypeObj->getForm(_CO_ICMS_MIMETYPE_CREATE, 'save');
+			$formTitle = _CO_ICMS_MIMETYPE_CREATE_INFO;
+		}
+
+		echo '<h1 class="mimetypeTitle">' . $formTitle . '</h1>';
+		echo '<div class="mimetypeForm">';
+		$sform->display();
+		echo '</div>';
+
+		icms_cp_footer();
+		exit; // Ensure we don't continue to other cases
 		break;
 
-	case "addmimetype":
-		global $icms_mimetype_handler;
-		$controller = new icms_ipf_Controller($icms_mimetype_handler);
+	case 'save':
+		$controller = new icms_ipf_Controller($mimetypeHandler);
 		$controller->storeFromDefaultForm(_CO_ICMS_MIMETYPE_CREATED, _CO_ICMS_MIMETYPE_MODIFIED);
 		break;
 
-	case "del":
-		global $icms_mimetype_handler;
-		$controller = new icms_ipf_Controller($icms_mimetype_handler);
+	case 'delete':
+		$controller = new icms_ipf_Controller($mimetypeHandler);
 		$controller->handleObjectDeletion();
 		break;
 
 	default:
-		global $icmsAdminTpl, $icms_mimetype_handler;
 		icms_cp_header();
 
-		$objectTable = new icms_ipf_view_Table($icms_mimetype_handler);
+		echo '<h1 class="mimetypeTitle">' . _CO_ICMS_MIMETYPES_DSC . '</h1>';
+
+		// Create IPF table view
+		$objectTable = new icms_ipf_view_Table($mimetypeHandler);
 		$objectTable->addColumn(new icms_ipf_view_Column('name', _GLOBAL_LEFT, 150));
 		$objectTable->addColumn(new icms_ipf_view_Column('extension', _GLOBAL_LEFT, 150));
 		$objectTable->addColumn(new icms_ipf_view_Column('types', _GLOBAL_LEFT));
-		$objectTable->addIntroButton('addmimetype', 'admin.php?fct=mimetype&amp;op=mod', _CO_ICMS_MIMETYPE_CREATE);
-		$objectTable->addQuickSearch(array('name', 'extension', 'types'));
 
-		$icmsAdminTpl->assign('icms_mimetype_table', $objectTable->fetch());
-		$icmsAdminTpl->assign('icms_mimetype_explain', TRUE);
-		$icmsAdminTpl->assign('icms_mimetype_title', _CO_ICMS_MIMETYPES_DSC);
-		$icmsAdminTpl->display('db:system_adm_mimetype.html');
+		// Add intro button with correct operation
+		$objectTable->addIntroButton('edit', 'admin.php?fct=mimetype&amp;op=edit', _CO_ICMS_MIMETYPE_CREATE);
+		$objectTable->addQuickSearch(['name', 'extension', 'types']);
+
+		echo '<div class="mimetypeTable">';
+		echo $objectTable->fetch();
+		echo '</div>';
+
+		icms_cp_footer();
 		break;
 }
-
-icms_cp_footer();

@@ -2,24 +2,23 @@
 /**
  * ImpressCMS Mimetypes
  *
- * @copyright	The ImpressCMS Project http://www.impresscms.org/
- * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
- * @package		System
- * @subpackage	Mimetypes
- * @since		1.2
- * @author		Sina Asghari (aka stranger) <pesian_stranger@users.sourceforge.net>
- * @version		SVN: $Id: mimetype.php 11143 2011-03-30 13:46:23Z m0nty_ $
- */
+ * @copyright   The ImpressCMS Project <https://www.impresscms.org/>
+ * @license     GNU General Public License (GPL) <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
+ * @package     System
+ * @subpackage  Mimetypes
+ * @since       1.2
+ * @author      David Janssens (fiammybe) based on work by Sina Asghari (aka stranger)
+  */
 
-defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
+defined("ICMS_ROOT_PATH") || die("ImpressCMS root path not defined");
 
 icms_loadLanguageFile('system', 'mimetype', TRUE);
 
 /**
  * Mimetype management for file handling
  *
- * @package		System
- * @subpackage	Mimetypes
+ * @package     System
+ * @subpackage  Mimetypes
  */
 class SystemMimetype extends icms_ipf_Object {
 	public $content = FALSE;
@@ -29,7 +28,7 @@ class SystemMimetype extends icms_ipf_Object {
 	 *
 	 * @param object $handler
 	 */
-	function __construct(&$handler) {
+	public function __construct(&$handler) {
 		parent::__construct($handler);
 
 		$this->quickInitVar('mimetypeid', XOBJ_DTYPE_INT, TRUE);
@@ -38,20 +37,20 @@ class SystemMimetype extends icms_ipf_Object {
 		$this->quickInitVar('name', XOBJ_DTYPE_TXTBOX, TRUE, _CO_ICMS_MIMETYPE_NAME, _CO_ICMS_MIMETYPE_NAME_DSC);
 		$this->quickInitVar('dirname', XOBJ_DTYPE_SIMPLE_ARRAY, TRUE, _CO_ICMS_MIMETYPE_DIRNAME);
 
-		$this->setControl('dirname', array(
+		$this->setControl('dirname', [
 			'name' => 'selectmulti',
 			'itemHandler' => 'icms_module',
-			'method' => 'getActive'));
+			'method' => 'getActive'
+		]);
 	}
 
 	/**
-	 * (non-PHPdoc)
 	 * @see icms_ipf_Object::getVar()
-	 * @return	mixed	Value of the selected property
+	 * @return mixed Value of the selected property
 	 */
 	public function getVar($key, $format = 's') {
-		if ($format == 's' && in_array($key, array())) {
-			return call_user_func(array($this, $key));
+		if ($format === 's' && in_array($key, [])) {
+			return call_user_func([$this, $key]);
 		}
 		return parent::getVar($key, $format);
 	}
@@ -59,7 +58,7 @@ class SystemMimetype extends icms_ipf_Object {
 	/**
 	 * Determines if a variable is a zero length string
 	 * @param string $var
-	 * @return	boolean
+	 * @return bool
 	 */
 	public function emptyString($var) {
 		return strlen($var) > 0;
@@ -67,40 +66,36 @@ class SystemMimetype extends icms_ipf_Object {
 
 	/**
 	 * Get the name property of the selected mimetype
-	 * @return	string
+	 * @return string
 	 */
 	public function getMimetypeName() {
-		$ret = $this->getVar('name');
-		return $ret;
+		return $this->getVar('name');
 	}
 
 	/**
 	 * Get the type of the selected mimetype
-	 * @return	string
+	 * @return string
 	 */
 	public function getMimetypeType() {
-		$ret = $this->getVar('types');
-		return $ret;
+		return $this->getVar('types');
 	}
 
 	/**
 	 * Get the ID of the selected mimetype
-	 * @return	int
+	 * @return int
 	 */
 	public function getMimetypeId() {
-		$ret = (int) $this->getVar('mimetypeid');
-		return $ret;
+		return (int) $this->getVar('mimetypeid');
 	}
 }
 
 /**
  * Handler for the mimetype object class
  *
- * @package		System
- * @subpackage	Mimetypes
+ * @package     System
+ * @subpackage  Mimetypes
  */
 class SystemMimetypeHandler extends icms_ipf_Handler {
-
 	public $objects = FALSE;
 
 	/**
@@ -114,8 +109,7 @@ class SystemMimetypeHandler extends icms_ipf_Handler {
 	}
 
 	/**
-	 *
-	 * @return	array
+	 * @return array
 	 */
 	public function UserCanUpload() {
 		$handler = new icms_ipf_permission_Handler($this);
@@ -124,78 +118,54 @@ class SystemMimetypeHandler extends icms_ipf_Handler {
 
 	/**
 	 * Returns a list of mimetypes allowed for the user
-	 * @return	array
+	 * @return array
 	 */
 	public function AllowedMimeTypes() {
-		$GrantedItems =  $this->UserCanUpload();
-		$array = array();
-		$grantedItemValues = array_values($GrantedItems);
-		if (!empty($grantedItemValues)) {
-			$sql = "SELECT types " . "FROM " . $this->table . " WHERE (mimetypeid='";
-			if (count($grantedItemValues)>1) {
-				foreach ($grantedItemValues as $grantedItemValue) {
-					$sql .= ($grantedItemValue != $grantedItemValues[0]) ? $grantedItemValue . "' OR mimetypeid='" : "";
-				}
-			}
-			$sql .= $grantedItemValues[0] . "')";
-			$Qvalues = $this->query($sql, FALSE);
-			for ($i = 0; $i < count($Qvalues); $i++) {
-				$values[]= explode(' ', $Qvalues[$i]['types']);
-			}
-			foreach ($values as $item=>$value) {
-				$array = array_merge($array, $value);
+		$GrantedItems = $this->UserCanUpload();
+		$array = [];
+
+		if (!empty($GrantedItems)) {
+			$criteria = new icms_db_criteria_Compo();
+			$criteria->add(new icms_db_criteria_Item('mimetypeid', '(' . implode(',', array_keys($GrantedItems)) . ')', 'IN'));
+
+			$objects = $this->getObjects($criteria, TRUE, FALSE);
+
+			foreach ($objects as $object) {
+				$types = explode(' ', $object->getVar('types', 'n'));
+				$array = array_merge($array, $types);
 			}
 		}
+
 		return $array;
 	}
 
-
 	/**
-	 *
-	 *
 	 * @param string $mimetype
 	 * @param string $module
-	 * @return	boolean
+	 * @return bool
 	 */
 	public function AllowedModules($mimetype, $module) {
-		$mimetypeid_allowed = $dirname_allowed = FALSE;
 		$GrantedItems = $this->UserCanUpload();
+
 		$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('types', '%' . $mimetype . '%', 'LIKE'));
+		$objects = $this->getObjects($criteria, TRUE, FALSE);
 
-		$sql = 'SELECT mimetypeid, dirname, types FROM ' . $this->table;
-		$rows = $this->query($sql, $criteria);
-		if (count($rows) > 1) {
-			for ($i = 0; $i < count($rows); $i++) {
-				$mimetypeids[]= $rows[$i]['mimetypeid'];
-				$dirname[]= explode('|', $rows[$i]['dirname']);
-				$types[]= $rows[$i]['types'];
-			}
+		$mimetypeid_allowed = FALSE;
+		$dirname_allowed = FALSE;
 
-			foreach ($mimetypeids as $mimetypeid) {
-				if (in_array($mimetypeid, $GrantedItems)) {
-					$mimetypeid_allowed = TRUE;
-				}
-			}
-			foreach ($dirname as $dir) {
-				if (!empty($module) && in_array($module, $dir)) {
-					$dirname_allowed = TRUE;
-				}
-			}
-		} elseif (count($rows) == 1) {
-			$mimetypeid= $rows[0]['mimetypeid'];
-			$dirname= explode('|', $rows[0]['dirname']);
-			$types= $rows[0]['types'];
-			if (in_array($mimetypeid, $GrantedItems)) {
+		foreach ($objects as $object) {
+			$mimetypeid = $object->getVar('mimetypeid');
+			$dirname = explode('|', $object->getVar('dirname', 'n'));
+
+			if (in_array($mimetypeid, array_keys($GrantedItems))) {
 				$mimetypeid_allowed = TRUE;
 			}
+
 			if (!empty($module) && in_array($module, $dirname)) {
 				$dirname_allowed = TRUE;
 			}
 		}
-		if ($mimetypeid_allowed && $dirname_allowed) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+
+		return $mimetypeid_allowed && $dirname_allowed;
 	}
 }
