@@ -41,6 +41,8 @@ include_once '../include/version.php';
 include_once '../include/functions.php';
 // installer common functions
 require_once 'include/functions.php';
+// template helper functions
+require_once 'include/template_helper.php';
 include_once './class/IcmsInstallWizard.php';
 
 require_once '../libraries/icms/Autoloader.php';

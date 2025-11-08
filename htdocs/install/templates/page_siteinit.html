@@ -1,0 +1,55 @@
+<{if $error}>
+    <div class="x2-note error"><{$error}></div>
+<{/if}>
+
+<script type="text/javascript" src="js/password-strength.js"></script>
+<script type="text/javascript">
+    // Configure password strength checker with localized labels
+    document.addEventListener('DOMContentLoaded', function() {
+        PasswordStrength.init({
+            shortPass: "<{$shortPassLabel}>",
+            badPass: "<{$badPassLabel}>",
+            goodPass: "<{$goodPassLabel}>",
+            strongPass: "<{$strongPassLabel}>",
+            samePassword: "Username and Password identical.",
+            resultStyle: "top_testresult",
+            shortPassId: "top_shortPass",
+            badPassId: "top_badPass",
+            goodPassId: "top_goodPass",
+            strongPassId: "top_strongPass",
+            userIdSelector: "#adminlogin_name"
+        });
+    });
+</script>
+
+<fieldset>
+    <h3><{$adminAccountLegend}></h3>
+    <div class="blokinit">
+        <div class="dbconn_line">
+            <label for="adminname"><{$adminDisplayLabel}></label>
+            <div class="clear">&nbsp;</div>
+            <input type="text" name="adminname" id="adminname" maxlength="25" value="<{$adminDisplayValue}>" />
+        </div>
+        <div class="dbconn_line">
+            <label for="adminlogin_name"><{$adminLoginLabel}></label>
+            <div class="clear">&nbsp;</div>
+            <input class="adminlogin_name" type="text" name="adminlogin_name" id="adminlogin_name" maxlength="25" value="<{$adminLoginValue}>" />
+        </div>
+        <div class="dbconn_line">
+            <label for="adminmail"><{$adminEmailLabel}></label>
+            <div class="clear">&nbsp;</div>
+            <input type="text" name="adminmail" id="adminmail" maxlength="255" value="<{$adminEmailValue}>" />
+        </div>
+        <div class="dbconn_line">
+            <label for="adminpass"><{$adminPassLabel}></label>
+            <div class="clear">&nbsp;</div>
+            <input class="password_adv" type="password" name="adminpass" id="adminpass" maxlength="255" value="" />
+        </div>
+        <div class="dbconn_line">
+            <label for="adminpass2"><{$adminConfirmPassLabel}></label>
+            <div class="clear">&nbsp;</div>
+            <input type="password" name="adminpass2" id="adminpass2" maxlength="255" value="" />
+        </div>
+    </div>
+</fieldset>
+

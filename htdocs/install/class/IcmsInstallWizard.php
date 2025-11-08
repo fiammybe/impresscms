@@ -184,8 +184,16 @@ class IcmsInstallWizard {
 			} elseif ($page[0] === '-') {
 				$page = $this->currentPage - substr($page, 1);
 			} else {
-				$page = (int) array_search($page, $this->pages, false);
+				$searchResult = array_search($page, $this->pages, false);
+				$page = ($searchResult !== false) ? (int) $searchResult : 0;
 			}
+		}
+		// Ensure page index is within valid bounds
+		$page = (int) $page;
+		if ($page < 0) {
+			$page = 0;
+		} elseif ($page >= count($this->pages)) {
+			$page = count($this->pages) - 1;
 		}
 		$page = $this->pages[$page];
 		return $this->baseLocation() . "/page_$page.php";

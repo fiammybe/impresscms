@@ -172,22 +172,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	exit();
 }
 
-ob_start();
-?>
-<p class="x2-note"><?php
-
-echo READY_SAVE_MAINFILE;
-?></p>
-<dl style="height: 200px; overflow: auto; border: 1px solid #D0D0D0">
-<?php
-
+// Prepare configuration variables for display
+$configVars = [];
 foreach ($vars as $k => $v) {
-	echo "<dt>XOOPS_$k</dt><dd>$v</dd>";
+	$configVars[] = [
+		'key' => 'XOOPS_' . $k,
+		'value' => $v,
+	];
 }
-?>
-</dl>
 
-<?php
-$content = ob_get_contents();
-ob_end_clean();
-include 'install_tpl.php';
+// Render the full layout with page variables
+renderInstallerLayout($wizard, [
+	'configSaveLabel' => CONFIG_SAVE,
+	'configSaveMessage' => READY_SAVE_MAINFILE,
+	'configVars' => $configVars,
+], true);

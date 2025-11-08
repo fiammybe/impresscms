@@ -67,7 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$msg = $process ? READY_INSERT_DATA : DATA_ALREADY_INSERTED;
 	$pageHasForm = $process ? true : false;
 
-	$content = "<p class='x2-note'>$msg</p>";
+	// Render the full layout with page variables
+	renderInstallerLayout($wizard, [
+		'message' => $msg,
+		'processInsert' => !empty($process),
+	], $pageHasForm);
 }
-
-include 'install_tpl.php';

@@ -1,0 +1,18 @@
+<div><{$selectModsIntro}></div>
+<div class="dbconn_line">
+    <h3><{$selectModulesLabel}></h3>
+    <div id="modinstall" name="install_mods[]">
+        <{foreach from=$availableModules item=module}>
+            <div class="langselect" style="text-decoration: none;">
+                <a href="javascript:void(0);" style="text-decoration: none;">
+                    <img src="<{$module.icon}>" alt="<{$module.name}>" />
+                    <br /><{$module.name}><br />
+                    <input type="checkbox" checked="checked" name="install_mods[]" value="<{$module.name}>" />
+                </a>
+            </div>
+        <{/foreach}>
+    </div>
+    <div class='clear'>&nbsp;</div>
+</div>
+<input type="hidden" name="mod" value="1" />
+

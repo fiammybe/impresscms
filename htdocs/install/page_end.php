@@ -31,18 +31,30 @@ if ($success) {
 	$_SESSION = array();
 }
 
-$wizard->setPage( 'end' );
+$wizard->setPage('end');
 $pageHasForm = false;
-$content = "";
-include "./language/$wizard->language/finish.php";
 
-// destroy all the installation session
+// Load finish content from language file
+$content = '';
+ob_start();
+include "./language/$wizard->language/finish.php";
+$finishContent = ob_get_clean();
+if (empty($finishContent)) {
+	$finishContent = $content;
+}
+
+// Render the full layout with page variables
+renderInstallerLayout($wizard, [
+	'finishLabel' => WELCOME,
+	'successMessage' => INSTALL_COMPLETE,
+	'finishMessage' => INSTALL_COMPLETE_MSG,
+	'finishContent' => $finishContent,
+], $pageHasForm);
+
+// Destroy all the installation session
 unset($_SESSION);
-if(isset($_COOKIE[session_name()]))
-{
-	setcookie(session_name(), '', time()-60);
+if (isset($_COOKIE[session_name()])) {
+	setcookie(session_name(), '', time() - 60);
 }
 session_unset();
 session_destroy();
-
-include 'install_tpl.php';

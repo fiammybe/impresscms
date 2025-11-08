@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title><{$pageTitle}> (<{$currentPageNum}>/<{$totalPages}>)</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=<{$charset}>"/>
+    <{if $useRtl}>
+        <link rel="stylesheet" type="text/css" media="all" href="style_rtl.css" />
+    <{else}>
+        <link rel="stylesheet" type="text/css" media="all" href="style.css" />
+        <link rel="stylesheet" type="text/css" media="all" href="style.css" title="darkstyle" />
+        <link rel="stylesheet" type="text/css" media="all" href="stylelight.css" title="lightstyle" />
+    <{/if}>
+
+    <!-- Alpine.js for reactive UI -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Stylesheet toggle utility -->
+    <script type="text/javascript" src="js/stylesheet-toggle.js"></script>
+    <!-- Installer UI module -->
+    <script type="text/javascript" src="js/alpine-installer.js"></script>
+</head>
+<body<{if $useRtl}> dir="rtl"<{/if}} x-data="installerUI()" @alpine:init="init()">
+<div id="wrapper">
+    <div id="header">
+        <div id="logo"><img src="img/logo.png" alt="ImpressCMS"/></div>
+        <div id="info"><{$wizardTitle}><br /><{$stepLabel}>&nbsp;<{$currentPageNum}><{$outOfLabel}><{$totalPages}></div>
+    </div>
+
+    <div id="page_top">&nbsp;</div>
+
+    <div id="page">
+        <form action='<{$formAction}>' method='post'>
+            <div id="leftside">
+                <h3><{$stepsLabel}></h3>
+                <ul>
+                    <{foreach from=$pages item=page key=k}>
+                        <{if $k == $currentPageIndex}>
+                            <li class="current"><{$pageNames[$k]}></li>
+                        <{elseif $k > $currentPageIndex}>
+                            <li class="disabled"><{$pageNames[$k]}></li>
+                        <{else}>
+                            <li><a href="<{$pageUris[$k]}>"><{$pageNames[$k]}></a></li>
+                        <{/if}>
+                    <{/foreach}>
+                </ul>
+                <div class="clear">&nbsp;</div>
+            </div>
+            <div id="rightside">
+                <div class="page" id="<{$currentPageName}>">
+                    <{if $pageHasHelp}>
+                        <button type="button" @click="toggleHelp()" id="help_button"
+                                title="<{$showHideHelpLabel}>">
+                            <img src="img/help2.png" alt="<{$showHideHelpLabel}>"
+                                 title="<{$showHideHelpLabel}>"/>
+                        </button>
+                    <{/if}>
+                    <button type="button" @click="scrollToBottom()" id="pagedown">
+                        <img src="img/down.png" alt="<{$showHideHelpLabel}>"
+                             title="<{$showHideHelpLabel}>"/>
+                    </button>
+                    <button type="button" @click="toggleStylesheet()" id="toggler">
+                        <img src="img/toggler.png" alt="<{$showHideHelpLabel}>"/>
+                    </button>
+                    <h2><{$pageTitle}></h2>
+                    <{include file="page_`$currentPageName`.html"}>
+                </div>
+                <div id="buttons">
+                    <{if $showPrevButton}>
+                        <button type="button" title="<{$prevButtonLabel}>"
+                                onclick="location.href='<{$prevPageUri}>'" class="prev">
+                            <img src="img/left-arr.png" alt="<{$prevButtonLabel}>"
+                                 title="<{$prevButtonLabel}>" width="16"/>
+                        </button>
+                    <{/if}>
+                    <{if $showFinishButton}>
+                        <button id="hmo" title="<{$showSiteButtonLabel}>" type="button"
+                                onclick="location.href='<{$finishPageUri}>'"
+                                class="finish">
+                            <img src="img/Home.png" alt="<{$showSiteButtonLabel}>"
+                                 title="<{$showSiteButtonLabel}>" width="32"/>
+                        </button>
+                    <{/if}>
+                    <{if $showNextButton}>
+                        <{if $pageHasForm}>
+                            <button type="submit" title="<{$nextButtonLabel}>">
+                        <{else}>
+                            <button type="button" title="<{$nextButtonLabel}>" accesskey="n"
+                                    onclick="location.href='<{$nextPageUri}>'" class="next">
+                        <{/if}>
+                            <{if $isLastModuleStep}>
+                                <{$finishLabel}>
+                            <{else}>
+                                <img src="img/right-arr.png" alt="<{$nextButtonLabel}>" width="16"/>
+                            <{/if}>
+                        </button>
+                    <{/if}>
+                </div>
+                <div class="clear">&nbsp;</div>
+            </div>
+        </form>
+        <div class="clear">&nbsp;</div>
+    </div>
+    <div id="page_bot">&nbsp;</div>
+
+    <div id="footer">
+        <{$copyrightLabel}>
+    </div>
+</div>
+</body>
+</html>
+

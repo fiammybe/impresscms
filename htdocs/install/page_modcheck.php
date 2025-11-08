@@ -101,72 +101,48 @@ function imCheckRequirements()
 	$requirement['gd']['description']="GD Extension";
 	$requirement['gd']['result']=extension_loaded( 'GD' ) ? SUCCESS : FAILED;
 	$requirement['gd']['status']=extension_loaded( 'GD' ) ? true : false;
-	
-	
+
+
 	return $requirement;
 }
 
-ob_start();
 $requirements_array = imCheckRequirements();
-?>
-<fieldset>
-<h3><?php echo REQUIREMENTS; ?></h3>
-<?php foreach($requirements_array as &$requirement)
-	 {
-	 ?>
-<h4><?php echo $requirement['description']; ?>:&nbsp; <?php echo xoDiag($requirement['status'], $requirement['result']); ?> <img
-	src="img/<?php echo $requirement['status'] ? "yes" : "no"; ?>.png" alt="<?php echo $requirement['status'] ? SUCCESS : FAILED; ?>" class="rootimg" /></h4>
-<div class="clear">&nbsp;</div>
-		 <?php } ?>
-</fieldset>
 
-<fieldset>
-<h3><?php echo RECOMMENDED_EXTENSIONS; ?></h3>
-<p><?php echo RECOMMENDED_EXTENSIONS_MSG; ?></p>
-<div class="clear">&nbsp;</div>
-
-<h4><?php printf( PHP_EXTENSION, CHAR_ENCODING ); ?>:&nbsp; <?php
-$ext = array();
-if (extension_loaded( 'iconv' ) )		$ext[] = 'Iconv';
-if (extension_loaded( 'mb_string' ) )	$ext[] = 'MBString';
-if (empty($ext)) {
-	echo xoDiag( 0, NONE );
-} else {
-	echo xoDiag( 1, implode( ',', $ext ) );
+// Prepare character encoding extensions
+$charEncodingExtensions = '';
+$charEncodingExts = [];
+if (extension_loaded('iconv')) {
+	$charEncodingExts[] = 'Iconv';
 }
-?> <img src="img/yes.png" alt="Success" class="rootimg" /></h4>
-<div class="clear">&nbsp;</div>
-<h4><?php printf( PHP_EXTENSION, XML_PARSING ); ?>:&nbsp; <?php
-$ext = array();
-if (extension_loaded( 'xml' ) )		$ext[] = 'XML';
-//if (extension_loaded( 'dom' ) )		$ext[] = 'DOM';
-if (empty($ext)) {
-	echo xoDiag( 0, NONE );
-} else {
-	echo xoDiag( 1, implode( ',', $ext ) );
+if (extension_loaded('mb_string')) {
+	$charEncodingExts[] = 'MBString';
 }
-?> <img src="img/yes.png" alt="Success" class="rootimg" /></h4>
-<div class="clear">&nbsp;</div>
-</fieldset>
-<!--
-	<table class="diags">
-	<caption><?php echo FILE_PERMISSIONS; ?></caption>
-    <thead>
-    	<tr><th>Path</th><th>Status</th></tr>
-    </thead>
-	<?php
-		$paths = array("uploads/", "cache/", "templates_c/", "mainfile.php");
-		foreach ( $paths as $path) {
-	?>
-	<tr>
-		<th scope="row"><?php echo $path; ?></th>
-		<td><?php echo xoDiagIfWritable( $path ); ?></td>
-	</tr>
-	<?php } ?>
-	</table>
-	-->
-	<?php
-	$content = ob_get_contents();
-	ob_end_clean();
+if (!empty($charEncodingExts)) {
+	$charEncodingExtensions = implode(',', $charEncodingExts);
+}
 
-	include 'install_tpl.php';
+// Prepare XML extensions
+$xmlExtensions = '';
+$xmlExts = [];
+if (extension_loaded('xml')) {
+	$xmlExts[] = 'XML';
+}
+if (!empty($xmlExts)) {
+	$xmlExtensions = implode(',', $xmlExts);
+}
+
+// Render the full layout with page variables
+renderInstallerLayout($wizard, [
+	'requirements' => $requirements_array,
+	'requirementsLabel' => REQUIREMENTS,
+	'recommendedExtensionsLabel' => RECOMMENDED_EXTENSIONS,
+	'recommendedExtensionsMsg' => RECOMMENDED_EXTENSIONS_MSG,
+	'charEncodingLabel' => sprintf(PHP_EXTENSION, CHAR_ENCODING),
+	'charEncodingExtensions' => $charEncodingExtensions,
+	'xmlParsingLabel' => sprintf(PHP_EXTENSION, XML_PARSING),
+	'xmlExtensions' => $xmlExtensions,
+	'successLabel' => SUCCESS,
+	'failedLabel' => FAILED,
+	'warningLabel' => WARNING,
+	'noneLabel' => NONE,
+], false);

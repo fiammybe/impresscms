@@ -85,21 +85,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		exit();
 	}
 } else {
-
-	$content .= '<div>'. _INSTALL_SELECT_MODS_INTRO .'</div>';
-	$content .= '<div class="dbconn_line">';
-	$content .= '<h3>'. _INSTALL_SELECT_MODULES.'</h3>';
-	$content .= '<div id="modinstall" name="install_mods[]">';
+	// Get available modules
+	$availableModules = [];
 	$langarr = icms_module_Handler::getAvailable();
 	foreach ($langarr as $lang) {
-		if ($lang == 'system' || $lang == 'protector') {
+		if ($lang === 'system' || $lang === 'protector') {
 			continue;
 		}
-		$content .= "<div class=\"langselect\" style=\"text-decoration: none;\"><a href=\"javascript:void(0);\" style=\"text-decoration: none;\"><img src=\"../modules/$lang/images/icon_small.png\" alt=\"$lang\" /><br />$lang <br /><input type=\"checkbox\" checked=\"checked\" name=\"install_mods[]\" value=\"$lang\" /></a></div>";
+		$availableModules[] = [
+			'name' => $lang,
+			'icon' => "../modules/$lang/images/icon_small.png",
+		];
 	}
-	$content .= "</div><div class='clear'>&nbsp;</div>";
-	$content .= '</div>';
-	$content .= '<input type="hidden" name="mod" value="1" />';
-}
 
-include 'install_tpl.php';
+	// Render the full layout with page variables
+	renderInstallerLayout($wizard, [
+		'selectModsIntro' => _INSTALL_SELECT_MODS_INTRO,
+		'selectModulesLabel' => _INSTALL_SELECT_MODULES,
+		'availableModules' => $availableModules,
+	], true);
+}

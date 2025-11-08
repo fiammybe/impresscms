@@ -324,63 +324,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	return;
 }
 
-ob_start();
-?> <script type="text/javascript" src="pathsettings.js"></script>
-
-<div class="blokz">
-<fieldset>
-<h3><?php echo _INSTALL_WEB_LOCATIONS; ?></h3>
-<label for="url"><?php echo _INSTALL_WEB_LOCATIONS_LABEL; ?></label>
-<div class="xoform-help"><?php echo XOOPS_URL_HELP; ?></div>
-<div class="clear">&nbsp;</div>
-<input type="text" name="URL" id="url"
-	value="<?php echo $ctrl->xoopsUrl; ?>" /></fieldset>
-<br />
-</div>
-<div class="bloky">
-<fieldset>
-<h3><?php echo _INSTALL_PHYSICAL_PATH; ?></h3>
-<label for="rootpath"><?php echo XOOPS_ROOT_PATH_LABEL; ?></label>
-<div class="xoform-help"><?php echo XOOPS_ROOT_PATH_HELP; ?></div>
-<div class="clear">&nbsp;</div>
-<input type="text" name="ROOT_PATH" id="rootpath"
-	value="<?php echo $ctrl->xoopsRootPath; ?>" /> <span id="rootpathimg"><?php echo genRootCheckHtml( $ctrl->validRootPath ); ?></span>
-<?php if ($ctrl->validRootPath && !empty( $ctrl->permErrors )) { ?>
-<div id="rootperms"><?php echo CHECKING_PERMISSIONS . '<br /><p>' . ERR_NEED_WRITE_ACCESS . '</p>'; ?>
-<ul class="diags">
-<?php foreach ( $ctrl->permErrors as $path => $result) {
-	if ($result) {
-		echo '<li class="success">' . sprintf( IS_WRITABLE, $path ) . '</li>';
-	} else {
-		echo '<li class="failure">' . sprintf( IS_NOT_WRITABLE, $path ) . '</li>';
+// Prepare permission errors for display
+$permErrorsList = [];
+if ($ctrl->validRootPath && !empty($ctrl->permErrors)) {
+	foreach ($ctrl->permErrors as $path => $result) {
+		$permErrorsList[] = [
+			'path' => $path,
+			'result' => $result,
+			'message' => $result ? sprintf(IS_WRITABLE, $path) : sprintf(IS_NOT_WRITABLE, $path),
+		];
 	}
-} ?>
-	<button type="button" id="permrefresh" /><?php echo BUTTON_REFRESH; ?></button>
-</ul>
-<?php } else { echo '<div id="rootperms">'.CHECKING_PERMISSIONS .'<br /><ul class="diags"><li class="success">'.ALL_PERM_OK.'</li></ul></div>';} ?>
+}
 
-</fieldset>
-<br />
-</div>
-<div class="blokx">
-<fieldset>
-<h3><?php echo _INSTALL_TRUST_PATH; ?></h3>
-<label for="trustpath"><?php echo _INSTALL_TRUST_PATH_LABEL; ?></label>
-<div class="xoform-help"><?php echo _INSTALL_TRUST_PATH_HELP; ?></div>
-<div class="clear">&nbsp;</div>
-<input type="text" name="TRUST_PATH" id="trustpath"
-	value="<?php echo $ctrl->xoopsTrustPath; ?>" /> <span id="trustpathimg"><?php echo genTrustPathCheckHtml( $ctrl->validTrustPath ); ?></span>
-<?php if (!$ctrl->validTrustPath && $ctrl->xoopsTrustPath != '') { ?>
-<div id="trustperms">
-<p><?php echo TRUST_PATH_VALIDATE . '</p>'; ?>
-<button type="button" id="createtrustpath"><?php echo BUTTON_CREATE_TUST_PATH; ?></button>
-
-</div>
-<?php
-}?></fieldset>
-</div>
-<?php
-$content = ob_get_contents();
-ob_end_clean();
-
-include 'install_tpl.php';
+// Render page content
+// Render the full layout with page variables
+renderInstallerLayout($wizard, [
+	'urlLabel' => _INSTALL_WEB_LOCATIONS_LABEL,
+	'urlHelp' => XOOPS_URL_HELP,
+	'url' => htmlspecialchars($ctrl->xoopsUrl, ENT_QUOTES),
+	'rootPathLabel' => XOOPS_ROOT_PATH_LABEL,
+	'rootPathHelp' => XOOPS_ROOT_PATH_HELP,
+	'rootPath' => htmlspecialchars($ctrl->xoopsRootPath, ENT_QUOTES),
+	'rootPathValid' => $ctrl->validRootPath,
+	'rootPathCheckHtml' => genRootCheckHtml($ctrl->validRootPath),
+	'trustPathLabel' => _INSTALL_TRUST_PATH_LABEL,
+	'trustPathHelp' => _INSTALL_TRUST_PATH_HELP,
+	'trustPath' => htmlspecialchars($ctrl->xoopsTrustPath, ENT_QUOTES),
+	'trustPathValid' => $ctrl->validTrustPath,
+	'trustPathCheckHtml' => genTrustPathCheckHtml($ctrl->validTrustPath),
+	'checkingPermissionsLabel' => CHECKING_PERMISSIONS,
+	'needWriteAccessLabel' => ERR_NEED_WRITE_ACCESS,
+	'permErrors' => $permErrorsList,
+	'allPermOkLabel' => ALL_PERM_OK,
+	'trustPathValidateLabel' => TRUST_PATH_VALIDATE,
+	'buttonRefreshLabel' => BUTTON_REFRESH,
+	'buttonCreateTrustPathLabel' => BUTTON_CREATE_TUST_PATH,
+	'webLocationsLabel' => _INSTALL_WEB_LOCATIONS,
+	'physicalPathLabel' => _INSTALL_PHYSICAL_PATH,
+	'trustPathLabel' => _INSTALL_TRUST_PATH,
+], true, true);

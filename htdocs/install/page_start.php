@@ -25,10 +25,20 @@ icms_core_Filesystem::chmod("../mainfile.php", 0777);
 icms_core_Filesystem::chmod("../uploads", 0777);
 icms_core_Filesystem::chmod("../templates_c", 0777);
 icms_core_Filesystem::chmod("../cache", 0777);
-$wizard->setPage( 'start' );
+
+$wizard->setPage('start');
 $pageHasForm = false;
 
-$content = "";
+// Load welcome content from language file
+$content = '';
+ob_start();
 include "./language/$wizard->language/welcome.php";
+$welcomeContent = ob_get_clean();
+if (empty($welcomeContent)) {
+	$welcomeContent = $content;
+}
 
-include 'install_tpl.php';
+// Render the full layout with page variables
+renderInstallerLayout($wizard, [
+	'welcomeContent' => $welcomeContent,
+], $pageHasForm);

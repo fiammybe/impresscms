@@ -22,35 +22,33 @@
 require_once 'common.inc.php';
 if (!defined( 'XOOPS_INSTALL' ) )	exit();
 
-$wizard->setPage( 'langselect' );
+$wizard->setPage('langselect');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$lang = htmlentities($_REQUEST['lang']);
 
-	$languages = icms_core_Filesystem::getDirList( "./language/" );
+	$languages = icms_core_Filesystem::getDirList('./language/');
 	if (!in_array($lang, $languages)) {
 		$lang = 'english';
 	}
-	setcookie( 'xo_install_lang', $lang, time() + 3600, '/', null );
+	setcookie('xo_install_lang', $lang, time() + 3600, '/', null);
 
-	$wizard->redirectToPage( '+1' );
+	$wizard->redirectToPage('+1');
 	exit();
 }
+
 $_SESSION = array();
 $pageHasForm = true;
 $pageHasHelp = true;
-$title = LANGUAGE_SELECTION;
-$content = "";
 
+// Get available languages
+$languages = icms_core_Filesystem::getDirList('./language/');
 
-$languages = icms_core_Filesystem::getDirList( "./language/" );
-foreach ( $languages as $lang) {
-	$sel = ( $lang == $wizard->language ) ? ' checked="checked"' : '';
-	$content .= "<div class=\"langselect\" style=\"text-decoration: none;\"><a href=\"javascript:void(0);\" style=\"text-decoration: none;\"><img src=\"../images/flags/$lang.gif\" alt=\"$lang\" /><br />$lang<br /> <input type=\"radio\" name=\"lang\" value=\"$lang\"$sel /></a></div>";
-}
-$content .= '<fieldset style="text-align: center;">';
-$content .= '<div>' . ALTERNATE_LANGUAGE_MSG . '</div>';
-$content .= '<div style="text-align: center; margin-top: 5px;"><a href="' . ALTERNATE_LANGUAGE_LNK_URL . '" target="_blank">' . ALTERNATE_LANGUAGE_LNK_MSG . '</a></div>';
-$content .= '</fieldset>';
-
-include 'install_tpl.php';
+// Render the full layout with page variables
+renderInstallerLayout($wizard, [
+	'languages' => $languages,
+	'selectedLanguage' => $wizard->language,
+	'alternateLanguageMsg' => ALTERNATE_LANGUAGE_MSG,
+	'alternateLanguageLinkUrl' => ALTERNATE_LANGUAGE_LNK_URL,
+	'alternateLanguageLinkMsg' => ALTERNATE_LANGUAGE_LNK_MSG,
+], $pageHasForm, $pageHasHelp);

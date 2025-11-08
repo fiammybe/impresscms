@@ -352,46 +352,23 @@ function xoFormFieldCharset($name, $value, $label, $link, $help = '') {
 	return $field;
 }
 
-ob_start();
-?>
-
-<?php
-if (!empty ($error)) {
-	echo '<div class="x2-note error">' . htmlentities($error) . "</div>\n";
-}
-?>
-	<script type="text/javascript" src="prototype.js"></script>
-	<script type="text/javascript">
-		function setFormFieldCollation(id, val) {
-			if (val == '') {
-				document.getElementById(id).style.display='none';
-			} else {
-				document.getElementById(id).style.display='display';
-			}
-			new Ajax.Updater(
-					id, '<?php
-							echo $_SERVER ['PHP_SELF'];
-							?>',
-					{ method:'get',parameters:'action=updateCollation&charset='+val }
-			);
-		}
-	</script>
-	<div class="blokSQL">
-		<fieldset>
-			<h3><?php echo LEGEND_DATABASE; ?></h3>
-			<?php
-			echo xoFormField('DB_NAME', sanitize_database($vars ['DB_NAME']), DB_NAME_LABEL, 255, DB_NAME_HELP);
-			?> <?php
-			echo xoFormField('DB_PREFIX', $vars ['DB_PREFIX'], DB_PREFIX_LABEL, 10, DB_PREFIX_HELP);
-			?> <?php
-			echo xoFormField('DB_SALT', $vars ['DB_SALT'], DB_SALT_LABEL, 255, DB_SALT_HELP);
-			?> <?php
-			echo xoFormFieldCharset('DB_CHARSET', $vars ['DB_CHARSET'], DB_CHARSET_LABEL, $link, DB_CHARSET_HELP);
-			?> <?php
-			echo xoFormBlockCollation('DB_COLLATION', $vars ['DB_COLLATION'], DB_COLLATION_LABEL, $link, $vars ['DB_CHARSET'], DB_COLLATION_HELP, );
-			?></fieldset>
-	</div>
-<?php
-$content = ob_get_contents();
-ob_end_clean();
-include 'install_tpl.php';
+// Render the full layout with page variables
+renderInstallerLayout($wizard, [
+	'error' => isset($error) ? $error : '',
+	'databaseLegend' => LEGEND_DATABASE,
+	'dbNameLabel' => DB_NAME_LABEL,
+	'dbNameHelp' => DB_NAME_HELP,
+	'dbName' => htmlspecialchars(sanitize_database($vars['DB_NAME']), ENT_QUOTES),
+	'dbPrefixLabel' => DB_PREFIX_LABEL,
+	'dbPrefixHelp' => DB_PREFIX_HELP,
+	'dbPrefix' => htmlspecialchars($vars['DB_PREFIX'], ENT_QUOTES),
+	'dbSaltLabel' => DB_SALT_LABEL,
+	'dbSaltHelp' => DB_SALT_HELP,
+	'dbSalt' => htmlspecialchars($vars['DB_SALT'], ENT_QUOTES),
+	'dbCharsetLabel' => DB_CHARSET_LABEL,
+	'dbCharsetHelp' => DB_CHARSET_HELP,
+	'dbCharset' => htmlspecialchars($vars['DB_CHARSET'], ENT_QUOTES),
+	'dbCollationLabel' => DB_COLLATION_LABEL,
+	'dbCollationHelp' => DB_COLLATION_HELP,
+	'dbCollation' => htmlspecialchars($vars['DB_COLLATION'], ENT_QUOTES),
+], true, true);

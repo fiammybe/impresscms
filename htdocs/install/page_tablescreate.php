@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		exit();
 	}
 	$tables = array();
-	
+
 	if (substr(XOOPS_DB_TYPE, 0, 4) == 'pdo.') {
 		$driver = substr(XOOPS_DB_TYPE, 4);
 	} else {
@@ -76,19 +76,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	exit();
 }
 
-ob_start();
-
-if ($process == 'create') {
-	?>
-<p class="x2-note"><?php echo READY_CREATE_TABLES; ?></p>
-	<?php
-} else {
+// Update form flag if no process needed
+if ($process !== 'create') {
 	$pageHasForm = false;
-	?>
-<p class="x2-note"><?php echo XOOPS_TABLES_FOUND; ?></p>
-	<?php
 }
 
-$content = ob_get_contents();
-ob_end_clean();
-include 'install_tpl.php';
+// Render the full layout with page variables
+renderInstallerLayout($wizard, [
+	'processCreate' => $process === 'create',
+	'readyCreateTablesLabel' => READY_CREATE_TABLES,
+	'tablesFoundLabel' => XOOPS_TABLES_FOUND,
+], $pageHasForm);
