@@ -232,8 +232,45 @@ function select_db($db_name, $link) {
 }
 
 if ($_SERVER ['REQUEST_METHOD'] == 'GET' && isset ($_GET ['charset']) && @$_GET ['action'] == 'updateCollation') {
-	echo xoFormFieldCollation('DB_COLLATION', $vars ['DB_COLLATION'], DB_COLLATION_LABEL, $link, $_GET ['charset'],DB_COLLATION_HELP);
-	exit ();
+	// Return only the select element (not wrapped in div)
+	$charset = $_GET ['charset'];
+	if (empty($charset)) {
+		// If charset is empty, return empty response
+		exit();
+	}
+
+	// Get collations for the selected charset
+	$collations = getDbCollations($link, $charset);
+	if (empty($collations)) {
+		// No collations available for this charset
+		exit();
+	}
+
+	// Generate the select element
+	$field = "<select name='DB_COLLATION' id='DB_COLLATION'>";
+
+	$collation_default = "";
+	$options = "";
+	foreach ($collations as $key => $isDefault) {
+		if ($isDefault) {
+			$collation_default = $key;
+			continue;
+		}
+		$selected = ($vars['DB_COLLATION'] == $key) ? " selected='selected'" : "";
+		$options .= "<option value='{$key}'{$selected}>{$key}</option>";
+	}
+
+	// Add default collation first
+	if ($collation_default) {
+		$selected = ($vars['DB_COLLATION'] == $collation_default || empty($vars['DB_COLLATION'])) ? " selected='selected'" : "";
+		$field .= "<option value='{$collation_default}'{$selected}>{$collation_default} (Default)</option>";
+	}
+
+	$field .= $options;
+	$field .= "</select>";
+
+	echo $field;
+	exit();
 }
 
 if ($_SERVER ['REQUEST_METHOD'] == 'POST') {
@@ -303,6 +340,24 @@ if (@empty ($vars ['DB_NAME'])) {
 	$vars = array_merge($vars, array('DB_NAME' => '', 'DB_CHARSET' => 'utf8', 'DB_COLLATION' => '', 'DB_PREFIX' => 'i' . substr(md5(time()), 0, 8), 'DB_SALT' => icms_core_Password::createSalt()));
 }
 
+// Get all available charsets for the template
+$allCharsets = getDbCharsets($link);
+
+// Sort charsets: UTF-8 first, then alphabetically
+$sortedCharsets = array();
+if (isset($allCharsets['utf8'])) {
+	$sortedCharsets['utf8'] = $allCharsets['utf8'];
+	unset($allCharsets['utf8']);
+}
+ksort($allCharsets);
+$sortedCharsets = array_merge($sortedCharsets, $allCharsets);
+
+// Get collations for the current charset
+$currentCollations = array();
+if (!empty($vars['DB_CHARSET'])) {
+	$currentCollations = getDbCollations($link, $vars['DB_CHARSET']);
+}
+
 function xoFormField($name, $value, $label, $maxlength, $help = '') {
 	$label = htmlspecialchars($label);
 	$name = htmlspecialchars($name, ENT_QUOTES);
@@ -352,6 +407,47 @@ function xoFormFieldCharset($name, $value, $label, $link, $help = '') {
 	return $field;
 }
 
+// Prepare charsets array for template
+$charsetOptions = array();
+foreach ($sortedCharsets as $charset => $description) {
+	$charsetOptions[] = array(
+		'value' => $charset,
+		'description' => $description,
+		'selected' => ($charset === $vars['DB_CHARSET'])
+	);
+}
+
+// Prepare collations array for template
+$collationOptions = array();
+if (!empty($currentCollations)) {
+	$collation_default = "";
+	$other_options = array();
+
+	foreach ($currentCollations as $collation => $isDefault) {
+		if ($isDefault) {
+			$collation_default = $collation;
+		} else {
+			$other_options[] = array(
+				'value' => $collation,
+				'label' => $collation,
+				'selected' => ($collation === $vars['DB_COLLATION'])
+			);
+		}
+	}
+
+	// Add default collation first
+	if ($collation_default) {
+		array_unshift($collationOptions, array(
+			'value' => $collation_default,
+			'label' => $collation_default . ' (Default)',
+			'selected' => ($collation_default === $vars['DB_COLLATION'] || empty($vars['DB_COLLATION']))
+		));
+	}
+
+	// Add other collations
+	$collationOptions = array_merge($collationOptions, $other_options);
+}
+
 // Render the full layout with page variables
 renderInstallerLayout($wizard, [
 	'error' => isset($error) ? $error : '',
@@ -368,7 +464,9 @@ renderInstallerLayout($wizard, [
 	'dbCharsetLabel' => DB_CHARSET_LABEL,
 	'dbCharsetHelp' => DB_CHARSET_HELP,
 	'dbCharset' => htmlspecialchars($vars['DB_CHARSET'], ENT_QUOTES),
+	'charsetOptions' => $charsetOptions,
 	'dbCollationLabel' => DB_COLLATION_LABEL,
 	'dbCollationHelp' => DB_COLLATION_HELP,
 	'dbCollation' => htmlspecialchars($vars['DB_COLLATION'], ENT_QUOTES),
+	'collationOptions' => $collationOptions,
 ], true, true);

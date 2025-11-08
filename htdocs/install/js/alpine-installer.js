@@ -151,17 +151,18 @@ document.addEventListener('alpine:init', () => {
             // Show/hide the collation field
             if (charset === '') {
                 element.style.display = 'none';
+                return;
             } else {
                 element.style.display = 'block';
             }
 
             // Fetch updated collation options from server
             try {
-                const url = new URL(window.location.href);
-                url.searchParams.set('action', 'updateCollation');
-                url.searchParams.set('charset', charset);
+                const params = new URLSearchParams();
+                params.set('action', 'updateCollation');
+                params.set('charset', charset);
 
-                const response = await fetch(url.toString(), {
+                const response = await fetch('page_dbsettings.php?' + params.toString(), {
                     method: 'GET',
                     headers: {
                         'Accept': 'text/html'
@@ -170,7 +171,18 @@ document.addEventListener('alpine:init', () => {
 
                 if (response.ok) {
                     const html = await response.text();
-                    element.innerHTML = html;
+
+                    // Find the select element within the container
+                    const selectElement = element.querySelector('select');
+                    if (selectElement) {
+                        // Replace the select element with the new one
+                        const parser = new DOMParser();
+                        const newSelect = parser.parseFromString(html, 'text/html').body.firstChild;
+                        selectElement.replaceWith(newSelect);
+                    } else {
+                        // If no select found, replace entire content
+                        element.innerHTML = html;
+                    }
                 } else {
                     console.error('Failed to fetch collation options:', response.statusText);
                 }

@@ -290,34 +290,32 @@ function genTrustPathCheckHtml( $valid) {
 }
 
 function genCreateTrustPathHtml($valid) {
-	if (!$valid) {
-		?>
-<p><?php echo TRUST_PATH_NEED_CREATED_MANUALLY . '</p>'; ?>
-<button type="button"
-	onclick="createTrustPath(this.form.elements.trustpath.value);"><?php echo BUTTON_REFRESH; ?></button>
-		<?
+	if ($valid) {
+		return '<p>' . TRUST_PATH_SUCCESSFULLY_CREATED . '</p>';
 	} else {
-		?>
-<p><?php echo TRUST_PATH_SUCCESSFULLY_CREATED . '</p>';
+		return '<img src="img/no.png" alt="Error" class="rootimg" />' . ERR_NO_XOOPS_FOUND;
 	}
 }
 
 $ctrl = new PathStuffController();
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && @$_GET['action'] == 'checkrootpath') {
-	$ctrl->xoopsRootPath = $_GET['path'];
-	echo genRootCheckHtml( $ctrl->checkRootPath() );
-	exit();
-}
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && @$_GET['action'] == 'checktrustpath') {
-	$ctrl->xoopsTrustPath = $_GET['path'];
-	echo genTrustPathCheckHtml( $ctrl->checkTrustPath() );
-	exit();
-}
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && @$_GET['action'] == 'createtrustpath') {
-	$ctrl->xoopsTrustPath = $_GET['path'];
-	echo genCreateTrustPathHtml( $ctrl->createTrustPath() );
-	exit();
+// Handle AJAX requests
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['action'])) {
+	if ($_GET['action'] === 'checkrootpath' && isset($_GET['path'])) {
+		$ctrl->xoopsRootPath = $_GET['path'];
+		echo genRootCheckHtml($ctrl->checkRootPath());
+		exit;
+	}
+	if ($_GET['action'] === 'checktrustpath' && isset($_GET['path'])) {
+		$ctrl->xoopsTrustPath = $_GET['path'];
+		echo genTrustPathCheckHtml($ctrl->checkTrustPath());
+		exit;
+	}
+	if ($_GET['action'] === 'createtrustpath' && isset($_GET['path'])) {
+		$ctrl->xoopsTrustPath = $_GET['path'];
+		echo genCreateTrustPathHtml($ctrl->createTrustPath());
+		exit;
+	}
 }
 $ctrl->execute();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

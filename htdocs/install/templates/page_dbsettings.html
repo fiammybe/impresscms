@@ -41,7 +41,9 @@
             <{/if}>
             <select name='DB_CHARSET' id='DB_CHARSET' @change="updateCollation('DB_COLLATION_div', $event.target.value)">
                 <option value=''>None</option>
-                <option value='<{$dbCharset}>'<{if $dbCharset}> selected='selected'<{/if}>><{$dbCharset}></option>
+                <{foreach from=$charsetOptions item=charset}>
+                    <option value='<{$charset.value}>'<{if $charset.selected}> selected='selected'<{/if}>><{$charset.value}> - <{$charset.description}></option>
+                <{/foreach}>
             </select>
         </div>
 
@@ -51,7 +53,11 @@
                 <div class="xoform-help"><{$dbCollationHelp}></div>
                 <div class='clear'>&nbsp;</div>
             <{/if}>
-            <input type='text' name='DB_COLLATION' id='DB_COLLATION' value='<{$dbCollation}>' />
+            <select name='DB_COLLATION' id='DB_COLLATION'>
+                <{foreach from=$collationOptions item=collation}>
+                    <option value='<{$collation.value}>'<{if $collation.selected}> selected='selected'<{/if}>><{$collation.label}></option>
+                <{/foreach}>
+            </select>
         </div>
     </fieldset>
 </div>
