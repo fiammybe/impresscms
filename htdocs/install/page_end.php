@@ -16,6 +16,11 @@
  * @version		$Id: page_end.php 12389 2014-01-17 16:58:21Z skenow $
  */
 
+// Enable error display for debugging
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 /**
  *
  */
@@ -37,10 +42,23 @@ $pageHasForm = false;
 // Load finish content from language file
 $content = '';
 ob_start();
-include "./language/$wizard->language/finish.php";
+$finishFile = "./language/$wizard->language/finish.php";
+if (file_exists($finishFile)) {
+	include $finishFile;
+} else {
+	include "./language/english/finish.php";
+}
 $finishContent = ob_get_clean();
 if (empty($finishContent)) {
 	$finishContent = $content;
+}
+
+// Ensure constants are defined
+if (!defined('INSTALL_COMPLETE')) {
+	define('INSTALL_COMPLETE', 'Installation Complete');
+}
+if (!defined('INSTALL_COMPLETE_MSG')) {
+	define('INSTALL_COMPLETE_MSG', 'ImpressCMS has been successfully installed.');
 }
 
 // Render the full layout with page variables

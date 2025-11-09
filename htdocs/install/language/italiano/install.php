@@ -233,4 +233,9 @@ define('_CORE_PASSLEVEL3','Buona');
 define('_CORE_PASSLEVEL4','Forte');
 define('DB_PCONNECT_HELP', "Le connessioni persistenti sono utili con connessioni internet lente. Non sono generalmente richieste per la maggior parte delle installazioni. Default è 'NO'. Scegli 'NO' se non sei sicuro"); // L69
 define( "DB_PCONNECT_HELPS",  "Le connessioni persistenti sono utili con connessioni internet lente. Non sono generalmente richieste per la maggior parte delle installazioni."); // L69
+
+// Installation completion messages
+define("INSTALL_COMPLETE", "Installazione Completata");
+define("INSTALL_COMPLETE_MSG", "ImpressCMS è stato installato con successo. Puoi ora accedere al tuo sito facendo clic sul pulsante sottostante. La cartella di installazione verrà automaticamente rimossa per motivi di sicurezza.");
+
 ?>

@@ -217,4 +217,8 @@ define("_DEF_LANG_NAMES",'french,english');
 define("_LOCAL_LANG_NAMES",'Fran&ccedil;ais,English');
 define("_EXT_DATE_FUNC","0"); // changement de 0 à 1, si cette langue a une fonction étendue date
 
+// Installation completion messages
+define("INSTALL_COMPLETE", "Installation Complète");
+define("INSTALL_COMPLETE_MSG", "ImpressCMS a été installé avec succès. Vous pouvez maintenant accéder à votre site en cliquant sur le bouton ci-dessous. Le dossier d'installation sera automatiquement supprimé pour des raisons de sécurité.");
+
 ?>

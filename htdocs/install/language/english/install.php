@@ -233,3 +233,7 @@ define( "DB_PCONNECT_HELPS",  "Persistent connections are useful with slower int
 
 // Added in 1.3
 define("FILE_PERMISSIONS", "File Permissions");
+
+// Installation completion messages
+define("INSTALL_COMPLETE", "Installation Complete");
+define("INSTALL_COMPLETE_MSG", "ImpressCMS has been successfully installed. You can now access your website by clicking the button below. The installer folder will be automatically removed for security reasons.");

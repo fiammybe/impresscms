@@ -232,3 +232,7 @@ define( 'DB_PCONNECT_HELPS',  'Blijvende connecties kunnen interessant zijn voor
 
 // Added in 1.3
 define("FILE_PERMISSIONS", "Bestandsrechten");
+
+// Installation completion messages
+define("INSTALL_COMPLETE", "Installatie Voltooid");
+define("INSTALL_COMPLETE_MSG", "ImpressCMS is succesvol geïnstalleerd. U kunt nu uw website openen door op de knop hieronder te klikken. De installatieomslag wordt automatisch verwijderd om veiligheidsredenen.");
