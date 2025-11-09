@@ -2,7 +2,7 @@
  * ImpressCMS Installer - Alpine.js Module
  *
  * Handles installer UI interactions using Alpine.js
- * Replaces jQuery-based functionality with modern Alpine.js
+ * Replaces jQuery-based functionality with Alpine.js
  *
  * @copyright The ImpressCMS Project http://www.impresscms.org/
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)

@@ -71,8 +71,6 @@ const PasswordStrength = {
 
         // Calculate strength
         const strength = this.calculateStrength(password);
-
-        // Show result based on strength
         switch (strength) {
             case 'short':
                 this.showResult(this.config.shortPass, 'short');
