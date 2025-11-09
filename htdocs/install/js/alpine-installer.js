@@ -10,9 +10,6 @@
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('installerUI', () => ({
-        // Stylesheet management
-        availableStylesheets: [],
-        activeStylesheetIndex: 0,
         helpVisible: false,
         scrolling: false,
 
@@ -20,48 +17,7 @@ document.addEventListener('alpine:init', () => {
          * Initialize the installer UI
          */
         init() {
-            this.initStylesheets();
-        },
-
-        /**
-         * Initialize available stylesheets
-         */
-        initStylesheets() {
-            const links = document.querySelectorAll('link[rel*=style][title]');
-            links.forEach((link) => {
-                this.availableStylesheets.push(link.getAttribute('title'));
-            });
-
-            // Load saved stylesheet preference
-            const savedStyle = this.readCookie('style');
-            if (savedStyle) {
-                this.switchStylesheet(savedStyle);
-            }
-        },
-
-        /**
-         * Toggle between available stylesheets
-         */
-        toggleStylesheet() {
-            this.activeStylesheetIndex++;
-            this.activeStylesheetIndex %= this.availableStylesheets.length;
-            this.switchStylesheet(this.availableStylesheets[this.activeStylesheetIndex]);
-        },
-
-        /**
-         * Switch to a specific stylesheet by name
-         * @param {string} styleName - The name of the stylesheet to activate
-         */
-        switchStylesheet(styleName) {
-            const links = document.querySelectorAll('link[rel*=style][title]');
-            links.forEach((link, index) => {
-                link.disabled = true;
-                if (link.getAttribute('title') === styleName) {
-                    link.disabled = false;
-                    this.activeStylesheetIndex = index;
-                }
-            });
-            this.createCookie('style', styleName, 365);
+            // Initialization logic here if needed
         },
 
         /**
@@ -96,47 +52,6 @@ document.addEventListener('alpine:init', () => {
             setTimeout(() => {
                 this.scrolling = false;
             }, 1500);
-        },
-
-        /**
-         * Create a cookie
-         * @param {string} name - Cookie name
-         * @param {string} value - Cookie value
-         * @param {number} days - Number of days until expiration
-         */
-        createCookie(name, value, days) {
-            let expires = '';
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = '; expires=' + date.toUTCString();
-            }
-            document.cookie = name + '=' + value + expires + '; path=/';
-        },
-
-        /**
-         * Read a cookie value
-         * @param {string} name - Cookie name
-         * @returns {string|null} Cookie value or null if not found
-         */
-        readCookie(name) {
-            const nameEQ = name + '=';
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                let cookie = cookies[i].trim();
-                if (cookie.indexOf(nameEQ) === 0) {
-                    return cookie.substring(nameEQ.length);
-                }
-            }
-            return null;
-        },
-
-        /**
-         * Erase a cookie
-         * @param {string} name - Cookie name
-         */
-        eraseCookie(name) {
-            this.createCookie(name, '', -1);
         },
 
         /**
