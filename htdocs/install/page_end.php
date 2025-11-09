@@ -67,6 +67,8 @@ renderInstallerLayout($wizard, [
 	'successMessage' => INSTALL_COMPLETE,
 	'finishMessage' => INSTALL_COMPLETE_MSG,
 	'finishContent' => $finishContent,
+	'success' => $success,
+	'errors' => [],
 ], $pageHasForm);
 
 // Destroy all the installation session
