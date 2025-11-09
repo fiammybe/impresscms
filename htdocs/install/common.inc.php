@@ -49,8 +49,37 @@ require_once '../libraries/icms/Autoloader.php';
 icms_Autoloader::setup();
 
 error_reporting(E_ALL);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
 
+// Set up error handler to catch fatal errors
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+	// Don't handle suppressed errors
+	if (!(error_reporting() & $errno)) {
+		return false;
+	}
 
+	// Log the error
+	error_log("Installer Error [$errno]: $errstr in $errfile on line $errline");
+
+	// Display error for debugging
+	echo '<div style="color: #d32f2f; background-color: #ffebee; padding: 12px; border-radius: 4px; margin: 20px; font-family: monospace;">';
+	echo '<strong>Error:</strong> ' . htmlspecialchars($errstr) . '<br>';
+	echo '<small>File: ' . htmlspecialchars($errfile) . ' (Line ' . $errline . ')</small>';
+	echo '</div>';
+
+	return true;
+});
+
+// Set up exception handler
+set_exception_handler(function($exception) {
+	error_log('Installer Exception: ' . $exception->getMessage());
+
+	echo '<div style="color: #d32f2f; background-color: #ffebee; padding: 12px; border-radius: 4px; margin: 20px; font-family: monospace;">';
+	echo '<strong>Exception:</strong> ' . htmlspecialchars($exception->getMessage()) . '<br>';
+	echo '<small>File: ' . htmlspecialchars($exception->getFile()) . ' (Line ' . $exception->getLine() . ')</small>';
+	echo '</div>';
+});
 
 $pageHasHelp = false;
 $pageHasForm = false;
