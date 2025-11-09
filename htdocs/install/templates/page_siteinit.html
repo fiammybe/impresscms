@@ -4,6 +4,8 @@
 
 <!-- Load zxcvbn library for password strength estimation -->
 <script type="text/javascript" src="js/zxcvbn.js"></script>
+<!-- Load SHA-1 library for HIBP integration -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-sha1/0.6.0/sha1.min.js"></script>
 <!-- Load Alpine.js password strength component -->
 <script type="text/javascript" src="js/password-strength-alpine.js"></script>
 
@@ -44,6 +46,12 @@
                 :style="{ display: showResult ? 'block' : 'none', marginTop: '8px', padding: '8px', borderRadius: '4px', fontWeight: 'bold' }"
             >
                 <div x-show="resultMessage" x-text="resultMessage"></div>
+                <div x-show="isCheckingBreach" style="margin-top: 8px; font-size: 0.9em; opacity: 0.7;">
+                    <em>Checking for data breaches...</em>
+                </div>
+                <div x-show="breachWarning !== ''" style="margin-top: 8px; font-size: 0.9em; opacity: 0.9; color: #bc0000; font-weight: bold;">
+                    <strong>⚠️ Security Alert:</strong> <span x-text="breachWarning"></span>
+                </div>
                 <div x-show="feedbackWarning" style="margin-top: 8px; font-size: 0.9em; opacity: 0.9;">
                     <strong>Warning:</strong> <span x-text="feedbackWarning"></span>
                 </div>
