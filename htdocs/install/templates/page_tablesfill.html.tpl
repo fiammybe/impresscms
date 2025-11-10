@@ -1,11 +1,15 @@
 <{if $error}>
-    <div class="alert alert-danger" style="color: #d32f2f; background-color: #ffebee; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+    <div class="notification is-danger">
+        <button class="delete"></button>
         <strong>Error:</strong> <{$message}>
     </div>
 <{else}>
-    <p class="x2-note"><{$message}></p>
+    <div class="notification is-info">
+        <button class="delete"></button>
+        <{$message}>
+    </div>
     <{if $content}>
-        <div style="margin-top: 20px;">
+        <div class="box" style="margin-top: 1.5rem;">
             <{$content}>
         </div>
     <{/if}>

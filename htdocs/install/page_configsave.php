@@ -167,8 +167,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$wizard->redirectToPage('+1');
 		exit();
 	}
-	$content = '<p class="errorMsg">' . $error . '</p>';
-	include 'install_tpl.php';
+
+	// Render error page with new layout
+	renderInstallerLayout($wizard, [
+		'configSaveLabel' => CONFIG_SAVE,
+		'errorMessage' => $error,
+		'hasError' => true,
+	], false);
 	exit();
 }
 

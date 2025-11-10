@@ -72,7 +72,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 	$result = $dbm->queryFromFile( './sql/' . $driver . '.structure.sql' );
 	$content = $dbm->report();
-	include 'install_tpl.php';
+
+	// Render the full layout with page variables and report content
+	renderInstallerLayout($wizard, [
+		'processCreate' => false,
+		'readyCreateTablesLabel' => READY_CREATE_TABLES,
+		'tablesFoundLabel' => XOOPS_TABLES_FOUND,
+		'reportContent' => $content,
+	], false);
 	exit();
 }
 
