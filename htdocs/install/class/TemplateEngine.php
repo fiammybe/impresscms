@@ -178,7 +178,7 @@ class InstallerTemplateEngine
     private function renderWithSmarty($templateName)
     {
         try {
-            $templateFile = $templateName . '.html';
+            $templateFile = $templateName . '.html.tpl';
             return $this->smarty->fetch($templateFile);
         } catch (Exception $e) {
             // Fall back to PHP rendering
@@ -194,7 +194,7 @@ class InstallerTemplateEngine
      */
     private function renderWithPhp($templateName)
     {
-        $templateFile = $this->templateDir . '/' . $templateName . '.html';
+        $templateFile = $this->templateDir . '/' . $templateName . '.html.tpl';
 
         if (!file_exists($templateFile)) {
             return "<!-- Template not found: $templateName -->";
