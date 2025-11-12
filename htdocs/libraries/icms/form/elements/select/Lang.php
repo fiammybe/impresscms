@@ -41,23 +41,148 @@
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
- * A select field with available languages
+ * A specialized select form element for selecting languages
+ *
+ * The Language select class creates a form element that allows users to select a language
+ * from all available languages installed in the ImpressCMS system. It automatically discovers
+ * and populates with all language directories found in the /language/ folder.
+ *
+ * ## Class Overview
+ *
+ * This class extends icms_form_elements_Select and provides specialized functionality for:
+ * - Displaying all available installed languages
+ * - Automatically discovering languages from the /language/ directory
+ * - Supporting single language selection
+ * - Using language directory names as values
+ * - Providing language names as display labels
+ *
+ * ## When to Use
+ *
+ * Use this class when you need to:
+ * - Allow users to select their preferred language
+ * - Set system-wide language preferences
+ * - Configure module language settings
+ * - Implement language switching functionality
+ * - Store language preferences in user profiles
+ * - Set default language for content
+ * - Support multi-language administration
+ * - Configure language-specific settings
+ *
+ * ## Key Features
+ *
+ * - **Automatic Discovery**: Languages automatically discovered from /language/ directory
+ * - **Dynamic Population**: List updates when new languages are added
+ * - **Directory-Based**: Uses language directory names as values
+ * - **Filesystem Integration**: Uses icms_core_Filesystem for directory listing
+ * - **Single Selection**: Supports single language selection
+ * - **Dropdown Format**: Renders as dropdown by default
+ *
+ * ## Inheritance
+ *
+ * This class extends icms_form_elements_Select and inherits all its functionality
+ * while adding specialized language selection capabilities.
  *
  * @category	ICMS
  * @package     Form
  * @subpackage  Elements
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
+ *
+ * @example
+ * // Basic language selection (dropdown)
+ * $langSelect = new icms_form_elements_select_Lang('Select Language', 'language');
+ * $form->addElement($langSelect);
+ *
+ * @example
+ * // Language selection with pre-selected value
+ * $langSelect = new icms_form_elements_select_Lang('Language', 'language', 'english');
+ * $form->addElement($langSelect);
+ *
+ * @example
+ * // Language selection with custom size
+ * $langSelect = new icms_form_elements_select_Lang('Language', 'language', null, 5);
+ * $form->addElement($langSelect);
+ *
+ * @example
+ * // Language selection in user preferences
+ * $langSelect = new icms_form_elements_select_Lang(
+ *     'Preferred Language',
+ *     'user_language',
+ *     $user->getVar('language')
+ * );
+ * $form->addElement($langSelect);
  */
 class icms_form_elements_select_Lang extends icms_form_elements_Select {
 	/**
 	 * Constructor
 	 *
-	 * @param	string	$caption
-	 * @param	string	$name
-	 * @param	mixed	$value	Pre-selected value (or array of them).
-	 * 							Legal is any name of a ICMS_ROOT_PATH."/language/" subdirectory.
-	 * @param	int		$size	Number of rows. "1" makes a drop-down-list.
+	 * Creates a new Language select form element with automatic language discovery from
+	 * the /language/ directory. All available language directories are automatically loaded
+	 * and populated as options.
+	 *
+	 * ## Behavior
+	 *
+	 * The constructor automatically:
+	 * 1. Calls the parent Select constructor with provided parameters
+	 * 2. Scans the /language/ directory for subdirectories
+	 * 3. Uses icms_core_Filesystem::getDirList() to discover languages
+	 * 4. Populates the select element with discovered language directories
+	 * 5. Uses directory names as both values and display labels
+	 *
+	 * ## Language Directory Structure
+	 *
+	 * Languages are discovered from: {ICMS_ROOT_PATH}/language/
+	 *
+	 * Example directory structure:
+	 * ```
+	 * /language/
+	 *   /english/
+	 *   /french/
+	 *   /german/
+	 *   /spanish/
+	 *   /chinese/
+	 * ```
+	 *
+	 * Each directory name becomes both the value and label in the select element.
+	 *
+	 * @param string $caption The label/caption displayed for this form element.
+	 *                        Example: "Select Language", "Preferred Language"
+	 *
+	 * @param string $name The HTML "name" attribute for the select element.
+	 *                     Example: "language", "user_language", "site_language"
+	 *
+	 * @param mixed $value Optional. Pre-selected language directory name(s). Can be:
+	 *                     - null: No language pre-selected (default)
+	 *                     - string: Single language directory name (e.g., 'english', 'french')
+	 *                     - array: Multiple language names (e.g., array('english', 'french'))
+	 *                     Example: 'english' or array('english', 'french')
+	 *
+	 * @param int $size Number of visible rows in the select element.
+	 *                  - 1: Renders as a dropdown list (default)
+	 *                  - >1: Renders as a multi-row list box
+	 *                  Example: 1 or 5
+	 *
+	 * @return void
+	 *
+	 * @example
+	 * // Basic language selection (dropdown)
+	 * $select = new icms_form_elements_select_Lang('Select Language', 'language');
+	 *
+	 * @example
+	 * // Language selection with pre-selected value
+	 * $select = new icms_form_elements_select_Lang('Language', 'language', 'english');
+	 *
+	 * @example
+	 * // Language selection with custom size
+	 * $select = new icms_form_elements_select_Lang('Language', 'language', null, 5);
+	 *
+	 * @example
+	 * // Language selection in user preferences
+	 * $select = new icms_form_elements_select_Lang(
+	 *     'Preferred Language',
+	 *     'user_language',
+	 *     $user->getVar('language')
+	 * );
 	 */
 	public function __construct($caption, $name, $value = null, $size = 1) {
 		parent::__construct($caption, $name, $value, $size);
