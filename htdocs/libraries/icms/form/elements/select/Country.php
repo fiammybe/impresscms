@@ -41,7 +41,45 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 /**
- * A select field with countries
+ * A specialized select form element for selecting countries
+ *
+ * The Country select class creates a form element that allows users to select a country
+ * from a comprehensive list of all ISO 3166 countries. It automatically populates with
+ * localized country names based on the current language.
+ *
+ * ## Class Overview
+ *
+ * This class extends icms_form_elements_Select and provides specialized functionality for:
+ * - Displaying all ISO 3166 countries in alphabetical order
+ * - Supporting multi-language country names (localized)
+ * - Providing 2-letter country codes (ISO 3166-1 alpha-2)
+ * - Automatically loading countries from language files
+ * - Supporting single country selection
+ *
+ * ## When to Use
+ *
+ * Use this class when you need to:
+ * - Allow users to select their country
+ * - Collect geographic information in user profiles
+ * - Set country-based preferences or restrictions
+ * - Configure location-based settings
+ * - Integrate with address forms
+ * - Support international user registration
+ * - Store country information in databases
+ *
+ * ## Key Features
+ *
+ * - **Comprehensive Country List**: All ISO 3166 countries included
+ * - **Localized Names**: Country names translated to current language
+ * - **Alphabetical Sorting**: Countries sorted alphabetically for easy navigation
+ * - **ISO 3166 Codes**: Uses standard 2-letter country codes
+ * - **Multi-Language Support**: Automatically loads localized country names
+ * - **Static Method**: getCountryList() available as static method
+ *
+ * ## Inheritance
+ *
+ * This class extends icms_form_elements_Select and inherits all its functionality
+ * while adding specialized country selection capabilities.
  *
  * @category	ICMS
  * @package     Form
@@ -49,16 +87,90 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  *
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
+ *
+ * @example
+ * // Basic country selection (dropdown)
+ * $countrySelect = new icms_form_elements_select_Country('Select Country', 'country');
+ * $form->addElement($countrySelect);
+ *
+ * @example
+ * // Country selection with pre-selected value
+ * $countrySelect = new icms_form_elements_select_Country('Country', 'country', 'US');
+ * $form->addElement($countrySelect);
+ *
+ * @example
+ * // Country selection with custom size
+ * $countrySelect = new icms_form_elements_select_Country('Country', 'country', null, 5);
+ * $form->addElement($countrySelect);
+ *
+ * @example
+ * // Get country list without creating element
+ * $countries = icms_form_elements_select_Country::getCountryList();
+ * foreach ($countries as $code => $name) {
+ *     echo "$code: $name\n";
+ * }
  */
 class icms_form_elements_select_Country extends icms_form_elements_Select {
 	/**
 	 * Constructor
 	 *
-	 * @param	string	$caption	Caption
-	 * @param	string	$name       "name" attribute
-	 * @param	mixed	$value	    Pre-selected value (or array of them).
-	 *                              Legal are all 2-letter country codes (in capitals).
-	 * @param	int		$size	    Number or rows. "1" makes a drop-down-list
+	 * Creates a new Country select form element with automatic country loading from
+	 * language files. Countries are loaded in the current language and sorted alphabetically.
+	 *
+	 * ## Behavior
+	 *
+	 * The constructor automatically:
+	 * 1. Calls the parent Select constructor with provided parameters
+	 * 2. Retrieves the localized country list via getCountryList()
+	 * 3. Populates the select element with country options
+	 * 4. Sorts countries alphabetically for easy navigation
+	 *
+	 * ## Country Code Format
+	 *
+	 * All country codes follow ISO 3166-1 alpha-2 standard:
+	 * - 2-letter uppercase codes (e.g., 'US', 'GB', 'FR', 'DE')
+	 * - Empty string '' represents "no selection" option
+	 * - Codes are case-sensitive (must be uppercase)
+	 *
+	 * @param string $caption The label/caption displayed for this form element.
+	 *                        Example: "Select Country", "Country of Residence"
+	 *
+	 * @param string $name The HTML "name" attribute for the select element.
+	 *                     Example: "country", "user_country", "shipping_country"
+	 *
+	 * @param mixed $value Optional. Pre-selected country code(s). Can be:
+	 *                     - null: No country pre-selected (default)
+	 *                     - string: Single 2-letter country code (e.g., 'US', 'GB')
+	 *                     - array: Multiple country codes (e.g., array('US', 'CA', 'MX'))
+	 *                     Example: 'US' or array('US', 'CA')
+	 *
+	 * @param int $size Number of visible rows in the select element.
+	 *                  - 1: Renders as a dropdown list (default)
+	 *                  - >1: Renders as a multi-row list box
+	 *                  Example: 1 or 5
+	 *
+	 * @return void
+	 *
+	 * @example
+	 * // Basic country selection (dropdown)
+	 * $select = new icms_form_elements_select_Country('Select Country', 'country');
+	 *
+	 * @example
+	 * // Country selection with pre-selected value
+	 * $select = new icms_form_elements_select_Country('Country', 'country', 'US');
+	 *
+	 * @example
+	 * // Country selection with custom size
+	 * $select = new icms_form_elements_select_Country('Country', 'country', null, 5);
+	 *
+	 * @example
+	 * // Country selection with pre-selected multiple values
+	 * $select = new icms_form_elements_select_Country(
+	 *     'Countries',
+	 *     'countries',
+	 *     array('US', 'CA', 'MX'),
+	 *     5
+	 * );
 	 */
 	public function __construct($caption, $name, $value = null, $size = 1) {
 		parent::__construct($caption, $name, $value, $size);
@@ -336,6 +448,6 @@ class icms_form_elements_select_Country extends icms_form_elements_Select {
 		reset($country_list);
 		return $country_list;
 	}
-	
+
 }
 
