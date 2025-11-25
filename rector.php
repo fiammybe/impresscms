@@ -3,7 +3,11 @@
 /**
  * Rector configuration for ImpressCMS
  *
- * Applies PSR-12 code style and ensures PHP 7.4 to 8.5 compatibility.
+ * Configures Rector to generate code compatible with PHP 7.4 through 8.5.
+ * The minimum target version is PHP 7.4, ensuring the generated code
+ * runs on all supported PHP versions (7.4, 8.0, 8.1, 8.2, 8.3, 8.4, 8.5).
+ *
+ * Applies PSR-12 compatible code style improvements.
  */
 
 declare(strict_types=1);
@@ -42,14 +46,14 @@ return RectorConfig::configure()
         __DIR__ . '/htdocs/templates_c',
         __DIR__ . '/htdocs/themes',
         __DIR__ . '/htdocs/uploads',
-        // Skip constructor property promotion as it requires PHP 8.0+
+        // Skip rules that generate code incompatible with PHP 7.4
         InlineConstructorDefaultToPropertyRector::class,
     ])
-    // Set minimum PHP version to 7.4 to ensure compatibility
+    // Target PHP 7.4 as minimum version for broad compatibility (7.4 to 8.5)
     ->withPhpVersion(PhpVersion::PHP_74)
-    // Enable PHP 7.4 level set (includes all compatible rules)
+    // Enable PHP 7.4 compatible feature set
     ->withPhpSets(php74: true)
-    // Enable prepared sets for code quality and style improvements
+    // Enable prepared sets for code quality and PSR-12 style improvements
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
@@ -57,7 +61,7 @@ return RectorConfig::configure()
         typeDeclarations: true,
         earlyReturn: true
     )
-    // Apply additional code style sets for PSR-12 compliance
+    // Apply coding style sets for PSR-12 compliance
     ->withSets([
         SetList::CODING_STYLE,
     ]);
