@@ -15,13 +15,11 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
 
-      # Voer Rector uit via de bestaande Action
+      # Execute Rector using existing action
       - name: Run Rector
-        uses: zingimmick/rector-action@0.0.2
-        with:
-          args: --config=rector.php
+        uses: zingimmick/rector-action@0.0.3
 
-      # Commit & push de wijzigingen terug naar de PR branch
+      # Commit & pushthe changes back to the PR branch
       - name: Commit & Push Rector changes
         uses: EndBug/add-and-commit@v9
         with:
