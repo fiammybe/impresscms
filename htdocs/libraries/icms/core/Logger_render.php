@@ -187,7 +187,7 @@ if (empty( $mode )) {
 	$ret .= <<<EOT
 </div>
 <script type="text/javascript">
-	public function xoLogCreateCookie(name,value,days) {
+	function xoLogCreateCookie(name,value,days) {
 		if (days) {
 			var date = new Date();
 			date.setTime(date.getTime()+(days*24*60*60*1000));
@@ -196,7 +196,7 @@ if (empty( $mode )) {
 		else var expires = "";
 		document.cookie = name+"="+value+expires+"; path=/";
 	}
-	public function xoLogReadCookie(name) {
+	function xoLogReadCookie(name) {
 		var nameEQ = name + "=";
 		var ca = document.cookie.split(';');
 		for (var i=0;i < ca.length;i++) {
@@ -206,10 +206,10 @@ if (empty( $mode )) {
 		}
 		return null;
 	}
-	public function xoLogEraseCookie(name) {
+	function xoLogEraseCookie(name) {
 		createCookie(name,"",-1);
 	}
-	public function xoSetLoggerView( name) {
+	function xoSetLoggerView( name) {
 		var log = document.getElementById( "xo-logger-output" );
 		if (!log ) return;
 		var i, elt;
