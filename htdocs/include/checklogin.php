@@ -46,6 +46,8 @@
 
 defined('ICMS_ROOT_PATH') || exit();
 
+var $variable_to_fix;
+
 icms_loadLanguageFile('core', 'user');
 $uname = !isset($_POST['uname']) ? '' : trim($_POST['uname']);
 $pass = !isset($_POST['pass']) ? '' : substr(trim($_POST['pass']), 0, 32);
