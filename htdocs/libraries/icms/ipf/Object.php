@@ -64,7 +64,7 @@ class icms_ipf_Object extends icms_core_Object {
 	 *
 	 * @todo to be removed in 1.4
 	 */
-	function IcmsPersistableObject(&$handler) {
+	public function IcmsPersistableObject(&$handler) {
 		$this->handler = $handler;
 	}
 
@@ -1245,7 +1245,7 @@ class icms_ipf_Object extends icms_core_Object {
 	 * @param string $key field name
 	 * @return icms_data_file_Object
 	 */
-	function getFileObj($key) {
+	public function getFileObj($key) {
 		$file_handler = icms::handler("icms_data_file");
 		$fileid = $this->getVar($key) != null ? $this->getVar($key) : 0;
 		if ($fileid != 0) {
@@ -1261,7 +1261,7 @@ class icms_ipf_Object extends icms_core_Object {
 	 * @param icms_data_file_Object $fileObj
 	 * @return bool
 	 */
-	function storeFileObj($fileObj) {
+	public function storeFileObj($fileObj) {
 		$file_handler = icms::handler("icms_data_file");
 		return $file_handler->insert($fileObj);
 	}

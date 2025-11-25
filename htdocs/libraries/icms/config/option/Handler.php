@@ -112,7 +112,7 @@ class icms_config_option_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $confoption->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($confoption->isNew()) {
 			$confop_id = $this->db->genId('configoption_confop_id_seq');

@@ -137,7 +137,7 @@ class icms_config_Item_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $config->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($config->isNew()) {
 			$conf_id = $this->db->genId('config_conf_id_seq');

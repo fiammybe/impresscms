@@ -111,7 +111,7 @@ class icms_member_group_membership_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $mship->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($mship->isNew()) {
 			$linkid = icms::$xoopsDB->genId('groups_users_link_linkid_seq');

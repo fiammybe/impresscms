@@ -59,7 +59,7 @@ class icms_ipf_form_Base extends icms_form_Theme {
 	 * @todo to be implented later...
 	 */
 	/*
-	 function addCaptcha() {
+	 public function addCaptcha() {
 		include_once SMARTOBJECT_ROOT_PATH . 'include/captcha/formcaptcha.php' ;
 		$this->addElement(new XoopsFormCaptcha(), TRUE);
 		}

@@ -111,7 +111,7 @@ class icms_data_privmessage_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ($pm->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($pm->isNew()) {
 			$msg_id = $this->db->genId('priv_msgs_msg_id_seq');

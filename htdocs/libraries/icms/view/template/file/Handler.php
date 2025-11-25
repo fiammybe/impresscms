@@ -144,7 +144,7 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $tplfile->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($tplfile->isNew()) {
 			$tpl_id = $this->db->genId('tpltpl_file_id_seq');
@@ -228,7 +228,7 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $tplfile->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if (!$tplfile->isNew()) {
 			$sql = sprintf("UPDATE %s SET tpl_tplset = %s, tpl_file = %s, tpl_desc = %s, tpl_lastimported = '%u', tpl_lastmodified = '%u' WHERE tpl_id = '%u'", $this->db->prefix('tplfile'), $this->db->quoteString($tpl_tplset), $this->db->quoteString($tpl_file), $this->db->quoteString($tpl_desc), (int) ($tpl_lastimported), (int) ($tpl_lastmodified), (int) ($tpl_id));

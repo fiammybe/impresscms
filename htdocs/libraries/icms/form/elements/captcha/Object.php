@@ -131,10 +131,11 @@ class icms_form_elements_captcha_Object {
 			$background_num = NULL)
 		{
 		global $icmsConfigCaptcha;
-		// Loading RUN-TIME settings
+		// Loading RUN-TIME settings - use compact() to create an array of parameter names and values
+		$params = compact('name', 'skipmember', 'num_chars', 'fontsize_min', 'fontsize_max', 'background_type', 'background_num');
 		foreach (array_keys($this->config) as $key) {
-			if (isset(${$key}) && ${$key} !== NULL) {
-				$this->config[$key] = ${$key};
+			if (isset($params[$key]) && $params[$key] !== NULL) {
+				$this->config[$key] = $params[$key];
 			}
 		}
 		$this->config["name"] = $name;

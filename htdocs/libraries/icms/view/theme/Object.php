@@ -532,7 +532,7 @@ class icms_view_theme_Object {
 	 * @param	str	$zone	Area of the HTML page to place the meta
 	 * @param 	int	$weight	Sort factor - lower weights are loaded first
 	 */
-	function addMeta($type = 'meta', $name = '', $value = '', $zone = 'module', $weight = 0) {
+	public function addMeta($type = 'meta', $name = '', $value = '', $zone = 'module', $weight = 0) {
 		!empty($zone) || $zone = 'module';
 		if (!isset($this->metas[$zone][$type])) {
 			$this->metas[$zone][$type] = array();

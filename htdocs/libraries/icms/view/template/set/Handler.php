@@ -138,7 +138,7 @@ class icms_view_template_set_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ($tplset->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($tplset->isNew()) {
 			$tplset_id = $this->db->genId('tplset_tplset_id_seq');

@@ -114,7 +114,7 @@ class icms_image_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $image->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($image->isNew()) {
 			$image_id = $this->db->genId('image_image_id_seq');

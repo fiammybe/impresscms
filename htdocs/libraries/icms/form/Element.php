@@ -230,7 +230,7 @@ abstract class icms_form_Element {
 	 *
 	 * @param	string  $caption
 	 */
-	function setCaption($caption) {
+	public function setCaption($caption) {
 		$this->_caption = trim($caption);
 	}
 

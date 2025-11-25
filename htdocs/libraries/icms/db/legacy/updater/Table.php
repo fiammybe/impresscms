@@ -29,68 +29,68 @@ class icms_db_legacy_updater_Table {
 	/**
 	 * @var string $_name name of the table
 	 */
-	var $_name;
+	public $_name;
 	/**
 	 * @var string $_structure structure of the table
 	 */
-	var $_structure;
+	public $_structure;
 
 	/**
 	 * @var array $_data containing valued of each records to be added
 	 */
-	var $_data;
+	public $_data;
 
 	/**
 	 * @var array $_alteredFields containing fields to be altered
 	 */
-	var $_alteredFields;
+	public $_alteredFields;
 
 	/**
 	 * @var array $_newFields containing new fields to be added
 	 */
-	var $_newFields;
+	public $_newFields;
 
 	/**
 	 * @var array $_dropedFields containing fields to be droped
 	 */
-	var $_dropedFields;
+	public $_dropedFields;
 
 	/**
 	 * @var array $_flagForDrop flag table to drop it
 	 */
-	var $_flagForDrop = false;
+	public $_flagForDrop = false;
 
 	/**
 	 * @var array $_updateAll containing items to be updated
 	 */
-	var $_updateAll;
+	public $_updateAll;
 
 	/**
 	 * @var array $_deleteAll containing items to be deleted
 	 */
-	var $_deleteAll;
+	public $_deleteAll;
 
-	var $_existingFieldsArray=false;
+	public $_existingFieldsArray=false;
 
 	/**
 	 * @var bool $force force the query even in a GET process
 	 */
-	var $force=false;
+	public $force=false;
 
 	/** For backward compat */
-	var $_db;
+	public $_db;
 
 	/**
 	 * xoopsDB database object
 	 *
 	 * @var @link XoopsDatabase object
 	 */
-	var $db;
+	public $db;
 
 	/**
 	 * @var array $_messages containing messages to be shown
 	 */
-	var $_messages = array();
+	public $_messages = array();
 
 	/**
 	 * Constructor
@@ -98,7 +98,7 @@ class icms_db_legacy_updater_Table {
 	 * @param string $name name of the table
 	 *
 	 */
-	function __construct($name) {
+	public function __construct($name) {
 		$this->db = icms::$xoopsDB;
 		/** For backward compat */
 		$this->_db = icms::$xoopsDB;
@@ -113,7 +113,7 @@ class icms_db_legacy_updater_Table {
 	 * @return string table name
 	 *
 	 */
-	function name() {
+	public function name() {
 		return $this->_db->prefix($this->_name);
 	}
 
@@ -126,7 +126,7 @@ class icms_db_legacy_updater_Table {
 	 * @access public
 	 * @author xhelp development team
 	 */
-	function exists() {
+	public function exists() {
 		$bRetVal = false;
 		$ret = $this->_db->queryF("SHOW TABLES FROM `" . XOOPS_DB_NAME . "` LIKE '" . $this->name() . "'");
 		list ($m_table) = $this->_db->fetchRow($ret);
@@ -138,7 +138,7 @@ class icms_db_legacy_updater_Table {
 	 * Gets the field array from one table name
 	 * @return array array of fields
 	 */
-	function getExistingFieldsArray() {
+	public function getExistingFieldsArray() {
 		$sql = "SHOW COLUMNS FROM " . $this->name();
 		$result = $this->_db->queryF($sql);
 		while ($existing_field = $this->_db->fetchArray($result)) {
@@ -161,7 +161,7 @@ class icms_db_legacy_updater_Table {
 	 * @param string $field does the field exist in the database
 	 * @return bool whether the field exists or not
 	 */
-	function fieldExists($field) {
+	public function fieldExists($field) {
 		$existingFields = $this->getExistingFieldsArray();
 		return isset($existingFields[$field]);
 	}
@@ -183,7 +183,7 @@ class icms_db_legacy_updater_Table {
 	 * @param  string $structure table structure
 	 *
 	 */
-	function setStructure($structure) {
+	public function setStructure($structure) {
 		$this->_structure = $structure;
 	}
 
@@ -193,7 +193,7 @@ class icms_db_legacy_updater_Table {
 	 * @return string table structure
 	 *
 	 */
-	function getStructure() {
+	public function getStructure() {
 		return sprintf($this->_structure, $this->name());
 	}
 
@@ -203,7 +203,7 @@ class icms_db_legacy_updater_Table {
 	 * @param string $data values of a record
 	 *
 	 */
-	function setData($data) {
+	public function setData($data) {
 		$this->_data[] = $data;
 	}
 
@@ -213,7 +213,7 @@ class icms_db_legacy_updater_Table {
 	 * @return array containing the records values to be added
 	 *
 	 */
-	function getData() {
+	public function getData() {
 		return $this->_data;
 	}
 
@@ -223,7 +223,7 @@ class icms_db_legacy_updater_Table {
 	 * @return bool true if success, false if an error occured
 	 *
 	 */
-	function addData() {
+	public function addData() {
 		$str = '(' . implode( '), (', $this->getData() ) . ')';
 		$query = sprintf( 'INSERT INTO %s VALUES %s', $this->name(), $str );
 
@@ -247,7 +247,7 @@ class icms_db_legacy_updater_Table {
 	 * @param string $properties properties of the field
 	 *
 	 */
-	function addAlteredField($name, $properties, $newname=false, $showerror = true) {
+	public function addAlteredField($name, $properties, $newname=false, $showerror = true) {
 		$field['name'] = $name;
 		$field['properties'] = $properties;
 		$field['showerror'] = $showerror;
@@ -262,7 +262,7 @@ class icms_db_legacy_updater_Table {
 	 * @param string $properties properties of the field
 	 *
 	 */
-	function addNewField($name, $properties) {
+	public function addNewField($name, $properties) {
 		$field['name'] = $name;
 		$field['properties'] = $properties;
 		$this->_newFields[] = $field;
@@ -274,7 +274,7 @@ class icms_db_legacy_updater_Table {
 	 * @return array fields that need to be altered
 	 *
 	 */
-	function getAlteredFields() {
+	public function getAlteredFields() {
 		return $this->_alteredFields;
 	}
 
@@ -288,7 +288,7 @@ class icms_db_legacy_updater_Table {
 	 *
 	 * @return  bool
 	 */
-	function addUpdateAll($fieldname, $fieldvalue, $criteria, $fieldvalueIsOperation) {
+	public function addUpdateAll($fieldname, $fieldvalue, $criteria, $fieldvalueIsOperation) {
 		$item['fieldname'] = $fieldname;
 		$item['fieldvalue'] = $fieldvalue;
 		$item['criteria'] = $criteria;
@@ -305,7 +305,7 @@ class icms_db_legacy_updater_Table {
 	 *
 	 * @return  bool
 	 */
-	function addDeleteAll($criteria) {
+	public function addDeleteAll($criteria) {
 		$item['criteria'] = $criteria;
 		$this->_deleteAll[] = $item;
 	}
@@ -316,7 +316,7 @@ class icms_db_legacy_updater_Table {
 	 * @return array fields to be added
 	 *
 	 */
-	function getNewFields() {
+	public function getNewFields() {
 		return $this->_newFields;
 	}
 
@@ -326,7 +326,7 @@ class icms_db_legacy_updater_Table {
 	 * @return array items to be updated
 	 *
 	 */
-	function getUpdateAll() {
+	public function getUpdateAll() {
 		return $this->_updateAll;
 	}
 
@@ -336,7 +336,7 @@ class icms_db_legacy_updater_Table {
 	 * @return array items to be deleted
 	 *
 	 */
-	function getDeleteAll() {
+	public function getDeleteAll() {
 		return $this->_deleteAll;
 	}
 
@@ -346,7 +346,7 @@ class icms_db_legacy_updater_Table {
 	 * @param string $name name of the field
 	 *
 	 */
-	function addDropedField($name) {
+	public function addDropedField($name) {
 		$this->_dropedFields[] = $name;
 	}
 
@@ -356,7 +356,7 @@ class icms_db_legacy_updater_Table {
 	 * @return array fields that need to be droped
 	 *
 	 */
-	function getDropedFields() {
+	public function getDropedFields() {
 		return $this->_dropedFields;
 	}
 
@@ -364,7 +364,7 @@ class icms_db_legacy_updater_Table {
 	 * Set the flag to drop the table
 	 *
 	 */
-	function setFlagForDrop() {
+	public function setFlagForDrop() {
 		$this->_flagForDrop = true;
 	}
 
@@ -374,7 +374,7 @@ class icms_db_legacy_updater_Table {
 	 * @return bool true if success, false if an error occured
 	 *
 	 */
-	function createTable() {
+	public function createTable() {
 		$query = $this->getStructure();
 		$query = "CREATE TABLE `" . $this->name() . "` (" . $query . ")";
 
@@ -398,7 +398,7 @@ class icms_db_legacy_updater_Table {
 	 * @return bool true if success, false if an error occured
 	 *
 	 */
-	function dropTable() {
+	public function dropTable() {
 		$query = sprintf("DROP TABLE %s", $this->name());
 		if ($this->force) {
 			$ret = $this->_db->queryF($query);
@@ -420,7 +420,7 @@ class icms_db_legacy_updater_Table {
 	 * @return bool true if success, false if an error occured
 	 *
 	 */
-	function alterTable() {
+	public function alterTable() {
 		$ret = true;
 		$query = 'ALTER TABLE `' . $this->name() .'`';
 		foreach ($this->getAlteredFields() as $alteredField) {
@@ -453,7 +453,7 @@ class icms_db_legacy_updater_Table {
 	 * @return bool true if success, false if an error occured
 	 *
 	 */
-	function addNewFields() {
+	public function addNewFields() {
 		$ret = true;
 		$query = 'ALTER TABLE `' . $this->name() . '`';
 		foreach ($this->getNewFields() as $newField) {
@@ -483,7 +483,7 @@ class icms_db_legacy_updater_Table {
 	 *
 	 * @return  bool
 	 **/
-	function updateAll()
+	public function updateAll()
 	{
 		$ret = true;
 		foreach ($this->getUpdateAll() as $item) {
@@ -524,7 +524,7 @@ class icms_db_legacy_updater_Table {
 	 * @return bool
 	 */
 
-	function deleteAll()
+	public function deleteAll()
 	{
 		$ret = true;
 		foreach ($this->getDeleteAll() as $item) {
@@ -554,7 +554,7 @@ class icms_db_legacy_updater_Table {
 	 * @return bool true if success, false if an error occured
 	 *
 	 */
-	function dropFields() {
+	public function dropFields() {
 		$ret = true;
 		$str = implode( ', DROP ', $this->getdropedFields() );
 		$query = 'ALTER TABLE ' . $this->name() . ' DROP ' . $str;

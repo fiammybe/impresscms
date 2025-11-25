@@ -127,7 +127,7 @@ class icms_form_elements_Radio extends icms_form_Element {
 	 *
 	 * @param	array	$options	Associative array of value->name pairs.
 	 */
-	function addOptionArray($options) {
+	public function addOptionArray($options) {
 		if (is_array($options)) {
 			foreach ($options as $k => $v) {
 				$this->addOption($k, $v);
@@ -141,7 +141,7 @@ class icms_form_elements_Radio extends icms_form_Element {
 	 * @param	int     $encode     To sanitizer the text? potential values: 0 - skip; 1 - only for value; 2 - for both value and name
 	 * @return	array   Associative array of value->name pairs
 	 */
-	function getOptions($encode = false) {
+	public function getOptions($encode = false) {
 		if (!$encode) {
 			return $this->_options;
 		}

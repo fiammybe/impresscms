@@ -120,7 +120,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $confcat->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($confcat->isNew()) {
 			$confcat_id = $this->db->genId('configcategory_confcat_id_seq');

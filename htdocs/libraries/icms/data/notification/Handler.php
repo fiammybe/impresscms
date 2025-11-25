@@ -117,7 +117,7 @@ class icms_data_notification_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ($notification->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($notification->isNew()) {
 			$not_id = $this->db->genId('xoopsnotifications_not_id_seq');
@@ -242,7 +242,7 @@ class icms_data_notification_Handler extends icms_core_ObjectHandler {
 	* @return  bool
 	**/
 	/*
-	 function updateAll($fieldname, $fieldvalue, $criteria = null)
+	 public function updateAll($fieldname, $fieldvalue, $criteria = null)
 	 {
 	 $set_clause = is_numeric($fieldvalue) ? $filedname.' = '.$fieldvalue : $filedname." = '".$fieldvalue."'";
 	 $sql = 'UPDATE '.$this->db->prefix('xoopsnotifications').' SET '.$set_clause;

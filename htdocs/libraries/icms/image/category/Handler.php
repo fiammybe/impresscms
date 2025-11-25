@@ -111,7 +111,7 @@ class icms_image_category_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $imgcat->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($imgcat->isNew()) {
 			$imgcat_id = $this->db->genId('imgcat_imgcat_id_seq');
@@ -316,7 +316,7 @@ class icms_image_category_Handler extends icms_core_ObjectHandler {
 	 *
 	 * @return string - full folder path or url
 	 */
-	function getCategFolder(&$imgcat, $full=true, $type='path') {
+	public function getCategFolder(&$imgcat, $full=true, $type='path') {
 		/* As of PHP 5.3, is_a is no longer deprecated, this is an acceptable usage
 		 * and is compatible with more versions of PHP. http://us2.php.net/manual/en/language.operators.type.php
 		 */

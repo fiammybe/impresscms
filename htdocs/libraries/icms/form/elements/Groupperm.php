@@ -54,19 +54,19 @@ class icms_form_elements_Groupperm extends icms_form_Element {
 	 *
 	 * @var array;
 	 */
-	var $_value = array ();
+	public $_value = array ();
 	/**
 	 * Group ID
 	 *
 	 * @var int
 	 */
-	var $_groupId;
+	public $_groupId;
 	/**
 	 * Option tree
 	 *
 	 * @var array
 	 */
-	var $_optionTree;
+	public $_optionTree;
 
 	/**
 	 * Constructor
@@ -86,7 +86,7 @@ class icms_form_elements_Groupperm extends icms_form_Element {
 	 * @param mixed $value A group ID or an array of group IDs
 	 * @access public
 	 */
-	function setValue($value) {
+	public function setValue($value) {
 		if (is_array($value)) {
 			foreach ($value as $v) {
 				$this->setValue($v);
@@ -102,7 +102,7 @@ class icms_form_elements_Groupperm extends icms_form_Element {
 	 * @param array $optionTree
 	 * @access public
 	 */
-	function setOptionTree(& $optionTree) {
+	public function setOptionTree(& $optionTree) {
 		$this->_optionTree = & $optionTree;
 	}
 
@@ -112,7 +112,7 @@ class icms_form_elements_Groupperm extends icms_form_Element {
 	 * @return string
 	 * @access public
 	 */
-	function render() {
+	public function render() {
 		$ele_name = $this->getName();
 		$ret = '<table class="outer"><tr><td class="odd"><table><tr>';
 		$cols = 1;
@@ -149,7 +149,7 @@ class icms_form_elements_Groupperm extends icms_form_Element {
 	 * @param array $parentIds
 	 * @access private
 	 */
-	function _renderOptionTree(& $tree, $option, $prefix, $parentIds = array ()) {
+	public function _renderOptionTree(& $tree, $option, $prefix, $parentIds = array ()) {
 		$ele_name = $this->getName();
 		$tree .= $prefix . "<input type=\"checkbox\" name=\"" . $ele_name . "[groups][" . $this->_groupId . "][" . $option['id'] . "]\" id=\"" . $ele_name . "[groups][" . $this->_groupId . "][" . $option['id'] . "]\" onclick=\"";
 		// If there are parent elements, add javascript that will

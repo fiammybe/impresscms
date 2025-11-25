@@ -111,7 +111,7 @@ class icms_member_group_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $group->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($group->isNew()) {
 			$groupid = icms::$xoopsDB->genId('group_groupid_seq');

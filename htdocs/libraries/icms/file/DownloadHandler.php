@@ -94,7 +94,7 @@ abstract class icms_file_DownloadHandler {
 	 * @param   string    $filepath
 	 * @param   string    $newfilename
 	 **/
-	abstract function addFile($filepath, $newfilename = NULL);
+	abstract public function addFile($filepath, $newfilename = NULL);
 
 	/**
 	 * addBinaryFile()
@@ -102,7 +102,7 @@ abstract class icms_file_DownloadHandler {
 	 * @param   string    $filepath
 	 * @param   string    $newfilename
 	 **/
-	abstract function addBinaryFile($filepath, $newfilename = NULL);
+	abstract public function addBinaryFile($filepath, $newfilename = NULL);
 
 	/**
 	 * addFileData()
@@ -111,7 +111,7 @@ abstract class icms_file_DownloadHandler {
 	 * @param   string    $filename
 	 * @param   integer   $time
 	 **/
-	abstract function addFileData(&$data, $filename, $time = 0);
+	abstract public function addFileData(&$data, $filename, $time = 0);
 
 	/**
 	 * addBinaryFileData()
@@ -120,7 +120,7 @@ abstract class icms_file_DownloadHandler {
 	 * @param   string  $filename
 	 * @param   integer $time
 	 **/
-	abstract function addBinaryFileData(&$data, $filename, $time = 0);
+	abstract public function addBinaryFileData(&$data, $filename, $time = 0);
 
 	/**
 	 * download()
@@ -128,5 +128,5 @@ abstract class icms_file_DownloadHandler {
 	 * @param   string  $name
 	 * @param   boolean $gzip
 	 **/
-	abstract function download($name, $gzip = true);
+	abstract public function download($name, $gzip = true);
 }

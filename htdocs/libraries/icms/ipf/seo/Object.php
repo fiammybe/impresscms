@@ -45,7 +45,7 @@ class icms_ipf_seo_Object extends icms_ipf_Object {
 	 *
 	 * @todo to be removed in 1.4
 	 */
-    function IcmsPersistableSeoObject() {
+    public function IcmsPersistableSeoObject() {
 		$this->initiateSEO();
     }
 

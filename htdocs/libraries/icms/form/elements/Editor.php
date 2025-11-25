@@ -52,7 +52,7 @@ if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
  * @todo		To be removed as this is not used anywhere in the core
  */
 class icms_form_elements_Editor extends icms_form_elements_Textarea {
-	var $editor;
+	public $editor;
 
 	/**
 	 * Constructor
@@ -64,7 +64,7 @@ class icms_form_elements_Editor extends icms_form_elements_Textarea {
 	 * @param	bool  	$noHtml       use non-WYSIWYG eitor onfailure
 	 * @param	string  $OnFailure editor to be used if current one failed
 	 */
-	function __construct($caption, $name, $editor_configs = null, $noHtml=false, $OnFailure = "")
+	public function __construct($caption, $name, $editor_configs = null, $noHtml=false, $OnFailure = "")
 	{
 		parent::__construct($caption, $editor_configs["name"]);
 		$editor_handler = icms_plugins_EditorHandler::getInstance();
@@ -75,7 +75,7 @@ class icms_form_elements_Editor extends icms_form_elements_Textarea {
 	 * Renders the editor
 	 * @return	string  the constructed html string for the editor
 	 */
-	function render()
+	public function render()
 	{
 		return $this->editor->render();
 	}

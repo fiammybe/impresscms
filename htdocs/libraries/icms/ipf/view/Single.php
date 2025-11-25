@@ -26,12 +26,12 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  */
 class icms_ipf_view_Single {
 
-	var $_object;
-	var $_userSide;
-	var $_tpl;
-	var $_rows;
-	var $_actions;
-	var $_headerAsRow = true;
+	public $_object;
+	public $_userSide;
+	public $_tpl;
+	public $_rows;
+	public $_actions;
+	public $_headerAsRow = true;
 
 	/**
 	 * Constructor

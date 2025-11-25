@@ -109,7 +109,7 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ($avatar->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($avatar->isNew()) {
 			$avatar_id = $this->db->genId('avatar_avatar_id_seq');

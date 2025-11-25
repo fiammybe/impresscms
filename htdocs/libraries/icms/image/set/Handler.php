@@ -61,7 +61,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 		 * @param bool $isNew is the new imageset new??
 		 * @return object $imgset {@link icms_image_set_Object} reference to the new imageset
 	 **/
-	function & create($isNew = true) {
+	public function & create($isNew = true) {
 		$imgset = new icms_image_set_Object();
 		if ($isNew) {
 			$imgset->setNew();
@@ -76,7 +76,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 		 * @param integer $id imgsetID (imgset_id) of the imageset
 		 * @return object icms_image_set_Object reference to the image set
 	 **/
-	function & get($id) {
+	public function & get($id) {
 		$id = (int) $id;
 		$imgset = false;
 		if ($id > 0) {
@@ -99,7 +99,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 		 * @param object icms_image_set_Object $imgset reference to the imageset to insert
 		 * @return bool TRUE if succesful
 	 **/
-	function insert(& $imgset) {
+	public function insert(& $imgset) {
 		/**
 		* @TODO: Change to if (!(class_exists($this->className) && $obj instanceof $this->className)) when going fully PHP5
 		*/
@@ -114,7 +114,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 			return false;
 		}
 		foreach ($imgset->cleanVars as $k => $v) {
-			${ $k } = $v;
+			$$k = $v;
 		}
 		if ($imgset->isNew()) {
 			$imgset_id = $this->db->genId('imgset_imgset_id_seq');
@@ -138,7 +138,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 		 * @param object icms_image_set_Object $imgset reference to the imageset to delete
 		 * @return bool TRUE if succesful
 	 **/
-	function delete(& $imgset) {
+	public function delete(& $imgset) {
 		/**
 		* @TODO: Change to if (!(class_exists($this->className) && $obj instanceof $this->className)) when going fully PHP5
 		*/
@@ -161,7 +161,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 		 * @param bool $id_as_key should the imageset's imgset_id be the key for the returned array?
 		 * @return array {@link icms_image_set_Object}s matching the conditions
 	 **/
-	function getObjects($criteria = null, $id_as_key = false) {
+	public function getObjects($criteria = null, $id_as_key = false) {
 		$ret = array ();
 		$limit = $start = 0;
 		$sql = 'SELECT DISTINCT i.* FROM ' . $this->db->prefix('imgset') . ' i LEFT JOIN ' . $this->db->prefix('imgset_tplset_link') . ' l ON l.imgset_id=i.imgset_id';
@@ -193,7 +193,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 		 * @param int $tplset_name theme set to link
 		 * @return bool TRUE if succesful FALSE if unsuccesful
 	 **/
-	function linkThemeset($imgset_id, $tplset_name) {
+	public function linkThemeset($imgset_id, $tplset_name) {
 		$imgset_id = (int) $imgset_id;
 		$tplset_name = trim($tplset_name);
 		if ($imgset_id <= 0 || $tplset_name == '') {
@@ -217,7 +217,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 		 * @param int $tplset_name theme set to unlink
 		 * @return bool TRUE if succesful FALSE if unsuccesful
 	 **/
-	function unlinkThemeset($imgset_id, $tplset_name) {
+	public function unlinkThemeset($imgset_id, $tplset_name) {
 		$imgset_id = (int) $imgset_id;
 		$tplset_name = trim($tplset_name);
 		if ($imgset_id <= 0 || $tplset_name == '') {
@@ -238,7 +238,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 		 * @param int $tplset conditions to match
 		 * @return array array of {@link icms_image_set_Object}s matching the conditions
 	 **/
-	function getList($refid = null, $tplset = null) {
+	public function getList($refid = null, $tplset = null) {
 		$criteria = new CriteriaCompo();
 		if (isset ($refid)) {
 			$criteria->add(new Criteria('imgset_refid', (int) $refid));

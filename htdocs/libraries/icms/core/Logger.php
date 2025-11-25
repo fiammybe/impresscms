@@ -267,7 +267,7 @@ class icms_core_Logger {
 	 * @return string  $path   sanitized path
 	 * @access protected
 	 */
-	function sanitizePath( $path) {
+	public function sanitizePath( $path) {
 		$path = str_replace(
 			array('\\', ICMS_ROOT_PATH, ICMS_TRUST_PATH, str_replace( '\\', '/', realpath(ICMS_ROOT_PATH))),
 			array('/', '', 'TRUSTPATH', ''),

@@ -362,7 +362,7 @@ class icms_module_Object extends icms_core_Object {
 	 *
 	 * @todo Make this work with templates ;)
 	 */
-	function setMessage($msg, $title = '', $render = false) {
+	public function setMessage($msg, $title = '', $render = false) {
 		$ret = '<div class="moduleMsg">';
 		if ($title != '') {
 			$ret .= '<h4>' . $title . '</h4>';

@@ -114,7 +114,7 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $perm->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($perm->isNew()) {
 			$gperm_id = icms::$xoopsDB->genId('group_permission_gperm_id_seq');

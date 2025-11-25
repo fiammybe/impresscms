@@ -103,7 +103,7 @@ class icms_form_elements_select_User extends icms_form_elements_Tray {
 		icms_loadLanguageFile('core', 'findusers');
 
 		$js_addusers = "<script type=\"text/javascript\">
-					function addusers(opts){
+					public function addusers(opts){
 						var num = opts.substring(0, opts.indexOf(\":\"));
 						opts = opts.substring(opts.indexOf(\":\")+1, opts.length);
 						var sel = xoopsGetElementById(\"" . $name . ($multiple ? "[]" : "") . "\");

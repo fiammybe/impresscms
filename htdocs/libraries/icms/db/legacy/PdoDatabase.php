@@ -209,7 +209,7 @@ class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms
 	 * @param string $sql
 	 * @return int - nro. de linhas afetadas ou false // number of rows affected, or FALSE
 	 */
-	function exec($sql) {
+	public function exec($sql) {
 		/*
 		 $row = $this->pdo->exec($sql);
 		if ($row === FALSE) {
@@ -238,7 +238,7 @@ class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms
 	 *        	An optional array of parameters to pass to the constructor for class_name objects.
 	 * @return object Inserida por Claudia // added by Claudia (ImpressCMS)
 	 */
-	function fetchObject($result, $class = 'stdClass', $params = array()) {
+	public function fetchObject($result, $class = 'stdClass', $params = array()) {
 		/*
 		 if ($result) {
 		return $result->fetchObject($class, $params);
@@ -274,7 +274,7 @@ class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms
 		return FALSE;
 	}
 
-	function getConnection() {
+	public function getConnection() {
 		return $this->pdo;
 	}
 	

@@ -43,23 +43,23 @@ icms_loadLanguageFile('core', 'databaseupdater');
  */
 class icms_db_legacy_updater_Handler {
 
-	var $_dbTypesArray;
+	public $_dbTypesArray;
 
 	/**
 	 * xoopsDB database object
 	 *
 	 * @var @link XoopsDatabase object
 	 */
-	var $_db;
-	var $db;
+	public $_db;
+	public $db;
 
 	/**
 	 *
 	 * @var array of messages
 	 */
-	var $_messages = array();
+	public $_messages = array();
 
-	function __construct() {
+	public function __construct() {
 		// backward compat
 		$this->_db = icms::$xoopsDB;
 		$this->db = icms::$xoopsDB;
@@ -95,7 +95,7 @@ class icms_db_legacy_updater_Handler {
 	 * @return bool true if success, false if an error occured
 	 *
 	 */
-	function runQuery($query, $goodmsg, $badmsg, $force=false) {
+	public function runQuery($query, $goodmsg, $badmsg, $force=false) {
 		if ($force) {
 			$ret = $this->_db->queryF($query);
 		} else {
@@ -120,7 +120,7 @@ class icms_db_legacy_updater_Handler {
 	 *
 	 * @return bool true if success, false if an error occured
 	 */
-	function renameTable($from, $to, $force=false) {
+	public function renameTable($from, $to, $force=false) {
 		$from = $this->_db->prefix($from);
 		$to = $this->_db->prefix($to);
 		$query = sprintf("ALTER TABLE %s RENAME %s", $from, $to);
@@ -148,7 +148,7 @@ class icms_db_legacy_updater_Handler {
 	 *
 	 * @return bool true if success, false if an error occured
 	 */
-	function updateTable($table, $force=false) {
+	public function updateTable($table, $force=false) {
 		$ret = true;
 		$table->force = $force;
 
@@ -193,7 +193,7 @@ class icms_db_legacy_updater_Handler {
 	 * @param string $dirname dirname of the module
 	 * @param mixed $item name or array of names of the item to upgrade
 	 */
-	function automaticUpgrade($dirname, $item) {
+	public function automaticUpgrade($dirname, $item) {
 		if (is_array($item)) {
 			foreach($item as $v) {
 				$this->upgradeObjectItem($dirname, $v);
@@ -209,7 +209,7 @@ class icms_db_legacy_updater_Handler {
 	 * @param array $var array containing information about the var
 	 * @return string type of the field
 	 */
-	function getFieldTypeFromVar($var) {
+	public function getFieldTypeFromVar($var) {
 		$ret = isset($this->_dbTypesArray[$var['data_type']]) ? $this->_dbTypesArray[$var['data_type']] : 'text';
 		return $ret;
 	}
@@ -221,7 +221,7 @@ class icms_db_legacy_updater_Handler {
 	 * @param bool $key TRUE if the var is the primary key
 	 * @return string default value
 	 */
-	function getFieldDefaultFromVar($var, $key = false) {
+	public function getFieldDefaultFromVar($var, $key = false) {
 		if (in_array($var['data_type'], array(
 				XOBJ_DTYPE_TXTAREA,
 				XOBJ_DTYPE_SOURCE,
@@ -255,7 +255,7 @@ class icms_db_legacy_updater_Handler {
 	 * Upgrades the object
 	 * @param string $dirname
 	 */
-	function upgradeObjectItem($dirname, $item) {
+	public function upgradeObjectItem($dirname, $item) {
 		$module_handler = icms_getModuleHandler($item, $dirname, null, true);
 		if (!$module_handler) {
 			return false;
@@ -376,7 +376,7 @@ class icms_db_legacy_updater_Handler {
 	 * @param string $conf_valuetype
 	 * @param int $conf_order
 	 */
-	function insertConfig($conf_catid, $conf_name, $conf_title, $conf_value, $conf_desc, $conf_formtype, $conf_valuetype, $conf_order) {
+	public function insertConfig($conf_catid, $conf_name, $conf_title, $conf_value, $conf_desc, $conf_formtype, $conf_valuetype, $conf_order) {
 		global $dbVersion;
 		$configitem_handler = icms::handler('icms_config_item');
 		$configitemObj = $configitem_handler->create();
@@ -402,7 +402,7 @@ class icms_db_legacy_updater_Handler {
 	 * @param object reference to Module Object
 	 * @return bool whether upgrade succeeded or not
 	 */
-	function moduleUpgrade(&$module, $tables_first=false) {
+	public function moduleUpgrade(&$module, $tables_first=false) {
 		$dirname = $module->getVar('dirname');
 
 		//		ob_start();
@@ -462,7 +462,7 @@ class icms_db_legacy_updater_Handler {
 	 *
 	 * @return bool TRUE if success FALSE if not
 	 */
-	function updateModuleDBVersion($newDBVersion, $dirname) {
+	public function updateModuleDBVersion($newDBVersion, $dirname) {
 		if (!$dirname) {
 			$dirname = icms_getCurrentModuleName();
 		}

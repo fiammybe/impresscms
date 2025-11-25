@@ -124,7 +124,7 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 		foreach ( $comment->cleanVars as $k => $v) {
-			${$k} = $v;
+			$$k = $v;
 		}
 		if ($comment->isNew()) {
 			$com_id = $this->db->genId('xoopscomments_com_id_seq');
@@ -458,7 +458,7 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @return  bool
 	 **/
 	/*
-	 function updateAll($fieldname, $fieldvalue, $criteria = null)
+	 public function updateAll($fieldname, $fieldvalue, $criteria = null)
 	 {
 	 $set_clause = is_numeric($fieldvalue) ? $filedname.' = '.$fieldvalue : $filedname.' = '.$this->db->quoteString($fieldvalue);
 	 $sql = 'UPDATE '.$this->db->prefix('xoopscomments').' SET '.$set_clause;

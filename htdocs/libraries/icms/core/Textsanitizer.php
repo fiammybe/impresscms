@@ -349,7 +349,7 @@ class icms_core_Textsanitizer {
 	 * @param unknown_type $smiley
 	 * @param unknown_type $bbcode
 	 */
-	function sanitizeForDisplay($text, $allowhtml = 0, $smiley = 1, $bbcode = 1) {
+	public function sanitizeForDisplay($text, $allowhtml = 0, $smiley = 1, $bbcode = 1) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::checkVar - type = text or html, $options1 = output', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		if ($allowhtml == 0)
 		{
@@ -378,7 +378,7 @@ class icms_core_Textsanitizer {
 	 * @param $smiley
 	 * @param $bbcode
 	 */
-	function sanitizeForPreview($text, $allowhtml = 0, $smiley = 1, $bbcode = 1) {
+	public function sanitizeForPreview($text, $allowhtml = 0, $smiley = 1, $bbcode = 1) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter->checkVar - type = text or html, options1 = input', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		$text = $this->oopsStripSlashesGPC($text);
 		if ($allowhtml == 0)
@@ -405,7 +405,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param unknown_type $text
 	 */
-	function makeTboxData4Save($text) {
+	public function makeTboxData4Save($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::addSlashes', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::addSlashes($text);
 	}
@@ -417,7 +417,7 @@ class icms_core_Textsanitizer {
 	 * @param $text
 	 * @param $smiley
 	 */
-	function makeTboxData4Show($text, $smiley=0) {
+	public function makeTboxData4Show($text, $smiley=0) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::htmlSpecialChars', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::htmlSpecialChars($text);
 	}
@@ -428,7 +428,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param $text
 	 */
-	function makeTboxData4Edit($text) {
+	public function makeTboxData4Edit($text) {
 		icms_core_Debug::setDeprecated('icms_core_Datafilter::htmlSpecialChars', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::htmlSpecialChars($text);
 	}
@@ -440,7 +440,7 @@ class icms_core_Textsanitizer {
 	 * @param $text
 	 * @param $smiley
 	 */
-	function makeTboxData4Preview($text, $smiley=0) {
+	public function makeTboxData4Preview($text, $smiley=0) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::htmlSpecialChars and icms_core_DataFilter::stripSlashesGPC', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		$text = icms_core_DataFilter::stripSlashesGPC($text);
 		return icms_core_DataFilter::htmlSpecialChars($text);
@@ -452,7 +452,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param unknown_type $text
 	 */
-	function makeTboxData4PreviewInForm($text) {
+	public function makeTboxData4PreviewInForm($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::htmlSpecialChars and icms_core_DataFilter::stripSlashesGPC', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		$text = icms_core_DataFilter::stripSlashesGPC($text);
 		return icms_core_DataFilter::htmlSpecialChars($text);
@@ -464,7 +464,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param $text
 	 */
-	function makeTareaData4Save($text) {
+	public function makeTareaData4Save($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::addSlashes', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::addSlashes($text);
 	}
@@ -478,7 +478,7 @@ class icms_core_Textsanitizer {
 	 * @param unknown_type $smiley
 	 * @param unknown_type $xcode
 	 */
-	function makeTareaData4Show(&$text, $html=0, $smiley=1, $xcode=1) {
+	public function makeTareaData4Show(&$text, $html=0, $smiley=1, $xcode=1) {
 		$text = $this->displayTarea($text, $html, $smiley, $xcode);
 		return $text;
 	}
@@ -489,7 +489,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param $text
 	 */
-	function makeTareaData4Edit($text) {
+	public function makeTareaData4Edit($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::htmlSpecialChars', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::htmlSpecialChars($text);
 	}
@@ -502,7 +502,7 @@ class icms_core_Textsanitizer {
 	 * @param unknown_type $smiley
 	 * @param unknown_type $xcode
 	 */
-	function makeTareaData4Preview(&$text, $html=0, $smiley=1, $xcode=1) {
+	public function makeTareaData4Preview(&$text, $html=0, $smiley=1, $xcode=1) {
 		$text = $this->previewTarea($text, $html, $smiley, $xcode);
 		return $text;
 	}
@@ -514,7 +514,7 @@ class icms_core_Textsanitizer {
 	 *
 	 * @param str	$text
 	 */
-	function makeTareaData4PreviewInForm($text) {
+	public function makeTareaData4PreviewInForm($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::checkVar - type = text, options1 = input', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		$text = icms_core_DataFilter::stripSlashesGPC($text);
 		return icms_core_DataFilter::htmlSpecialChars($text);
@@ -525,7 +525,7 @@ class icms_core_Textsanitizer {
 	 * @todo		Remove this in version 1.4 - no other occurrences in the core
 	 * @param 		$text
 	 */
-	function makeTareaData4InsideQuotes($text) {
+	public function makeTareaData4InsideQuotes($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::htmlSpecialChars', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::htmlSpecialChars($text);
 	}
@@ -538,7 +538,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param $text
 	 */
-	function oopsStripSlashesGPC($text) {
+	public function oopsStripSlashesGPC($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::stripSlashesGPC', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::stripSlashesGPC($text);
 	}
@@ -551,7 +551,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param unknown_type $text
 	 */
-	function oopsStripSlashesRT($text) {
+	public function oopsStripSlashesRT($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::stripSlashesGPC', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::stripSlashesGPC($text);
 	}
@@ -562,7 +562,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param $text
 	 */
-	function oopsAddSlashes($text) {
+	public function oopsAddSlashes($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::addSlashes', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::addSlashes($text);
 	}
@@ -573,7 +573,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param $text
 	 */
-	function oopsHtmlSpecialChars($text) {
+	public function oopsHtmlSpecialChars($text) {
 		icms_core_Debug::setDeprecated('icms_core_Datafilter::htmlSpecialChars', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_Datafilter::htmlSpecialChars($text);
 	}
@@ -584,7 +584,7 @@ class icms_core_Textsanitizer {
 	 * Enter description here ...
 	 * @param $text
 	 */
-	function oopsNl2Br($text) {
+	public function oopsNl2Br($text) {
 		icms_core_Debug::setDeprecated('icms_core_DataFilter::nl2br', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return icms_core_DataFilter::nl2br($text);
 	}
