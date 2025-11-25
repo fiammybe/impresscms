@@ -1,0 +1,29 @@
+name: Rector
+
+on:
+  pull_request:
+    paths:
+      - '**/*.php'
+
+jobs:
+  rector:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      # Voer Rector uit via de bestaande Action
+      - name: Run Rector
+        uses: zingimmick/rector-action@0.0.2
+        with:
+          args: --config=rector.php
+
+      # Commit & push de wijzigingen terug naar de PR branch
+      - name: Commit & Push Rector changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions[bot]
+          message: "chore: apply Rector PSR-12"
