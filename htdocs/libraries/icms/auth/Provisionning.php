@@ -54,7 +54,7 @@ class icms_auth_Provisionning {
 	 * @param   object $auth_instance
 	 * @return  object $provis_instance {@link icms_auth_Provisionning}
 	 **/
-	static public function &getInstance(&$auth_instance) {
+	public static function &getInstance(&$auth_instance) {
 		static $provis_instance;
 		if (!isset($provis_instance)) {
 			$provis_instance = new icms_auth_Provisionning($auth_instance);
@@ -143,7 +143,7 @@ class icms_auth_Provisionning {
 		foreach ($tab_mapping as $mapping) {
 			$fields = explode('=', trim($mapping));
 			if ($fields[0] && $fields[1])
-			$newuser->setVar(trim($fields[0]), utf8_decode($datas[trim($fields[1])][0]));
+			$newuser->setVar(trim($fields[0]), mb_convert_encoding($datas[trim($fields[1])][0], 'ISO-8859-1', 'UTF-8'));
 		}
 		if ($member_handler->insertUser($newuser)) {
 			foreach ($this->ldap_provisionning_group as $groupid) {
@@ -173,7 +173,7 @@ class icms_auth_Provisionning {
 		foreach ($tab_mapping as $mapping) {
 			$fields = explode('=', trim($mapping));
 			if ($fields[0] && $fields[1]) {
-				$icmsUser->setVar(trim($fields[0]), utf8_decode($datas[trim($fields[1])][0]));
+				$icmsUser->setVar(trim($fields[0]), mb_convert_encoding($datas[trim($fields[1])][0], 'ISO-8859-1', 'UTF-8'));
 			}
 		}
 		if ($member_handler->insertUser($icmsUser)) {

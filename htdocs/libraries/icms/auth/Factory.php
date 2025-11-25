@@ -56,7 +56,7 @@ class icms_auth_Factory {
 	 * @static
 	 * @return  object  Reference to the only instance of authentication class
 	 */
-	static public function &getAuthConnection($uname) {
+	public static function &getAuthConnection($uname) {
 		static $auth_instance;
 		if (isset($auth_instance)) {
 			return $auth_instance;
