@@ -124,12 +124,20 @@ class icmsFormCKEditor extends icms_form_elements_Textarea {
 				'objecttype' => $objecttype
 			));
 		$requestHeaders = array('X-ICMS-TOKEN' => $csrf_token);
+		$extraPlugins = 'uploadimage,clipboard,image2';
+		if (!empty($this->config['extraPlugins'])) {
+			$extraPlugins = $this->config['extraPlugins'] . ',' . $extraPlugins;
+		}
+		$removePlugins = 'image';
+		if (!empty($this->config['removePlugins'])) {
+			$removePlugins = $this->config['removePlugins'] . ',' . $removePlugins;
+		}
 		// image2 replaces the legacy image plugin when enabling uploadimage support
 		$configData = array(
 				'filebrowserImageBrowseUrl' => ICMS_URL . '/editors/CKeditor/imagebrowser.php',
 				'toolbar' => $toolbar,
-				'extraPlugins' => 'uploadimage,clipboard,image2',
-				'removePlugins' => 'image',
+				'extraPlugins' => $extraPlugins,
+				'removePlugins' => $removePlugins,
 				'uploadUrl' => $uploadUrl,
 				'uploadImage_supportedTypes' => 'jpeg|jpg|png|gif|webp',
 				'fileTools_requestHeaders' => $requestHeaders

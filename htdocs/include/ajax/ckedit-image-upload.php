@@ -114,7 +114,7 @@ if (!icms_core_Filesystem::mkdir($destination, 0750, '') && !is_dir($destination
 	$response(0, _ER_UP_FAILEDOPENDIRWRITE);
 }
 
-$uploader = new icms_file_MediaUploadHandler($destination, $allowedMimeTypes, $maxFileSize);
+$uploader = new icms_file_MediaUploadHandler($destination, $allowedMimeTypes, $maxFileSize, null, null);
 $basename = preg_replace('/[^a-z0-9_-]/i', '', pathinfo($fileInfo['name'], PATHINFO_FILENAME));
 if ($basename === '') {
 	$basename = 'image';
@@ -126,7 +126,7 @@ if ($extension === '' || !in_array($extension, $allowedExtensions)) {
 try {
 	$uniqueSuffix = bin2hex(random_bytes(8));
 } catch (Exception $e) {
-	$response(0, _ER_UP_UNKNOWNFILETYPEREJECTED);
+	$response(0, _ER_UP_INVALIDFILENAME);
 }
 $uniqueName = $basename . '-' . $uniqueSuffix . '.' . $extension;
 $uploader->setTargetFileName($uniqueName);
