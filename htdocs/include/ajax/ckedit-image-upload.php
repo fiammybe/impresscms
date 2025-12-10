@@ -110,7 +110,7 @@ if ($maxFileSize <= 0) {
 	$maxFileSize = $value;
 }
 
-if (!icms_core_Filesystem::mkdir($destination, 0755, '') && !is_dir($destination)) {
+if (!icms_core_Filesystem::mkdir($destination, 0750, '') && !is_dir($destination)) {
 	$response(0, _ER_UP_FAILEDOPENDIRWRITE);
 }
 
@@ -126,7 +126,11 @@ if ($extension === '' || !in_array($extension, $allowedExtensions)) {
 try {
 	$uniqueSuffix = bin2hex(random_bytes(8));
 } catch (Exception $e) {
-	$uniqueSuffix = uniqid();
+	$fallback = openssl_random_pseudo_bytes(8);
+	if ($fallback === false) {
+		$response(0, 'Unable to generate a secure filename');
+	}
+	$uniqueSuffix = bin2hex($fallback);
 }
 $uniqueName = $basename . '-' . $uniqueSuffix . '.' . $extension;
 $uploader->setTargetFileName($uniqueName);

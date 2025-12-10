@@ -123,7 +123,7 @@ class icmsFormCKEditor extends icms_form_elements_Textarea {
 				'module' => $module,
 				'objecttype' => $objecttype
 			));
-		$requestHeaders = array('X-ICMS-TOKEN' => $csrf_token, _CORE_TOKEN . '_REQUEST' => $csrf_token);
+		$requestHeaders = array('X-ICMS-TOKEN' => $csrf_token);
 		$configData = array(
 				'filebrowserImageBrowseUrl' => ICMS_URL . '/editors/CKeditor/imagebrowser.php',
 				'toolbar' => $toolbar,
