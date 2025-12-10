@@ -129,13 +129,7 @@ $extension = strtolower(pathinfo($fileInfo['name'], PATHINFO_EXTENSION));
 if ($extension === '' || !in_array($extension, $allowedExtensions)) {
 	$response(0, _ER_UP_UNKNOWNFILETYPEREJECTED);
 }
-try {
-	$uniqueSuffix = bin2hex(random_bytes(8));
-} catch (Exception $e) {
-	$response(0, _ER_UP_INVALIDFILENAME);
-}
-$uniqueName = $basename . '-' . $uniqueSuffix . '.' . $extension;
-$uploader->setTargetFileName($uniqueName);
+$uploader->setPrefix($basename, true);
 
 if (!$uploader->fetchMedia($uploadField)) {
 	$response(0, implode('; ', $uploader->getErrors(false)));
