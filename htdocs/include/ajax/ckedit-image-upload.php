@@ -128,7 +128,7 @@ try {
 } catch (Exception $e) {
 	$uniqueSuffix = uniqid();
 }
-$uniqueName = $basename . '-' . $uniqueSuffix . ($extension !== '' ? '.' . $extension : '');
+$uniqueName = $basename . '-' . $uniqueSuffix . '.' . $extension;
 $uploader->setTargetFileName($uniqueName);
 
 if (!$uploader->fetchMedia($uploadField)) {

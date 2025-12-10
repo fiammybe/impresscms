@@ -121,8 +121,7 @@ class icmsFormCKEditor extends icms_form_elements_Textarea {
 		$csrf_token = icms::$security->createToken();
 		$uploadUrl = ICMS_URL . '/include/ajax/ckedit-image-upload.php?' . http_build_query(array(
 				'module' => $module,
-				'objecttype' => $objecttype,
-				_CORE_TOKEN . '_REQUEST' => $csrf_token
+				'objecttype' => $objecttype
 			));
 		$requestHeaders = array('X-ICMS-TOKEN' => $csrf_token, _CORE_TOKEN . '_REQUEST' => $csrf_token);
 		$configData = array(
