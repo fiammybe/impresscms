@@ -10,6 +10,8 @@ class icmsFormCKEditor extends icms_form_elements_Textarea {
 	var $_language = _LANGCODE;
 	var $_width = "100%";
 	var $_height = "400px";
+	var $_module = "";
+	var $_objecttype = "content";
 
 	var $ckeditor;
 	var $config = array();
@@ -110,10 +112,24 @@ class icmsFormCKEditor extends icms_form_elements_Textarea {
 	         }
 	    }
 
+		$module = !empty($this->_module) ? $this->_module : (is_object(icms::$module) ? icms::$module->getVar('dirname') : 'system');
+		$objecttype = !empty($this->_objecttype) ? $this->_objecttype : 'content';
+		$module = preg_replace('/[^a-z0-9_-]/i', '', $module);
+		$objecttype = preg_replace('/[^a-z0-9_-]/i', '', $objecttype);
+		$module = !empty($module) ? $module : 'system';
+		$objecttype = !empty($objecttype) ? $objecttype : 'content';
+		$csrf_token = icms::$security->createToken();
+		$uploadUrl = ICMS_URL . '/include/ajax/ckedit-image-upload.php?' . http_build_query(array(
+				'module' => $module,
+				'objecttype' => $objecttype,
+				_CORE_TOKEN . '_REQUEST' => $csrf_token
+			));
+		$requestHeaders = json_encode(array('X-ICMS-TOKEN' => $csrf_token, _CORE_TOKEN . '_REQUEST' => $csrf_token));
+
 		$ret = $xoTheme->addScript("/editors/CKeditor/ckeditor/ckeditor.js", array('type' => 'text/javascript'), '');
 		$ret .= $xoTheme->addScript("/editors/CKeditor/ckeditor/adapters/jquery.js", array('type' => 'text/javascript'), '');
 		$ret .= $xoTheme->addScript('', array('type' => 'text/javascript'),
-			'var config = {filebrowserImageBrowseUrl: "' . ICMS_URL . '/editors/CKeditor/imagebrowser.php", toolbar: "' .  $toolbar . '"}; $(function() { $("#'.@$this->_name.'_tarea").ckeditor(config); $("#'.@$this->_name.'_tarea").parents("form").submit(function() { var data = $("#'.@$this->_name.'_tarea").html(); $("#'.@$this->_name.'_tarea").html(data); }); });');
+			'var config = {filebrowserImageBrowseUrl: "' . ICMS_URL . '/editors/CKeditor/imagebrowser.php", toolbar: "' .  $toolbar . '", extraPlugins: "uploadimage,clipboard,image2", removePlugins: "image", uploadUrl: "' . $uploadUrl . '", uploadImage_supportedTypes: "jpeg|jpg|png|gif|webp", fileTools_requestHeaders: ' . $requestHeaders . '}; $(function() { $("#'.@$this->_name.'_tarea").ckeditor(config); $("#'.@$this->_name.'_tarea").parents("form").submit(function() { var data = $("#'.@$this->_name.'_tarea").html(); $("#'.@$this->_name.'_tarea").html(data); }); });');
 		$ret .= parent::render();
 
 		$ret .= '<br clear="' . _GLOBAL_RIGHT . '" />';
