@@ -124,6 +124,7 @@ class icmsFormCKEditor extends icms_form_elements_Textarea {
 				'objecttype' => $objecttype
 			));
 		$requestHeaders = array('X-ICMS-TOKEN' => $csrf_token);
+		// image2 replaces the legacy image plugin when enabling uploadimage support
 		$configData = array(
 				'filebrowserImageBrowseUrl' => ICMS_URL . '/editors/CKeditor/imagebrowser.php',
 				'toolbar' => $toolbar,

@@ -126,11 +126,7 @@ if ($extension === '' || !in_array($extension, $allowedExtensions)) {
 try {
 	$uniqueSuffix = bin2hex(random_bytes(8));
 } catch (Exception $e) {
-	$fallback = openssl_random_pseudo_bytes(8);
-	if ($fallback === false) {
-		$response(0, 'Unable to generate a secure filename');
-	}
-	$uniqueSuffix = bin2hex($fallback);
+	$response(0, _ER_UP_UNKNOWNFILETYPEREJECTED);
 }
 $uniqueName = $basename . '-' . $uniqueSuffix . '.' . $extension;
 $uploader->setTargetFileName($uniqueName);
