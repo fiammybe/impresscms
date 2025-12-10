@@ -133,6 +133,7 @@ class icmsFormCKEditor extends icms_form_elements_Textarea {
 			$removePlugins = $this->config['removePlugins'] . ',' . $removePlugins;
 		}
 		// image2 replaces the legacy image plugin when enabling uploadimage support
+		$elementSelector = addslashes('#' . @$this->_name . '_tarea');
 		$configData = array(
 				'filebrowserImageBrowseUrl' => ICMS_URL . '/editors/CKeditor/imagebrowser.php',
 				'toolbar' => $toolbar,
@@ -143,7 +144,7 @@ class icmsFormCKEditor extends icms_form_elements_Textarea {
 				'fileTools_requestHeaders' => $requestHeaders
 			);
 		$configScript = 'var config = ' . json_encode($configData) . ';';
-		$configScript .= ' $(function() { $("#'.@$this->_name.'_tarea").ckeditor(config); $("#'.@$this->_name.'_tarea").parents("form").submit(function() { var data = $("#'.@$this->_name.'_tarea").html(); $("#'.@$this->_name.'_tarea").html(data); }); });';
+		$configScript .= "\n$(function() {\n\t$('".$elementSelector."').ckeditor(config);\n\t$('".$elementSelector."').parents(\"form\").submit(function() {\n\t\tvar data = $('".$elementSelector."').html();\n\t\t$('".$elementSelector."').html(data);\n\t});\n});";
 
 		$ret = $xoTheme->addScript("/editors/CKeditor/ckeditor/ckeditor.js", array('type' => 'text/javascript'), '');
 		$ret .= $xoTheme->addScript("/editors/CKeditor/ckeditor/adapters/jquery.js", array('type' => 'text/javascript'), '');

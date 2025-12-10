@@ -70,7 +70,7 @@ if (empty($providedFields)) {
 	$response(0, _ER_UP_NOFILEUPLOADED);
 }
 if (count($providedFields) > 1) {
-	$response(0, 'Only one file upload is allowed per request');
+	$response(0, sprintf(_ER_UP_ERROROCCURRED, 1));
 }
 $uploadField = $providedFields[0];
 
@@ -91,6 +91,12 @@ foreach ($allowedTypes as $mimeList) {
 $allowedMimeTypes = array_unique($allowedMimeTypes);
 
 $fileInfo = $_FILES[$uploadField];
+if (!is_array($fileInfo) || !isset($fileInfo['name'], $fileInfo['tmp_name'], $fileInfo['error'])) {
+	$response(0, sprintf(_ER_UP_ERROROCCURRED, 2));
+}
+if (!is_string($fileInfo['name']) || $fileInfo['name'] === '') {
+	$response(0, _ER_UP_INVALIDFILENAME);
+}
 
 $maxFileSize = isset(icms::$config['maxfilesize']) ? (int) icms::$config['maxfilesize'] : 0;
 if ($maxFileSize <= 0) {
