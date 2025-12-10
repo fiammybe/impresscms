@@ -59,22 +59,38 @@ if (!$grouppermHandler->checkRight('module_read', $module->getVar('mid'), $group
 	$response(0, _NOPERM);
 }
 
-$uploadField = null;
-foreach (array('upload', 'file') as $field) {
+$allowedFields = array('upload', 'file');
+$providedFields = array();
+foreach ($allowedFields as $field) {
 	if (!empty($_FILES[$field]['name'])) {
-		$uploadField = $field;
-		break;
+		$providedFields[] = $field;
 	}
 }
-
-if ($uploadField === null) {
+if (empty($providedFields)) {
 	$response(0, _ER_UP_NOFILEUPLOADED);
 }
+if (count($providedFields) > 1) {
+	$response(0, 'Only one file upload is allowed per request');
+}
+$uploadField = $providedFields[0];
 
 $destination = ICMS_UPLOAD_PATH . '/' . $moduleName . '/' . $objectType;
 
+$allowedTypes = array(
+	'jpg' => array('image/jpeg', 'image/pjpeg'),
+	'jpeg' => array('image/jpeg', 'image/pjpeg'),
+	'png' => array('image/png', 'image/x-png'),
+	'gif' => array('image/gif'),
+	'webp' => array('image/webp')
+);
+$allowedExtensions = array_keys($allowedTypes);
+$allowedMimeTypes = array();
+foreach ($allowedTypes as $mimeList) {
+	$allowedMimeTypes = array_merge($allowedMimeTypes, $mimeList);
+}
+$allowedMimeTypes = array_unique($allowedMimeTypes);
+
 $fileInfo = $_FILES[$uploadField];
-$allowedMimeTypes = array('image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png', 'image/gif', 'image/webp');
 
 $maxFileSize = isset(icms::$config['maxfilesize']) ? (int) icms::$config['maxfilesize'] : 0;
 if ($maxFileSize <= 0) {
@@ -104,11 +120,15 @@ if ($basename === '') {
 	$basename = 'image';
 }
 $extension = strtolower(pathinfo($fileInfo['name'], PATHINFO_EXTENSION));
-$allowedExtensions = array('jpg', 'jpeg', 'png', 'gif', 'webp');
 if ($extension === '' || !in_array($extension, $allowedExtensions)) {
 	$response(0, _ER_UP_UNKNOWNFILETYPEREJECTED);
 }
-$uniqueName = $basename . '-' . uniqid() . ($extension !== '' ? '.' . $extension : '');
+try {
+	$uniqueSuffix = bin2hex(random_bytes(8));
+} catch (Exception $e) {
+	$uniqueSuffix = uniqid();
+}
+$uniqueName = $basename . '-' . $uniqueSuffix . ($extension !== '' ? '.' . $extension : '');
 $uploader->setTargetFileName($uniqueName);
 
 if (!$uploader->fetchMedia($uploadField)) {
