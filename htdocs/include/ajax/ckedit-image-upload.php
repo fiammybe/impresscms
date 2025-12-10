@@ -55,7 +55,7 @@ if (!is_object($module) || !$module->getVar('isactive')) {
 
 $groups = icms::$user->getGroups();
 $grouppermHandler = icms::handler('icms_member_groupperm');
-if (!$module->getVar('isactive') || (!$grouppermHandler->checkRight('module_read', $module->getVar('mid'), $groups, 1) && !icms::$user->isAdmin($module->getVar('mid')))) {
+if (!$grouppermHandler->checkRight('module_read', $module->getVar('mid'), $groups, 1) && !icms::$user->isAdmin($module->getVar('mid'))) {
 	$response(0, _NOPERM);
 }
 
@@ -94,7 +94,7 @@ if ($maxFileSize <= 0) {
 	$maxFileSize = $value;
 }
 
-if (!icms_core_Filesystem::mkdir($destination, 0777, '') && !is_dir($destination)) {
+if (!icms_core_Filesystem::mkdir($destination, 0755, '') && !is_dir($destination)) {
 	$response(0, _ER_UP_FAILEDOPENDIRWRITE);
 }
 
@@ -104,6 +104,10 @@ if ($basename === '') {
 	$basename = 'image';
 }
 $extension = strtolower(pathinfo($fileInfo['name'], PATHINFO_EXTENSION));
+$allowedExtensions = array('jpg', 'jpeg', 'png', 'gif', 'webp');
+if ($extension === '' || !in_array($extension, $allowedExtensions)) {
+	$response(0, _ER_UP_UNKNOWNFILETYPEREJECTED);
+}
 $uniqueName = $basename . '-' . uniqid() . ($extension !== '' ? '.' . $extension : '');
 $uploader->setTargetFileName($uniqueName);
 

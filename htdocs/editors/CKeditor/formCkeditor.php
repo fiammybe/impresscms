@@ -125,11 +125,12 @@ class icmsFormCKEditor extends icms_form_elements_Textarea {
 				_CORE_TOKEN . '_REQUEST' => $csrf_token
 			));
 		$requestHeaders = json_encode(array('X-ICMS-TOKEN' => $csrf_token, _CORE_TOKEN . '_REQUEST' => $csrf_token));
+		$configScript = 'var config = {filebrowserImageBrowseUrl: "' . ICMS_URL . '/editors/CKeditor/imagebrowser.php", toolbar: "' .  $toolbar . '", extraPlugins: "uploadimage,clipboard,image2", removePlugins: "image", uploadUrl: "' . $uploadUrl . '", uploadImage_supportedTypes: "jpeg|jpg|png|gif|webp", fileTools_requestHeaders: ' . $requestHeaders . '};';
+		$configScript .= ' $(function() { $("#'.@$this->_name.'_tarea").ckeditor(config); $("#'.@$this->_name.'_tarea").parents("form").submit(function() { var data = $("#'.@$this->_name.'_tarea").html(); $("#'.@$this->_name.'_tarea").html(data); }); });';
 
 		$ret = $xoTheme->addScript("/editors/CKeditor/ckeditor/ckeditor.js", array('type' => 'text/javascript'), '');
 		$ret .= $xoTheme->addScript("/editors/CKeditor/ckeditor/adapters/jquery.js", array('type' => 'text/javascript'), '');
-		$ret .= $xoTheme->addScript('', array('type' => 'text/javascript'),
-			'var config = {filebrowserImageBrowseUrl: "' . ICMS_URL . '/editors/CKeditor/imagebrowser.php", toolbar: "' .  $toolbar . '", extraPlugins: "uploadimage,clipboard,image2", removePlugins: "image", uploadUrl: "' . $uploadUrl . '", uploadImage_supportedTypes: "jpeg|jpg|png|gif|webp", fileTools_requestHeaders: ' . $requestHeaders . '}; $(function() { $("#'.@$this->_name.'_tarea").ckeditor(config); $("#'.@$this->_name.'_tarea").parents("form").submit(function() { var data = $("#'.@$this->_name.'_tarea").html(); $("#'.@$this->_name.'_tarea").html(data); }); });');
+		$ret .= $xoTheme->addScript('', array('type' => 'text/javascript'), $configScript);
 		$ret .= parent::render();
 
 		$ret .= '<br clear="' . _GLOBAL_RIGHT . '" />';
