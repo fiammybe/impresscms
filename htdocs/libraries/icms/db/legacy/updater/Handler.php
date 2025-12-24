@@ -24,13 +24,14 @@
  * @author marcan <marcan@smartfactory.ca>
  * @link http://www.smartfactory.ca The SmartFactory
  */
+
+namespace Icms\Db\Legacy\Updater;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
  * Include the language constants for the icms_db_legacy_updater_Handler
  */
-
-namespace Icms\Db\Legacy\Updater;
 
 global $icmsConfigPersona;
 icms_loadLanguageFile('core', 'databaseupdater');

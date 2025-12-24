@@ -12,6 +12,9 @@
  * @version		SVN: $Id: icmspersistablesingleview.php 19623 2010-06-25 14:59:15Z malanciault $
  */
 
+
+namespace Icms\Ipf\View;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -24,8 +27,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @subpackage	View
  * @author marcan <marcan@smartfactory.ca>
  */
-
-namespace Icms\Ipf\View;
 
 class Single {
 

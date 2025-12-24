@@ -11,6 +11,9 @@
  * @author		marcan <marcan@impresscms.org>
  */
 
+
+namespace Icms\Core\Versionchecker;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -18,8 +21,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  *
  * This class implements version checking using RSS feeds
  */
-
-namespace Icms\Core\Versionchecker;
 
 class RSS extends \Icms\Core\Versionchecker {
 

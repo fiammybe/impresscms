@@ -12,10 +12,11 @@
  * @version		$Id: Text.php 10875 2010-12-12 14:57:26Z phoenyx $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Text extends icms_form_elements_Text {
 	/**

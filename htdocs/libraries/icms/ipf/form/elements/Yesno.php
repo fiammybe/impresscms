@@ -12,10 +12,11 @@
  * @version		$Id: Yesno.php 10711 2010-10-10 17:11:29Z phoenyx $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Yesno extends icms_form_elements_Radioyn {
 	/**

@@ -8,6 +8,9 @@
  * @subpackage	View
  * @version		SVH: $Id: Row.php 10326 2010-07-11 18:54:25Z malanciault $
  */
+
+namespace Icms\Ipf\View;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -21,8 +24,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author		marcan <marcan@smartfactory.ca>
  * @todo		Properly determine visibility of vars and methods and follow naming convention
  */
-
-namespace Icms\Ipf\View;
 
 class Row {
 

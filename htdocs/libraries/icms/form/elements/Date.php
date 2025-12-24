@@ -38,6 +38,9 @@
  * @version		SVN: $Id: Date.php 12495 2015-06-15 19:43:10Z fiammy $
  **/
 
+
+namespace Icms\Form\Elements;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -49,8 +52,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  *
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  */
-
-namespace Icms\Form\Elements;
 
 class Date extends \Icms\Form\Elements\Text {
 

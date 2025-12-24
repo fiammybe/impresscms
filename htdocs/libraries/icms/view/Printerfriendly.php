@@ -13,6 +13,9 @@
  * @version		$Id: Printerfriendly.php 11764 2012-07-01 03:10:47Z skenow $
  */
 
+
+namespace Icms\View;
+
 defined("ICMS_ROOT_PATH") or die("ICMS root path not defined");
 
 /**
@@ -22,8 +25,6 @@ defined("ICMS_ROOT_PATH") or die("ICMS root path not defined");
  * @subpackage	PrinterFriendly
  * @author The IcmsFactory <www.smartfactory.ca>
  */
-
-namespace Icms\View;
 
 class Printerfriendly {
 

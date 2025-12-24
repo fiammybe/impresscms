@@ -10,10 +10,11 @@
  * @version		$Id: Base.php 12310 2013-09-13 21:33:58Z skenow $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Base extends icms_form_Theme {
 	public $targetObject = NULL;

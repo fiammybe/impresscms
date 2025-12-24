@@ -12,10 +12,11 @@
  * @version		$Id: Section.php 10851 2010-12-05 19:15:30Z phoenyx $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Section extends icms_form_Element {
 	/**

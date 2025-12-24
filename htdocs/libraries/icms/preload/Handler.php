@@ -12,6 +12,9 @@
  * @version		SVN: $Id: Handler.php 12368 2013-11-17 04:04:28Z skenow $
  */
 
+
+namespace Icms\Preload;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -26,8 +29,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @since		1.1
  * @author		marcan <marcan@impresscms.org>
  */
-
-namespace Icms\Preload;
 
 class Handler {
 

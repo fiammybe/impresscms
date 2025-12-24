@@ -12,10 +12,11 @@
  * @version		$Id: Handler.php 10849 2010-12-05 18:46:02Z phoenyx $
  */
 
-defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Data\Urllink;
+
+defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
+
 
 class Handler extends \Icms\Ipf\Handler {
 	/**

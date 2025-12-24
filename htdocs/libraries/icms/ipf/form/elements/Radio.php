@@ -12,10 +12,11 @@
  * @version		$Id: Radio.php 12005 2012-09-02 13:18:34Z qm-b $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Radio extends icms_form_elements_Radio {
 

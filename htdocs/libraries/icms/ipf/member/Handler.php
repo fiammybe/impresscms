@@ -14,6 +14,9 @@
  * @version		SVN: $Id: Handler.php 10868 2010-12-11 12:02:57Z phoenyx $
  */
 
+
+namespace Icms\Ipf\Member;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -25,8 +28,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @package		Ipf
  * @subpackage	Member
  */
-
-namespace Icms\Ipf\Member;
 
 class Handler extends \Icms\Member\Handler {
 

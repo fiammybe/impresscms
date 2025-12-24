@@ -15,6 +15,9 @@
  * @todo		Properly set visibility of variables - in version 1.4
  */
 
+
+namespace Icms\Ipf\Category;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
@@ -27,8 +30,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
  * @since 		1.1
  */
-
-namespace Icms\Ipf\Category;
 
 class Object extends \Icms\Ipf\Seo\Object {
 	/** Path that corresponds to the category */

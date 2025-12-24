@@ -38,6 +38,9 @@
  * @version		SVN: $Id:Handler.php 19775 2010-07-11 18:54:25Z malanciault $
  */
 
+
+namespace Icms\Config\Category;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -55,8 +58,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package     Config
  * @subpackage  Category
  */
-
-namespace Icms\Config\Category;
 
 class Handler extends \Icms\Core\ObjectHandler {
 

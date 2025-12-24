@@ -12,10 +12,11 @@
  * @version		$Id: Source.php 10866 2010-12-08 04:40:32Z skenow $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Source extends icms_form_elements_Textarea {
 	/*

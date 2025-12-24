@@ -13,6 +13,9 @@
  * @version		SVN: $Id: LibrariesHandler.php 10868 2010-12-11 12:02:57Z phoenyx $
  */
 
+
+namespace Icms\Preload;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -28,8 +31,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @since		1.1
  * @author		marcan <marcan@impresscms.org>
  */
-
-namespace Icms\Preload;
 
 class LibrariesHandler {
 	/**

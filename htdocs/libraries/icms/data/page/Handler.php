@@ -12,6 +12,9 @@
  * @version		SVN: $Id: Handler.php 10619 2010-09-08 17:59:13Z malanciault $
  */
 
+
+namespace Icms\Data\Page;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -20,8 +23,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @since	ImpressCMS 1.2
  * @author	Gustavo Pilla (aka nekro) <nekro@impresscms.org> <gpilla@nubee.com.ar>
  */
-
-namespace Icms\Data\Page;
 
 class Handler extends \Icms\Ipf\Handler {
 

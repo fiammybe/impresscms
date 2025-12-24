@@ -39,6 +39,9 @@
  * @author		Kazumi Ono (aka onokazo)
  * @version		SVN: $Id:Object.php 19775 2010-07-11 18:54:25Z malanciault $
  */
+
+namespace Icms\Data\Avatar;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -52,8 +55,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @subpackage	Avatar
  *
  */
-
-namespace Icms\Data\Avatar;
 
 class Object extends \Icms\Core\Object {
 	/** @var integer */

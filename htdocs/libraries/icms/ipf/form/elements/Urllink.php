@@ -12,10 +12,11 @@
  * @version		$Id: Urllink.php 10849 2010-12-05 18:46:02Z phoenyx $
  */
 
-defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
+
 
 class Urllink extends icms_form_elements_Tray {
 	/**

@@ -39,6 +39,9 @@
  * @version	$Id: Element.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
+
+namespace Icms\Form;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -52,8 +55,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		Taiwen Jiang    <phppp@users.sourceforge.net>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-
-namespace Icms\Form;
 
 abstract class Element {
 

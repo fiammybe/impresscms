@@ -37,6 +37,9 @@
  * @subpackage	Group
  * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
  */
+
+namespace Icms\Member\Group;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -48,8 +51,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package		Member
  * @subpackage	Group
  */
-
-namespace Icms\Member\Group;
 
 class Object extends \Icms\Core\Object {
 	/**

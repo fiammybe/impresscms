@@ -47,6 +47,9 @@
  * @version		SVN: $Id: Element.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
+
+namespace Icms\Db\Criteria;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
@@ -62,8 +65,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-
-namespace Icms\Db\Criteria;
 
 abstract class Element {
 	/**

@@ -41,6 +41,9 @@
  * @version		SVN: $Id: Database.php 12434 2014-04-12 23:22:23Z skenow $
  */
 
+
+namespace Icms\Db\Legacy\Mysql;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
@@ -53,8 +56,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @author      Kazumi Ono  <onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-
-namespace Icms\Db\Legacy\Mysql;
 
 abstract class Database extends \Icms\Db\Legacy\Database {
 	/**

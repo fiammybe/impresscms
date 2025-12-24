@@ -14,6 +14,9 @@
  * @version		SVN: $Id: Handler.php 10897 2010-12-19 18:17:29Z phoenyx $
  */
 
+
+namespace Icms\Ipf\Permission;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
@@ -23,8 +26,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @subpackage	Permission
  *
  */
-
-namespace Icms\Ipf\Permission;
 
 class Handler {
 

@@ -12,6 +12,9 @@
  * @version $Id: Table.php 12310 2013-09-13 21:33:58Z skenow $
  * @link http://www.smartfactory.ca The SmartFactory
  */
+
+namespace Icms\Db\Legacy\Updater;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 /**
  * icms_db_legacy_updater_Table class
@@ -25,8 +28,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @author marcan <marcan@smartfactory.ca>
  * @link http://www.smartfactory.ca The SmartFactory
  */
-
-namespace Icms\Db\Legacy\Updater;
 
 class Table {
 	/**

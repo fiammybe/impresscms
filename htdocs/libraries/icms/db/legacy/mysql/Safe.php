@@ -37,6 +37,9 @@
  * @package		Database
  * @subpackage	Legacy
  */
+
+namespace Icms\Db\Legacy\Mysql;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
@@ -49,8 +52,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @author      Kazumi Ono  <onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-
-namespace Icms\Db\Legacy\Mysql;
 
 class Safe extends \Icms\Db\Legacy\Mysql\Database {
 

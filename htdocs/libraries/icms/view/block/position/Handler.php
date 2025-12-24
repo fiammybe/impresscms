@@ -13,6 +13,9 @@
  * @version		SVN: $Id:Handler.php 19775 2010-07-11 18:54:25Z malanciault $
  */
 
+
+namespace Icms\View\Block\Position;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -22,8 +25,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @subpackage	Block
  *
  */
-
-namespace Icms\View\Block\Position;
 
 class Handler extends \Icms\Ipf\Handler {
 

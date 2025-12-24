@@ -12,10 +12,11 @@
  * @version		$Id: Date.php 10733 2010-10-16 17:31:12Z phoenyx $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Date extends icms_form_elements_Date {
 	/**

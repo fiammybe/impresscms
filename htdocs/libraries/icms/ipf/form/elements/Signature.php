@@ -12,10 +12,11 @@
  * @version		$Id: Signature.php 10711 2010-10-10 17:11:29Z phoenyx $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Signature extends icms_form_elements_Tray {
 	/**

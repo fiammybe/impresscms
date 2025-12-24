@@ -12,6 +12,9 @@
  * @version		$Id: Autocomplete.php 10846 2010-12-05 11:04:09Z phoenyx $
  */
 
+
+namespace Icms\Ipf\Form\Elements;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -35,8 +38,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  *  - use control parameter "delay" to specify the delay before the autocomplete function starts
  *    to work. Use with caution since it can result in high server load! (default: 500)
  */
-
-namespace Icms\Ipf\Form\Elements;
 
 class Autocomplete extends icms_form_elements_Text {
 	private $_file;

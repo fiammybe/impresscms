@@ -10,10 +10,11 @@
  * @version		$Id: Selectmulti.php 10721 2010-10-11 19:40:51Z phoenyx $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Selectmulti extends \Icms\Ipf\Form\Elements\Select  {
 	/**

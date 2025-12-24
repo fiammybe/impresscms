@@ -38,10 +38,11 @@
  * @version		SVN: $Id: Handler.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
-defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Messaging;
+
+defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
+
 
 icms_loadLanguageFile('core', 'mail');
 

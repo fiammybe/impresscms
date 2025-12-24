@@ -38,6 +38,9 @@
  * @author Gustavo Pilla (aka nekro) <nekro@impresscms.org>
  * @version SVN: $Id: Handler.php 12313 2013-09-15 21:14:35Z skenow $
  */
+
+namespace Icms\View\Block;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -51,8 +54,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @since ImpressCMS 1.2
  * @author Gustavo Pilla (aka nekro) <nekro@impresscms.org>
  */
-
-namespace Icms\View\Block;
 
 class Handler extends \Icms\Ipf\Handler {
 	private $block_positions;

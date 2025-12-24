@@ -38,6 +38,9 @@
  * @author		Kazumi Ono (aka onokazo)
  * @version		SVN: $Id:Handler.php 19775 2010-07-11 18:54:25Z malanciault $
  */
+
+namespace Icms\Member\Group\Membership;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -51,8 +54,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package		Member
  * @subpackage	GroupMembership
  */
-
-namespace Icms\Member\Group\Membership;
 
 class Handler extends \Icms\Core\ObjectHandler {
 	/**

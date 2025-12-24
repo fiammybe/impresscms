@@ -15,6 +15,9 @@
  * @todo		Use language constants for messages
  */
 
+
+namespace Icms\Ipf;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -25,8 +28,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @subpackage	Controller
  *
  */
-
-namespace Icms\Ipf;
 
 class Controller {
 

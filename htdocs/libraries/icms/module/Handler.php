@@ -37,9 +37,10 @@
  * @version	$Id: Handler.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
-defined("ICMS_ROOT_PATH") or die("ImpressCMS root path is not defined");
 
 namespace Icms\Module;
+
+defined("ICMS_ROOT_PATH") or die("ImpressCMS root path is not defined");
 
 use \Composer\InstalledVersions;
 

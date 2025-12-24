@@ -12,10 +12,11 @@
  * @version		$Id: Select.php 11112 2011-03-24 23:43:48Z m0nty_ $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Select extends icms_form_elements_Select {
 	protected $_multiple = false;

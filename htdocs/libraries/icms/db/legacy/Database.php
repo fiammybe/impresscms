@@ -43,6 +43,9 @@
  * @version		SVN: $Id: Database.php 12403 2014-01-26 21:35:08Z skenow $
  */
 
+
+namespace Icms\Db\Legacy;
+
 defined( 'ICMS_ROOT_PATH' ) or die();
 /**
  * Abstract base class for Database access classes
@@ -54,8 +57,6 @@ defined( 'ICMS_ROOT_PATH' ) or die();
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  * @author		Gustavo Pilla  (aka nekro) <nekro@impresscms.org>
 */
-
-namespace Icms\Db\Legacy;
 
 abstract class Database implements \Icms\Db\Legacy\IDatabase {
 	

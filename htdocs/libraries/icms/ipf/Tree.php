@@ -40,6 +40,9 @@
  * @version		$Id:Tree.php 19775 2010-07-11 18:54:25Z malanciault $
  */
 
+
+namespace Icms\Ipf;
+
 defined('ICMS_ROOT_PATH') or die('ICMS root path not defined');
 
 
@@ -53,8 +56,6 @@ defined('ICMS_ROOT_PATH') or die('ICMS root path not defined');
  * @package		Ipf
  * @subpackage	Tree
  */
-
-namespace Icms\Ipf;
 
 class Tree {
 

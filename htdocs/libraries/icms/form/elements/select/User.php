@@ -39,6 +39,9 @@
  * @subpackage	Elements
  * @version		SVN: $Id: User.php 12313 2013-09-15 21:14:35Z skenow $
  */
+
+namespace Icms\Form\Elements\Select;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -52,8 +55,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-
-namespace Icms\Form\Elements\Select;
 
 class User extends \Icms\Form\Elements\Tray {
 

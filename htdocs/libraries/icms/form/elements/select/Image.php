@@ -1,6 +1,7 @@
 
 namespace Icms\Form\Elements\Select;
 
+
 <?PHP
 /**
  * Creates a form attribute which is able to select an image

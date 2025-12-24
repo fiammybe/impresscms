@@ -12,10 +12,11 @@
  * @version		$Id: Parentcategory.php 10833 2010-12-04 21:47:36Z skenow $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Parentcategory extends icms_form_elements_Select {
 	/**

@@ -12,10 +12,11 @@
  * @version		$Id: Upload.php 11454 2011-11-25 12:29:04Z sato-san $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Upload extends icms_form_elements_File {
 	/**

@@ -11,6 +11,9 @@
  * @version		SVN: $Id: About.php 11311 2011-07-20 08:08:45Z mcdonald3072 $
  */
 
+
+namespace Icms\Ipf;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -27,8 +30,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @todo		Properly set visibility of vars
  */
 
-
-namespace Icms\Ipf;
 
 class About {
 	public $_lang_aboutTitle;

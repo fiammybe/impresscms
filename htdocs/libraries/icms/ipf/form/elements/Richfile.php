@@ -12,13 +12,14 @@
  * @version		$Id: Richfile.php 10851 2010-12-05 19:15:30Z phoenyx $
  */
 
+
+namespace Icms\Ipf\Form\Elements;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
  * Please note that this form element will only work if the uploader is enabled in the handler!
  */
-
-namespace Icms\Ipf\Form\Elements;
 
 class Richfile extends icms_form_elements_Tray {
 	/**

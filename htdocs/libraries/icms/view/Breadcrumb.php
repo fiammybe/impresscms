@@ -11,6 +11,9 @@
  * @version		SVN: $Id: Breadcrumb.php 12340 2013-09-22 04:11:09Z skenow $
  */
 
+
+namespace Icms\View;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -25,8 +28,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @subpackage	Breadcrumb
  * @author		marcan <marcan@impresscms.org>
  */
-
-namespace Icms\View;
 
 class Breadcrumb {
 

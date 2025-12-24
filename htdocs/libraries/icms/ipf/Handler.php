@@ -18,6 +18,9 @@
  * @todo		Properly determine visibility for methods and vars (private, protected, public) and apply naming conventions
  */
 
+
+namespace Icms\Ipf;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 /**
  * Persistable Object Handlder
@@ -26,8 +29,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @since		1.1
  * @todo		Properly name the vars using the naming conventions
  */
-
-namespace Icms\Ipf;
 
 class Handler extends \Icms\Core\ObjectHandler {
 

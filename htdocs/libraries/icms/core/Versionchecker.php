@@ -3,6 +3,9 @@
  * Class used to determine if the core, or modules, need to be updated
  */
 
+
+namespace Icms\Core;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -19,8 +22,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		marcan <marcan@impresscms.org>
  * @version		$Id: Versionchecker.php 11603 2012-02-26 08:45:50Z fiammy $
  */
-
-namespace Icms\Core;
 
 class Versionchecker {
 

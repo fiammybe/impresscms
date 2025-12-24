@@ -11,6 +11,9 @@
  * @version		SVN: $Id: Object.php 10326 2010-07-11 18:54:25Z malanciault $
  */
 
+
+namespace Icms\Member\Group\Membership;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -21,8 +24,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package		Member
  * @subpackage	Group
  */
-
-namespace Icms\Member\Group\Membership;
 
 class Object extends \Icms\Core\Object {
 	/**

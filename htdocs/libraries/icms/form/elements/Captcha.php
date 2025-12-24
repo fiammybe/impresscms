@@ -17,6 +17,9 @@
  * @version		SVN: $Id: Captcha.php 10868 2010-12-11 12:02:57Z phoenyx $
  */
 
+
+namespace Icms\Form\Elements;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /*
@@ -40,8 +43,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @subpackage	Elements
  *
  */
-
-namespace Icms\Form\Elements;
 
 class Captcha extends \Icms\Form\Element {
 	private $_captchaHandler;

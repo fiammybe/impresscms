@@ -12,10 +12,11 @@
  * @version		$Id: Checkbox.php 12310 2013-09-13 21:33:58Z skenow $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Checkbox extends icms_form_elements_Checkbox {
 

@@ -13,6 +13,9 @@
  * @version		SVN: $Id: Metagen.php 12248 2013-08-09 08:56:21Z fiammy $
  */
 
+
+namespace Icms\Ipf;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
@@ -21,8 +24,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @package		Ipf
  * @todo		Properly set visibility of variables - in version 2.0
  */
-
-namespace Icms\Ipf;
 
 class Metagen {
 	/** @var object */

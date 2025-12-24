@@ -12,10 +12,11 @@
  * @version		$Id: Object.php 10851 2010-12-05 19:15:30Z phoenyx $
  */
 
-defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Data\File;
+
+defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
+
 
 class Object extends \Icms\Ipf\Object {
 	/**

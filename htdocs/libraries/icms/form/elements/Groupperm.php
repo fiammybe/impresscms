@@ -36,6 +36,9 @@
  * @package		Form
  * @subpackage	Elements
  */
+
+namespace Icms\Form\Elements;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -48,8 +51,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author		Kazumi Ono <onokazu@myweb.ne.jp>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-
-namespace Icms\Form\Elements;
 
 class Groupperm extends \Icms\Form\Element {
 	/**

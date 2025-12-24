@@ -38,11 +38,12 @@
  * @version		SVN: $Id: Handler.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
+
+namespace Icms\Data\Notification;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 // RMV-NOTIFY
-
-namespace Icms\Data\Notification;
 
 include_once ICMS_ROOT_PATH . '/include/notification_constants.php';
 

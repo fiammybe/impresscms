@@ -37,6 +37,9 @@
  * @package Module
  * @version SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
  */
+
+namespace Icms\Module;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path is not defined');
 
 /**
@@ -47,8 +50,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path is not defined');
  * @author Kazumi Ono <onokazu@xoops.org>
  * @copyright Copyright (c) 2000 XOOPS.org
  */
-
-namespace Icms\Module;
 
 class Object extends \Icms\Core\Object {
 	/**

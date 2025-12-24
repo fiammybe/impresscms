@@ -13,6 +13,9 @@
  * @version		SVN: $Id:Handler.php 19775 2010-07-11 18:54:25Z malanciault $
  */
 
+
+namespace Icms\Ipf\Category;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
@@ -24,8 +27,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @subpackage	Category
  * @since 		1.1
  */
-
-namespace Icms\Ipf\Category;
 
 class Handler extends \Icms\Ipf\Handler {
 	/** */

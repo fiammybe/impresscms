@@ -39,6 +39,9 @@
  * @version		SVN: $Id: Select.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
+
+namespace Icms\Form\Elements;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 /**
  * A select field
@@ -50,8 +53,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-
-namespace Icms\Form\Elements;
 
 class Select extends \Icms\Form\Element {
 

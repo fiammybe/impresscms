@@ -3,6 +3,9 @@
  * Class used to determine if the core, or modules, need to be updated
  */
 
+
+namespace Icms\Core;
+
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
@@ -19,8 +22,6 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		fiammybe <david.j@impresscms.org>
  * @todo		turn this into a generic way of testing for new updates from github, also for themes, modules, ...
  */
-
-namespace Icms\Core;
 
 class Versioncheckergithub extends \Icms\Core\Versionchecker implements \Icms\Core\VersioncheckerInterface
 {

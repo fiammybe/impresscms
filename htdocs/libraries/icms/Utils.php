@@ -10,6 +10,9 @@
  * @version		SVN: $Id: Utils.php 11448 2011-11-21 16:37:13Z fiammy $
  */
 
+
+namespace Icms;
+
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
@@ -22,8 +25,6 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @since		1.3
  * @author		marcan <marcan@impresscms.org>
  */
-
-namespace Icms;
 
 class Utils {
 	/**

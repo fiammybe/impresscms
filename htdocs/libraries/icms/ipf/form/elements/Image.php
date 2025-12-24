@@ -13,10 +13,11 @@
  * @version		$Id: Image.php 11573 2012-02-16 00:39:30Z skenow $
  */
 
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 
 namespace Icms\Ipf\Form\Elements;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 
 class Image extends icms_form_elements_Tray {
 	/**

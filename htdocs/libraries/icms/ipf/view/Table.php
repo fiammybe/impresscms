@@ -9,6 +9,9 @@
  * @since 1.1
  * @author marcan <marcan@impresscms.org>
  */
+
+namespace Icms\Ipf\View;
+
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 /**
@@ -23,8 +26,6 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author marcan <marcan@impresscms.org>
  * @todo Properly declare all vars with their visibility (private, protected, public) and follow naming convention
  */
-
-namespace Icms\Ipf\View;
 
 class Table {
 	var $_id;
