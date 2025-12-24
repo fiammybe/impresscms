@@ -24,7 +24,7 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 class Richfile extends icms_form_elements_Tray {
 	/**
 	 * Constructor
-	 * @param \Icms\Ipf\Object	$object	target object
+	 * @param \Icms\Ipf\BaseObject	$object	target object
 	 * @param	string			$key	the key
 	 */
 	public function __construct($object, $key) {

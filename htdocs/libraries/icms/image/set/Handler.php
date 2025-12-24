@@ -66,7 +66,7 @@ class Handler extends XoopsObjectHandler {
 		 * @return object $imgset {@link icms_image_set_Object} reference to the new imageset
 	 **/
 	function & create($isNew = true) {
-		$imgset = new \Icms\Image\Set\Object();
+		$imgset = new \Icms\Image\Set\BaseObject();
 		if ($isNew) {
 			$imgset->setNew();
 		}
@@ -76,7 +76,7 @@ class Handler extends XoopsObjectHandler {
 	/**
 	 * retrieve a specific {@link icms_image_set_Object}
 	 *
-		 * @see \Icms\Image\Set\Object
+		 * @see \Icms\Image\Set\BaseObject
 		 * @param integer $id imgsetID (imgset_id) of the imageset
 		 * @return object icms_image_set_Object reference to the image set
 	 **/
@@ -90,7 +90,7 @@ class Handler extends XoopsObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$imgset = new \Icms\Image\Set\Object();
+				$imgset = new \Icms\Image\Set\BaseObject();
 				$imgset->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -179,7 +179,7 @@ class Handler extends XoopsObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$imgset = new \Icms\Image\Set\Object();
+			$imgset = new \Icms\Image\Set\BaseObject();
 			$imgset->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] = & $imgset;

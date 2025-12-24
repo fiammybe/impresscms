@@ -51,7 +51,7 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path is not defined');
  * @copyright Copyright (c) 2000 XOOPS.org
  */
 
-class Object extends \Icms\Core\Object {
+class BaseObject extends \Icms\Core\BaseObject {
 	/**
 	 * Module configuration
 	 *

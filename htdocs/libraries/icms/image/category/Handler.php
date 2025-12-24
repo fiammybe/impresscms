@@ -63,7 +63,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @return object $imgcat {@link icms_image_category_Object} reference to the new image category
 	 **/
 	public function &create($isNew = true) {
-		$imgcat = new \Icms\Image\Category\Object();
+		$imgcat = new \Icms\Image\Category\BaseObject();
 		if ($isNew) {
 			$imgcat->setNew();
 		}
@@ -73,7 +73,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * retrieve a specific {@link icms_image_category_Object}
 	 *
-	 * @see \Icms\Image\Category\Object
+	 * @see \Icms\Image\Category\BaseObject
 	 * @param integer $id imgcatID (imgcat_id) of the image category
 	 * @return object icms_image_category_Object reference to the image category
 	 **/
@@ -87,7 +87,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$imgcat = new \Icms\Image\Category\Object();
+				$imgcat = new \Icms\Image\Category\BaseObject();
 				$imgcat->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -202,7 +202,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$imgcat = new \Icms\Image\Category\Object();
+			$imgcat = new \Icms\Image\Category\BaseObject();
 			$imgcat->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] = &$imgcat;

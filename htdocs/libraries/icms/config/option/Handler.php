@@ -67,7 +67,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @return	object  {@link icms_config_option_Object}
 	 */
 	public function &create($isNew = true) {
-		$confoption = new \Icms\Config\Option\Object();
+		$confoption = new \Icms\Config\Option\BaseObject();
 		if ($isNew) {
 			$confoption->setNew();
 		}
@@ -91,7 +91,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$confoption = new \Icms\Config\Option\Object();
+				$confoption = new \Icms\Config\Option\BaseObject();
 				$confoption->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -193,7 +193,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$confoption = new \Icms\Config\Option\Object();
+			$confoption = new \Icms\Config\Option\BaseObject();
 			$confoption->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $confoption;

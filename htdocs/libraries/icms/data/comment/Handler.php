@@ -73,7 +73,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @see \Icms\Core\ObjectHandler#create()
 	 */
 	public function &create($isNew = true) {
-		$comment = new \Icms\Data\Comment\Object();
+		$comment = new \Icms\Data\Comment\BaseObject();
 		if ($isNew) {
 			$comment->setNew();
 		}
@@ -99,7 +99,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$comment = new \Icms\Data\Comment\Object();
+				$comment = new \Icms\Data\Comment\BaseObject();
 				$comment->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -277,7 +277,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$comment = new \Icms\Data\Comment\Object();
+			$comment = new \Icms\Data\Comment\BaseObject();
 			$comment->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $comment;

@@ -38,6 +38,9 @@
  * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
+
+namespace Icms\Member\User;
+
 defined('ICMS_ROOT_PATH') or exit();
 
 /**
@@ -49,9 +52,7 @@ defined('ICMS_ROOT_PATH') or exit();
  * @subpackage	User
  */
 
-namespace Icms\Member\User;
-
-class Object extends \Icms\Core\Object {
+class BaseObject extends \Icms\Core\BaseObject {
 	/**
 	 * Array of groups that user belongs to
 	 * @var array

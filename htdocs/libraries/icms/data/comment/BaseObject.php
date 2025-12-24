@@ -24,73 +24,73 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 //  ------------------------------------------------------------------------ //
 // Author: Kazumi Ono (AKA onokazu)                                          //
-// URL: http://www.myweb.ne.jp/, http://www.xoops.org/, http://jp.xoops.org/ //
-// Project: The XOOPS Project                                                //
+// URL: http://www.xoops.org/ http://jp.xoops.org/  http://www.myweb.ne.jp/  //
+// Project: The XOOPS Project (http://www.xoops.org/)                        //
 // ------------------------------------------------------------------------- //
 /**
- * Manage avatars for users
+ * Core class for managing comments
  *
- * @copyright	Copyright (c) 2000 XOOPS.org
- * @copyright	http://www.impresscms.org/ The ImpressCMS Project
- * @license		LICENSE.txt
+ * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
+ * @author	    Kazumi Ono	<onokazu@xoops.org>
+ * @copyright 	http://www.impresscms.org/ The ImpressCMS Project
+ *
  * @category	ICMS
  * @package		Data
- * @subpackage	Avatar
- * @author		Kazumi Ono (aka onokazo)
+ * @subpackage	Comment
+ *
  * @version		SVN: $Id:Object.php 19775 2010-07-11 18:54:25Z malanciault $
  */
 
-namespace Icms\Data\Avatar;
+namespace Icms\Data\Comment;
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
- * Avatar class
+ * A Comment
  *
- * @author		Kazumi Ono (aka onokazo)
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  *
  * @category	ICMS
  * @package		Data
- * @subpackage	Avatar
+ * @subpackage	Comment
  *
  */
 
-class Object extends \Icms\Core\Object {
-	/** @var integer */
-	private $_userCount;
+class BaseObject extends \Icms\Core\BaseObject {
 
 	/**
-	 * Constructor for avatar class, initializing all the properties of the class object
-	 *
-	 */
+	 * Constructor
+	 **/
 	public function __construct() {
 		parent::__construct();
-		$this->initVar('avatar_id', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('avatar_file', XOBJ_DTYPE_OTHER, null, false, 30);
-		$this->initVar('avatar_name', XOBJ_DTYPE_TXTBOX, null, true, 100);
-		$this->initVar('avatar_mimetype', XOBJ_DTYPE_OTHER, null, false);
-		$this->initVar('avatar_created', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('avatar_display', XOBJ_DTYPE_INT, 1, false);
-		$this->initVar('avatar_weight', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('avatar_type', XOBJ_DTYPE_OTHER, 0, false);
+		$this->initVar('com_id', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('com_pid', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('com_modid', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('com_icon', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('com_title', XOBJ_DTYPE_TXTBOX, null, true, 255, true);
+		$this->initVar('com_text', XOBJ_DTYPE_TXTAREA, null, true, null, true);
+		$this->initVar('com_created', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('com_modified', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('com_uid', XOBJ_DTYPE_INT, 0, true);
+		$this->initVar('com_ip', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('com_sig', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('com_itemid', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('com_rootid', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('com_status', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('com_exparams', XOBJ_DTYPE_OTHER, null, false, 255);
+		$this->initVar('dohtml', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('dosmiley', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('doxcode', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('doimage', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('dobr', XOBJ_DTYPE_INT, 0, false);
 	}
 
 	/**
-	 * Sets the value for the number of users
-	 * @param integer $value
+	 * Is this comment on the root level?
 	 *
-	 */
-	public function setUserCount($value) {
-		$this->_userCount = (int) $value;
-	}
-
-	/**
-	 * Gets the value for the number of users
-	 * @return integer
-	 */
-	public function getUserCount() {
-		return $this->_userCount;
+	 * @return  bool
+	 **/
+	public function isRoot() {
+		return ($this->getVar('com_id') == $this->getVar('com_rootid'));
 	}
 }
-

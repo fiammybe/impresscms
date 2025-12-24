@@ -70,7 +70,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @see htdocs/kernel/icms_core_ObjectHandler#create()
 	 */
 	public function &create($isNew = true)	{
-		$confcat = new \Icms\Config\Category\Object();
+		$confcat = new \Icms\Config\Category\BaseObject();
 		if ($isNew) {
 			$confcat->setNew();
 		}
@@ -95,7 +95,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$confcat = new \Icms\Config\Category\Object();
+				$confcat = new \Icms\Config\Category\BaseObject();
 				$confcat->assignVars($this->db->fetchArray($result), false);
 			}
 		}
@@ -201,7 +201,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$confcat = new \Icms\Config\Category\Object();
+			$confcat = new \Icms\Config\Category\BaseObject();
 			$confcat->assignVars($myrow, false);
 			if (!$id_as_key) {
 				$ret[] =& $confcat;

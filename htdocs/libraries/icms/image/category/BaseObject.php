@@ -28,45 +28,69 @@
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
 /**
- * Manage groups and memberships
+ * Image categories
  *
- * @copyright	The ImpressCMS Project <http://www.impresscms.org/>
+ * @copyright	http://www.impresscms.org/ The ImpressCMS Project
  * @license		LICENSE.txt
- *
- * @author		Gustavo Alejandro Pilla (aka nekro) <nekro@impresscms.org> <gpilla@nube.com.ar>
  * @category	ICMS
- * @package		Member
- * @subpackage	Groupperm
+ * @package		Image
+ * @subpackage	Category
  * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
-namespace Icms\Member\Groupperm;
+
+namespace Icms\Image\Category;
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
- * A group permission
+ * An image category
  *
- * These permissions are managed through a {@link icms_member_groupperm_Handler} object
+ * These categories are managed through a {@link icms_image_category_Handler} object
+
  * @category	ICMS
- * @package     Member
- * @subpackage	GroupPermission
+ * @package     Image
+ * @subpackage	Category
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
 
-class Object extends \Icms\Core\Object {
+class BaseObject extends \Icms\Core\BaseObject {
+	private $_imageCount;
+
 	/**
 	 * Constructor
 	 *
 	 */
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
-		$this->initVar('gperm_id', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('gperm_groupid', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('gperm_itemid', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('gperm_modid', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('gperm_name', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('imgcat_id', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('imgcat_pid', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('imgcat_name', XOBJ_DTYPE_TXTBOX, null, true, 100);
+		$this->initVar('imgcat_foldername', XOBJ_DTYPE_TXTBOX, null, true, 100);
+		$this->initVar('imgcat_display', XOBJ_DTYPE_INT, 1, false);
+		$this->initVar('imgcat_weight', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('imgcat_maxsize', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('imgcat_maxwidth', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('imgcat_maxheight', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('imgcat_type', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('imgcat_storetype', XOBJ_DTYPE_OTHER, null, false);
+	}
+
+	/**
+	 * Set count of images in a category
+	 * @param	int $value Value
+	 */
+	public function setImageCount($value) {
+		$this->_imageCount = (int) $value;
+	}
+
+	/**
+	 * Gets count of images in a category
+	 * @return	int _imageCount number of images
+	 */
+	public function getImageCount() {
+		return $this->_imageCount;
 	}
 }
 

@@ -12,6 +12,9 @@
  * @version		$Id: icmspersistabletreetable.php 19651 2010-06-26 06:15:15Z malanciault $
  */
 
+
+namespace Icms\Ipf\View;
+
 defined('ICMS_ROOT_PATH') || die("ImpressCMS root path not defined");
 
 /**
@@ -28,8 +31,6 @@ defined('ICMS_ROOT_PATH') || die("ImpressCMS root path not defined");
  * @author		marcan <marcan@impresscms.org>
  * @version		$Id: icmspersistabletreetable.php 19651 2010-06-26 06:15:15Z malanciault $
  */
-
-namespace Icms\Ipf\View;
 
 class Tree extends \Icms\Ipf\View\Table {
 

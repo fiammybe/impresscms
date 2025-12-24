@@ -63,7 +63,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @see \Icms\Core\ObjectHandler#create()
 	 */
 	public function &create($isNew = true) {
-		$avatar = new \Icms\Data\Avatar\Object();
+		$avatar = new \Icms\Data\Avatar\BaseObject();
 		if ($isNew) {
 			$avatar->setNew();
 		}
@@ -86,7 +86,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$avatar = new \Icms\Data\Avatar\Object();
+				$avatar = new \Icms\Data\Avatar\BaseObject();
 				$avatar->assignVars($this->db->fetchArray($result));
 				return $avatar;
 			}
@@ -212,7 +212,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$avatar = new \Icms\Data\Avatar\Object();
+			$avatar = new \Icms\Data\Avatar\BaseObject();
 			$avatar->assignVars($myrow);
 			$avatar->setUserCount($myrow['count']);
 			if (!$id_as_key) {

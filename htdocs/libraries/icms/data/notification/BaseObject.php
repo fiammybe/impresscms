@@ -53,7 +53,7 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @package     Notification
  */
 
-class Object extends \Icms\Core\Object {
+class BaseObject extends \Icms\Core\BaseObject {
 
 	/**
 	 * Constructor

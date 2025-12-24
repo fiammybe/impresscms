@@ -40,13 +40,14 @@
  * @version      $Id:Handler.php 19775 2010-07-11 18:54:25Z malanciault $
  */
 
+
+namespace Icms\Config\Item;
+
 if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
 
 /**#@+
  * Config type
  */
-
-namespace Icms\Config\Item;
 
 define('ICMS_CONF', 1);
 define('ICMS_CONF_USER', 2);
@@ -84,12 +85,12 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * Create a new {@link icms_config_Item_Object}
 	 *
-	 * @see \Icms\Config\Item\Object
+	 * @see \Icms\Config\Item\BaseObject
 	 * @param	bool    $isNew  Flag the config as "new"?
 	 * @return	object  reference to the new config
 	 */
 	public function &create($isNew = true) {
-		$config = new \Icms\Config\Item\Object();
+		$config = new \Icms\Config\Item\BaseObject();
 		if ($isNew) {
 			$config->setNew();
             $config->setNewConfig();
@@ -114,7 +115,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
 				$myrow = $this->db->fetchArray($result);
-				$config = new \Icms\Config\Item\Object();
+				$config = new \Icms\Config\Item\BaseObject();
 				$config->setType($myrow["conf_valuetype"]);
 				$config->assignVars($myrow);
 			}

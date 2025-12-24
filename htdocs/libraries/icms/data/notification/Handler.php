@@ -337,7 +337,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 		}
 
 		if (!isset($mode)) {
-			$user = new \Icms\Member\User\Object($user_id);
+			$user = new \Icms\Member\User\BaseObject($user_id);
 			$mode = $user->getVar('notify_mode');
 		}
 

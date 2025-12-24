@@ -44,7 +44,7 @@ class Autocomplete extends icms_form_elements_Text {
 
 	/**
 	 * Constructor
-	 * @param \Icms\Ipf\Object	$object	reference to targetobject (@link icms_ipf_Object)
+	 * @param \Icms\Ipf\BaseObject	$object	reference to targetobject (@link icms_ipf_Object)
 	 * @param	string			$key	the form name
 	 */
 	public function __construct($object, $key) {

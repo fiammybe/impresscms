@@ -28,77 +28,62 @@
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
 /**
- * Manage images
+ * Template file object
  *
  * @copyright	http://www.impresscms.org/ The ImpressCMS Project
  * @license		LICENSE.txt
  * @category	ICMS
- * @package		Image
+ * @package		View
+ * @subpackage	Template
  * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
 
-namespace Icms\Image;
+namespace Icms\View\Template\File;
 
-defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
+
 /**
- * An Image Object
+ * Base class for all templates
  *
- * @category	ICMS
- * @package		Image
- * @author		Kazumi Ono 	<onokazu@xoops.org>
+ * @author Kazumi Ono (AKA onokazu)
  * @copyright	Copyright (c) 2000 XOOPS.org
- */
+ * @category	ICMS
+ * @package		View
+ * @subpackage	Template
+ **/
 
-class Object extends \Icms\Core\Object {
+class BaseObject extends \Icms\Core\BaseObject {
+
 	/**
-	 * Info of Image file (width, height, bits, mimetype)
-	 *
-	 * @var array
+	 * constructor
 	 */
-	public $image_info = array();
-
-	/**
-	 * Constructor
-	 **/
 	public function __construct() {
 		parent::__construct();
-		$this->initVar('image_id', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('image_name', XOBJ_DTYPE_OTHER, null, false, 30);
-		$this->initVar('image_nicename', XOBJ_DTYPE_TXTBOX, null, true, 100);
-		$this->initVar('image_mimetype', XOBJ_DTYPE_OTHER, null, false);
-		$this->initVar('image_created', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('image_display', XOBJ_DTYPE_INT, 1, false);
-		$this->initVar('image_weight', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('image_body', XOBJ_DTYPE_SOURCE, null, true);
-		$this->initVar('imgcat_id', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('tpl_id', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('tpl_refid', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('tpl_tplset', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('tpl_file', XOBJ_DTYPE_TXTBOX, null, true, 100);
+		$this->initVar('tpl_desc', XOBJ_DTYPE_TXTBOX, null, false, 100);
+		$this->initVar('tpl_lastmodified', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('tpl_lastimported', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('tpl_module', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('tpl_type', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('tpl_source', XOBJ_DTYPE_SOURCE, null, false);
 	}
 
 	/**
-	 * Returns information
-	 *
-	 * @param string  $path  the path to search through
-	 * @param string  $type  the path type, url or other
-	 * @param bool  $ret  return the information or keep it stored
-	 *
-	 * @return array  the array of image information
+	 * Gets Template Source
 	 */
-	public function getInfo($path, $type = 'url', $ret = false) {
-		$path = (substr($path,-1) != '/') ? $path . '/' : $path;
-		if ($type == 'url') {
-			$img = $path . $this->getVar('image_name');
-		} else {
-			$img = $path;
-		}
-		$get_size = getimagesize($img);
-		$this->image_info = array(
-			'width' => $get_size[0],
-			'height' => $get_size[1],
-			'bits' => $get_size['bits'],
-			'mime' => $get_size['mime']
-		);
-		if ($ret) {
-			return $this->image_info;
-		}
+	public function getSource()	{
+		return $this->getVar('tpl_source');
+	}
+
+	/**
+	 * Gets Last Modified timestamp
+	 */
+	public function getLastModified()	{
+		return $this->getVar('tpl_lastmodified');
 	}
 }
+

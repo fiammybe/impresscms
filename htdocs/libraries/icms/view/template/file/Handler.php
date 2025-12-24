@@ -61,12 +61,12 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * create a new template instance
 	 *
-	 * @see \Icms\View\Template\File\Object
+	 * @see \Icms\View\Template\File\BaseObject
 	 * @param bool $isNew is the new tempate new??
 	 * @return object icms_view_template_file_Object {@link icms_view_template_file_Object} reference to the new template
 	 **/
 	public function &create($isNew = true) {
-		$tplfile = new \Icms\View\Template\File\Object();
+		$tplfile = new \Icms\View\Template\File\BaseObject();
 		if ($isNew) {
 			$tplfile->setNew();
 		}
@@ -76,7 +76,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * gets a new template instance
 	 *
-	 * @see \Icms\View\Template\File\Object
+	 * @see \Icms\View\Template\File\BaseObject
 	 * @param int $id ID of the template to get
 	 * @param bool $getsource would you like to get the source?
 	 * @return object icms_view_template_file_Object {@link icms_view_template_file_Object} reference to the new template
@@ -97,7 +97,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$tplfile = new \Icms\View\Template\File\Object();
+				$tplfile = new \Icms\View\Template\File\BaseObject();
 				$tplfile->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -107,7 +107,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * Loads Template source from DataBase
 	 *
-	 * @see \Icms\View\Template\File\Object
+	 * @see \Icms\View\Template\File\BaseObject
 	 * @param object $tplfile {@link icms_view_template_file_Object} object of the template file to load
 	 * @return bool TRUE on success, FALSE if fail
 	 **/
@@ -132,7 +132,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * Inserts Template into the DataBase
 	 *
-	 * @see \Icms\View\Template\File\Object
+	 * @see \Icms\View\Template\File\BaseObject
 	 * @param object $tplfile {@link icms_view_template_file_Object} object of the template file to load
 	 * @return bool TRUE on success, FALSE if fail
 	 **/
@@ -296,7 +296,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$tplfile = new \Icms\View\Template\File\Object();
+			$tplfile = new \Icms\View\Template\File\BaseObject();
 			$tplfile->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $tplfile;
@@ -437,7 +437,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 		$result = $this->db->query($sql);
 		if (!$result) return false;
 		while ($myrow = $this->db->fetchArray($result)) {
-			$tplfile = new \Icms\View\Template\File\Object();
+			$tplfile = new \Icms\View\Template\File\BaseObject();
 			$tplfile->assignVars($myrow);
 			$this->_prefetch_cache[] =& $tplfile;
 			unset($tplfile);

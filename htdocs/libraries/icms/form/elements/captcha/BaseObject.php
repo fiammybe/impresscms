@@ -34,7 +34,7 @@ icms_loadLanguageFile('core', 'captcha');
  * @package		Form
  * @subpackage	Elements
  */
-class Object {
+class BaseObject {
 
 	public $active	= TRUE;
 	/** potential values: image, text */

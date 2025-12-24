@@ -18,7 +18,7 @@ namespace Icms\Data\Urllink;
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 
-class Object extends \Icms\Ipf\Object {
+class BaseObject extends \Icms\Ipf\BaseObject {
 	/**
 	 * constructor
 	 */

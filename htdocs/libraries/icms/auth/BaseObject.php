@@ -23,67 +23,101 @@
 //  along with this program; if not, write to the Free Software              //
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 //  ------------------------------------------------------------------------ //
-// Author: Kazumi Ono (AKA onokazu)                                          //
-// URL: http://www.myweb.ne.jp/, http://www.xoops.org/, http://jp.xoops.org/ //
-// Project: The XOOPS Project                                                //
-// ------------------------------------------------------------------------- //
 /**
- * Template file object
+ * Authorization classes, Base class file
+ *
+ * defines abstract authentification wrapper class
  *
  * @copyright	http://www.impresscms.org/ The ImpressCMS Project
  * @license		LICENSE.txt
  * @category	ICMS
- * @package		View
- * @subpackage	Template
+ * @package		Auth
  * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
-
-namespace Icms\View\Template\File;
-
-defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 /**
- * Base class for all templates
+ * Authentification base class
  *
- * @author Kazumi Ono (AKA onokazu)
- * @copyright	Copyright (c) 2000 XOOPS.org
+ * @copyright	http://www.xoops.org/ The XOOPS Project
+ * @copyright	http://www.impresscms.org/ The ImpressCMS Project
+ * @since       XOOPS
  * @category	ICMS
- * @package		View
- * @subpackage	Template
- **/
+ * @package     Auth
+ * @author	    Pierre-Eric MENUET	<pemphp@free.fr>
+ */
 
-class Object extends \Icms\Core\Object {
+namespace Icms\Auth;
+
+class BaseObject {
+
+	private $_dao;
+
+	private $_errors;
 
 	/**
-	 * constructor
+	 * Authentication Service constructor
 	 */
-	public function __construct() {
-		parent::__construct();
-		$this->initVar('tpl_id', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('tpl_refid', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('tpl_tplset', XOBJ_DTYPE_OTHER, null, false);
-		$this->initVar('tpl_file', XOBJ_DTYPE_TXTBOX, null, true, 100);
-		$this->initVar('tpl_desc', XOBJ_DTYPE_TXTBOX, null, false, 100);
-		$this->initVar('tpl_lastmodified', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('tpl_lastimported', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('tpl_module', XOBJ_DTYPE_OTHER, null, false);
-		$this->initVar('tpl_type', XOBJ_DTYPE_OTHER, null, false);
-		$this->initVar('tpl_source', XOBJ_DTYPE_SOURCE, null, false);
+	public function __construct(&$dao) {
+		$this->_dao = $dao;
 	}
 
 	/**
-	 * Gets Template Source
+	 * authenticate
+	 *
+	 * @abstract need to be written in the derived class
+	 * @return bool whether user is authenticated
+	 * @todo	Cannot declare this as abstract until the OpenID method is compliant -- quid now that OpenID is no longer there?
 	 */
-	public function getSource()	{
-		return $this->getVar('tpl_source');
+	public function authenticate($uname, $pwd = null) {
 	}
 
 	/**
-	 * Gets Last Modified timestamp
+	 * add an error
+	 *
+	 * @param string $value error to add
+	 * @access public
 	 */
-	public function getLastModified()	{
-		return $this->getVar('tpl_lastmodified');
+	public function setErrors($err_no, $err_str) {
+		$this->_errors[$err_no] = trim($err_str);
+	}
+
+	/**
+	 * return the errors for this object as an array
+	 *
+	 * @return array an array of errors
+	 * @access public
+	 */
+	public function getErrors() {
+		return $this->_errors;
+	}
+
+	/**
+	 * return the errors for this object as html
+	 *
+	 * @return string $ret html listing the errors
+	 * @access public
+	 */
+	public function getHtmlErrors() {
+		global $icmsConfigPersona;
+		$ret = '<br />';
+		if ($icmsConfigPersona['debug_mode'] < 3) {
+			$ret .= _US_INCORRECTLOGIN;
+		} else {
+			if (empty($this->_errors)) {
+				$ret .= _NONE . '<br />';
+			} else {
+				foreach ($this->_errors as $errno => $errstr) {
+					$ret .=  $errstr . '<br/>';
+				}
+				/**
+				 * Fix to replace the message "Incorrect Login using xoops authenticated method"
+				 * as this message don't say much to normal users...
+				 * This fix of course is temporary and will change in the future
+				 */
+				$auth_method_name = $this->auth_method == 'xoops' ? 'standard' : $this->auth_method;
+				$ret .= sprintf(_AUTH_MSG_AUTH_METHOD, $auth_method_name);
+			}
+		}
+		return $ret;
 	}
 }
-

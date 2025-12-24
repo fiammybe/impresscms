@@ -28,69 +28,46 @@
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
 /**
- * Image categories
+ * Private messages
  *
+ * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
  * @copyright	http://www.impresscms.org/ The ImpressCMS Project
- * @license		LICENSE.txt
+ *
  * @category	ICMS
- * @package		Image
- * @subpackage	Category
- * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
+ * @package		Privmessage
+ * @version		SVN: $Id:Object.php 19775 2010-07-11 18:54:25Z malanciault $
  */
 
 
-namespace Icms\Image\Category;
+namespace Icms\Data\Privmessage;
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
- * An image category
+ * A handler for Private Messages
  *
- * These categories are managed through a {@link icms_image_category_Handler} object
-
+ * @author		Kazumi Ono	<onokazu@xoops.org>
+ * @copyright	copyright (c) 2000-2007 XOOPS.org
+ *
  * @category	ICMS
- * @package     Image
- * @subpackage	Category
- * @author	    Kazumi Ono	<onokazu@xoops.org>
- * @copyright	Copyright (c) 2000 XOOPS.org
+ * @package		Privmessage
  */
 
-class Object extends \Icms\Core\Object {
-	private $_imageCount;
+class BaseObject extends \Icms\Core\BaseObject {
 
 	/**
-	 * Constructor
-	 *
-	 */
+	 * constructor
+	 **/
 	public function __construct() {
 		parent::__construct();
-		$this->initVar('imgcat_id', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('imgcat_pid', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('imgcat_name', XOBJ_DTYPE_TXTBOX, null, true, 100);
-		$this->initVar('imgcat_foldername', XOBJ_DTYPE_TXTBOX, null, true, 100);
-		$this->initVar('imgcat_display', XOBJ_DTYPE_INT, 1, false);
-		$this->initVar('imgcat_weight', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('imgcat_maxsize', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('imgcat_maxwidth', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('imgcat_maxheight', XOBJ_DTYPE_INT, 0, false);
-		$this->initVar('imgcat_type', XOBJ_DTYPE_OTHER, null, false);
-		$this->initVar('imgcat_storetype', XOBJ_DTYPE_OTHER, null, false);
-	}
-
-	/**
-	 * Set count of images in a category
-	 * @param	int $value Value
-	 */
-	public function setImageCount($value) {
-		$this->_imageCount = (int) $value;
-	}
-
-	/**
-	 * Gets count of images in a category
-	 * @return	int _imageCount number of images
-	 */
-	public function getImageCount() {
-		return $this->_imageCount;
+		$this->initVar('msg_id', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('msg_image', XOBJ_DTYPE_OTHER, 'icon1.gif', false, 100);
+		$this->initVar('subject', XOBJ_DTYPE_TXTBOX, null, true, 255);
+		$this->initVar('from_userid', XOBJ_DTYPE_INT, null, true);
+		$this->initVar('to_userid', XOBJ_DTYPE_INT, null, true);
+		$this->initVar('msg_time', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('msg_text', XOBJ_DTYPE_TXTAREA, null, true);
+		$this->initVar('read_msg', XOBJ_DTYPE_INT, 0, false);
 	}
 }
 

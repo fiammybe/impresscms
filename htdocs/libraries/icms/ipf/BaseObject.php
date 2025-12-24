@@ -40,7 +40,7 @@ if (!defined('XOBJ_DTYPE_FORM_SECTION_CLOSE')) define('XOBJ_DTYPE_FORM_SECTION_C
  * @author marcan <marcan@smartfactory.ca>
  * @todo Properly identify and declare the visibility of vars and functions
  */
-class Object extends \Icms\Core\Object {
+class BaseObject extends \Icms\Core\BaseObject {
 	public $_image_path;
 	public $_image_url;
 	public $seoEnabled = false;
@@ -137,7 +137,7 @@ class Object extends \Icms\Core\Object {
 		}
 
 		/**
-		 * this section from \Icms\Core\Object::initVar
+		 * this section from \Icms\Core\BaseObject::initVar
 		 *
 		 * @copyright (c) 2000-2003 The Xoops Project - www.xoops.org
 		 */

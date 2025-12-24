@@ -55,7 +55,7 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author		Gustavo Pilla (aka nekro) <nekro@impresscms.org>
  */
 
-class Object extends \Icms\Ipf\Object {
+class BaseObject extends \Icms\Ipf\BaseObject {
 
 	/**
 	 * Constructor for the block object

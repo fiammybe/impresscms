@@ -86,7 +86,7 @@ define('XOBJ_DTYPE_FORM_SECTION_CLOSE', 211);
  *            You should have received a copy of XOOPS_copyrights.txt with
  *            this file. If not, you may obtain a copy from xoops.org
  */
-class Object {
+class BaseObject {
 
 	/**
 	 * holds all variables(properties) of an object

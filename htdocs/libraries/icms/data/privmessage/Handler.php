@@ -67,7 +67,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @return 	object {@link icms_data_privmessage_Object}
 	 **/
 	public function &create($isNew = true) {
-		$pm = new \Icms\Data\Privmessage\Object();
+		$pm = new \Icms\Data\Privmessage\BaseObject();
 		if ($isNew) {
 			$pm->setNew();
 		}
@@ -89,7 +89,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$pm = new \Icms\Data\Privmessage\Object();
+				$pm = new \Icms\Data\Privmessage\BaseObject();
 				$pm->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -191,7 +191,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$pm = new \Icms\Data\Privmessage\Object();
+			$pm = new \Icms\Data\Privmessage\BaseObject();
 			$pm->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $pm;

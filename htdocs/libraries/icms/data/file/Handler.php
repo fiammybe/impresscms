@@ -33,7 +33,7 @@ class Handler extends \Icms\Ipf\Handler {
 	 *
 	 * Event automatically triggered by IcmsPersistable Framework after the object is deleted
 	 *
-	 * @param \Icms\Data\File\Object $obj object
+	 * @param \Icms\Data\File\BaseObject $obj object
 	 * @return bool TRUE
 	 */
 	protected function afterDelete(&$obj) {

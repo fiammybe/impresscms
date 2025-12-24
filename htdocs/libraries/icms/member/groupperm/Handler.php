@@ -53,7 +53,7 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @category	ICMS
  * @package		Member
  * @subpackage	GroupPermission
- * @see \Icms\Member\Groupperm\Object
+ * @see \Icms\Member\Groupperm\BaseObject
  * @author		Kazumi Ono  <onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
@@ -67,7 +67,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @return	bool    $isNew  Flag the object as "new"?
 	 */
 	public function &create($isNew = true) {
-		$perm = new \Icms\Member\Groupperm\Object();
+		$perm = new \Icms\Member\Groupperm\BaseObject();
 		if ($isNew) {
 			$perm->setNew();
 		}
@@ -91,7 +91,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = icms::$xoopsDB->getRowsNum($result);
 			if ($numrows == 1) {
-				$perm = new \Icms\Member\Groupperm\Object();
+				$perm = new \Icms\Member\Groupperm\BaseObject();
 				$perm->assignVars(icms::$xoopsDB->fetchArray($result));
 			}
 		}
@@ -197,7 +197,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = icms::$xoopsDB->fetchArray($result)) {
-			$perm = new \Icms\Member\Groupperm\Object();
+			$perm = new \Icms\Member\Groupperm\BaseObject();
 			$perm->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $perm;

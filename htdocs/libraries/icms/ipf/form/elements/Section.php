@@ -35,7 +35,7 @@ class Section extends icms_form_Element {
 	/**
 	 * Constructor
 	 *
-	 * @param \Icms\Ipf\Object	$object	reference to targetobject (@link icms_ipf_Object)
+	 * @param \Icms\Ipf\BaseObject	$object	reference to targetobject (@link icms_ipf_Object)
 	 * @param	string			$key	name of the form section
 	 */
 	public function __construct($object, $key) {

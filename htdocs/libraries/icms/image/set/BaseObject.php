@@ -23,49 +23,52 @@
 //  along with this program; if not, write to the Free Software              //
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 //  ------------------------------------------------------------------------ //
-
+// Author: Kazumi Ono (AKA onokazu)                                          //
+// URL: http://www.myweb.ne.jp/, http://www.xoops.org/, http://jp.xoops.org/ //
+// Project: The XOOPS Project                                                //
+// ------------------------------------------------------------------------- //
 /**
- * Manage configuration categories
- *
- * @copyright	Copyright (c) 2000 XOOPS.org
- * @copyright	http://www.impresscms.org/ The ImpressCMS Project
- * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
- *
- * @category	ICMS
- * @package		Config
- * @subpackage	Category
- * @author		Kazumi Ono (aka onokazo)
- * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
- */
+* Manage of imagesets baseclass
+* Image sets - the image directory within a module - are part of templates
+*
+* @copyright	http://www.xoops.org/ The XOOPS Project
+* @copyright	http://www.impresscms.org/ The ImpressCMS Project
+* @license	    LICENSE.txt
+* @category	    ICMS
+* @package		Image
+* @subpackage	Set
+* @since	    XOOPS
+* @author	    http://www.xoops.org The XOOPS Project
+* @author	    modified by UnderDog <underdog@impresscms.org>
+* @version	    $Id: imageset.php 19775 2010-07-11 18:54:25Z malanciault $
+*/
 
 
-namespace Icms\Config\Category;
+namespace Icms\Image\Set;
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
- * A category of configs
+ * An imageset
  *
- * @author		Kazumi Ono	<onokazu@xoops.org>
+ * These sets are managed through a {@link icms_image_set_Handler} object
+ *
+ * @package     kernel
+ *
+ * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
- * 				You should have received a copy of XOOPS_copyrights.txt with
- * 				this file. If not, you may obtain a copy from xoops.org
- *
- * @category	ICMS
- * @package     Config
- * @subpackage	Category
  */
 
-class Object extends \Icms\Core\Object {
-	/**
-	 * Constructor
-	 *
-	 */
-	public function __construct() {
-		parent::__construct();
-		$this->initVar('confcat_id', XOBJ_DTYPE_INT, null);
-		$this->initVar('confcat_name', XOBJ_DTYPE_OTHER, null);
-		$this->initVar('confcat_order', XOBJ_DTYPE_INT, 0);
-	}
+class BaseObject extends XoopsObject
+{
+    /**
+     * Constructor
+     *
+     */
+  	function __construct() {
+  		$this->XoopsObject();
+  		$this->initVar('imgset_id', XOBJ_DTYPE_INT, null, false);
+  		$this->initVar('imgset_name', XOBJ_DTYPE_TXTBOX, null, true, 50);
+  		$this->initVar('imgset_refid', XOBJ_DTYPE_INT, 0, false);
+  	}
 }
-

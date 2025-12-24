@@ -63,7 +63,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @return  object
 	 **/
 	public function &create($isNew = true) {
-		$image = new \Icms\Image\Object();
+		$image = new \Icms\Image\BaseObject();
 		if ($isNew) {
 			$image->setNew();
 		}
@@ -90,7 +90,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$image = new \Icms\Image\Object();
+				$image = new \Icms\Image\BaseObject();
 				$image->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -217,7 +217,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @param bool|string $sql  Extra sql (unused; only used for compatibility function signature)
 	 * @param bool $debug Debug mode?
 	 *
-	 * @return \Icms\Image\Object[]
+	 * @return \Icms\Image\BaseObject[]
 	 */
 	public function getObjects($criteria = null, $id_as_key = false, $getbinary = false, $sql = false, $debug = false) {
 		$ret = array();
@@ -244,7 +244,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$image = new \Icms\Image\Object();
+			$image = new \Icms\Image\BaseObject();
 			$image->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] = &$image;

@@ -28,39 +28,42 @@
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
 /**
- * Manage groups
+ * Manage template sets
  *
  * @copyright	http://www.impresscms.org/ The ImpressCMS Project
  * @license		LICENSE.txt
  * @category	ICMS
- * @package		Member
- * @subpackage	Group
+ * @package		View
+ * @subpackage	Template
  * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
-namespace Icms\Member\Group;
+
+namespace Icms\View\Template\Set;
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
-
 /**
- * a group of users
+ * Base class for all template sets
  *
- * @author		Kazumi Ono <onokazu@xoops.org>
+ * @author		Kazumi Ono (AKA onokazu)
  * @copyright	Copyright (c) 2000 XOOPS.org
  * @category	ICMS
- * @package		Member
- * @subpackage	Group
- */
+ * @package		View
+ * @subpackage	Template
+ **/
 
-class Object extends \Icms\Core\Object {
+class BaseObject extends \Icms\Core\BaseObject {
+
 	/**
 	 * constructor
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->initVar('groupid', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('name', XOBJ_DTYPE_TXTBOX, null, true, 100);
-		$this->initVar('description', XOBJ_DTYPE_TXTAREA, null, false);
-		$this->initVar('group_type', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('tplset_id', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('tplset_name', XOBJ_DTYPE_OTHER, null, false);
+		$this->initVar('tplset_desc', XOBJ_DTYPE_TXTBOX, null, false, 255);
+		$this->initVar('tplset_credits', XOBJ_DTYPE_TXTAREA, null, false);
+		$this->initVar('tplset_created', XOBJ_DTYPE_INT, 0, false);
 	}
 }
+

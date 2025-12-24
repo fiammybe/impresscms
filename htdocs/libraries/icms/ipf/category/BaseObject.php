@@ -31,12 +31,12 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @since 		1.1
  */
 
-class Object extends \Icms\Ipf\Seo\Object {
+class BaseObject extends \Icms\Ipf\Seo\BaseObject {
 	/** Path that corresponds to the category */
 	private $_categoryPath;
 	/**
 	 * Constructor for icms_ipf_category_Object
-	 * @return \Icms\Ipf\Category\Object
+	 * @return \Icms\Ipf\Category\BaseObject
 	 */
 	public function __construct() {
 		$this->initVar('categoryid', XOBJ_DTYPE_INT, '', true);
@@ -75,7 +75,7 @@ class Object extends \Icms\Ipf\Seo\Object {
 	}
 	/**
 	 * Returns the description for the category
-	 * @see \Icms\Ipf\Object::getValueFor()
+	 * @see \Icms\Ipf\BaseObject::getValueFor()
 	 * @return 	string	Text to display as the description
 	 */
 	public function description() {

@@ -64,7 +64,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @see \Icms\Core\ObjectHandler#create()
 	 */
 	public function &create($isNew = true) 	{
-		$mship = new \Icms\Member\Group\Membership\Object();
+		$mship = new \Icms\Member\Group\Membership\BaseObject();
 		if ($isNew) {
 			$mship->setNew();
 		}
@@ -89,7 +89,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = icms::$xoopsDB->getRowsNum($result);
 			if ($numrows == 1) {
-				$mship = new \Icms\Member\Group\Membership\Object();
+				$mship = new \Icms\Member\Group\Membership\BaseObject();
 				$mship->assignVars(icms::$xoopsDB->fetchArray($result));
 			}
 		}
@@ -190,7 +190,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = icms::$xoopsDB->fetchArray($result)) {
-			$mship = new \Icms\Member\Group\Membership\Object();
+			$mship = new \Icms\Member\Group\Membership\BaseObject();
 			$mship->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $mship;

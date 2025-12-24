@@ -79,7 +79,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @return  object      {@link icms_module_Object}
 	 */
 	public function &create($isNew = TRUE) {
-		$module = new \Icms\Module\Object();
+		$module = new \Icms\Module\BaseObject();
 		if ($isNew) $module->setNew();
 		return $module;
 	}
@@ -105,7 +105,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 				if (!$result = $this->db->query($sql)) return $module;
 				$numrows = $this->db->getRowsNum($result);
 				if ($numrows == 1) {
-					$module = new \Icms\Module\Object();
+					$module = new \Icms\Module\BaseObject();
 					$myrow = $this->db->fetchArray($result);
 					$module->assignVars($myrow);
 					// load module config
@@ -139,7 +139,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			if (!$result = $this->db->query($sql)) return $module;
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$module = new \Icms\Module\Object();
+				$module = new \Icms\Module\BaseObject();
 				$myrow = $this->db->fetchArray($result);
 				$module->assignVars($myrow);
 				// load module config
@@ -155,7 +155,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * load config for a module before caching it
 	 *
-	 * @param \Icms\Module\Object	$module
+	 * @param \Icms\Module\BaseObject	$module
 	 * @return	bool				TRUE
 	 */
 	private function loadConfig($module) {
@@ -326,7 +326,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 		$result = $this->db->query($sql, $limit, $start);
 		if (!$result) return $ret;
 		while ($myrow = $this->db->fetchArray($result)) {
-			$module = new \Icms\Module\Object();
+			$module = new \Icms\Module\BaseObject();
 			$module->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] = $module;
@@ -464,7 +464,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	}
 	/**
 	 * Checks if the current user can access the specified module
-	 * @param \Icms\Module\Object $module
+	 * @param \Icms\Module\BaseObject $module
 	 * @param bool $inAdmin
 	 * @return bool
 	 */

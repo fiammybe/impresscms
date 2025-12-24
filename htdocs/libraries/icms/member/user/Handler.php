@@ -38,6 +38,9 @@
  * @version		SVN: $Id: Handler.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
+
+namespace Icms\Member\User;
+
 defined('ICMS_ROOT_PATH') or exit();
 
 /**
@@ -51,8 +54,6 @@ defined('ICMS_ROOT_PATH') or exit();
  * @package		Member
  * @subpackage	User
  */
-
-namespace Icms\Member\User;
 
 class Handler extends \Icms\Core\ObjectHandler {
 	/**
@@ -73,7 +74,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	}
 
 	public function &create($isNew = TRUE) {
-		$user = new \Icms\Member\User\Object();
+		$user = new \Icms\Member\User\BaseObject();
 		if ($isNew) {
 			$user->setNew();
 		}
@@ -94,7 +95,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			if (!$result = $this->db->query($sql)) {return $user;}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$user = new \Icms\Member\User\Object();
+				$user = new \Icms\Member\User\BaseObject();
 				$user->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -246,7 +247,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 		$result = $this->db->query($sql, $limit, $start);
 		if (!$result) {return $ret;}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$user = new \Icms\Member\User\Object();
+			$user = new \Icms\Member\User\BaseObject();
 			$user->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $user;

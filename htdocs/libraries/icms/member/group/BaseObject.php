@@ -28,46 +28,39 @@
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
 /**
- * Private messages
+ * Manage groups
  *
- * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
  * @copyright	http://www.impresscms.org/ The ImpressCMS Project
- *
+ * @license		LICENSE.txt
  * @category	ICMS
- * @package		Privmessage
- * @version		SVN: $Id:Object.php 19775 2010-07-11 18:54:25Z malanciault $
+ * @package		Member
+ * @subpackage	Group
+ * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
-
-namespace Icms\Data\Privmessage;
+namespace Icms\Member\Group;
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
- * A handler for Private Messages
+ * a group of users
  *
- * @author		Kazumi Ono	<onokazu@xoops.org>
- * @copyright	copyright (c) 2000-2007 XOOPS.org
- *
+ * @author		Kazumi Ono <onokazu@xoops.org>
+ * @copyright	Copyright (c) 2000 XOOPS.org
  * @category	ICMS
- * @package		Privmessage
+ * @package		Member
+ * @subpackage	Group
  */
 
-class Object extends \Icms\Core\Object {
-
+class BaseObject extends \Icms\Core\BaseObject {
 	/**
 	 * constructor
-	 **/
+	 */
 	public function __construct() {
 		parent::__construct();
-		$this->initVar('msg_id', XOBJ_DTYPE_INT, null, false);
-		$this->initVar('msg_image', XOBJ_DTYPE_OTHER, 'icon1.gif', false, 100);
-		$this->initVar('subject', XOBJ_DTYPE_TXTBOX, null, true, 255);
-		$this->initVar('from_userid', XOBJ_DTYPE_INT, null, true);
-		$this->initVar('to_userid', XOBJ_DTYPE_INT, null, true);
-		$this->initVar('msg_time', XOBJ_DTYPE_OTHER, null, false);
-		$this->initVar('msg_text', XOBJ_DTYPE_TXTAREA, null, true);
-		$this->initVar('read_msg', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('groupid', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('name', XOBJ_DTYPE_TXTBOX, null, true, 100);
+		$this->initVar('description', XOBJ_DTYPE_TXTAREA, null, false);
+		$this->initVar('group_type', XOBJ_DTYPE_OTHER, null, false);
 	}
 }
-

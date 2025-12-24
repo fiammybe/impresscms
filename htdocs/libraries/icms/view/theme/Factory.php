@@ -99,7 +99,7 @@ class Factory
             (is_dir(ICMS_MODULES_PATH . '/system/themes/' . $options['folderName']))
                 ? ICMS_MODULES_PATH . '/system/themes/' . $options['folderName']
                 : ICMS_THEME_PATH . '/' . $options['folderName'];
-        $inst = new \Icms\View\Theme\Object();
+        $inst = new \Icms\View\Theme\BaseObject();
         foreach ($options as $k => $v) {
             $inst->$k = $v;
         }

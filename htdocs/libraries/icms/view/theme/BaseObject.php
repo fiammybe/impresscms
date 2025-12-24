@@ -48,7 +48,7 @@
 
 namespace Icms\View\Theme;
 
-class Object {
+class BaseObject {
 	/**
 	 * The name of this theme
 	 * @public string

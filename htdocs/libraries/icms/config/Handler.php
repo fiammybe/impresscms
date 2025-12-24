@@ -126,7 +126,7 @@ class Handler {
 	/**
 	 * Create a config
 	 *
-	 * @see \Icms\Config\Item\Object
+	 * @see \Icms\Config\Item\BaseObject
 	 * @return	object  reference to the new {@link icms_config_Item_Object}
 	 */
 	public function &createConfig() {

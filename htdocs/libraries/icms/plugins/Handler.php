@@ -36,7 +36,7 @@ class Handler {
 			$function = 'icms_plugin_' . $dirname;
 			if (function_exists($function)) {
 				$array = $function();
-				$ret = new \Icms\Plugins\Object($array);
+				$ret = new \Icms\Plugins\BaseObject($array);
 				return $ret;
 			}
 		}

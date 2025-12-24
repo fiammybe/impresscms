@@ -31,7 +31,7 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author		marcan <marcan@impresscms.org>
  */
 
-class Object extends \Icms\Ipf\Object {
+class BaseObject extends \Icms\Ipf\BaseObject {
 
     public function __construct(&$handler) {
 		parent::__construct($handler);

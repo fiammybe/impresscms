@@ -39,6 +39,9 @@
  * @version		SVN: $Id:Handler.php 19775 2010-07-11 18:54:25Z malanciault $
  */
 
+
+namespace Icms\Member\Group;
+
 if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
 
 /**
@@ -52,8 +55,6 @@ if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
  * @subpackage	Group
  */
 
-namespace Icms\Member\Group;
-
 class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
@@ -64,7 +65,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	 * @see \Icms\Core\ObjectHandler#create()
 	 */
 	public function &create($isNew = true) {
-		$group = new \Icms\Member\Group\Object();
+		$group = new \Icms\Member\Group\BaseObject();
 		if ($isNew) {
 			$group->setNew();
 		}
@@ -88,7 +89,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = icms::$xoopsDB->getRowsNum($result);
 			if ($numrows == 1) {
-				$group = new \Icms\Member\Group\Object();
+				$group = new \Icms\Member\Group\BaseObject();
 				$group->assignVars(icms::$xoopsDB->fetchArray($result));
 			}
 		}
@@ -190,7 +191,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = icms::$xoopsDB->fetchArray($result)) {
-			$group = new \Icms\Member\Group\Object();
+			$group = new \Icms\Member\Group\BaseObject();
 			$group->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $group;

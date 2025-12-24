@@ -47,9 +47,9 @@ if (!class_exists('icms_config_Item_Handler', false) && !interface_exists('icms_
     }
 }
 
-// icms_config_Item_Object => Icms\Config\Item\Object
+// icms_config_Item_Object => Icms\Config\Item\BaseObject
 if (!class_exists('icms_config_Item_Object', false) && !interface_exists('icms_config_Item_Object', false) && !trait_exists('icms_config_Item_Object', false)) {
-    class_alias('Icms\Config\Item\Object', 'icms_config_Item_Object');
+    class_alias('Icms\Config\Item\BaseObject', 'icms_config_Item_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -65,9 +65,9 @@ if (!class_exists('icms_config_category_Handler', false) && !interface_exists('i
     }
 }
 
-// icms_config_category_Object => Icms\Config\Category\Object
+// icms_config_category_Object => Icms\Config\Category\BaseObject
 if (!class_exists('icms_config_category_Object', false) && !interface_exists('icms_config_category_Object', false) && !trait_exists('icms_config_category_Object', false)) {
-    class_alias('Icms\Config\Category\Object', 'icms_config_category_Object');
+    class_alias('Icms\Config\Category\BaseObject', 'icms_config_category_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -83,9 +83,9 @@ if (!class_exists('icms_config_option_Handler', false) && !interface_exists('icm
     }
 }
 
-// icms_config_option_Object => Icms\Config\Option\Object
+// icms_config_option_Object => Icms\Config\Option\BaseObject
 if (!class_exists('icms_config_option_Object', false) && !interface_exists('icms_config_option_Object', false) && !trait_exists('icms_config_option_Object', false)) {
-    class_alias('Icms\Config\Option\Object', 'icms_config_option_Object');
+    class_alias('Icms\Config\Option\BaseObject', 'icms_config_option_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -146,9 +146,9 @@ if (!class_exists('icms_core_Message', false) && !interface_exists('icms_core_Me
     }
 }
 
-// icms_core_Object => Icms\Core\Object
+// icms_core_Object => Icms\Core\BaseObject
 if (!class_exists('icms_core_Object', false) && !interface_exists('icms_core_Object', false) && !trait_exists('icms_core_Object', false)) {
-    class_alias('Icms\Core\Object', 'icms_core_Object');
+    class_alias('Icms\Core\BaseObject', 'icms_core_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -263,9 +263,9 @@ if (!class_exists('icms_image_Handler', false) && !interface_exists('icms_image_
     }
 }
 
-// icms_image_Object => Icms\Image\Object
+// icms_image_Object => Icms\Image\BaseObject
 if (!class_exists('icms_image_Object', false) && !interface_exists('icms_image_Object', false) && !trait_exists('icms_image_Object', false)) {
-    class_alias('Icms\Image\Object', 'icms_image_Object');
+    class_alias('Icms\Image\BaseObject', 'icms_image_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -281,9 +281,9 @@ if (!class_exists('icms_image_category_Handler', false) && !interface_exists('ic
     }
 }
 
-// icms_image_category_Object => Icms\Image\Category\Object
+// icms_image_category_Object => Icms\Image\Category\BaseObject
 if (!class_exists('icms_image_category_Object', false) && !interface_exists('icms_image_category_Object', false) && !trait_exists('icms_image_category_Object', false)) {
-    class_alias('Icms\Image\Category\Object', 'icms_image_category_Object');
+    class_alias('Icms\Image\Category\BaseObject', 'icms_image_category_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -299,9 +299,9 @@ if (!class_exists('icms_image_set_Handler', false) && !interface_exists('icms_im
     }
 }
 
-// icms_image_set_Object => Icms\Image\Set\Object
+// icms_image_set_Object => Icms\Image\Set\BaseObject
 if (!class_exists('icms_image_set_Object', false) && !interface_exists('icms_image_set_Object', false) && !trait_exists('icms_image_set_Object', false)) {
-    class_alias('Icms\Image\Set\Object', 'icms_image_set_Object');
+    class_alias('Icms\Image\Set\BaseObject', 'icms_image_set_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -353,9 +353,9 @@ if (!class_exists('icms_ipf_Metagen', false) && !interface_exists('icms_ipf_Meta
     }
 }
 
-// icms_ipf_Object => Icms\Ipf\Object
+// icms_ipf_Object => Icms\Ipf\BaseObject
 if (!class_exists('icms_ipf_Object', false) && !interface_exists('icms_ipf_Object', false) && !trait_exists('icms_ipf_Object', false)) {
-    class_alias('Icms\Ipf\Object', 'icms_ipf_Object');
+    class_alias('Icms\Ipf\BaseObject', 'icms_ipf_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -380,9 +380,9 @@ if (!class_exists('icms_ipf_category_Handler', false) && !interface_exists('icms
     }
 }
 
-// icms_ipf_category_Object => Icms\Ipf\Category\Object
+// icms_ipf_category_Object => Icms\Ipf\Category\BaseObject
 if (!class_exists('icms_ipf_category_Object', false) && !interface_exists('icms_ipf_category_Object', false) && !trait_exists('icms_ipf_category_Object', false)) {
-    class_alias('Icms\Ipf\Category\Object', 'icms_ipf_category_Object');
+    class_alias('Icms\Ipf\Category\BaseObject', 'icms_ipf_category_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -686,9 +686,9 @@ if (!class_exists('icms_ipf_registry_Handler', false) && !interface_exists('icms
     }
 }
 
-// icms_ipf_seo_Object => Icms\Ipf\Seo\Object
+// icms_ipf_seo_Object => Icms\Ipf\Seo\BaseObject
 if (!class_exists('icms_ipf_seo_Object', false) && !interface_exists('icms_ipf_seo_Object', false) && !trait_exists('icms_ipf_seo_Object', false)) {
-    class_alias('Icms\Ipf\Seo\Object', 'icms_ipf_seo_Object');
+    class_alias('Icms\Ipf\Seo\BaseObject', 'icms_ipf_seo_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -758,9 +758,9 @@ if (!class_exists('icms_member_group_Handler', false) && !interface_exists('icms
     }
 }
 
-// icms_member_group_Object => Icms\Member\Group\Object
+// icms_member_group_Object => Icms\Member\Group\BaseObject
 if (!class_exists('icms_member_group_Object', false) && !interface_exists('icms_member_group_Object', false) && !trait_exists('icms_member_group_Object', false)) {
-    class_alias('Icms\Member\Group\Object', 'icms_member_group_Object');
+    class_alias('Icms\Member\Group\BaseObject', 'icms_member_group_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -776,9 +776,9 @@ if (!class_exists('icms_member_group_membership_Handler', false) && !interface_e
     }
 }
 
-// icms_member_group_membership_Object => Icms\Member\Group\Membership\Object
+// icms_member_group_membership_Object => Icms\Member\Group\Membership\BaseObject
 if (!class_exists('icms_member_group_membership_Object', false) && !interface_exists('icms_member_group_membership_Object', false) && !trait_exists('icms_member_group_membership_Object', false)) {
-    class_alias('Icms\Member\Group\Membership\Object', 'icms_member_group_membership_Object');
+    class_alias('Icms\Member\Group\Membership\BaseObject', 'icms_member_group_membership_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -794,9 +794,9 @@ if (!class_exists('icms_member_groupperm_Handler', false) && !interface_exists('
     }
 }
 
-// icms_member_groupperm_Object => Icms\Member\Groupperm\Object
+// icms_member_groupperm_Object => Icms\Member\Groupperm\BaseObject
 if (!class_exists('icms_member_groupperm_Object', false) && !interface_exists('icms_member_groupperm_Object', false) && !trait_exists('icms_member_groupperm_Object', false)) {
-    class_alias('Icms\Member\Groupperm\Object', 'icms_member_groupperm_Object');
+    class_alias('Icms\Member\Groupperm\BaseObject', 'icms_member_groupperm_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -812,9 +812,9 @@ if (!class_exists('icms_member_user_Handler', false) && !interface_exists('icms_
     }
 }
 
-// icms_member_user_Object => Icms\Member\User\Object
+// icms_member_user_Object => Icms\Member\User\BaseObject
 if (!class_exists('icms_member_user_Object', false) && !interface_exists('icms_member_user_Object', false) && !trait_exists('icms_member_user_Object', false)) {
-    class_alias('Icms\Member\User\Object', 'icms_member_user_Object');
+    class_alias('Icms\Member\User\BaseObject', 'icms_member_user_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -839,9 +839,9 @@ if (!class_exists('icms_plugins_Handler', false) && !interface_exists('icms_plug
     }
 }
 
-// icms_plugins_Object => Icms\Plugins\Object
+// icms_plugins_Object => Icms\Plugins\BaseObject
 if (!class_exists('icms_plugins_Object', false) && !interface_exists('icms_plugins_Object', false) && !trait_exists('icms_plugins_Object', false)) {
-    class_alias('Icms\Plugins\Object', 'icms_plugins_Object');
+    class_alias('Icms\Plugins\BaseObject', 'icms_plugins_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -938,9 +938,9 @@ if (!class_exists('icms_view_block_Handler', false) && !interface_exists('icms_v
     }
 }
 
-// icms_view_block_Object => Icms\View\Block\Object
+// icms_view_block_Object => Icms\View\Block\BaseObject
 if (!class_exists('icms_view_block_Object', false) && !interface_exists('icms_view_block_Object', false) && !trait_exists('icms_view_block_Object', false)) {
-    class_alias('Icms\View\Block\Object', 'icms_view_block_Object');
+    class_alias('Icms\View\Block\BaseObject', 'icms_view_block_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -956,9 +956,9 @@ if (!class_exists('icms_view_block_position_Handler', false) && !interface_exist
     }
 }
 
-// icms_view_block_position_Object => Icms\View\Block\Position\Object
+// icms_view_block_position_Object => Icms\View\Block\Position\BaseObject
 if (!class_exists('icms_view_block_position_Object', false) && !interface_exists('icms_view_block_position_Object', false) && !trait_exists('icms_view_block_position_Object', false)) {
-    class_alias('Icms\View\Block\Position\Object', 'icms_view_block_position_Object');
+    class_alias('Icms\View\Block\Position\BaseObject', 'icms_view_block_position_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -974,9 +974,9 @@ if (!class_exists('icms_view_template_file_Handler', false) && !interface_exists
     }
 }
 
-// icms_view_template_file_Object => Icms\View\Template\File\Object
+// icms_view_template_file_Object => Icms\View\Template\File\BaseObject
 if (!class_exists('icms_view_template_file_Object', false) && !interface_exists('icms_view_template_file_Object', false) && !trait_exists('icms_view_template_file_Object', false)) {
-    class_alias('Icms\View\Template\File\Object', 'icms_view_template_file_Object');
+    class_alias('Icms\View\Template\File\BaseObject', 'icms_view_template_file_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -992,9 +992,9 @@ if (!class_exists('icms_view_template_set_Handler', false) && !interface_exists(
     }
 }
 
-// icms_view_template_set_Object => Icms\View\Template\Set\Object
+// icms_view_template_set_Object => Icms\View\Template\Set\BaseObject
 if (!class_exists('icms_view_template_set_Object', false) && !interface_exists('icms_view_template_set_Object', false) && !trait_exists('icms_view_template_set_Object', false)) {
-    class_alias('Icms\View\Template\Set\Object', 'icms_view_template_set_Object');
+    class_alias('Icms\View\Template\Set\BaseObject', 'icms_view_template_set_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used
@@ -1010,9 +1010,9 @@ if (!class_exists('icms_view_theme_Factory', false) && !interface_exists('icms_v
     }
 }
 
-// icms_view_theme_Object => Icms\View\Theme\Object
+// icms_view_theme_Object => Icms\View\Theme\BaseObject
 if (!class_exists('icms_view_theme_Object', false) && !interface_exists('icms_view_theme_Object', false) && !trait_exists('icms_view_theme_Object', false)) {
-    class_alias('Icms\View\Theme\Object', 'icms_view_theme_Object');
+    class_alias('Icms\View\Theme\BaseObject', 'icms_view_theme_Object');
     // Mark as deprecated
     if (class_exists('icms_core_Debug', false)) {
         // Deprecation will be triggered when legacy class is used

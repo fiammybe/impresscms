@@ -42,6 +42,9 @@
 /**
  * This file cannot be requested directly
  */
+
+namespace Icms\View;
+
 defined('ICMS_ROOT_PATH') or exit();
 
 /**
@@ -54,8 +57,6 @@ defined('ICMS_ROOT_PATH') or exit();
  * @copyright	Copyright (c) 2000 XOOPS.org
  * @author      Gustavo Pilla (aka nekro) <nekro@impresscms.org>
  */
-
-namespace Icms\View;
 
 class PageBuilder {
 

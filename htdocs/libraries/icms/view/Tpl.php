@@ -38,10 +38,11 @@
  * @author		modified by UnderDog <underdog@impresscms.org>
  * @version		SVN: $Id: Tpl.php 12313 2013-09-15 21:14:35Z skenow $
  */
-if (!defined('SMARTY_DIR')) {
-	exit();
 
 namespace Icms\View;
+
+if (!defined('SMARTY_DIR')) {
+	exit();
 
 }
 /**

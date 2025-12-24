@@ -491,7 +491,7 @@ class Handler {
 		}
 		while ($myrow = icms::$xoopsDB->fetchArray($result)) {
 			if ($asobject) {
-				$user = new \Icms\Member\User\Object();
+				$user = new \Icms\Member\User\BaseObject();
 				$user->assignVars($myrow);
 				if (! $id_as_key) {
 					$ret[] =& $user;

@@ -38,6 +38,9 @@
  */
 
 
+
+namespace Icms\Config\Item;
+
 if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
 
 /**
@@ -53,9 +56,7 @@ if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
  * 				this file. If not, you may obtain a copy from xoops.org
  */
 
-namespace Icms\Config\Item;
-
-class Object extends \Icms\Core\Object {
+class BaseObject extends \Icms\Core\BaseObject {
 	/**
 	 * Config options
 	 *

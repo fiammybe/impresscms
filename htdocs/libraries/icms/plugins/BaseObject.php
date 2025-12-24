@@ -19,7 +19,7 @@
 
 namespace Icms\Plugins;
 
-class Object {
+class BaseObject {
 
 	public $_infoArray;
 

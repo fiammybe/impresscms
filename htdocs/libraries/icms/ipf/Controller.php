@@ -495,7 +495,7 @@ class Controller {
 	/**
 	 * This method returns a view link of the Object
 	 *
-	 * @param \Icms\Ipf\Object $icmsObj
+	 * @param \Icms\Ipf\BaseObject $icmsObj
 	 * @param boolean $onlyUrl
 	 * @param boolean $withimage
 	 * @param boolean $userSide

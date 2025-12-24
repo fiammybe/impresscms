@@ -23,8 +23,9 @@
 //  along with this program; if not, write to the Free Software              //
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 //  ------------------------------------------------------------------------ //
+
 /**
- * Manage configuration options
+ * Manage configuration categories
  *
  * @copyright	Copyright (c) 2000 XOOPS.org
  * @copyright	http://www.impresscms.org/ The ImpressCMS Project
@@ -32,15 +33,18 @@
  *
  * @category	ICMS
  * @package		Config
- * @subpackage	Option
+ * @subpackage	Category
  * @author		Kazumi Ono (aka onokazo)
  * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
-if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
+
+namespace Icms\Config\Category;
+
+defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
- * A Config-Option
+ * A category of configs
  *
  * @author		Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
@@ -49,21 +53,19 @@ if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
  *
  * @category	ICMS
  * @package     Config
- * @subpackage	Option
+ * @subpackage	Category
  */
 
-namespace Icms\Config\Option;
-
-class Object extends \Icms\Core\Object {
+class BaseObject extends \Icms\Core\BaseObject {
 	/**
 	 * Constructor
+	 *
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->initVar('confop_id', XOBJ_DTYPE_INT, null);
-		$this->initVar('confop_name', XOBJ_DTYPE_TXTBOX, null, true, 255);
-		$this->initVar('confop_value', XOBJ_DTYPE_TXTBOX, null, true, 255);
-		$this->initVar('conf_id', XOBJ_DTYPE_INT, 0);
+		$this->initVar('confcat_id', XOBJ_DTYPE_INT, null);
+		$this->initVar('confcat_name', XOBJ_DTYPE_OTHER, null);
+		$this->initVar('confcat_order', XOBJ_DTYPE_INT, 0);
 	}
 }
 

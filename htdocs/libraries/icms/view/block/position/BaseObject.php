@@ -23,7 +23,7 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @subpackage	Block
  */
 
-class Object extends \Icms\Ipf\Object {
+class BaseObject extends \Icms\Ipf\BaseObject {
 
 	/**
 	 * Constructor

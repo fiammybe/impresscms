@@ -61,12 +61,12 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * create a new templateset instance
 	 *
-	 * @see \Icms\View\Template\Set\Object
+	 * @see \Icms\View\Template\Set\BaseObject
 	 * @param bool $isNew is the new tempateset new??
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
 	public function &create($isNew = true) {
-		$tplset = new \Icms\View\Template\Set\Object();
+		$tplset = new \Icms\View\Template\Set\BaseObject();
 		if ($isNew) {
 			$tplset->setNew();
 		}
@@ -76,7 +76,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * Gets templateset from database by ID
 	 *
-	 * @see \Icms\View\Template\Set\Object
+	 * @see \Icms\View\Template\Set\BaseObject
 	 * @param int $id of the tempateset to get
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
@@ -91,7 +91,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$tplset = new \Icms\View\Template\Set\Object();
+				$tplset = new \Icms\View\Template\Set\BaseObject();
 				$tplset->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -101,7 +101,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * Gets templateset from database by Name
 	 *
-	 * @see \Icms\View\Template\Set\Object
+	 * @see \Icms\View\Template\Set\BaseObject
 	 * @param string $tplset_name of the tempateset to get
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
@@ -116,7 +116,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$tplset = new \Icms\View\Template\Set\Object();
+				$tplset = new \Icms\View\Template\Set\BaseObject();
 				$tplset->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -126,7 +126,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * Inserts templateset into the database
 	 *
-	 * @see \Icms\View\Template\Set\Object
+	 * @see \Icms\View\Template\Set\BaseObject
 	 * @param string $tplset_name of the tempateset to get
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
@@ -185,7 +185,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * Deletes templateset from the database
 	 *
-	 * @see \Icms\View\Template\Set\Object
+	 * @see \Icms\View\Template\Set\BaseObject
 	 * @param object $tplset {@link icms_view_template_set_Object} reference to the object of the tempateset to delete
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
@@ -232,7 +232,7 @@ class Handler extends \Icms\Core\ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$tplset = new \Icms\View\Template\Set\Object();
+			$tplset = new \Icms\View\Template\Set\BaseObject();
 			$tplset->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $tplset;

@@ -28,47 +28,45 @@
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
 /**
-* Manage of imagesets baseclass
-* Image sets - the image directory within a module - are part of templates
-*
-* @copyright	http://www.xoops.org/ The XOOPS Project
-* @copyright	http://www.impresscms.org/ The ImpressCMS Project
-* @license	    LICENSE.txt
-* @category	    ICMS
-* @package		Image
-* @subpackage	Set
-* @since	    XOOPS
-* @author	    http://www.xoops.org The XOOPS Project
-* @author	    modified by UnderDog <underdog@impresscms.org>
-* @version	    $Id: imageset.php 19775 2010-07-11 18:54:25Z malanciault $
-*/
+ * Manage groups and memberships
+ *
+ * @copyright	The ImpressCMS Project <http://www.impresscms.org/>
+ * @license		LICENSE.txt
+ *
+ * @author		Gustavo Alejandro Pilla (aka nekro) <nekro@impresscms.org> <gpilla@nube.com.ar>
+ * @category	ICMS
+ * @package		Member
+ * @subpackage	Groupperm
+ * @version		SVN: $Id: Object.php 12313 2013-09-15 21:14:35Z skenow $
+ */
 
-
-namespace Icms\Image\Set;
+namespace Icms\Member\Groupperm;
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 /**
- * An imageset
+ * A group permission
  *
- * These sets are managed through a {@link icms_image_set_Handler} object
- *
- * @package     kernel
- *
+ * These permissions are managed through a {@link icms_member_groupperm_Handler} object
+ * @category	ICMS
+ * @package     Member
+ * @subpackage	GroupPermission
  * @author	    Kazumi Ono	<onokazu@xoops.org>
- * @copyright	copyright (c) 2000-2003 XOOPS.org
+ * @copyright	Copyright (c) 2000 XOOPS.org
  */
 
-class Object extends XoopsObject
-{
-    /**
-     * Constructor
-     *
-     */
-  	function __construct() {
-  		$this->XoopsObject();
-  		$this->initVar('imgset_id', XOBJ_DTYPE_INT, null, false);
-  		$this->initVar('imgset_name', XOBJ_DTYPE_TXTBOX, null, true, 50);
-  		$this->initVar('imgset_refid', XOBJ_DTYPE_INT, 0, false);
-  	}
+class BaseObject extends \Icms\Core\BaseObject {
+	/**
+	 * Constructor
+	 *
+	 */
+	function __construct() {
+		parent::__construct();
+		$this->initVar('gperm_id', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('gperm_groupid', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('gperm_itemid', XOBJ_DTYPE_INT, null, false);
+		$this->initVar('gperm_modid', XOBJ_DTYPE_INT, 0, false);
+		$this->initVar('gperm_name', XOBJ_DTYPE_OTHER, null, false);
+	}
 }
+
