@@ -48,7 +48,10 @@
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-abstract class icms_file_DownloadHandler {
+
+namespace Icms\File;
+
+abstract class DownloadHandler {
 
 	/**#@+
 	 * file information

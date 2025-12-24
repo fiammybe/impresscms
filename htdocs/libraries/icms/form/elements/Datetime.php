@@ -53,7 +53,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_elements_Datetime extends icms_form_elements_Tray {
+
+namespace Icms\Form\Elements;
+
+class Datetime extends \Icms\Form\Elements\Tray {
 
 	/**
 	 * Constructor
@@ -67,7 +70,7 @@ class icms_form_elements_Datetime extends icms_form_elements_Tray {
 		$value = (int) ($value);
 		$value = ($value > 0) ? $value : time();
 		$datetime = getDate($value);
-		$this->addElement(new icms_form_elements_Date('', $name.'[date]', $size, $value));
+		$this->addElement(new \Icms\Form\Elements\Date('', $name.'[date]', $size, $value));
 		$timearray = array();
 		for ($i = 0; $i < 24; $i++) {
 			for ($j = 0; $j < 60; $j = $j + 10) {
@@ -76,7 +79,7 @@ class icms_form_elements_Datetime extends icms_form_elements_Tray {
 			}
 		}
 		ksort($timearray);
-		$timeselect = new icms_form_elements_Select('', $name.'[time]', $datetime['hours'] * 3600 + 600 * ceil($datetime['minutes'] / 10));
+		$timeselect = new \Icms\Form\Elements\Select('', $name.'[time]', $datetime['hours'] * 3600 + 600 * ceil($datetime['minutes'] / 10));
 		$timeselect->addOptionArray($timearray);
 		$this->addElement($timeselect);
 	}

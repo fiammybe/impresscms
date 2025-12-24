@@ -51,16 +51,19 @@
  * @author Kazumi Ono <onokazu@xoops.org>
  * @copyright copyright (c) 2000-2003 XOOPS.org
  */
-class icms_core_Session {
+
+namespace Icms\Core;
+
+class Session {
 
 	/**
 	 * Initialize the session service
 	 *
-	 * @return icms_core_Session
+	 * @return \Icms\Core\Session
 	 */
 	static public function service() {
 		global $icmsConfig;
-		$instance = new icms_core_Session(icms::$xoopsDB);
+		$instance = new \Icms\Core\Session(icms::$xoopsDB);
 		session_set_save_handler(array($instance, 'open'), array($instance, 'close'), array($instance, 'read'),
 			array($instance, 'write'), array($instance, 'destroy'), array($instance, 'gc'));
 		$sslpost_name = isset($_POST[$icmsConfig['sslpost_name']]) ? $_POST[$icmsConfig['sslpost_name']] : "";
@@ -336,7 +339,7 @@ class icms_core_Session {
 			$online_handler = icms::handler('icms_core_Online');
 			$online_handler->destroy($uid);
 		}
-		icms_Event::trigger('icms_core_Session', 'sessionClose', $this);
+		\Icms\Event::trigger('icms_core_Session', 'sessionClose', $this);
 		return;
 	}
 
@@ -370,7 +373,7 @@ class icms_core_Session {
 		session_start();
 
 		self::removeExpiredCustomSession('xoopsUserId');
-		icms_Event::trigger('icms_core_Session', 'sessionStart', $this);
+		\Icms\Event::trigger('icms_core_Session', 'sessionStart', $this);
 		return;
 	}
 
@@ -381,7 +384,7 @@ class icms_core_Session {
 
 		$fingerprint = $this->mainSaltKey;
 
-		if (isset($ip) && icms_core_DataFilter::checkVar($ip, 'ip', 'ipv4')) {
+		if (isset($ip) && \Icms\Core\DataFilter::checkVar($ip, 'ip', 'ipv4')) {
 			if ($securityLevel >= 1) {
 				$fingerprint .= $userAgent;
 			}
@@ -395,7 +398,7 @@ class icms_core_Session {
 					$fingerprint .= $blocks[$i] . '.';
 				}
 			}
-		} elseif (isset($ip) && icms_core_DataFilter::checkVar($ip, 'ip', 'ipv6')) {
+		} elseif (isset($ip) && \Icms\Core\DataFilter::checkVar($ip, 'ip', 'ipv6')) {
 			if ($securityLevel >= 1) {
 				$fingerprint .= $userAgent;
 			}
@@ -410,7 +413,7 @@ class icms_core_Session {
 				}
 			}
 		} else {
-			icms_core_Debug::message('ERROR (Session Fingerprint): Invalid IP format,
+			\Icms\Core\Debug::message('ERROR (Session Fingerprint): Invalid IP format,
 				IP must be a valid IPv4 or IPv6 format', false);
 			$fingerprint = '';
 			return $fingerprint;
@@ -428,7 +431,7 @@ class icms_core_Session {
 		$sql = sprintf('SELECT sess_data, sess_ip FROM %s WHERE sess_id = %s', icms::$xoopsDB->prefix('session'), icms::$xoopsDB->quoteString($sess_id));
 		if (false != $result = icms::$xoopsDB->query($sql)) {
 			if (list($sess_data, $sess_ip) = icms::$xoopsDB->fetchRow($result)) {
-				if ($this->ipv6securityLevel > 1 && icms_core_DataFilter::checkVar($sess_ip, 'ip', 'ipv6')) {
+				if ($this->ipv6securityLevel > 1 && \Icms\Core\DataFilter::checkVar($sess_ip, 'ip', 'ipv6')) {
 					/**
 					 * also cover IPv6 localhost string
 					 */
@@ -441,7 +444,7 @@ class icms_core_Session {
 					if (strncmp($sess_ip, $_SERVER['REMOTE_ADDR'], $pos)) {
 						$sess_data = '';
 					}
-				} elseif ($this->securityLevel > 1 && icms_core_DataFilter::checkVar($sess_ip, 'ip', 'ipv4')) {
+				} elseif ($this->securityLevel > 1 && \Icms\Core\DataFilter::checkVar($sess_ip, 'ip', 'ipv4')) {
 					$pos = strpos($sess_ip, ".", $this->securityLevel - 1);
 
 					if (strncmp($sess_ip, $_SERVER['REMOTE_ADDR'], $pos)) {

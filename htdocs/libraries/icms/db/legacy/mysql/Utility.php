@@ -49,7 +49,10 @@
  * @author      Kazumi Ono  <onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-class icms_db_legacy_mysql_Utility implements icms_db_IUtility {
+
+namespace Icms\Db\Legacy\Mysql;
+
+class Utility implements \Icms\Db\IUtility {
 
 	/**
 	 * Creates a new utility object

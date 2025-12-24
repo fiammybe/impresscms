@@ -62,7 +62,10 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-abstract class icms_db_criteria_Element {
+
+namespace Icms\Db\Criteria;
+
+abstract class Element {
 	/**
 	 * Sort order
 	 * @var	string

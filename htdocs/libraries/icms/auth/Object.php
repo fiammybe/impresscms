@@ -45,7 +45,10 @@
  * @package     Auth
  * @author	    Pierre-Eric MENUET	<pemphp@free.fr>
  */
-class icms_auth_Object {
+
+namespace Icms\Auth;
+
+class Object {
 
 	private $_dao;
 

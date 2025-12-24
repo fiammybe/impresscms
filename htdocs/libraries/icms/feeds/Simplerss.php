@@ -16,9 +16,12 @@
  * @version		$Id: Simplerss.php 12107 2012-11-08 15:22:12Z skenow $
  */
 
+
+namespace Icms\Feeds;
+
 use \SimplePie\SimplePie;
 
-class icms_feeds_Simplerss extends SimplePie {
+class Simplerss extends SimplePie {
 
 	/**
 	 * The icms_feeds_Simplerss class contains feed level data and options

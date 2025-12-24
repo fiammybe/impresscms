@@ -22,7 +22,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @subpackage	Block
  *
  */
-class icms_view_block_position_Handler extends icms_ipf_Handler {
+
+namespace Icms\View\Block\Position;
+
+class Handler extends \Icms\Ipf\Handler {
 
 	/**
 	 * Constructor

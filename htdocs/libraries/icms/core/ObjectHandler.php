@@ -55,7 +55,10 @@
  *
  * @abstract
  */
-abstract class icms_core_ObjectHandler {
+
+namespace Icms\Core;
+
+abstract class ObjectHandler {
 
 	/**
 	 * holds referenced to {@link icms_db_legacy_Database} class object

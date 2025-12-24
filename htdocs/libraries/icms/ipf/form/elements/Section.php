@@ -14,7 +14,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Section extends icms_form_Element {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Section extends icms_form_Element {
 	/**
 	 * @var string
 	 * @access	private
@@ -31,7 +34,7 @@ class icms_ipf_form_elements_Section extends icms_form_Element {
 	/**
 	 * Constructor
 	 *
-	 * @param	icms_ipf_Object	$object	reference to targetobject (@link icms_ipf_Object)
+	 * @param \Icms\Ipf\Object	$object	reference to targetobject (@link icms_ipf_Object)
 	 * @param	string			$key	name of the form section
 	 */
 	public function __construct($object, $key) {

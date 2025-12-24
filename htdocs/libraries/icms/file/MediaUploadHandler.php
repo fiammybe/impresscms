@@ -44,7 +44,7 @@
  $maxfilesize = 50000;
  $maxfilewidth = 120;
  $maxfileheight = 120;
- $uploader = new icms_file_MediaUploadHandler('/home/httpdocs/uploads', $allowed_mimetypes, $maxfilesize, $maxfilewidth, $maxfileheight);
+ $uploader = new \Icms\File\MediaUploadHandler('/home/httpdocs/uploads', $allowed_mimetypes, $maxfilesize, $maxfilewidth, $maxfileheight);
  if($uploader->fetchMedia($_POST['uploade_file_name'])) {
 	 if(!$uploader->upload()) {
 		 echo $uploader->getErrors();
@@ -65,7 +65,7 @@
  * $maxfilesize = 50000;
  * $maxfilewidth = 120;
  * $maxfileheight = 120;
- * $uploader = new icms_file_MediaUploadHandler('/home/httpdocs/uploads', $allowed_mimetypes, $maxfilesize, $maxfilewidth, $maxfileheight);
+ * $uploader = new \Icms\File\MediaUploadHandler('/home/httpdocs/uploads', $allowed_mimetypes, $maxfilesize, $maxfilewidth, $maxfileheight);
  * if($uploader->fetchMedia($_POST['uploade_file_name'])) {
  *     if(!$uploader->upload()) {
  *         echo $uploader->getErrors();
@@ -85,7 +85,10 @@
  * @author      phppp
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-class icms_file_MediaUploadHandler {
+
+namespace Icms\File;
+
+class MediaUploadHandler {
 
 	/**
 	 * @var bool Flag indicating if unrecognized mimetypes should be allowed (use with precaution ! may lead to security issues )
@@ -195,7 +198,7 @@ class icms_file_MediaUploadHandler {
 	 * @param   int     $maxHeight
 	 */
 	public function __construct($uploadDir, $allowedMimeTypes, $maxFileSize = 0, $maxWidth = null, $maxHeight = null) {
-		$this->extensionToMime = icms_Utils::mimetypes() ;
+		$this->extensionToMime = \Icms\Utils::mimetypes() ;
 		if (!is_array($this->extensionToMime)) {
 			$this->extensionToMime = array();
 			return false;

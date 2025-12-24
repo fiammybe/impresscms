@@ -50,7 +50,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author 		Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_elements_Password extends icms_form_Element {
+
+namespace Icms\Form\Elements;
+
+class Password extends \Icms\Form\Element {
 	/**
 	 * Size of the field.
 	 * @var 		int
@@ -164,7 +167,7 @@ class icms_form_elements_Password extends icms_form_Element {
 	 */
 	public function render() {
 
-		$this->tpl = new icms_view_Tpl();
+		$this->tpl = new \Icms\View\Tpl();
 		$this->tpl->assign('ele_name', $this->getName());
 		$this->tpl->assign('ele_class', $this->getClassName());
 		$this->tpl->assign('ele_id', $this->getName());

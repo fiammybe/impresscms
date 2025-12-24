@@ -54,7 +54,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * 				- error handling
  * @access		public
  */
-class icms_config_Handler {
+
+namespace Icms\Config;
+
+class Handler {
 	static protected $instance;
 	/**
 	 * Initialize the config handler.
@@ -116,13 +119,13 @@ class icms_config_Handler {
 	 */
 	public function __construct(&$db) {
 		$this->_cHandler = new icms_config_item_Handler($db);
-		$this->_oHandler = new icms_config_option_Handler($db);
+		$this->_oHandler = new \Icms\Config\Option\Handler($db);
 	}
 
 	/**
 	 * Create a config
 	 *
-	 * @see     icms_config_Item_Object
+	 * @see \Icms\Config\Item\Object
 	 * @return	object  reference to the new {@link icms_config_Item_Object}
 	 */
 	public function &createConfig() {

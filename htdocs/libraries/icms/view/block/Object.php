@@ -51,7 +51,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @since		ImpressCMS 1.2
  * @author		Gustavo Pilla (aka nekro) <nekro@impresscms.org>
  */
-class icms_view_block_Object extends icms_ipf_Object {
+
+namespace Icms\View\Block;
+
+class Object extends \Icms\Ipf\Object {
 
 	/**
 	 * Constructor for the block object
@@ -109,19 +112,19 @@ class icms_view_block_Object extends icms_ipf_Object {
 					return $content;
 				} elseif ($c_type == 'P') {
 					ob_start();
-					echo eval(icms_core_DataFilter::undoHtmlSpecialChars($this->getVar('content', 'e')));
+					echo eval(\Icms\Core\DataFilter::undoHtmlSpecialChars($this->getVar('content', 'e')));
 					$content = ob_get_contents();
 					ob_end_clean();
                     $content = str_replace('{X_SITEURL}', ICMS_URL . '/', $content);
                     $content = str_replace(XOOPS_DB_SALT, '', $content);
 					return $content;
 				} elseif ($c_type == 'S') {
-					$myts = icms_core_Textsanitizer::getInstance();
+					$myts = \Icms\Core\Textsanitizer::getInstance();
 					$content = str_replace('{X_SITEURL}', ICMS_URL . '/', $this->getVar('content', 'n'));
 					return $myts->displayTarea($content, 1, 1);
 				} else {
 					$content = str_replace('{X_SITEURL}', ICMS_URL . '/', $this->getVar('content', 'n'));
-					return icms_core_DataFilter::checkVar($content, 'text', 'output');
+					return \Icms\Core\DataFilter::checkVar($content, 'text', 'output');
 				}
 				break;
 

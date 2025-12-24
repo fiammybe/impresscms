@@ -53,7 +53,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 * @author  Kazumi Ono <onokazu@xoops.org>
 * @copyright	Copyright (c) 2000 XOOPS.org
 */
-class icms_image_set_Handler extends XoopsObjectHandler {
+
+namespace Icms\Image\Set;
+
+class Handler extends XoopsObjectHandler {
 
 	/**
 	 * Creates a new imageset
@@ -62,7 +65,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 		 * @return object $imgset {@link icms_image_set_Object} reference to the new imageset
 	 **/
 	function & create($isNew = true) {
-		$imgset = new icms_image_set_Object();
+		$imgset = new \Icms\Image\Set\Object();
 		if ($isNew) {
 			$imgset->setNew();
 		}
@@ -72,7 +75,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 	/**
 	 * retrieve a specific {@link icms_image_set_Object}
 	 *
-		 * @see icms_image_set_Object
+		 * @see \Icms\Image\Set\Object
 		 * @param integer $id imgsetID (imgset_id) of the imageset
 		 * @return object icms_image_set_Object reference to the image set
 	 **/
@@ -86,7 +89,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$imgset = new icms_image_set_Object();
+				$imgset = new \Icms\Image\Set\Object();
 				$imgset->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -175,7 +178,7 @@ class icms_image_set_Handler extends XoopsObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$imgset = new icms_image_set_Object();
+			$imgset = new \Icms\Image\Set\Object();
 			$imgset->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] = & $imgset;

@@ -49,7 +49,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @category	ICMS
  * @package     Notification
  */
-class icms_data_notification_Object extends icms_core_Object {
+
+namespace Icms\Data\Notification;
+
+class Object extends \Icms\Core\Object {
 
 	/**
 	 * Constructor
@@ -93,7 +96,7 @@ class icms_data_notification_Object extends icms_core_Object {
 		}
 		$method = $user->getVar('notify_method');
 
-		$xoopsMailer = new icms_messaging_Handler();
+		$xoopsMailer = new \Icms\Messaging\Handler();
 		include_once ICMS_ROOT_PATH . '/include/notification_constants.php';
 		switch($method) {
 			case XOOPS_NOTIFICATION_METHOD_PM:

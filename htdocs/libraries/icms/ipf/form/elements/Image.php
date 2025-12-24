@@ -15,7 +15,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Image extends icms_form_elements_Tray {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Image extends icms_form_elements_Tray {
 	/**
 	 * Constructor
 	 * @param	object    $object   reference to targetobject (@link icms_ipf_Object)
@@ -41,7 +44,7 @@ class icms_ipf_form_elements_Image extends icms_form_elements_Tray {
 				. "' alt='" . $object_imageurl . $object->getVar($key, 'e') . "' height='150' /></a><br/><br/>" ));
 		}
 
-		$this->addElement(new icms_ipf_form_elements_Fileupload($object, $key));
+		$this->addElement(new \Icms\Ipf\Form\Elements\Fileupload($object, $key));
 
 		if (!isset($control['nourl']) || !$control['nourl']) {
 			$this->addElement(new icms_form_elements_Label('<div style="padding-top: 8px; font-size: 80%;">'._CO_ICMS_URL_FILE_DSC.'</div>', ''));

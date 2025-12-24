@@ -53,7 +53,10 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @author      Kazumi Ono  <onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-abstract class icms_db_legacy_mysql_Database extends icms_db_legacy_Database {
+
+namespace Icms\Db\Legacy\Mysql;
+
+abstract class Database extends \Icms\Db\Legacy\Database {
 	/**
 	 * Database connection
 	 * @var resource
@@ -68,7 +71,7 @@ abstract class icms_db_legacy_mysql_Database extends icms_db_legacy_Database {
 	 */
 	public function connect($selectdb = true) {
 		defined('_CORE_MYSQL_DEPRECATED') || define('_CORE_MYSQL_DEPRECATED', 'The mysql extension is being deprecated as of PHP 5.5.0 (<a href="http://php.net/mysql_connect">PHP MySQL Extenstion</a>). Switch to PDO, instead');
-		icms_core_Debug::setDeprecated("PDO", _CORE_MYSQL_DEPRECATED);
+		\Icms\Core\Debug::setDeprecated("PDO", _CORE_MYSQL_DEPRECATED);
 		static $db_charset_set;
 
 		$this->allowWebChanges = ($_SERVER['REQUEST_METHOD'] != 'GET');
@@ -269,11 +272,11 @@ abstract class icms_db_legacy_mysql_Database extends icms_db_legacy_Database {
 		if (false !== ($fp = fopen($file, 'r'))) {
 
 			$sql_queries = trim(fread($fp, filesize($file)));
-			icms_db_legacy_mysql_Utility::splitSqlFile($pieces, $sql_queries);
+			\Icms\Db\Legacy\Mysql\Utility::splitSqlFile($pieces, $sql_queries);
 			foreach ($pieces as $query) {
 				// [0] contains the prefixed query
 				// [4] contains unprefixed table name
-				$prefixed_query = icms_db_legacy_mysql_Utility::prefixQuery(trim($query), $this->prefix());
+				$prefixed_query = \Icms\Db\Legacy\Mysql\Utility::prefixQuery(trim($query), $this->prefix());
 				if ($prefixed_query != false) {
 					$this->query($prefixed_query[0]);
 				}

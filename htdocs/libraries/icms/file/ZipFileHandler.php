@@ -36,7 +36,10 @@
  * @category	ICMS
  * @package     Core
  */
-class icms_file_ZipFileHandler {
+
+namespace Icms\File;
+
+class ZipFileHandler {
 	/**
 	 * Array to store compressed data
 	 *

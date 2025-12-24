@@ -48,7 +48,10 @@
  * @author	    phppp (D.J.)
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_elements_select_Editor extends icms_form_elements_Tray {
+
+namespace Icms\Form\Elements\Select;
+
+class Editor extends \Icms\Form\Elements\Tray {
 	/**
 	 * Constructor
 	 *
@@ -65,8 +68,8 @@ class icms_form_elements_select_Editor extends icms_form_elements_Tray {
 		}
 
 		parent::__construct(_SELECT);
-		$edtlist = icms_plugins_EditorHandler::getListByType();
-		$option_select = new icms_form_elements_Select("", $name, $value);
+		$edtlist = \Icms\Plugins\EditorHandler::getListByType();
+		$option_select = new \Icms\Form\Elements\Select("", $name, $value);
 		$querys = preg_replace('/editor=(.*?)&/','',$_SERVER['QUERY_STRING']);
 		$extra = 'onchange="if(this.options[this.selectedIndex].value.length > 0 ){
 				window.location = \'?editor=\'+this.options[this.selectedIndex].value+\'&'.$querys.'\';

@@ -24,7 +24,10 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @subpackage	Category
  * @since 		1.1
  */
-class icms_ipf_category_Handler extends icms_ipf_Handler {
+
+namespace Icms\Ipf\Category;
+
+class Handler extends \Icms\Ipf\Handler {
 	/** */
 	public $allCategoriesObj = false;
 	/** */
@@ -35,7 +38,7 @@ class icms_ipf_category_Handler extends icms_ipf_Handler {
 	 *
 	 * @param object $db A database object
 	 * @param string $modulename The directory name for the module
-	 * @return icms_ipf_category_Handler
+	 * @return \Icms\Ipf\Category\Handler
 	 */
 	public function __construct($db, $modulename) {
 		parent::__construct($db, 'category', 'categoryid', 'name', 'description', $modulename);

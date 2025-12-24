@@ -22,7 +22,10 @@ defined("ICMS_ROOT_PATH") or die("ICMS root path not defined");
  * @subpackage	PrinterFriendly
  * @author The IcmsFactory <www.smartfactory.ca>
  */
-class icms_view_Printerfriendly {
+
+namespace Icms\View;
+
+class Printerfriendly {
 
 	public $_title;
 	public $_dsc;
@@ -56,7 +59,7 @@ class icms_view_Printerfriendly {
 		 * @todo make the output XHTML compliant
 		 */
 
-		$this->_tpl = new icms_view_Tpl();
+		$this->_tpl = new \Icms\View\Tpl();
 
 		$this->_tpl->assign('icms_print_pageTitle', $this->_pageTitle ? $this->_pageTitle : $this->_title);
 		$this->_tpl->assign('icms_print_title', $this->_title);

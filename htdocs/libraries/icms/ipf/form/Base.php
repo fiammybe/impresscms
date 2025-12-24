@@ -12,7 +12,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_Base extends icms_form_Theme {
+
+namespace Icms\Ipf\Form;
+
+class Base extends icms_form_Theme {
 	public $targetObject = NULL;
 	public $form_fields = NULL;
 	private $_cancel_js_action = FALSE;
@@ -410,7 +413,7 @@ class icms_ipf_form_Base extends icms_form_Theme {
 
 			case 'sourceeditor':
 				// leave as last element so that default is executed for sourceeditor as well
-				icms_core_Debug::setDeprecated('icms_ipf_form_elements_Source', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
+				\Icms\Core\Debug::setDeprecated('icms_ipf_form_elements_Source', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 				$controlName = "source";
 
 			default:

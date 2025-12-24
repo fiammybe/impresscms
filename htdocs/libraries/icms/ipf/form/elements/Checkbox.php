@@ -14,7 +14,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Checkbox extends icms_form_elements_Checkbox {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Checkbox extends icms_form_elements_Checkbox {
 
 	private $_delimeter = "&nbsp;";
 

@@ -17,7 +17,10 @@
 /**
  * Create and display messages on the screen
  */
-class icms_core_Message {
+
+namespace Icms\Core;
+
+class Message {
 
 	/* Since all the methods are static, there is no __construct necessary	 */
 

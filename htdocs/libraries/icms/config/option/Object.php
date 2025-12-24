@@ -51,7 +51,10 @@ if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
  * @package     Config
  * @subpackage	Option
  */
-class icms_config_option_Object extends icms_core_Object {
+
+namespace Icms\Config\Option;
+
+class Object extends \Icms\Core\Object {
 	/**
 	 * Constructor
 	 */

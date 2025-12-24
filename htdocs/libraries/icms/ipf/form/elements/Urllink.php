@@ -14,10 +14,13 @@
 
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Urllink extends icms_form_elements_Tray {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Urllink extends icms_form_elements_Tray {
 	/**
 	 * Constructor
-	 * @param	icms_ipf_Object	$object	target object
+	 * @param \Icms\Ipf\Object	$object	target object
 	 * @param	string			$key	the key
 	 */
 	public function __construct($object, $key) {
@@ -27,11 +30,11 @@ class icms_ipf_form_elements_Urllink extends icms_form_elements_Tray {
 		$module = $module_handler->getByDirname($object->handler->_moduleName);
 
 		$this->addElement(new icms_form_elements_Label("", _CO_ICMS_URLLINK_URL));
-		$this->addElement(new icms_ipf_form_elements_Text($urllinkObj, "url_" . $key));
+		$this->addElement(new \Icms\Ipf\Form\Elements\Text($urllinkObj, "url_" . $key));
 		$this->addElement(new icms_form_elements_Label("", "<br/>" . _CO_ICMS_CAPTION));
-		$this->addElement(new icms_ipf_form_elements_Text($urllinkObj, "caption_" . $key));
+		$this->addElement(new \Icms\Ipf\Form\Elements\Text($urllinkObj, "caption_" . $key));
 		$this->addElement(new icms_form_elements_Label("", "<br/>" . _CO_ICMS_DESC));
-		$this->addElement(new icms_ipf_form_elements_Text($urllinkObj, "desc_" . $key));
+		$this->addElement(new \Icms\Ipf\Form\Elements\Text($urllinkObj, "desc_" . $key));
 		$this->addElement(new icms_form_elements_Label("", "<br/>" . _CO_ICMS_URLLINK_TARGET));
 		$this->addElement(new icms_form_elements_Hidden("mid_" . $key, $module->getVar("mid")));
 		$targ_val = $urllinkObj->getVar("target");

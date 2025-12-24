@@ -4,7 +4,7 @@
  *
  * Currently there are two types of CAPTCHA forms, text and image
  * The default mode is "text", it can be changed in the priority:
- * 1 If mode is set through icms_form_elements_Captcha::setMode(), take it
+ * 1 If mode is set through \Icms\Form\Elements\Captcha::setMode(), take it
  * 2 Elseif mode is set though captcha/config.php, take it
  * 3 Else, take "text"
  *
@@ -23,10 +23,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * Usage
  *
  * For form creation:
- * Add form element where proper: $form->addElement(new icms_form_elements_Captcha($caption, $name, $skipmember, ...);
+ * Add form element where proper: $form->addElement(new \Icms\Form\Elements\Captcha($caption, $name, $skipmember, ...);
  *
  * For verification:
- * $icmsCaptcha = icms_form_elements_captcha_Object::instance();
+ * $icmsCaptcha = \Icms\Form\Elements\Captcha\Object::instance();
  * if (!$icmsCaptcha->verify()) {
  *   echo $icmsCaptcha->getMessage();
  *   ...
@@ -40,7 +40,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @subpackage	Elements
  *
  */
-class icms_form_elements_Captcha extends icms_form_Element {
+
+namespace Icms\Form\Elements;
+
+class Captcha extends \Icms\Form\Element {
 	private $_captchaHandler;
 
 	/**
@@ -58,7 +61,7 @@ class icms_form_elements_Captcha extends icms_form_Element {
 			$numchar = null, $minfontsize = null, $maxfontsize = null, $backgroundtype = null,
 			$backgroundnum = null
 	) {
-		$this->_captchaHandler =& icms_form_elements_captcha_Object::instance();
+		$this->_captchaHandler =& \Icms\Form\Elements\Captcha\Object::instance();
 		$this->_captchaHandler->init(
 			$name, $skipmember, $numchar, $minfontsize, $maxfontsize, $backgroundtype, $backgroundnum
 		);
@@ -82,7 +85,7 @@ class icms_form_elements_Captcha extends icms_form_Element {
 
 	/**
 	 *
-	 * @see htdocs/libraries/icms/form/icms_form_Element::render()
+	 * @see htdocs/libraries/icms/form/\Icms\Form\Element::render()
 	 */
 	public function render() {
 		if (!$this->isHidden()) {

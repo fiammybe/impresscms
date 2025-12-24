@@ -25,7 +25,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @subpackage	Controller
  *
  */
-class icms_ipf_Controller {
+
+namespace Icms\Ipf;
+
+class Controller {
 
 	/** */
 	public $handler;
@@ -229,7 +232,7 @@ class icms_ipf_Controller {
 
 		if ($storeResult) {
 			if ($this->handler->getPermissions()) {
-				$icmspermissions_handler = new icms_ipf_permission_Handler($this->handler);
+				$icmspermissions_handler = new \Icms\Ipf\Permission\Handler($this->handler);
 				$icmspermissions_handler->storeAllPermissionsForId($icmsObj->id());
 			}
 		}
@@ -371,7 +374,7 @@ class icms_ipf_Controller {
 			if ($this->handler->_moduleName == 'system') {
 				$hiddens['fct'] = isset($_GET['fct']) ? $_GET['fct'] : false;
 			}
-			icms_core_Message::confirm($hiddens, xoops_getenv('SCRIPT_NAME'), sprintf($confirm_msg , $icmsObj->getVar($this->handler->identifierName)), _CO_ICMS_DELETE);
+			\Icms\Core\Message::confirm($hiddens, xoops_getenv('SCRIPT_NAME'), sprintf($confirm_msg , $icmsObj->getVar($this->handler->identifierName)), _CO_ICMS_DELETE);
 
 			icms_cp_footer();
 
@@ -411,7 +414,7 @@ class icms_ipf_Controller {
 			}
 
 			ob_start();
-			icms_core_Message::confirm(array(
+			\Icms\Core\Message::confirm(array(
 				'op' => $op,
 				$this->handler->keyName => $icmsObj->getVar($this->handler->keyName),
 				'confirm' => 1,
@@ -491,7 +494,7 @@ class icms_ipf_Controller {
 	/**
 	 * This method returns a view link of the Object
 	 *
-	 * @param icms_ipf_Object $icmsObj
+	 * @param \Icms\Ipf\Object $icmsObj
 	 * @param boolean $onlyUrl
 	 * @param boolean $withimage
 	 * @param boolean $userSide

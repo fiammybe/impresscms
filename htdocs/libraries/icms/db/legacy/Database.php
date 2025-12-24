@@ -54,7 +54,10 @@ defined( 'ICMS_ROOT_PATH' ) or die();
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  * @author		Gustavo Pilla  (aka nekro) <nekro@impresscms.org>
 */
-abstract class icms_db_legacy_Database implements icms_db_legacy_IDatabase {
+
+namespace Icms\Db\Legacy;
+
+abstract class Database implements \Icms\Db\Legacy\IDatabase {
 	
 	/**
 	 * Prefix for tables in the database
@@ -64,7 +67,7 @@ abstract class icms_db_legacy_Database implements icms_db_legacy_IDatabase {
 
 	/**
 	 * reference to a {@link icms_core_Logger} object
-	 * @see icms_core_Logger
+	 * @see \Icms\Core\Logger
 	 * @var object icms_core_Logger
 	 */
 	public $logger;
@@ -88,7 +91,7 @@ abstract class icms_db_legacy_Database implements icms_db_legacy_IDatabase {
 	
 	/**
 	 * Setter for the logging class
-	 * @see icms_db_legacy_IDatabase::setLogger()
+	 * @see \Icms\Db\Legacy\IDatabase::setLogger()
 	 * @return	void
 	 */
 	public function setLogger($logger) {
@@ -98,7 +101,7 @@ abstract class icms_db_legacy_Database implements icms_db_legacy_IDatabase {
 	/**
 	 * Setter for the table prefix
 	 *
-	 * @see icms_db_legacy_IDatabase::setPrefix()
+	 * @see \Icms\Db\Legacy\IDatabase::setPrefix()
 	 * @return	void
 	 */
 	public function setPrefix($value) {
@@ -107,7 +110,7 @@ abstract class icms_db_legacy_Database implements icms_db_legacy_IDatabase {
 	
 	/**
 	 * Prefix the database table name
-	 * @see icms_db_legacy_IDatabase::prefix()
+	 * @see \Icms\Db\Legacy\IDatabase::prefix()
 	 * @return	string
 	 */
 	public function prefix($tablename='') {

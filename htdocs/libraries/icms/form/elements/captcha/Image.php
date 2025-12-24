@@ -26,7 +26,10 @@
  * @subpackage	Elements
  *
  */
-class icms_form_elements_captcha_Image {
+
+namespace Icms\Form\Elements\Captcha;
+
+class Image {
 	//var $config	= array();
 
 	/**

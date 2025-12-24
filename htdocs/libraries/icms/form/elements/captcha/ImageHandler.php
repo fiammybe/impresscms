@@ -23,7 +23,10 @@
  * @package		Form
  * @subpackage	Elements
  */
-class icms_form_elements_captcha_ImageHandler {
+
+namespace Icms\Form\Elements\Captcha;
+
+class ImageHandler {
 	//var $mode = "gd"; // GD or bmp
 	private $code;
 	public $invalid = FALSE;
@@ -200,7 +203,7 @@ class icms_form_elements_captcha_ImageHandler {
 		$items = array();
 
 		$file_path = "{$name}";
-		$files = icms_core_Filesystem::getFileList($file_path);
+		$files = \Icms\Core\Filesystem::getFileList($file_path);
 		foreach ($files as $item) {
 			if (empty($extension) || preg_match("/(\.{$extension})$/i", $item)) {
 				$items[] = $item;

@@ -21,7 +21,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author		marcan <marcan@smartfactory.ca>
  * @todo		Properly determine visibility of vars and methods and follow naming convention
  */
-class icms_ipf_view_Row {
+
+namespace Icms\Ipf\View;
+
+class Row {
 
 	/**
 	 * @var unknown_type

@@ -18,12 +18,15 @@
  * @package Database
  * @subpackage MySQL
  */
-class icms_db_mysql_Connection extends PDO implements icms_db_IConnection {
+
+namespace Icms\Db\Mysql;
+
+class Connection extends PDO implements \Icms\Db\IConnection {
 
 	/**
 	 * Safely escape the string, but strips the outer quotes
 	 *
-	 * @see icms_db_IConnection::escape()
+	 * @see \Icms\Db\IConnection::escape()
 	 * @param string $string
 	 * @return string
 	 */
@@ -47,10 +50,10 @@ class icms_db_mysql_Connection extends PDO implements icms_db_IConnection {
 
 		// trigger events for the debug console - see plugins/preloads/debug_mode.php
 		if ($result) {
-			icms_Event::trigger('icms_db_IConnection', 'execute', $this, array('sql' => $args[0], 'errorno' => NULL, 'error' => NULL));
+			\Icms\Event::trigger('icms_db_IConnection', 'execute', $this, array('sql' => $args[0], 'errorno' => NULL, 'error' => NULL));
 		} else {
 			$errorinfo = $this->errorInfo();
-			icms_Event::trigger('icms_db_IConnection', 'execute', $this, array('sql' => $args[0], 'errorno' => $errorinfo[1], 'error' => $errorinfo[2]));
+			\Icms\Event::trigger('icms_db_IConnection', 'execute', $this, array('sql' => $args[0], 'errorno' => $errorinfo[1], 'error' => $errorinfo[2]));
 		}
 
 		return $result;

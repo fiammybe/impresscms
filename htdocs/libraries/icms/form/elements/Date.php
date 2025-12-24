@@ -49,7 +49,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  *
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  */
-class icms_form_elements_Date extends icms_form_elements_Text {
+
+namespace Icms\Form\Elements;
+
+class Date extends \Icms\Form\Elements\Text {
 
 
     /**

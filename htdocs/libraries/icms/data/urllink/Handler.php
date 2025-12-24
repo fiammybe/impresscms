@@ -14,7 +14,10 @@
 
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
-class icms_data_urllink_Handler extends icms_ipf_Handler {
+
+namespace Icms\Data\Urllink;
+
+class Handler extends \Icms\Ipf\Handler {
 	/**
 	 * constrcutor
 	 *

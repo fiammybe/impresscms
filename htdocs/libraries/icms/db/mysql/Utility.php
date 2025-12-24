@@ -27,7 +27,10 @@
  * @package		Database
  * @subpackage	MySQL
  */
-abstract class icms_db_mysql_Utility implements icms_db_IUtility {
+
+namespace Icms\Db\Mysql;
+
+abstract class Utility implements \Icms\Db\IUtility {
 
 	/**
 	 * add a prefix.'_' to all tablenames in a query

@@ -45,7 +45,10 @@
  * @package		View
  * @subpackage	Theme
  */
-class icms_view_theme_Object {
+
+namespace Icms\View\Theme;
+
+class Object {
 	/**
 	 * The name of this theme
 	 * @public string
@@ -150,7 +153,7 @@ class icms_view_theme_Object {
 			? ICMS_MODULES_URL . '/system/themes/' . $this->folderName
 			: ICMS_THEME_URL . '/' . $this->folderName;
 
-		$this->template = new icms_view_Tpl();
+		$this->template = new \Icms\View\Tpl();
 		$this->template->currentTheme =& $this;
 		$this->template->assign_by_ref('xoTheme', $this);
 
@@ -363,7 +366,7 @@ class icms_view_theme_Object {
 		$xheader = empty($xoopsOption['xoops_module_header'])
 			? $this->template->get_template_vars('xoops_module_header')
 			: $xoopsOption['xoops_module_header'];
-		if ($xheader != "") icms_core_Debug::setDeprecated('icms_module_header', sprintf(_CORE_REMOVE_IN_VERSION, "2.0"));
+		if ($xheader != "") \Icms\Core\Debug::setDeprecated('icms_module_header', sprintf(_CORE_REMOVE_IN_VERSION, "2.0"));
 		$header = ($header != "") ? $header : $xheader;
 		$this->template->assign('xoops_module_header', $header . "\n" . $this->renderOldMetas(NULL, TRUE));
 		$this->template->assign('icms_module_header', $header . "\n" . $this->renderOldMetas(NULL, TRUE));
@@ -380,7 +383,7 @@ class icms_view_theme_Object {
 		$xpagetitle = empty($xoopsOption['xoops_pagetitle'])
 			? $this->template->get_template_vars('xoops_pagetitle')
 			: $xoopsOption['xoops_pagetitle'];
-		if ($xpagetitle != "") icms_core_Debug::setDeprecated('icms_pagetitle', sprintf(_CORE_REMOVE_IN_VERSION, "2.0"));
+		if ($xpagetitle != "") \Icms\Core\Debug::setDeprecated('icms_pagetitle', sprintf(_CORE_REMOVE_IN_VERSION, "2.0"));
 		$pagetitle = ($pagetitle != "") ? $pagetitle : $xpagetitle;
 		$this->template->assign('xoops_pagetitle', $pagetitle);
 		$this->template->assign('icms_pagetitle', $pagetitle);

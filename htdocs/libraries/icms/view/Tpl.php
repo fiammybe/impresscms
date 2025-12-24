@@ -40,6 +40,9 @@
  */
 if (!defined('SMARTY_DIR')) {
 	exit();
+
+namespace Icms\View;
+
 }
 /**
  * Base class: Smarty template engine
@@ -55,7 +58,7 @@ require_once SMARTY_DIR . 'Smarty.class.php';
  * @author		Kazumi Ono 	<onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
-class icms_view_Tpl extends Smarty {
+class Tpl extends Smarty {
 
 	public $left_delimiter = '<{';
 	public $right_delimiter = '}>';
@@ -153,7 +156,7 @@ class icms_view_Tpl extends Smarty {
 	 * function to update compiled template file in templates_c folder
 	 *
 	 * The proper way to use this would be
-	 * icms_view_Tpl::template_touch($tplid);
+	 * \Icms\View\Tpl::template_touch($tplid);
 	 *
 	 * @param   string  $tpl_id
 	 * @return  boolean
@@ -164,7 +167,7 @@ class icms_view_Tpl extends Smarty {
 
 		if (is_object($tplfile)) {
 			$file = $tplfile->getVar('tpl_file', 'n');
-			$tpl = new icms_view_Tpl();
+			$tpl = new \Icms\View\Tpl();
 			return $tpl->touch("db:$file");
 		}
 		return false;
@@ -174,7 +177,7 @@ class icms_view_Tpl extends Smarty {
 	 * Clear the module cache
 	 *
 	 * The proper way to use this would be
-	 * icms_view_Tpl::template_clear_module_cache($tplid);
+	 * \Icms\View\Tpl::template_clear_module_cache($tplid);
 	 *
 	 * @param   int $mid    Module ID
 	 * @return
@@ -184,7 +187,7 @@ class icms_view_Tpl extends Smarty {
 		$block_arr = $icms_block_handler->getByModule($mid);
 		$count = count($block_arr);
 		if ($count > 0) {
-			$xoopsTpl = new icms_view_Tpl();
+			$xoopsTpl = new \Icms\View\Tpl();
 			$xoopsTpl->caching = 2;
 			for ($i = 0; $i < $count; $i++) {
 				if ($block_arr[$i]->getVar('template') != '') {

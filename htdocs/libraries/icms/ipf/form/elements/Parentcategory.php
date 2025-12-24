@@ -14,7 +14,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Parentcategory extends icms_form_elements_Select {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Parentcategory extends icms_form_elements_Select {
 	/**
 	 * Constructor
 	 * @param	object    $object   reference to targetobject (@link icms_ipf_Object)
@@ -29,7 +32,7 @@ class icms_ipf_form_elements_Parentcategory extends icms_form_elements_Select {
 		$category_handler = icms_getModuleHandler('category', $object->handler->_moduleName);
 		$categories = $category_handler->getObjects($criteria);
 
-		$mytree = new icms_ipf_Tree($categories, "category_id", "category_pid");
+		$mytree = new \Icms\Ipf\Tree($categories, "category_id", "category_pid");
 		parent::__construct($object->vars[$key]['form_caption'], $key, $object->getVar($key, 'e'));
 
 		$ret = array();

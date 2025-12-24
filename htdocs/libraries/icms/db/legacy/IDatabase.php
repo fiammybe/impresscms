@@ -15,11 +15,14 @@
  * @category    ICMS
  * @package	    Database
  */
-interface icms_db_legacy_IDatabase {
+
+namespace Icms\Db\Legacy;
+
+interface IDatabase {
 	/**
 	 * assign a {@link icms_core_Logger} object to the database
 	 *
-	 * @see icms_core_Logger
+	 * @see \Icms\Core\Logger
 	 * @param object $logger reference to a {@link icms_core_Logger} object
 	 */
 	public function setLogger($logger);

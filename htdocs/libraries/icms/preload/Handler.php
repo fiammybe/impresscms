@@ -26,7 +26,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @since		1.1
  * @author		marcan <marcan@impresscms.org>
  */
-class icms_preload_Handler {
+
+namespace Icms\Preload;
+
+class Handler {
 
 	/**
 	 * @var array $_preloadFilesArray array containing a list of all preload files in ICMS_PRELOAD_PATH
@@ -48,7 +51,7 @@ class icms_preload_Handler {
 	 * @return	void
 	 */
 	public function __construct() {
-		$preloadFilesArray = str_replace('.php', '', icms_core_Filesystem::getFileList(ICMS_PRELOAD_PATH, '', array('php')));
+		$preloadFilesArray = str_replace('.php', '', \Icms\Core\Filesystem::getFileList(ICMS_PRELOAD_PATH, '', array('php')));
 		foreach ($preloadFilesArray as $filename) {
 			// exclude index.html
 			if (!in_array($this->getClassName($filename), get_declared_classes())) {
@@ -97,7 +100,7 @@ class icms_preload_Handler {
 					$preload_event = strtolower(str_replace('event', '', $method));
 
 					$callback = array( $preloadItem, $method );
-					icms_Event::attach('icms', $preload_event, $callback);
+					\Icms\Event::attach('icms', $preload_event, $callback);
 					/*
 					$preload_event_weight_define_name = strtoupper($classname) . '_' . strtoupper($preload_event);
 					if (defined($preload_event_weight_define_name)) {
@@ -122,7 +125,7 @@ class icms_preload_Handler {
 	static public function &getInstance() {
 		static $instance;
 		if (!isset($instance)) {
-			$instance = new icms_preload_Handler();
+			$instance = new \Icms\Preload\Handler();
 		}
 		return $instance;
 	}
@@ -137,18 +140,18 @@ class icms_preload_Handler {
 	 * - beforeFooter	 triggered when include/footer.php is called, at the beginning of the file
 	 * - startOutputInit	 triggered when starting to output the content, in include/header.php after instantiation of $xoopsTpl
 	 * - adminBeforeFooter	 triggered before the footer is loaded in the admin control panel
-	 * - beforeFilterTextareaInput	 triggered before text from a textarea is processed to save to the database (@see icms_core_DataFilter)
-	 * - afterFilterTextareaInput	 triggered after text from a textarea is processed to save to the database (@see icms_core_DataFilter)
-	 * - beforeFilterTextareaDisplay	 triggered before text from a textarea is processed to display (@see icms_core_DataFilter)
-	 * - afterFilterTextareaDisplay	 triggered after text from a textarea is processed to display (@see icms_core_DataFilter)
-	 * - beforeFilterHTMLinput	 triggered before text from a textarea is processed as HTML to save to the database (@see icms_core_DataFilter)
-	 * - afterFilterHTMLinput	 triggered after text from a textarea is processed as HTML to save to the database (@see icms_core_DataFilter)
-	 * - beforeFilterHTMLdisplay	 triggered before text from a textarea is processed as HTML to display (@see icms_core_DataFilter)
-	 * - afterFilterHTMLdisplay	 triggered after text from a textarea is processed as HTML to display (@see icms_core_DataFilter)
-	 * - beforeDisplayTarea	 triggered before before text from a textarea is processed to display (@see icms_core_Textsanitizer)
-	 * - afterDisplayTarea	 triggered after text from a textarea is processed to display (@see icms_core_Textsanitizer)
-	 * - beforePreviewTarea	 triggered before text from a textarea is processed for preview (@see icms_core_Textsanitizer)
-	 * - afterPreviewTarea	 triggered after text from a textarea is processed for preview (@see icms_core_Textsanitizer)
+	 * - beforeFilterTextareaInput	 triggered before text from a textarea is processed to save to the database (@see \Icms\Core\DataFilter)
+	 * - afterFilterTextareaInput	 triggered after text from a textarea is processed to save to the database (@see \Icms\Core\DataFilter)
+	 * - beforeFilterTextareaDisplay	 triggered before text from a textarea is processed to display (@see \Icms\Core\DataFilter)
+	 * - afterFilterTextareaDisplay	 triggered after text from a textarea is processed to display (@see \Icms\Core\DataFilter)
+	 * - beforeFilterHTMLinput	 triggered before text from a textarea is processed as HTML to save to the database (@see \Icms\Core\DataFilter)
+	 * - afterFilterHTMLinput	 triggered after text from a textarea is processed as HTML to save to the database (@see \Icms\Core\DataFilter)
+	 * - beforeFilterHTMLdisplay	 triggered before text from a textarea is processed as HTML to display (@see \Icms\Core\DataFilter)
+	 * - afterFilterHTMLdisplay	 triggered after text from a textarea is processed as HTML to display (@see \Icms\Core\DataFilter)
+	 * - beforeDisplayTarea	 triggered before before text from a textarea is processed to display (@see \Icms\Core\Textsanitizer)
+	 * - afterDisplayTarea	 triggered after text from a textarea is processed to display (@see \Icms\Core\Textsanitizer)
+	 * - beforePreviewTarea	 triggered before text from a textarea is processed for preview (@see \Icms\Core\Textsanitizer)
+	 * - afterPreviewTarea	 triggered after text from a textarea is processed for preview (@see \Icms\Core\Textsanitizer)
 	 * - savingSystemAdminPreferencesItem	 triggered before saving preferences in the admin control panel (modules/system/preferences/main.php)
 	 * - afterSaveSystemAdminPreferencesItems	triggered after  saving preferences in the admin control panel (modules/system/preferences/main.php)
 	 *
@@ -159,7 +162,7 @@ class icms_preload_Handler {
 	 */
 	public function triggerEvent($event, $array = array()) {
 		$event = strtolower($event);
-		icms_Event::trigger('icms', $event, null, $array);
+		\Icms\Event::trigger('icms', $event, null, $array);
 	}
 
 	/**

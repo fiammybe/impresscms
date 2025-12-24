@@ -9,7 +9,10 @@
  * @version		SVN: $Id$
  */
 
-class icms_Event {
+
+namespace Icms;
+
+class Event {
 	/**
 	 * Registered event handlers
 	 * @var array
@@ -24,7 +27,7 @@ class icms_Event {
 	/**
 	 * Returns information about a fired event.
 	 * @param int $index 0 for current, 1 for parent (if current event due to another event), and so on...
-	 * @return icms_Event
+	 * @return \Icms\Event
 	 */
 	static public function current($index = 0) {
 		return isset(self::$events[$index]) ? self::$events[$index] : false;
@@ -33,15 +36,15 @@ class icms_Event {
 	/**
 	 * Registers an event handler
 	 *
-	 * icms_Event::attach( 'icms_db_IConnection', 'connect', 'something' );
+	 * \Icms\Event::attach( 'icms_db_IConnection', 'connect', 'something' );
 	 * => will call something( $eventParams, $event ) when the event is fired
-	 * icms_Event::attach( 'icms_db_IConnection', 'connect', array( $object, 'something' ) );
+	 * \Icms\Event::attach( 'icms_db_IConnection', 'connect', array( $object, 'something' ) );
 	 * => will call $object->something( $eventParams, $event ) when the event is fired
-	 * icms_Event::attach( 'icms_db_IConnection', '*', array( 'MyClass', 'something' ) );
+	 * \Icms\Event::attach( 'icms_db_IConnection', '*', array( 'MyClass', 'something' ) );
 	 * => will call MyClass::something( $eventParams, $event ) when any event that
 	 * belongs to the 'icms_db_IConnection' namespace is fired
 	 * Also, on PHP 5.3+, you can use closures:
-	 * icms_Event::attach( 'icms_db_IConnection', 'execute', function ( $params, $event ) {
+	 * \Icms\Event::attach( 'icms_db_IConnection', 'execute', function ( $params, $event ) {
 	 *    echo 'Executing: ' . $params['sql'];
 	 * } );
 	 *
@@ -80,7 +83,7 @@ class icms_Event {
 	 * @param string $name Event name (use * to attach to all events of $namespace)
 	 * @param object $source Object that triggered this event
 	 * @param array $parameters Event parameters
-	 * @return icms_Event
+	 * @return \Icms\Event
 	 */
 	static public function trigger($namespace, $name, $source, $parameters = array()) {
 		$cancancel = false;
@@ -88,7 +91,7 @@ class icms_Event {
 			$cancancel = true;
 			$name = substr($name, 1);
 		}
-		$event = new icms_Event($namespace, $name, $source, $parameters, $cancancel);
+		$event = new \Icms\Event($namespace, $name, $source, $parameters, $cancancel);
 		array_unshift(self::$events, $event);
 		foreach (array("*", $name) as $handlers) {
 			if (isset(self::$handlers[$namespace][$handlers])) {

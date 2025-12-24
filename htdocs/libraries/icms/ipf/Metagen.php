@@ -21,7 +21,10 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @package		Ipf
  * @todo		Properly set visibility of variables - in version 2.0
  */
-class icms_ipf_Metagen {
+
+namespace Icms\Ipf;
+
+class Metagen {
 	/** @var object */
 	public $_myts;
 
@@ -56,7 +59,7 @@ class icms_ipf_Metagen {
 	 *
 	 */
 	public function __construct($title, $keywords = false, $description = false, $categoryPath = false) {
-		$this->_myts = icms_core_Textsanitizer::GetInstance();
+		$this->_myts = \Icms\Core\Textsanitizer::GetInstance();
 		$this->setCategoryPath($categoryPath);
 		$this->setTitle($title);
 		$this->setDescription($description);
@@ -65,7 +68,7 @@ class icms_ipf_Metagen {
 			$keywords = $this->createMetaKeywords();
 		}
 
-		/*		$myts = icms_core_Textsanitizer::getInstance();
+		/*		$myts = \Icms\Core\Textsanitizer::getInstance();
 		 if (method_exists($myts, 'formatForML')) {
 			$keywords = $myts->formatForML($keywords);
 			$description = $myts->formatForML($description);
@@ -224,7 +227,7 @@ class icms_ipf_Metagen {
 		$description = preg_replace("/([^\r\n])\r\n([^\r\n])/", "\\1 \\2", $description);
 		$description = preg_replace("/[\r\n]*\r\n[\r\n]*/", "\r\n\r\n", $description);
 		$description = preg_replace("/[ ]* [ ]*/", ' ', $description);
-		$description = icms_core_DataFilter::stripSlashesGPC($description);
+		$description = \Icms\Core\DataFilter::stripSlashesGPC($description);
 
 		$this->_description = $description;
 		$this->_meta_description = $this->createMetaDescription();
@@ -287,7 +290,7 @@ class icms_ipf_Metagen {
 		$text = preg_replace("/([^\r\n])\r\n([^\r\n])/", "\\1 \\2", $text);
 		$text = preg_replace("/[\r\n]*\r\n[\r\n]*/", "\r\n\r\n", $text);
 		$text = preg_replace("/[ ]* [ ]*/", ' ', $text);
-		$text = icms_core_DataFilter::stripSlashesGPC($text);
+		$text = \Icms\Core\DataFilter::stripSlashesGPC($text);
 
 		$originalKeywords = preg_split ('/[^a-zA-Z\'"-]+/', $text, -1, PREG_SPLIT_NO_EMPTY);
 

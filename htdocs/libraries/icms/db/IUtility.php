@@ -18,7 +18,10 @@
  * @package		Database
  * @since		2.0
  */
-interface icms_db_IUtility {
+
+namespace Icms\Db;
+
+interface IUtility {
 
 	/**
 	 * Creates a new utility object

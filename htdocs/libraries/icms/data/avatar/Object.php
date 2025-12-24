@@ -52,7 +52,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @subpackage	Avatar
  *
  */
-class icms_data_avatar_Object extends icms_core_Object {
+
+namespace Icms\Data\Avatar;
+
+class Object extends \Icms\Core\Object {
 	/** @var integer */
 	private $_userCount;
 

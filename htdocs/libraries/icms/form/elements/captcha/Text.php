@@ -25,7 +25,10 @@
  * @package		Form
  * @subpackage	Elements
  */
-class icms_form_elements_captcha_Text {
+
+namespace Icms\Form\Elements\Captcha;
+
+class Text {
 
 	public $config = array();
 	public $code;

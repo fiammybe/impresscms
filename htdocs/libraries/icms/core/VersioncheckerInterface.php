@@ -18,7 +18,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  *
  * Defines the contract that all version checker implementations must follow
  */
-interface icms_core_VersioncheckerInterface {
+
+namespace Icms\Core;
+
+interface VersioncheckerInterface {
 
 	/**
 	 * Check for a newer version

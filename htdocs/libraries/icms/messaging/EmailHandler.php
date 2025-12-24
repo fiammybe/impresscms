@@ -40,6 +40,9 @@
 /**
  * load the base class
  */
+
+namespace Icms\Messaging;
+
 require_once ICMS_LIBRARIES_PATH . '/phpmailer/src/Exception.php';
 require_once ICMS_LIBRARIES_PATH . '/phpmailer/src/PHPMailer.php';
 require_once ICMS_LIBRARIES_PATH . '/phpmailer/src/SMTP.php';
@@ -57,7 +60,7 @@ use PHPMailer\PHPMailer\Exception;
  * @package Core
  * @subpackage Mail
  */
-class icms_messaging_EmailHandler extends PHPMailer {
+class EmailHandler extends PHPMailer {
 
 	/**
 	 * "from" address

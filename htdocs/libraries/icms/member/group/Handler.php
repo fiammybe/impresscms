@@ -51,17 +51,20 @@ if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
  * @package		Member
  * @subpackage	Group
  */
-class icms_member_group_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Member\Group;
+
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * create a new {@link icms_member_group_Object} object
 	 *
 	 * @param bool $isNew mark the new object as "new"?
 	 * @return object icms_member_group_Object {@link icms_member_group_Object} reference to the new object
-	 * @see icms_core_ObjectHandler#create()
+	 * @see \Icms\Core\ObjectHandler#create()
 	 */
 	public function &create($isNew = true) {
-		$group = new icms_member_group_Object();
+		$group = new \Icms\Member\Group\Object();
 		if ($isNew) {
 			$group->setNew();
 		}
@@ -73,7 +76,7 @@ class icms_member_group_Handler extends icms_core_ObjectHandler {
 	 *
 	 * @param int $id ID of the group to get
 	 * @return object icms_member_group_Object {@link icms_member_group_Object} reference to the group object, FALSE if failed
-	 * @see icms_core_ObjectHandler#get($int_id)
+	 * @see \Icms\Core\ObjectHandler#get($int_id)
 	 */
 	public function &get($id) {
 		$id = (int) $id;
@@ -85,7 +88,7 @@ class icms_member_group_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = icms::$xoopsDB->getRowsNum($result);
 			if ($numrows == 1) {
-				$group = new icms_member_group_Object();
+				$group = new \Icms\Member\Group\Object();
 				$group->assignVars(icms::$xoopsDB->fetchArray($result));
 			}
 		}
@@ -97,11 +100,11 @@ class icms_member_group_Handler extends icms_core_ObjectHandler {
 	 *
 	 * @param object reference to the group object
 	 * @return mixed ID of the group if inserted, FALSE if failed, TRUE if already present and unchanged.
-	 * @see icms_core_ObjectHandler#insert($object)
+	 * @see \Icms\Core\ObjectHandler#insert($object)
 	 */
 	public function insert(&$group) {
 		/* As of PHP5.3.0, is_a()is no longer deprecated, so there is no reason to replace it */
-		if (!is_a($group, 'icms_member_group_Object')) {
+		if (!is_a($group, 'Icms\Member\Group\Object')) {
 			return false;
 		}
 		if (!$group->isDirty()) {
@@ -148,11 +151,11 @@ class icms_member_group_Handler extends icms_core_ObjectHandler {
 	 *
 	 * @param object $group reference to the group to be removed
 	 * @return bool FALSE if failed
-	 * @see icms_core_ObjectHandler#delete($object)
+	 * @see \Icms\Core\ObjectHandler#delete($object)
 	 */
 	public function delete(&$group) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated and there is no need to replace it */
-		if (!is_a($group, 'icms_member_group_Object')) {
+		if (!is_a($group, 'Icms\Member\Group\Object')) {
 			return false;
 		}
 		$sql = sprintf(
@@ -187,7 +190,7 @@ class icms_member_group_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = icms::$xoopsDB->fetchArray($result)) {
-			$group = new icms_member_group_Object();
+			$group = new \Icms\Member\Group\Object();
 			$group->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $group;

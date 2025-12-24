@@ -50,7 +50,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_elements_select_Group extends icms_form_elements_Select {
+
+namespace Icms\Form\Elements\Select;
+
+class Group extends \Icms\Form\Elements\Select {
 	/**
 	 * Constructor
 	 *
@@ -65,7 +68,7 @@ class icms_form_elements_select_Group extends icms_form_elements_Select {
 		parent::__construct($caption, $name, $value, $size, $multiple);
 		$member_handler = icms::handler('icms_member');
 		if (!$include_anon) {
-			$this->addOptionArray($member_handler->getGroupList(new icms_db_criteria_Item('groupid', ICMS_GROUP_ANONYMOUS, '!=')));
+			$this->addOptionArray($member_handler->getGroupList(new \Icms\Db\Criteria\Item('groupid', ICMS_GROUP_ANONYMOUS, '!=')));
 		} else {
 			$this->addOptionArray($member_handler->getGroupList());
 		}

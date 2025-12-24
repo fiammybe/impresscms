@@ -52,17 +52,20 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package		View
  * @subpackage	Template
  */
-class icms_view_template_set_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\View\Template\Set;
+
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * create a new templateset instance
 	 *
-	 * @see icms_view_template_set_Object
+	 * @see \Icms\View\Template\Set\Object
 	 * @param bool $isNew is the new tempateset new??
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
 	public function &create($isNew = true) {
-		$tplset = new icms_view_template_set_Object();
+		$tplset = new \Icms\View\Template\Set\Object();
 		if ($isNew) {
 			$tplset->setNew();
 		}
@@ -72,7 +75,7 @@ class icms_view_template_set_Handler extends icms_core_ObjectHandler {
 	/**
 	 * Gets templateset from database by ID
 	 *
-	 * @see icms_view_template_set_Object
+	 * @see \Icms\View\Template\Set\Object
 	 * @param int $id of the tempateset to get
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
@@ -87,7 +90,7 @@ class icms_view_template_set_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$tplset = new icms_view_template_set_Object();
+				$tplset = new \Icms\View\Template\Set\Object();
 				$tplset->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -97,7 +100,7 @@ class icms_view_template_set_Handler extends icms_core_ObjectHandler {
 	/**
 	 * Gets templateset from database by Name
 	 *
-	 * @see icms_view_template_set_Object
+	 * @see \Icms\View\Template\Set\Object
 	 * @param string $tplset_name of the tempateset to get
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
@@ -112,7 +115,7 @@ class icms_view_template_set_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$tplset = new icms_view_template_set_Object();
+				$tplset = new \Icms\View\Template\Set\Object();
 				$tplset->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -122,13 +125,13 @@ class icms_view_template_set_Handler extends icms_core_ObjectHandler {
 	/**
 	 * Inserts templateset into the database
 	 *
-	 * @see icms_view_template_set_Object
+	 * @see \Icms\View\Template\Set\Object
 	 * @param string $tplset_name of the tempateset to get
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
 	public function insert(&$tplset) {
 		/* As of PHP5.3.0, is_as() is no longer deprecated */
-		if (!is_a($tplset, 'icms_view_template_set_Object')) {
+		if (!is_a($tplset, 'Icms\View\Template\Set\Object')) {
 			return false;
 		}
 		if (!$tplset->isDirty()) {
@@ -181,13 +184,13 @@ class icms_view_template_set_Handler extends icms_core_ObjectHandler {
 	/**
 	 * Deletes templateset from the database
 	 *
-	 * @see icms_view_template_set_Object
+	 * @see \Icms\View\Template\Set\Object
 	 * @param object $tplset {@link icms_view_template_set_Object} reference to the object of the tempateset to delete
 	 * @return object icms_view_template_set_Object {@link icms_view_template_set_Object} reference to the new template
 	 **/
 	public function delete(&$tplset) {
 		/* As of PHP5.3.0, ia_a() is no longer deprecated */
-		if (!is_a($tplset, 'icms_view_template_set_Object')) {
+		if (!is_a($tplset, 'Icms\View\Template\Set\Object')) {
 			return false;
 		}
 
@@ -228,7 +231,7 @@ class icms_view_template_set_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$tplset = new icms_view_template_set_Object();
+			$tplset = new \Icms\View\Template\Set\Object();
 			$tplset->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $tplset;

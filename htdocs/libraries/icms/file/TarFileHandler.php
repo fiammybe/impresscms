@@ -90,7 +90,10 @@
  * @package     File
  *
  */
-class icms_file_TarFileHandler {
+
+namespace Icms\File;
+
+class TarFileHandler {
 	/**#@+
 	 * Unprocessed Archive Information
 	 */

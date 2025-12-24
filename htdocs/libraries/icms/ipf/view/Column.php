@@ -27,7 +27,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @since		1.1
  * @author		marcan <marcan@impresscms.org>
  */
-class icms_ipf_view_Column {
+
+namespace Icms\Ipf\View;
+
+class Column {
 
 	private $_keyname;
 	private $_align;

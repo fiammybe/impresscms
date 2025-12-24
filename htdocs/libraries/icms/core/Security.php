@@ -48,7 +48,10 @@
  * @author		Jan Pedersen <mithrandir@xoops.org>
  * @copyright	(c) 2000-2005 The Xoops Project - www.xoops.org
  */
-class icms_core_Security {
+
+namespace Icms\Core;
+
+class Security {
 
 	public $errors = array();
 
@@ -56,12 +59,12 @@ class icms_core_Security {
 	 * Initialize the icms::$security service
 	 */
 	static public function service() {
-		$instance = new icms_core_Security();
+		$instance = new \Icms\Core\Security();
 		$instance->checkSuperglobals();
 		if ($_SERVER['REQUEST_METHOD'] != 'POST' || !$instance->checkReferer(XOOPS_DB_CHKREF)) {
 			define('XOOPS_DB_PROXY', 1);
 		}
-		icms_Event::attach('icms', 'loadService-config', array($instance, 'checkBadips'));
+		\Icms\Event::attach('icms', 'loadService-config', array($instance, 'checkBadips'));
 		return $instance;
 	}
 

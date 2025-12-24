@@ -46,7 +46,10 @@
  * @author		Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_core_OnlineHandler {
+
+namespace Icms\Core;
+
+class OnlineHandler {
 
 	/**
 	 * Database connection

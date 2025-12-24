@@ -19,7 +19,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		fiammybe <david.j@impresscms.org>
  * @todo		turn this into a generic way of testing for new updates from github, also for themes, modules, ...
  */
-class icms_core_Versioncheckergithub extends icms_core_Versionchecker implements icms_core_VersioncheckerInterface
+
+namespace Icms\Core;
+
+class Versioncheckergithub extends \Icms\Core\Versionchecker implements \Icms\Core\VersioncheckerInterface
 {
 
 	/*

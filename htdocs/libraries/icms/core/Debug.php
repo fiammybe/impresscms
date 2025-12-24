@@ -17,7 +17,10 @@
 /**
  * This class and its methods handle all the debug messages
  */
-class icms_core_Debug {
+
+namespace Icms\Core;
+
+class Debug {
 
 	/* Since all the methods are static, there is no __construct necessary	 */
 
@@ -41,8 +44,8 @@ class icms_core_Debug {
  	 * @param string $var
  	 */
  	static public function vardump($var) {
- 		if (class_exists('icms_core_Textsanitizer')) {
-			self::message(icms_core_DataFilter::checkVar(var_export($var, true), 'text', 'output'));
+ 		if (class_exists('Icms\Core\Textsanitizer')) {
+			self::message(\Icms\Core\DataFilter::checkVar(var_export($var, true), 'text', 'output'));
  		} else {
 			$var = var_export($var, true);
 			$var = preg_replace("/(\015\012)|(\015)|(\012)/", "<br />", $var);

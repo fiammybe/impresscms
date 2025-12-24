@@ -19,7 +19,10 @@
  * @package		Ipf
  * @subpackage	Export
  */
-class icms_ipf_export_Handler {
+
+namespace Icms\Ipf\Export;
+
+class Handler {
 
 	public $handler;
 	public $criteria;
@@ -86,7 +89,7 @@ class icms_ipf_export_Handler {
 		$data = array();
 		$data['rows'] = $rows;
 		$data['columnsHeaders'] = $columnsHeaders;
-		$smartExportRenderer = new icms_ipf_export_Renderer($data, $this->filename, $this->filepath, $this->format, $this->options);
+		$smartExportRenderer = new \Icms\Ipf\Export\Renderer($data, $this->filename, $this->filepath, $this->format, $this->options);
 		$smartExportRenderer->execute();
 	}
 

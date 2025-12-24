@@ -47,7 +47,10 @@
  * @package     View
  * @subpackage  Theme
  */
-class icms_view_theme_Factory
+
+namespace Icms\View\Theme;
+
+class Factory
 {
     public $xoBundleIdentifier = 'icms_view_theme_Factory';
     /**
@@ -96,7 +99,7 @@ class icms_view_theme_Factory
             (is_dir(ICMS_MODULES_PATH . '/system/themes/' . $options['folderName']))
                 ? ICMS_MODULES_PATH . '/system/themes/' . $options['folderName']
                 : ICMS_THEME_PATH . '/' . $options['folderName'];
-        $inst = new icms_view_theme_Object();
+        $inst = new \Icms\View\Theme\Object();
         foreach ($options as $k => $v) {
             $inst->$k = $v;
         }
@@ -121,7 +124,7 @@ class icms_view_theme_Factory
     public static function getThemesList()
     {
         $dirtyList = $cleanList = array();
-        $dirtyList = icms_core_Filesystem::getDirList(ICMS_THEME_PATH . '/');
+        $dirtyList = \Icms\Core\Filesystem::getDirList(ICMS_THEME_PATH . '/');
         foreach ($dirtyList as $item) {
             if (file_exists(ICMS_THEME_PATH . '/' . $item . '/theme.html')) {
                 $cleanList[$item] = $item;
@@ -139,8 +142,8 @@ class icms_view_theme_Factory
     {
         $dirtyList1 = $cleanList1 = array();
         $dirtyList2 = $cleanList2 = array();
-        $dirtyList1 = icms_core_Filesystem::getDirList(ICMS_THEME_PATH . '/');
-        $dirtyList2 = icms_core_Filesystem::getDirList(ICMS_MODULES_PATH . '/system/themes/');
+        $dirtyList1 = \Icms\Core\Filesystem::getDirList(ICMS_THEME_PATH . '/');
+        $dirtyList2 = \Icms\Core\Filesystem::getDirList(ICMS_MODULES_PATH . '/system/themes/');
         foreach ($dirtyList1 as $item1) {
             if (file_exists(ICMS_THEME_PATH . '/' . $item1 . '/theme_admin.html')) {
                 $cleanList1[$item1] = $item1;

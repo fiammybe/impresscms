@@ -48,7 +48,10 @@ defined('ICMS_ROOT_PATH') or exit();
  * @package		Member
  * @subpackage	User
  */
-class icms_member_user_Object extends icms_core_Object {
+
+namespace Icms\Member\User;
+
+class Object extends \Icms\Core\Object {
 	/**
 	 * Array of groups that user belongs to
 	 * @var array
@@ -151,12 +154,12 @@ class icms_member_user_Object extends icms_core_Object {
 				if ($usereal) {
 					$name = $user->getVar('name');
 					if ($name != '') {
-						return icms_core_DataFilter::htmlSpecialChars($name);
+						return \Icms\Core\DataFilter::htmlSpecialChars($name);
 					} else {
-						return icms_core_DataFilter::htmlSpecialChars($user->getVar('uname'));
+						return \Icms\Core\DataFilter::htmlSpecialChars($user->getVar('uname'));
 					}
 				} else {
-					return icms_core_DataFilter::htmlSpecialChars($user->getVar('uname'));
+					return \Icms\Core\DataFilter::htmlSpecialChars($user->getVar('uname'));
 				}
 			}
 		}
@@ -193,7 +196,7 @@ class icms_member_user_Object extends icms_core_Object {
 		$xoopsMailer->setToEmails($user_email);
 		$xoopsMailer->setFromEmail($icmsConfig['adminmail']);
 		$xoopsMailer->setFromName($icmsConfig['sitename']);
-		$xoopsMailer->setSubject(sprintf(_US_YOURREGISTRATION, icms_core_DataFilter::stripSlashesGPC($icmsConfig['sitename'])));
+		$xoopsMailer->setSubject(sprintf(_US_YOURREGISTRATION, \Icms\Core\DataFilter::stripSlashesGPC($icmsConfig['sitename'])));
 		if (!$xoopsMailer->send(true)) {
 			$this->setErrors(_US_WELCOMEMSGFAILED);
 			return false;

@@ -40,6 +40,9 @@
 
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
+
+namespace Icms\Messaging;
+
 icms_loadLanguageFile('core', 'mail');
 
 /**
@@ -51,10 +54,10 @@ icms_loadLanguageFile('core', 'mail');
  * @category	ICMS
  * @package		Messaging
  */
-class icms_messaging_Handler {
+class Handler {
 	/**
 	 * reference to a {@link icms_messaging_EmailHandler}
-	 * @var		icms_messaging_EmailHandler
+	 * @var \Icms\Messaging\EmailHandler
 	 */
 	private $multimailer;
 
@@ -107,7 +110,7 @@ class icms_messaging_Handler {
 		if (class_exists('XoopsMailerLocal')) {
 			$this->multimailer = new XoopsMailerLocal();
 		} else {
-			$this->multimailer = new icms_messaging_Handler();
+			$this->multimailer = new \Icms\Messaging\Handler();
 		}
 		$this->reset();
 	}

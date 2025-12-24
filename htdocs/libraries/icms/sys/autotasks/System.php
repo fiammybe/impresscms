@@ -16,8 +16,11 @@
  * @category	ICMS
  * @package		Autotasks
  */
-abstract class icms_sys_autotasks_System
-implements icms_sys_autotasks_ISystem  {
+
+namespace Icms\Sys\Autotasks;
+
+abstract class System
+implements \Icms\Sys\Autotasks\ISystem  {
 
 	/**
 	 *

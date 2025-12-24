@@ -52,13 +52,16 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		Taiwen Jiang    <phppp@users.sourceforge.net>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-abstract class icms_form_Element {
+
+namespace Icms\Form;
+
+abstract class Element {
 
 	/**
 	 * Javascript performing additional validation of this element data
 	 *
 	 * This property contains a list of Javascript snippets that will be sent to
-	 * icms_form_Base::renderValidationJS().
+	 * \Icms\Form\Base::renderValidationJS().
 	 * NB: All elements are added to the output one after the other, so don't forget
 	 * to add a ";" after each to ensure no Javascript syntax error is generated.
 	 *
@@ -334,7 +337,7 @@ abstract class icms_form_Element {
 	/**
 	 * Render custom javascript validation code
 	 *
-	 * @see icms_form_Base::renderValidationJS
+	 * @see \Icms\Form\Base::renderValidationJS
 	 */
 	public function renderValidationJS() {
 		// render custom validation code if any

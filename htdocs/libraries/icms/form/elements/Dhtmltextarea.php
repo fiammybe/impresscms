@@ -50,7 +50,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_elements_Dhtmltextarea extends icms_form_elements_Textarea {
+
+namespace Icms\Form\Elements;
+
+class Dhtmltextarea extends \Icms\Form\Elements\Textarea {
 	/**
 	 * Extended HTML editor definition
 	 *
@@ -139,7 +142,7 @@ class icms_form_elements_Dhtmltextarea extends icms_form_elements_Textarea {
 			. "<img onmouseover='style.cursor=\"pointer\"' onclick='javascript:openWithSelfMain(\"" . ICMS_URL . "/modules/system/admin/images/browser.php?target=" . $ele_name . "&type=iman\",\"imgmanager\",985,470);' src='" . ICMS_URL . "/images/image.gif' alt='image' />&nbsp;";
 		$jscript = '';
 		foreach ($icmsConfigPlugins['sanitizer_plugins'] as $key) {
-			$extension = icms_core_DataFilter::loadExtension($key);
+			$extension = \Icms\Core\DataFilter::loadExtension($key);
 			$func = "render_{$key}";
 			if (function_exists($func)) {
 				@list($encode, $js) = $func($ele_name);
@@ -251,7 +254,7 @@ class icms_form_elements_Dhtmltextarea extends icms_form_elements_Textarea {
 	 * @return	string HTML
 	 */
 	private function _renderSmileys() {
-		$smiles =& icms_core_DataFilter::getSmileys();
+		$smiles =& \Icms\Core\DataFilter::getSmileys();
 		$ret = '';
 		$count = count($smiles);
 		$ele_name = $this->getName();

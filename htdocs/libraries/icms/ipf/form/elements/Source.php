@@ -14,7 +14,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Source extends icms_form_elements_Textarea {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Source extends icms_form_elements_Textarea {
 	/*
 	 * Editor's class instance
 	 */
@@ -32,7 +35,7 @@ class icms_ipf_form_elements_Source extends icms_form_elements_Textarea {
 
 		$control = $object->getControl($key);
 
-		$editor_handler = icms_plugins_EditorHandler::getInstance('source');
+		$editor_handler = \Icms\Plugins\EditorHandler::getInstance('source');
 		$this->_editor = &$editor_handler->get($icmsConfig['sourceeditor_default'],
 			array('name' => $key,
 				'value' => $object->getVar($key, 'e'),

@@ -38,6 +38,9 @@
  */
 
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path is not defined");
+
+namespace Icms\Module;
+
 use \Composer\InstalledVersions;
 
 /**
@@ -51,7 +54,7 @@ use \Composer\InstalledVersions;
  * @author	Kazumi Ono 	<onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
-class icms_module_Handler extends icms_core_ObjectHandler {
+class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * holds an array of cached module references, indexed by module dirname
 	 *
@@ -75,7 +78,7 @@ class icms_module_Handler extends icms_core_ObjectHandler {
 	 * @return  object      {@link icms_module_Object}
 	 */
 	public function &create($isNew = TRUE) {
-		$module = new icms_module_Object();
+		$module = new \Icms\Module\Object();
 		if ($isNew) $module->setNew();
 		return $module;
 	}
@@ -101,7 +104,7 @@ class icms_module_Handler extends icms_core_ObjectHandler {
 				if (!$result = $this->db->query($sql)) return $module;
 				$numrows = $this->db->getRowsNum($result);
 				if ($numrows == 1) {
-					$module = new icms_module_Object();
+					$module = new \Icms\Module\Object();
 					$myrow = $this->db->fetchArray($result);
 					$module->assignVars($myrow);
 					// load module config
@@ -135,7 +138,7 @@ class icms_module_Handler extends icms_core_ObjectHandler {
 			if (!$result = $this->db->query($sql)) return $module;
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$module = new icms_module_Object();
+				$module = new \Icms\Module\Object();
 				$myrow = $this->db->fetchArray($result);
 				$module->assignVars($myrow);
 				// load module config
@@ -151,7 +154,7 @@ class icms_module_Handler extends icms_core_ObjectHandler {
 	/**
 	 * load config for a module before caching it
 	 *
-	 * @param	icms_module_Object	$module
+	 * @param \Icms\Module\Object	$module
 	 * @return	bool				TRUE
 	 */
 	private function loadConfig($module) {
@@ -322,7 +325,7 @@ class icms_module_Handler extends icms_core_ObjectHandler {
 		$result = $this->db->query($sql, $limit, $start);
 		if (!$result) return $ret;
 		while ($myrow = $this->db->fetchArray($result)) {
-			$module = new icms_module_Object();
+			$module = new \Icms\Module\Object();
 			$module->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] = $module;
@@ -387,7 +390,7 @@ class icms_module_Handler extends icms_core_ObjectHandler {
 	 */
 	static public function getAvailableOld() {
 		$dirtyList = $cleanList = array();
-		$dirtyList = icms_core_Filesystem::getDirList(ICMS_MODULES_PATH . '/');
+		$dirtyList = \Icms\Core\Filesystem::getDirList(ICMS_MODULES_PATH . '/');
 		foreach ($dirtyList as $item) {
 			if (file_exists(ICMS_MODULES_PATH . '/' . $item . '/icms_version.php')) {
 				$cleanList[$item] = $item;
@@ -429,7 +432,7 @@ class icms_module_Handler extends icms_core_ObjectHandler {
 	 */
 	static public function getActive() {
 		$module_handler = new self(icms::$xoopsDB);
-		$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('isactive', 1));
+		$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('isactive', 1));
 		return $module_handler->getList($criteria, TRUE);
 	}
 
@@ -460,7 +463,7 @@ class icms_module_Handler extends icms_core_ObjectHandler {
 	}
 	/**
 	 * Checks if the current user can access the specified module
-	 * @param icms_module_Object $module
+	 * @param \Icms\Module\Object $module
 	 * @param bool $inAdmin
 	 * @return bool
 	 */

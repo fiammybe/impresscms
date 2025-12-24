@@ -46,7 +46,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author		Kazumi Ono 	<onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
-class icms_image_Object extends icms_core_Object {
+
+namespace Icms\Image;
+
+class Object extends \Icms\Core\Object {
 	/**
 	 * Info of Image file (width, height, bits, mimetype)
 	 *

@@ -51,7 +51,10 @@ defined('ICMS_ROOT_PATH') or exit();
  * @package		Member
  * @subpackage	User
  */
-class icms_member_user_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Member\User;
+
+class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * create a new user
 	 *
@@ -70,7 +73,7 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 	}
 
 	public function &create($isNew = TRUE) {
-		$user = new icms_member_user_Object();
+		$user = new \Icms\Member\User\Object();
 		if ($isNew) {
 			$user->setNew();
 		}
@@ -91,7 +94,7 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 			if (!$result = $this->db->query($sql)) {return $user;}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$user = new icms_member_user_Object();
+				$user = new \Icms\Member\User\Object();
 				$user->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -107,7 +110,7 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 	 */
 	public function insert(&$user, $force = FALSE) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated and there is no need to replace it */
-		if (!is_a($user, 'icms_member_user_Object')) {return FALSE;}
+		if (!is_a($user, 'Icms\Member\User\Object')) {return FALSE;}
 		if (!$user->isDirty()) {return TRUE;}
 		if (!$user->cleanVars()) {
 			return FALSE;
@@ -204,7 +207,7 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 	 */
 	public function delete(&$user, $force = FALSE) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated and there is no need to replace it */
-		if (!is_a($user, 'icms_member_user_Object')) {return FALSE;}
+		if (!is_a($user, 'Icms\Member\User\Object')) {return FALSE;}
 		$pass = substr(md5(time()), 0, 8);
 		$sql = sprintf(
 			"UPDATE %s SET level = '-1', pass = '%s' WHERE uid = '%u'",
@@ -243,7 +246,7 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 		$result = $this->db->query($sql, $limit, $start);
 		if (!$result) {return $ret;}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$user = new icms_member_user_Object();
+			$user = new \Icms\Member\User\Object();
 			$user->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $user;
@@ -323,7 +326,7 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 		// initializations
 		$member_handler = icms::handler('icms_member');
 		$thisUser = ($uid > 0) ? $thisUser = $member_handler->getUser($uid) : FALSE;
-		$icmsStopSpammers = new icms_core_StopSpammer();
+		$icmsStopSpammers = new \Icms\Core\StopSpammer();
 		$stop = '';
 		switch ($icmsConfigUser['uname_test_level']) {
 			case 0: // strict
@@ -339,13 +342,13 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 
 		// check email
 		if ((is_object($thisUser) && $thisUser->getVar('email', 'e') != $email && $email !== FALSE) || !is_object($thisUser)) {
-			if (!icms_core_DataFilter::checkVar($email, 'email', 0, 1)) $stop .= _US_INVALIDMAIL . '<br />';
+			if (!\Icms\Core\DataFilter::checkVar($email, 'email', 0, 1)) $stop .= _US_INVALIDMAIL . '<br />';
 			$count = $this->getCount(icms_buildCriteria(array('email' => addslashes($email))));
 			if ($count > 0) $stop .= _US_EMAILTAKEN . '<br />';
 		}
 
 		// check login_name
-		$login_name = icms_core_DataFilter::icms_trim($login_name);
+		$login_name = \Icms\Core\DataFilter::icms_trim($login_name);
 		if ((is_object($thisUser) && $thisUser->getVar('login_name', 'e') != $login_name && $login_name !== FALSE) || !is_object($thisUser)) {
 			if (empty($login_name) || preg_match($restriction, $login_name)) $stop .= _US_INVALIDNICKNAME . '<br />';
 			if (strlen($login_name) > $icmsConfigUser['maxuname']) $stop .= sprintf(_US_NICKNAMETOOLONG, $icmsConfigUser['maxuname']) . '<br />';
@@ -375,7 +378,7 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 			} elseif (($pass != '') && (strlen($pass) < $icmsConfigUser['minpass'])) {
 				$stop .= sprintf(_US_PWDTOOSHORT,$icmsConfigUser['minpass']) . '<br />';
 			}
-			if (isset($pass) && isset($login_name) && ($pass == $login_name || $pass == icms_core_DataFilter::utf8_strrev($login_name, TRUE) || strripos($pass, $login_name) === TRUE)) $stop .= _US_BADPWD . '<br />';
+			if (isset($pass) && isset($login_name) && ($pass == $login_name || $pass == \Icms\Core\DataFilter::utf8_strrev($login_name, TRUE) || strripos($pass, $login_name) === TRUE)) $stop .= _US_BADPWD . '<br />';
 		}
 
 		// check other things
@@ -419,7 +422,7 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 				if (($name) && !empty($fullname2)) $fullname = $user->getVar('name');
 				if (!empty($fullname)) $linkeduser = $fullname . "[";
                 $linkeduser .= '<a href="' . ICMS_URL . '/userinfo.php?uid=' . $uid . '"' . $author . '>';
-				$linkeduser .= icms_core_DataFilter::htmlSpecialChars($username) . "</a>";
+				$linkeduser .= \Icms\Core\DataFilter::htmlSpecialChars($username) . "</a>";
 				if (!empty($fullname)) $linkeduser .= "]";
 
 				if ($withContact) {

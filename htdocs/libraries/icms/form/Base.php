@@ -58,7 +58,10 @@
  * @subpackage	Base
  *
  */
-abstract class icms_form_Base {
+
+namespace Icms\Form;
+
+abstract class Base {
 
 	/**#@+
 	 * @access  private
@@ -122,7 +125,7 @@ abstract class icms_form_Base {
 		$this->_action = $action;
 		$this->_method = $method;
 		if ($addtoken != false) {
-			$this->addElement(new icms_form_elements_Hiddentoken());
+			$this->addElement(new \Icms\Form\Elements\Hiddentoken());
 		}
 	}
 

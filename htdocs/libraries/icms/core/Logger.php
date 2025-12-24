@@ -28,7 +28,10 @@
  * @package		Core
  * @subpackage	Logger
  */
-class icms_core_Logger {
+
+namespace Icms\Core;
+
+class Logger {
 
 	public $queries = array();
 	public $blocks = array();
@@ -58,7 +61,7 @@ class icms_core_Logger {
 	static public function &instance() {
 		static $instance;
 		if (!isset( $instance )) {
-			$instance = new icms_core_Logger();
+			$instance = new \Icms\Core\Logger();
 			// Always catch errors, for security reasons
 			set_error_handler( array( $instance, "handleError" ) );
 			set_exception_handler(array($instance, 'handleException'));
@@ -75,7 +78,7 @@ class icms_core_Logger {
 	 * @todo		Remove in version 1.4 - no occurrences in the core
 	 */
 	public function activate($showErrors = false) {
-		icms_core_Debug::setDeprecated('$this->activated = ', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
+		\Icms\Core\Debug::setDeprecated('$this->activated = ', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		$this->activated = $showErrors;
 	}
 
@@ -336,7 +339,7 @@ class icms_core_Logger {
 	 * @todo	Remove in version 1.4
 	 */
 	public function dumpAll() {
-		icms_core_Debug::setDeprecated('$this->dump("")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
+		\Icms\Core\Debug::setDeprecated('$this->dump("")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return $this->dump( '' );
 	}
 
@@ -348,7 +351,7 @@ class icms_core_Logger {
 	 * @todo	Remove in version 1.4
 	 */
 	public function dumpBlocks() {
-		icms_core_Debug::setDeprecated('$this->dump("blocks")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
+		\Icms\Core\Debug::setDeprecated('$this->dump("blocks")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return $this->dump('blocks');
 	}
 
@@ -360,7 +363,7 @@ class icms_core_Logger {
 	 * @todo	Remove in version 1.4
 	 */
 	public function dumpExtra() {
-		icms_core_Debug::setDeprecated('$this->dump("extra")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
+		\Icms\Core\Debug::setDeprecated('$this->dump("extra")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return $this->dump('extra');
 	}
 
@@ -372,7 +375,7 @@ class icms_core_Logger {
 	 * @todo	Remove in version 1.4
 	 */
 	public function dumpQueries() {
-		icms_core_Debug::setDeprecated('$this->dump("queries")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
+		\Icms\Core\Debug::setDeprecated('$this->dump("queries")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return $this->dump('queries');
 	}
 
@@ -384,7 +387,7 @@ class icms_core_Logger {
 	 * @todo	Remove in version 1.4
 	 */
 	public function dumpFilters() {
-		icms_core_Debug::setDeprecated('$this->dump("filters")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
+		\Icms\Core\Debug::setDeprecated('$this->dump("filters")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return $this->dump('filters');
 	}
 
@@ -398,7 +401,7 @@ class icms_core_Logger {
 	 * @todo		Remove in version 1.4 - no occurrences in the core
 	 */
 	public function renderErrors() {
-		icms_core_Debug::setDeprecated('$this->dump("errors")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
+		\Icms\Core\Debug::setDeprecated('$this->dump("errors")', sprintf(_CORE_REMOVE_IN_VERSION, '1.4'));
 		return $this->dump( 'errors' );
 	}
 

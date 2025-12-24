@@ -12,7 +12,7 @@
  *
  * Currently there are two types of CAPTCHA forms, text and image
  * The default mode is "text", it can be changed in the priority:
- * 1 If mode is set through icms_form_elements_Captcha::setConfig("mode", $mode), take it
+ * 1 If mode is set through \Icms\Form\Elements\Captcha::setConfig("mode", $mode), take it
  * 2 Elseif mode is set though captcha/config.php, take it
  * 3 Else, take "text"
  *
@@ -21,6 +21,9 @@
  * @subpackage	Elements
  * @version		SVN: $Id: Object.php 12340 2013-09-22 04:11:09Z skenow $
  */
+
+
+namespace Icms\Form\Elements\Captcha;
 
 icms_loadLanguageFile('core', 'captcha');
 /**
@@ -31,7 +34,7 @@ icms_loadLanguageFile('core', 'captcha');
  * @package		Form
  * @subpackage	Elements
  */
-class icms_form_elements_captcha_Object {
+class Object {
 
 	public $active	= TRUE;
 	/** potential values: image, text */

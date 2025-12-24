@@ -52,7 +52,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_elements_select_User extends icms_form_elements_Tray {
+
+namespace Icms\Form\Elements\Select;
+
+class User extends \Icms\Form\Elements\Tray {
 
 	/**
 	 * Constructor
@@ -67,7 +70,7 @@ class icms_form_elements_select_User extends icms_form_elements_Tray {
 	 */
 	public function __construct($caption, $name, $include_anon = FALSE, $value = NULL, $size = 1, $multiple = FALSE, $showremovedusers = FALSE, $justremovedusers = FALSE) {
 		$limit = 200;
-		$select_element = new icms_form_elements_Select('', $name, $value, $size, $multiple);
+		$select_element = new \Icms\Form\Elements\Select('', $name, $value, $size, $multiple);
 		if ($include_anon) {
 			$select_element->addOption(0, $GLOBALS['icmsConfig']['anonymous']);
 		}
@@ -80,16 +83,16 @@ class icms_form_elements_select_User extends icms_form_elements_Tray {
 				: array ($value)
 			);
 		if ($user_count > $limit && count($value) > 0) {
-			$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item("uid", "(" . implode(",", $value) . ")", "IN"));
+			$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item("uid", "(" . implode(",", $value) . ")", "IN"));
 		} else {
-			$criteria = new icms_db_criteria_Compo();
+			$criteria = new \Icms\Db\Criteria\Compo();
 			$criteria->setLimit($limit);
 		}
 		$criteria->setSort('uname');
 		if (!$showremovedusers) {
-			$criteria->add(new icms_db_criteria_Item('level', '-1', '!='));
+			$criteria->add(new \Icms\Db\Criteria\Item('level', '-1', '!='));
 		} elseif ($showremovedusers && $justremovedusers) {
-			$criteria->add(new icms_db_criteria_Item('level', '-1'));
+			$criteria->add(new \Icms\Db\Criteria\Item('level', '-1'));
 		}
 		$criteria->setOrder('ASC');
 		$users = $member_handler->getUserList($criteria);
@@ -132,12 +135,12 @@ class icms_form_elements_select_User extends icms_form_elements_Tray {
 					</script>";
 
 		$token = icms::$security->createToken();
-		$action_tray = new icms_form_elements_Tray("", " | ");
-		$action_tray->addElement(new icms_form_elements_Label('',
+		$action_tray = new \Icms\Form\Elements\Tray("", " | ");
+		$action_tray->addElement(new \Icms\Form\Elements\Label('',
 			"<a href='#' onclick='var sel = xoopsGetElementById(\"" . $name
 			. ($multiple ? "[]" : "") . "\");for (var i = sel.options.length-1; i >= 0; i--) {if (!sel.options[i].selected) {sel.options[i] = null;}}; return false;'>"
 			. _MA_USER_REMOVE . "</a>"));
-		$action_tray->addElement(new icms_form_elements_Label('',
+		$action_tray->addElement(new \Icms\Form\Elements\Label('',
 			"<a href='#' onclick='openWithSelfMain(\"" . ICMS_URL
 			. "/include/findusers.php?target={$name}&amp;multiple={$multiple}&amp;token={$token}\", \"userselect\", 800, 600, null); return false;' >"
 			. _MA_USER_MORE . "</a>" . $js_addusers));

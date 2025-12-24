@@ -49,7 +49,10 @@ defined('ICMS_ROOT_PATH') or exit();
  * @author		Kazumi Ono 	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-class icms_file_TarDownloader extends icms_file_DownloadHandler {
+
+namespace Icms\File;
+
+class TarDownloader extends \Icms\File\DownloadHandler {
 
 	/**
 	 * Constructor
@@ -58,7 +61,7 @@ class icms_file_TarDownloader extends icms_file_DownloadHandler {
 	 * @param string $mimyType  Mimetype
 	 **/
 	public function __construct($ext = '.tar.gz', $mimyType = 'application/x-gzip') {
-		$this->archiver = new icms_file_TarFileHandler();
+		$this->archiver = new \Icms\File\TarFileHandler();
 		$this->ext = trim($ext);
 		$this->mimeType = trim($mimyType);
 	}

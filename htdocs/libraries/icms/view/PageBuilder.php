@@ -54,7 +54,10 @@ defined('ICMS_ROOT_PATH') or exit();
  * @copyright	Copyright (c) 2000 XOOPS.org
  * @author      Gustavo Pilla (aka nekro) <nekro@impresscms.org>
  */
-class icms_view_PageBuilder {
+
+namespace Icms\View;
+
+class PageBuilder {
 
 	/** */
 	public $theme = FALSE;
@@ -116,7 +119,7 @@ class icms_view_PageBuilder {
 			$template =& $this->theme->template;
 			$backup = array($template->caching, $template->cache_lifetime);
 		} else {
-			$template = new icms_view_Tpl();
+			$template = new \Icms\View\Tpl();
 		}
 
 		/** moved here from buildBlocks to reduce redundant calls */
@@ -284,7 +287,7 @@ class icms_view_PageBuilder {
 		);
 
 		$bcachetime = (int) ($xobject->getVar('bcachetime'));
-		//$template = new icms_view_Tpl();
+		//$template = new \Icms\View\Tpl();
 		if (empty($bcachetime)) {
 			$template->caching = 0;
 		} else {

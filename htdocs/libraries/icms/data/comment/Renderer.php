@@ -47,7 +47,10 @@
  * @package		data
  * @subpackage	comment
  */
-class icms_data_comment_Renderer {
+
+namespace Icms\Data\Comment;
+
+class Renderer {
 
 	private $_tpl;
 	private $_comments = NULL;
@@ -86,7 +89,7 @@ class icms_data_comment_Renderer {
 	static function &instance(&$tpl, $use_icons = TRUE, $do_iconcheck = FALSE) {
 		static $instance;
 		if (!isset($instance)) {
-			$instance = new icms_data_comment_Renderer($tpl, $use_icons, $do_iconcheck);
+			$instance = new \Icms\Data\Comment\Renderer($tpl, $use_icons, $do_iconcheck);
 		}
 		return $instance;
 	}
@@ -142,7 +145,7 @@ class icms_data_comment_Renderer {
 	 */
 	public function renderThreadView($comment_id = 0, $admin_view = FALSE, $show_nav = TRUE) {
 		// construct comment tree
-		$xot = new icms_ipf_Tree($this->_comments, 'com_id', 'com_pid', 'com_rootid');
+		$xot = new \Icms\Ipf\Tree($this->_comments, 'com_id', 'com_pid', 'com_rootid');
 		$tree =& $xot->getTree();
 
 		if (FALSE != $this->_useIcons) {
@@ -253,7 +256,7 @@ class icms_data_comment_Renderer {
 	 * @param boolean $admin_view
 	 */
 	public function renderNestView($comment_id = 0, $admin_view = FALSE) {
-		$xot = new icms_ipf_Tree($this->_comments, 'com_id', 'com_pid', 'com_rootid');
+		$xot = new \Icms\Ipf\Tree($this->_comments, 'com_id', 'com_pid', 'com_rootid');
 		$tree =& $xot->getTree();
 		if (FALSE != $this->_useIcons) {
 			$title = $this->_getTitleIcon($tree[$comment_id]['obj']->getVar('com_icon')) . '&nbsp;' . $tree[$comment_id]['obj']->getVar('com_title');

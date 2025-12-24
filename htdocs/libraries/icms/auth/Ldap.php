@@ -48,7 +48,10 @@
  * @subpackage  Ldap
  * @author	    Pierre-Eric MENUET	<pemphp@free.fr>
  */
-class icms_auth_Ldap extends icms_auth_Object {
+
+namespace Icms\Auth;
+
+class Ldap extends \Icms\Auth\Object {
 
 	public $cp1252_map = array(
 		"\xc2\x80" => "\xe2\x82\xac", /* EURO SIGN */
@@ -208,7 +211,7 @@ class icms_auth_Ldap extends icms_auth_Object {
 	 * @return object {@link icms_member_user_Object} icms_member_user_Object object
 	 **/
 	public function loadicms_member_user_Object($userdn, $uname, $pwd = null) {
-		$provisHandler = icms_auth_Provisionning::getInstance($this);
+		$provisHandler = \Icms\Auth\Provisionning::getInstance($this);
 		$sr = ldap_read($this->_ds, $userdn, '(objectclass=*)');
 		$entries = ldap_get_entries($this->_ds, $sr);
 		if ($entries['count'] > 0) {

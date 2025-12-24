@@ -18,6 +18,9 @@
  *
  * @since 1.4
  */
-interface icms_db_IConnection {
+
+namespace Icms\Db;
+
+interface IConnection {
 
 }

@@ -27,12 +27,15 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
  * @since 		1.1
  */
-class icms_ipf_category_Object extends icms_ipf_seo_Object {
+
+namespace Icms\Ipf\Category;
+
+class Object extends \Icms\Ipf\Seo\Object {
 	/** Path that corresponds to the category */
 	private $_categoryPath;
 	/**
 	 * Constructor for icms_ipf_category_Object
-	 * @return icms_ipf_category_Object
+	 * @return \Icms\Ipf\Category\Object
 	 */
 	public function __construct() {
 		$this->initVar('categoryid', XOBJ_DTYPE_INT, '', true);
@@ -71,7 +74,7 @@ class icms_ipf_category_Object extends icms_ipf_seo_Object {
 	}
 	/**
 	 * Returns the description for the category
-	 * @see 	icms_ipf_Object::getValueFor()
+	 * @see \Icms\Ipf\Object::getValueFor()
 	 * @return 	string	Text to display as the description
 	 */
 	public function description() {
@@ -113,7 +116,7 @@ class icms_ipf_category_Object extends icms_ipf_seo_Object {
 	 */
 	public function getCategoryPath($withAllLink=true, $currentCategory=false)	{
 
-		$controller = new icms_ipf_Controller($this->handler);
+		$controller = new \Icms\Ipf\Controller($this->handler);
 
 		if (!$this->_categoryPath) {
 			if ($withAllLink && !$currentCategory) {

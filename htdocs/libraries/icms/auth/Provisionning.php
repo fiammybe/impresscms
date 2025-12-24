@@ -45,7 +45,10 @@
  * @author	    http://www.xoops.org The XOOPS Project
  * @author	    Pierre-Eric MENUET	<pemphp@free.fr>
  */
-class icms_auth_Provisionning {
+
+namespace Icms\Auth;
+
+class Provisionning {
 
 	private $_auth_instance;
 
@@ -57,7 +60,7 @@ class icms_auth_Provisionning {
 	static public function &getInstance(&$auth_instance) {
 		static $provis_instance;
 		if (!isset($provis_instance)) {
-			$provis_instance = new icms_auth_Provisionning($auth_instance);
+			$provis_instance = new \Icms\Auth\Provisionning($auth_instance);
 		}
 		return $provis_instance;
 	}
@@ -85,7 +88,7 @@ class icms_auth_Provisionning {
 	 */
 	public function geticms_member_user_Object($uname) {
 		$member_handler = icms::handler('icms_member');
-		$criteria = new icms_db_criteria_Item('uname', $uname);
+		$criteria = new \Icms\Db\Criteria\Item('uname', $uname);
 		$getuser = $member_handler->getUsers($criteria);
 		if (count($getuser) == 1) {
 			return $getuser[0];

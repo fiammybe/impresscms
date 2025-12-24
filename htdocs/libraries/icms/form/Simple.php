@@ -49,7 +49,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author	Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_Simple extends icms_form_Base {
+
+namespace Icms\Form;
+
+class Simple extends \Icms\Form\Base {
 	/**
 	 * This method is required - this method in the parent (abstract) class is also abstract
 	 * @param string $extra

@@ -1,3 +1,6 @@
+
+namespace Icms\Form\Elements\Select;
+
 <?PHP
 /**
  * Creates a form attribute which is able to select an image
@@ -34,7 +37,7 @@ defined('ICMS_ROOT_PATH') or die();
  *
  * @copyright	http://www.impresscms.org/ The ImpressCMS Project
  */
-class icms_form_elements_select_Image extends icms_form_elements_Select {
+class Image extends \Icms\Form\Elements\Select {
 	/**
 	 * OptGroup
 	 * @var array
@@ -107,8 +110,8 @@ class icms_form_elements_select_Image extends icms_form_elements_Select {
 		$image_handler = icms::handler('icms_image');
 		foreach ($catlist as $k=>$v) {
 			$this->_optgroupsID[$v] = $k;
-			$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('imgcat_id', $k));
-			$criteria->add(new icms_db_criteria_Item('image_display', 1));
+			$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('imgcat_id', $k));
+			$criteria->add(new \Icms\Db\Criteria\Item('image_display', 1));
 			$total = $image_handler->getCount($criteria);
 			if ($total > 0) {
 				$imgcat =& $imgcat_handler->get($k);

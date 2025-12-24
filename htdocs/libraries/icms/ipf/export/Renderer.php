@@ -18,7 +18,10 @@
  * @subpackage	Export
  *
  */
-class icms_ipf_export_Renderer {
+
+namespace Icms\Ipf\Export;
+
+class Renderer {
 
 	public $data;
 	public $format;

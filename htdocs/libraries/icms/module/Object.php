@@ -47,7 +47,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path is not defined');
  * @author Kazumi Ono <onokazu@xoops.org>
  * @copyright Copyright (c) 2000 XOOPS.org
  */
-class icms_module_Object extends icms_core_Object {
+
+namespace Icms\Module;
+
+class Object extends \Icms\Core\Object {
 	/**
 	 * Module configuration
 	 *
@@ -329,7 +332,7 @@ class icms_module_Object extends icms_core_Object {
 		}
 		icms_loadLanguageFile(icms::$module->getVar('dirname'), 'modinfo');
 		icms_loadLanguageFile(icms::$module->getVar('dirname'), 'admin');
-		$tpl = new icms_view_Tpl();
+		$tpl = new \Icms\View\Tpl();
 		$tpl->assign(array(
 			'headermenu' => $this->getAdminHeaderMenu(),
 			'adminmenu' => $this->getAdminMenu(),

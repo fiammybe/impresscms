@@ -55,7 +55,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package     Config
  * @subpackage  Category
  */
-class icms_config_category_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Config\Category;
+
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * Create a new category
@@ -66,7 +69,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 	 * @see htdocs/kernel/icms_core_ObjectHandler#create()
 	 */
 	public function &create($isNew = true)	{
-		$confcat = new icms_config_category_Object();
+		$confcat = new \Icms\Config\Category\Object();
 		if ($isNew) {
 			$confcat->setNew();
 		}
@@ -91,7 +94,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$confcat = new icms_config_category_Object();
+				$confcat = new \Icms\Config\Category\Object();
 				$confcat->assignVars($this->db->fetchArray($result), false);
 			}
 		}
@@ -110,7 +113,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 		/**
 		 * @TODO: Change to if (!(class_exists($this->className) && $obj instanceof $this->className)) when going fully PHP5
 		 */
-		if (!is_a($confcat, 'icms_config_category_Object')) {
+		if (!is_a($confcat, 'Icms\Config\Category\Object')) {
 			return false;
 		}
 		if (!$confcat->isDirty()) {
@@ -157,7 +160,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 		/**
 		 * @TODO: Change to if (!(class_exists($this->className) && $obj instanceof $this->className)) when going fully PHP5
 		 */
-		if (!is_a($confcat, 'icms_config_category_Object')) {
+		if (!is_a($confcat, 'Icms\Config\Category\Object')) {
 			return false;
 		}
 
@@ -197,7 +200,7 @@ class icms_config_category_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$confcat = new icms_config_category_Object();
+			$confcat = new \Icms\Config\Category\Object();
 			$confcat->assignVars($myrow, false);
 			if (!$id_as_key) {
 				$ret[] =& $confcat;

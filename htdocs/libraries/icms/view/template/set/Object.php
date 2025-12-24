@@ -48,7 +48,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package		View
  * @subpackage	Template
  **/
-class icms_view_template_set_Object extends icms_core_Object {
+
+namespace Icms\View\Template\Set;
+
+class Object extends \Icms\Core\Object {
 
 	/**
 	 * constructor

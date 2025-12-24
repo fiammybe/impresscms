@@ -48,7 +48,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package		Member
  * @subpackage	Group
  */
-class icms_member_group_Object extends icms_core_Object {
+
+namespace Icms\Member\Group;
+
+class Object extends \Icms\Core\Object {
 	/**
 	 * constructor
 	 */

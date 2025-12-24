@@ -21,7 +21,10 @@
  * @copyright	2004
  * @link 		http://setecastronomy.stufftoread.com
  */
-class icms_ipf_Highlighter {
+
+namespace Icms\Ipf;
+
+class Highlighter {
 
 	/**
 	 * @access private

@@ -51,7 +51,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @since ImpressCMS 1.2
  * @author Gustavo Pilla (aka nekro) <nekro@impresscms.org>
  */
-class icms_view_block_Handler extends icms_ipf_Handler {
+
+namespace Icms\View\Block;
+
+class Handler extends \Icms\Ipf\Handler {
 	private $block_positions;
 	private $modules_name;
 

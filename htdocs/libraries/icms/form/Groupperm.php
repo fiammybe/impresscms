@@ -47,7 +47,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author		Kazumi Ono <onokazu@myweb.ne.jp>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_Groupperm extends icms_form_Base {
+
+namespace Icms\Form;
+
+class Groupperm extends \Icms\Form\Base {
 	/**
 	 * Module ID
 	 *
@@ -81,9 +84,9 @@ class icms_form_Groupperm extends icms_form_Base {
 		$this->_modid = (int) $modid;
 		$this->_permName = $permname;
 		$this->_permDesc = $permdesc;
-		$this->addElement(new icms_form_elements_Hidden('modid', $this->_modid));
+		$this->addElement(new \Icms\Form\Elements\Hidden('modid', $this->_modid));
 		if ($url != "") {
-			$this->addElement(new icms_form_elements_Hidden('redirect_url', $url));
+			$this->addElement(new \Icms\Form\Elements\Hidden('redirect_url', $url));
 		}
 	}
 
@@ -142,14 +145,14 @@ class icms_form_Groupperm extends icms_form_Base {
 		foreach (array_keys($glist) as $i) {
 			// get selected item id(s) for each group
 			$selected = $gperm_handler->getItemIds($this->_permName, $i, $this->_modid);
-			$ele = new icms_form_elements_Groupperm($glist[$i], 'perms[' . $this->_permName . ']', $i, $selected);
+			$ele = new \Icms\Form\Elements\Groupperm($glist[$i], 'perms[' . $this->_permName . ']', $i, $selected);
 			$ele->setOptionTree($this->_itemTree);
 			$this->addElement($ele);
 			unset ($ele);
 		}
-		$tray = new icms_form_elements_Tray('');
-		$tray->addElement(new icms_form_elements_Button('', 'submit', _SUBMIT, 'submit'));
-		$tray->addElement(new icms_form_elements_Button('', 'reset', _CANCEL, 'reset'));
+		$tray = new \Icms\Form\Elements\Tray('');
+		$tray->addElement(new \Icms\Form\Elements\Button('', 'submit', _SUBMIT, 'submit'));
+		$tray->addElement(new \Icms\Form\Elements\Button('', 'reset', _CANCEL, 'reset'));
 		$this->addElement($tray);
 		$ret = '<h4>' . $this->getTitle() . '</h4>' . $this->_permDesc . '<br />';
 		$ret .= "<form name='" . $this->getName()

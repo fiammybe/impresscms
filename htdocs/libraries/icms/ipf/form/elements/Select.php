@@ -14,7 +14,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Select extends icms_form_elements_Select {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Select extends icms_form_elements_Select {
 	protected $_multiple = false;
 
 	/**

@@ -51,7 +51,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @category	ICMS
  * @package		Member
  */
-class icms_member_Handler {
+
+namespace Icms\Member;
+
+class Handler {
 
 	/**#@+
 	 * holds reference to group handler(DAO) class
@@ -82,9 +85,9 @@ class icms_member_Handler {
 	 *
 	 */
 	public function __construct(&$db) {
-		$this->_gHandler = new icms_member_group_Handler($db);
-		$this->_uHandler = new icms_member_user_Handler($db);
-		$this->_mHandler = new icms_member_group_membership_Handler($db);
+		$this->_gHandler = new \Icms\Member\Group\Handler($db);
+		$this->_uHandler = new \Icms\Member\User\Handler($db);
+		$this->_mHandler = new \Icms\Member\Group\Membership\Handler($db);
 		$this->db = &$db;
 	}
 
@@ -487,7 +490,7 @@ class icms_member_Handler {
 		}
 		while ($myrow = icms::$xoopsDB->fetchArray($result)) {
 			if ($asobject) {
-				$user = new icms_member_user_Object();
+				$user = new \Icms\Member\User\Object();
 				$user->assignVars($myrow);
 				if (! $id_as_key) {
 					$ret[] =& $user;

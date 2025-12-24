@@ -22,7 +22,10 @@ defined('ICMS_ROOT_PATH') or exit();
  * @subpackage	RSS
  *
  */
-class icms_feeds_Rss {
+
+namespace Icms\Feeds;
+
+class Rss {
 
 	public $title;
 	public $url;
@@ -76,7 +79,7 @@ class icms_feeds_Rss {
 
 		//header ('Content-Type:text/xml; charset='._CHARSET);
 		$xoopsOption['template_main'] = "db:system_rss.html";
-		$tpl = new icms_view_Tpl();
+		$tpl = new \Icms\View\Tpl();
 
 		$tpl->assign('channel_title', $this->title);
 		$tpl->assign('channel_link', $this->url);

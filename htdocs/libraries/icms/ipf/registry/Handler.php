@@ -27,7 +27,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @since		1.1
  * @author		marcan <marcan@impresscms.org>
  */
-class icms_ipf_registry_Handler {
+
+namespace Icms\Ipf\Registry;
+
+class Handler {
 
 	/**
 	 *
@@ -46,7 +49,7 @@ class icms_ipf_registry_Handler {
 	static public function &getInstance() {
 		static $instance;
 		if (!isset($instance)) {
-			$instance = new icms_ipf_registry_Handler();
+			$instance = new \Icms\Ipf\Registry\Handler();
 		}
 		return $instance;
 	}
@@ -54,7 +57,7 @@ class icms_ipf_registry_Handler {
 	/**
 	 * Adding objects to the registry
 	 *
-	 * @param icms_ipf_Handler $handler of the objects to add
+	 * @param \Icms\Ipf\Handler $handler of the objects to add
 	 * @param icms_db_criteria_Compo $criteria to pass to the getObjects method of the handler (with id_as_key)
 	 *
 	 * @return FALSE if an error occured
@@ -72,7 +75,7 @@ class icms_ipf_registry_Handler {
 	/**
 	 * Adding objects as list to the registry
 	 *
-	 * @param icms_ipf_Handler $handler of the objects to add
+	 * @param \Icms\Ipf\Handler $handler of the objects to add
 	 * @param icms_db_criteria_Compo $criteria to pass to the getObjects method of the handler (with id_as_key)
 	 *
 	 * @return FALSE if an error occured

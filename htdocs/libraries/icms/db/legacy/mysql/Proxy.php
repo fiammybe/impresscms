@@ -53,7 +53,10 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @author      Kazumi Ono  <onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-class icms_db_legacy_mysql_Proxy extends icms_db_legacy_mysql_Database {
+
+namespace Icms\Db\Legacy\Mysql;
+
+class Proxy extends \Icms\Db\Legacy\Mysql\Database {
 
 	/**
 	 * perform a query on the database

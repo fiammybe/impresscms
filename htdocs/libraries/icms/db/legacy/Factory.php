@@ -47,7 +47,10 @@
  * @author		http://www.xoops.org The XOOPS Project
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-class icms_db_legacy_Factory extends icms_db_Factory {
+
+namespace Icms\Db\Legacy;
+
+class Factory extends \Icms\Db\Factory {
 	/**
 	 * Constructor
 	 *
@@ -98,6 +101,6 @@ class icms_db_legacy_Factory extends icms_db_Factory {
 	 * @static
 	 */
 	static public function getDatabaseUpdater() {
-		return new icms_db_legacy_updater_Handler();
+		return new \Icms\Db\Legacy\Updater\Handler();
 	}
 }

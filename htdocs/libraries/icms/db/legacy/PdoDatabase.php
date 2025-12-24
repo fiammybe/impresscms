@@ -21,12 +21,15 @@
  * @package Database
  * @subpackage PDO
  */
-class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms_db_legacy_IDatabase {
+
+namespace Icms\Db\Legacy;
+
+class PdoDatabase extends \Icms\Db\Legacy\Database implements \Icms\Db\Legacy\IDatabase {
 
 	/**
 	 * The PDO connection that performs operations behind the scenes
 	 *
-	 * @var icms_db_IConnection
+	 * @var \Icms\Db\IConnection
 	 */
 	protected $pdo;
 
@@ -100,7 +103,7 @@ class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms
 		 * SQLi protection when you use bindParam and bindValue, and then
 		 * use prepare() and execute() on the statement
 		 */
-		if (FALSE === icms_db_legacy_mysql_Utility::checkSQL($sql)) {
+		if (FALSE === \Icms\Db\Legacy\Mysql\Utility::checkSQL($sql)) {
 			return $result;
 		}
 		
@@ -214,10 +217,10 @@ class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms
 		 $row = $this->pdo->exec($sql);
 		if ($row === FALSE) {
 		$errorinfo = $this->pdo->errorInfo();
-		icms_Event::trigger('icms_db_IConnection', 'execute', $this, array('sql' => $sql, 'errorno' => $errorinfo[1], 'error' => $errorinfo[2]));
+		\Icms\Event::trigger('icms_db_IConnection', 'execute', $this, array('sql' => $sql, 'errorno' => $errorinfo[1], 'error' => $errorinfo[2]));
 		return FALSE;
 		} else {
-		icms_Event::trigger('icms_db_IConnection', 'execute', $this, array('sql' => $sql));
+		\Icms\Event::trigger('icms_db_IConnection', 'execute', $this, array('sql' => $sql));
 		return $row;
 		}
 		*/	}
@@ -260,11 +263,11 @@ class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms
 		if (FALSE !== ($fp = fopen($file, 'r'))) {
 			
 			$sql_queries = trim(fread($fp, filesize($file)));
-			icms_db_legacy_mysql_Utility::splitSqlFile($pieces, $sql_queries);
+			\Icms\Db\Legacy\Mysql\Utility::splitSqlFile($pieces, $sql_queries);
 			foreach ($pieces as $query) {
 				// [0] contains the prefixed query
 				// [4] contains unprefixed table name
-				$prefixed_query = icms_db_mysql_Utility::prefixQuery(trim($query), $this->prefix());
+				$prefixed_query = \Icms\Db\Mysql\Utility::prefixQuery(trim($query), $this->prefix());
 				if ($prefixed_query != FALSE) {
 					$this->query($prefixed_query[0]);
 				}

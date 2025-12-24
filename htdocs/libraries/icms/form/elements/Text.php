@@ -49,7 +49,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_elements_Text extends icms_form_Element {
+
+namespace Icms\Form\Elements;
+
+class Text extends \Icms\Form\Element {
 	/**
 	 * Size
 	 * @var	int
@@ -135,7 +138,7 @@ class icms_form_elements_Text extends icms_form_Element {
 	 * @return	string  HTML
 	 */
 	public function render() {
-		$this->tpl = new icms_view_Tpl();
+		$this->tpl = new \Icms\View\Tpl();
 		$this->tpl->assign('ele_name', $this->getName());
 		$this->tpl->assign('ele_id', $this->getName());
 		$this->tpl->assign('ele_size', $this->getSize());

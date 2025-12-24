@@ -13,7 +13,10 @@
 
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_Secure extends icms_ipf_form_Base {
+
+namespace Icms\Ipf\Form;
+
+class Secure extends \Icms\Ipf\Form\Base {
 	/**
 	 * Constructor
 	 * Sets all the values / variables for the icms_ipf_form_Base (@link icms_ipf_form_Base) (parent) class

@@ -14,7 +14,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Passwordtray extends icms_form_elements_Tray {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Passwordtray extends icms_form_elements_Tray {
 	private $_key;
 
 	/**
@@ -37,7 +40,7 @@ class icms_ipf_form_elements_Passwordtray extends icms_form_elements_Tray {
 
 	public function render() {
 		// Use template-based rendering instead of direct HTML generation
-		$this->tpl = new icms_view_Tpl();
+		$this->tpl = new \Icms\View\Tpl();
 
 		// Get rendered elements from parent tray
 		$tray_elements = array();

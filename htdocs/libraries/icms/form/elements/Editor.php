@@ -51,7 +51,10 @@ if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
  *
  * @todo		To be removed as this is not used anywhere in the core
  */
-class icms_form_elements_Editor extends icms_form_elements_Textarea {
+
+namespace Icms\Form\Elements;
+
+class Editor extends \Icms\Form\Elements\Textarea {
 	var $editor;
 
 	/**
@@ -67,7 +70,7 @@ class icms_form_elements_Editor extends icms_form_elements_Textarea {
 	function __construct($caption, $name, $editor_configs = null, $noHtml=false, $OnFailure = "")
 	{
 		parent::__construct($caption, $editor_configs["name"]);
-		$editor_handler = icms_plugins_EditorHandler::getInstance();
+		$editor_handler = \Icms\Plugins\EditorHandler::getInstance();
 		$this->editor =& $editor_handler->get($name, $editor_configs, $noHtml, $OnFailure);
 	}
 

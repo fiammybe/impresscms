@@ -50,7 +50,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author	    Kazumi Ono	<onokazu@xoops.org>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_form_elements_Hidden extends icms_form_Element {
+
+namespace Icms\Form\Elements;
+
+class Hidden extends \Icms\Form\Element {
 
 	/**
 	 * Value

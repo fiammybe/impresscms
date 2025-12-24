@@ -58,7 +58,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package		Data
  * @subpackage  Comment
  */
-class icms_data_comment_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Data\Comment;
+
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * Create a {@link icms_data_comment_Object}
@@ -66,10 +69,10 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @param	bool    $isNew  Flag the object as "new"?
 	 *
 	 * @return	object
-	 * @see icms_core_ObjectHandler#create()
+	 * @see \Icms\Core\ObjectHandler#create()
 	 */
 	public function &create($isNew = true) {
-		$comment = new icms_data_comment_Object();
+		$comment = new \Icms\Data\Comment\Object();
 		if ($isNew) {
 			$comment->setNew();
 		}
@@ -95,7 +98,7 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$comment = new icms_data_comment_Object();
+				$comment = new \Icms\Data\Comment\Object();
 				$comment->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -108,13 +111,13 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @param   object  &$comment
 	 *
 	 * @return  bool
-	 * @see icms_core_ObjectHandler#insert($object)
+	 * @see \Icms\Core\ObjectHandler#insert($object)
 	 **/
 	public function insert(&$comment) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated,
 		 * but we can use type hinting
 		 */
-		if (!is_a($comment, 'icms_data_comment_Object')) {
+		if (!is_a($comment, 'Icms\Data\Comment\Object')) {
 			return false;
 		}
 		if (!$comment->isDirty()) {
@@ -233,11 +236,11 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @param   object  &$comment
 	 *
 	 * @return  bool
-	 *  @see icms_core_ObjectHandler#delete($object)
+	 *  @see \Icms\Core\ObjectHandler#delete($object)
 	 **/
 	public function delete(&$comment) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated - use type hinting */
-		if (!is_a($comment, 'icms_data_comment_Object')) {
+		if (!is_a($comment, 'Icms\Data\Comment\Object')) {
 			return false;
 		}
 		$sql = sprintf(
@@ -273,7 +276,7 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$comment = new icms_data_comment_Object();
+			$comment = new \Icms\Data\Comment\Object();
 			$comment->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $comment;
@@ -351,10 +354,10 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @return  array   Array of {@link icms_data_comment_Object} objects
 	 **/
 	public function getByItemId($module_id, $item_id, $order = null, $status = null, $limit = null, $start = 0) {
-		$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('com_modid', (int) $module_id));
-		$criteria->add(new icms_db_criteria_Item('com_itemid', (int) $item_id));
+		$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('com_modid', (int) $module_id));
+		$criteria->add(new \Icms\Db\Criteria\Item('com_itemid', (int) $item_id));
 		if (isset($status)) {
-			$criteria->add(new icms_db_criteria_Item('com_status', (int) ($status)));
+			$criteria->add(new \Icms\Db\Criteria\Item('com_status', (int) ($status)));
 		}
 		if (isset($order)) {
 			$criteria->setOrder($order);
@@ -376,10 +379,10 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @return  array   Array of {@link icms_data_comment_Object} objects
 	 **/
 	public function getCountByItemId($module_id, $item_id, $status = null) {
-		$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('com_modid', (int) $module_id));
-		$criteria->add(new icms_db_criteria_Item('com_itemid', (int) $item_id));
+		$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('com_modid', (int) $module_id));
+		$criteria->add(new \Icms\Db\Criteria\Item('com_itemid', (int) $item_id));
 		if (isset($status)) {
-			$criteria->add(new icms_db_criteria_Item('com_status', (int) $status));
+			$criteria->add(new \Icms\Db\Criteria\Item('com_status', (int) $status));
 		}
 		return $this->getCount($criteria);
 	}
@@ -395,11 +398,11 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @return  array   Array of {@link icms_data_comment_Object} objects
 	 **/
 	public function getTopComments($module_id, $item_id, $order, $status = null) {
-		$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('com_modid', (int) $module_id));
-		$criteria->add(new icms_db_criteria_Item('com_itemid', (int) $item_id));
-		$criteria->add(new icms_db_criteria_Item('com_pid', 0));
+		$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('com_modid', (int) $module_id));
+		$criteria->add(new \Icms\Db\Criteria\Item('com_itemid', (int) $item_id));
+		$criteria->add(new \Icms\Db\Criteria\Item('com_pid', 0));
 		if (isset($status)) {
-			$criteria->add(new icms_db_criteria_Item('com_status', (int) $status));
+			$criteria->add(new \Icms\Db\Criteria\Item('com_status', (int) $status));
 		}
 		$criteria->setOrder($order);
 		return $this->getObjects($criteria);
@@ -415,10 +418,10 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @return  array   Array of {@link icms_data_comment_Object} objects
 	 **/
 	public function getThread($comment_rootid, $comment_id, $status = null) {
-		$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('com_rootid', (int) $comment_rootid));
-		$criteria->add(new icms_db_criteria_Item('com_id', (int) $comment_id, '>='));
+		$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('com_rootid', (int) $comment_rootid));
+		$criteria->add(new \Icms\Db\Criteria\Item('com_id', (int) $comment_id, '>='));
 		if (isset($status)) {
-			$criteria->add(new icms_db_criteria_Item('com_status', (int) $status));
+			$criteria->add(new \Icms\Db\Criteria\Item('com_status', (int) $status));
 		}
 		return $this->getObjects($criteria);
 	}
@@ -445,7 +448,7 @@ class icms_data_comment_Handler extends icms_core_ObjectHandler {
 	 * @return  bool
 	 **/
 	public function deleteByModule($module_id) {
-		return $this->deleteAll(new icms_db_criteria_Item('com_modid', (int) $module_id));
+		return $this->deleteAll(new \Icms\Db\Criteria\Item('com_modid', (int) $module_id));
 	}
 
 	/**

@@ -53,7 +53,10 @@ defined('ICMS_ROOT_PATH') or die('ICMS root path not defined');
  * @package		Ipf
  * @subpackage	Tree
  */
-class icms_ipf_Tree {
+
+namespace Icms\Ipf;
+
+class Tree {
 
 	/**#@+
 	 * @access	private

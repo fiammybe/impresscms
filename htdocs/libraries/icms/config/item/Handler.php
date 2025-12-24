@@ -45,6 +45,9 @@ if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
 /**#@+
  * Config type
  */
+
+namespace Icms\Config\Item;
+
 define('ICMS_CONF', 1);
 define('ICMS_CONF_USER', 2);
 define('ICMS_CONF_METAFOOTER', 3);
@@ -76,17 +79,17 @@ define('ICMS_CONF_PURIFIER', 14);
  * @package     Config
  * @subpackage  Item
  */
-class icms_config_Item_Handler extends icms_core_ObjectHandler {
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * Create a new {@link icms_config_Item_Object}
 	 *
-	 * @see     icms_config_Item_Object
+	 * @see \Icms\Config\Item\Object
 	 * @param	bool    $isNew  Flag the config as "new"?
 	 * @return	object  reference to the new config
 	 */
 	public function &create($isNew = true) {
-		$config = new icms_config_Item_Object();
+		$config = new \Icms\Config\Item\Object();
 		if ($isNew) {
 			$config->setNew();
             $config->setNewConfig();
@@ -111,7 +114,7 @@ class icms_config_Item_Handler extends icms_core_ObjectHandler {
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
 				$myrow = $this->db->fetchArray($result);
-				$config = new icms_config_Item_Object();
+				$config = new \Icms\Config\Item\Object();
 				$config->setType($myrow["conf_valuetype"]);
 				$config->assignVars($myrow);
 			}
@@ -127,7 +130,7 @@ class icms_config_Item_Handler extends icms_core_ObjectHandler {
 	 */
 	public function insert(&$config) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated, no need to replace this */
-		if (!is_a($config, 'icms_config_Item_Object')) {
+		if (!is_a($config, 'Icms\Config\Item\Object')) {
 			return false;
 		}
 		if (!$config->isDirty()) {
@@ -209,7 +212,7 @@ class icms_config_Item_Handler extends icms_core_ObjectHandler {
 	 */
 	public function delete(&$config) {
 		/* As of PHP5.3.0, is_as() is no longer deprecated, there is no need to replace it */
-		if (!is_a($config, 'icms_config_Item_Object')) {
+		if (!is_a($config, 'Icms\Config\Item\Object')) {
 			return false;
 		}
 		$sql = sprintf(

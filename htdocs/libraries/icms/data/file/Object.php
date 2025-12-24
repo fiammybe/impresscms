@@ -14,7 +14,10 @@
 
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
-class icms_data_file_Object extends icms_ipf_Object {
+
+namespace Icms\Data\File;
+
+class Object extends \Icms\Ipf\Object {
 	/**
 	 * constructor
 	 */

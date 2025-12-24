@@ -51,16 +51,19 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package		Member
  * @subpackage	GroupMembership
  */
-class icms_member_group_membership_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Member\Group\Membership;
+
+class Handler extends \Icms\Core\ObjectHandler {
 	/**
 	 * create a new membership
 	 *
 	 * @param bool $isNew should the new object be set to "new"?
 	 * @return object icms_member_group_membership_Object {@link icms_member_group_membership_Object}
-	 * @see icms_core_ObjectHandler#create()
+	 * @see \Icms\Core\ObjectHandler#create()
 	 */
 	public function &create($isNew = true) 	{
-		$mship = new icms_member_group_membership_Object();
+		$mship = new \Icms\Member\Group\Membership\Object();
 		if ($isNew) {
 			$mship->setNew();
 		}
@@ -72,7 +75,7 @@ class icms_member_group_membership_Handler extends icms_core_ObjectHandler {
 	 *
 	 * @param int $id ID of the membership to get
 	 * @return mixed reference to the object if successful, else FALSE
-	 * @see icms_core_ObjectHandler#get($int_id)
+	 * @see \Icms\Core\ObjectHandler#get($int_id)
 	 */
 	public function &get($id) {
 		$id = (int) $id;
@@ -85,7 +88,7 @@ class icms_member_group_membership_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = icms::$xoopsDB->getRowsNum($result);
 			if ($numrows == 1) {
-				$mship = new icms_member_group_membership_Object();
+				$mship = new \Icms\Member\Group\Membership\Object();
 				$mship->assignVars(icms::$xoopsDB->fetchArray($result));
 			}
 		}
@@ -97,11 +100,11 @@ class icms_member_group_membership_Handler extends icms_core_ObjectHandler {
 	 *
 	 * @param object $mship reference to the membership object
 	 * @return bool TRUE if already in DB or successful, FALSE if failed
-	 * @see icms_core_ObjectHandler#insert($object)
+	 * @see \Icms\Core\ObjectHandler#insert($object)
 	 */
 	public function insert(&$mship) {
 		/* As of PHP5.3.0, is_a()is no longer deprecated and there is no need to replace it */
-		if (!is_a($mship, 'icms_member_group_membership_Object')) {
+		if (!is_a($mship, 'Icms\Member\Group\Membership\Object')) {
 			return false;
 		}
 		if (!$mship->isDirty()) {
@@ -146,11 +149,11 @@ class icms_member_group_membership_Handler extends icms_core_ObjectHandler {
 	 *
 	 * @param object $mship reference to the membership object
 	 * @return bool FALSE if failed
-	 * @see icms_core_ObjectHandler#delete($object)
+	 * @see \Icms\Core\ObjectHandler#delete($object)
 	 */
 	public function delete(&$mship) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated and there is no reason to replace it */
-		if (!is_a($mship, 'icms_member_group_membership_Object')) {
+		if (!is_a($mship, 'Icms\Member\Group\Membership\Object')) {
 			return false;
 		}
 
@@ -186,7 +189,7 @@ class icms_member_group_membership_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = icms::$xoopsDB->fetchArray($result)) {
-			$mship = new icms_member_group_membership_Object();
+			$mship = new \Icms\Member\Group\Membership\Object();
 			$mship->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $mship;

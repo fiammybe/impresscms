@@ -20,7 +20,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @since	ImpressCMS 1.2
  * @author	Gustavo Pilla (aka nekro) <nekro@impresscms.org> <gpilla@nubee.com.ar>
  */
-class icms_data_page_Handler extends icms_ipf_Handler {
+
+namespace Icms\Data\Page;
+
+class Handler extends \Icms\Ipf\Handler {
 
 	public function __construct(& $db) {
 		parent::__construct($db, 'page', 'page_id', 'page_title', '', 'icms');
@@ -42,14 +45,14 @@ class icms_data_page_Handler extends icms_ipf_Handler {
 			$value = array($value);
 		}
 		$module_handler = icms::handler('icms_module');
-		$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('hasmain', 1));
-		$criteria->add(new icms_db_criteria_Item('isactive', 1));
+		$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('hasmain', 1));
+		$criteria->add(new \Icms\Db\Criteria\Item('isactive', 1));
 		$module_list =& $module_handler->getObjects($criteria);
 		$mods = '';
 		foreach ($module_list as $module) {
 			$mods .= '<optgroup label="' . $module->getVar('name') . '">';
-			$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('page_moduleid', $module->getVar('mid')));
-			$criteria->add(new icms_db_criteria_Item('page_status', 1));
+			$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('page_moduleid', $module->getVar('mid')));
+			$criteria->add(new \Icms\Db\Criteria\Item('page_status', 1));
 			$pages =& $this->getObjects($criteria);
 			$sel = '';
 			if (in_array($module->getVar('mid') . '-0', $value)) {
@@ -70,8 +73,8 @@ class icms_data_page_Handler extends icms_ipf_Handler {
 		}
 
 		$module = $module_handler->get(1);
-		$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('page_moduleid', 1));
-		$criteria->add(new icms_db_criteria_Item('page_status', 1));
+		$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('page_moduleid', 1));
+		$criteria->add(new \Icms\Db\Criteria\Item('page_status', 1));
 		$pages =& $this->getObjects($criteria);
 		$cont = '';
 		if (count($pages) > 0) {

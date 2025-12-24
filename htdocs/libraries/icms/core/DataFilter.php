@@ -47,7 +47,10 @@
  * @subpackage Filters
  *
  */
-class icms_core_DataFilter {
+
+namespace Icms\Core;
+
+class DataFilter {
 
 	/**
 	 *
@@ -431,7 +434,7 @@ class icms_core_DataFilter {
 
 	/**
 	 * Filters textarea form data for INPUt to DB (text only!!)
-	 * For HTML please use icms_core_HTMLFilter::filterHTMLinput()
+	 * For HTML please use \Icms\Core\HTMLFilter::filterHTMLinput()
 	 *
 	 * @author vaughan montgomery (vaughan@impresscms.org)
 	 * @copyright (c) 2007-2010 The ImpressCMS Project - www.impresscms.org
@@ -451,7 +454,7 @@ class icms_core_DataFilter {
 
 	/**
 	 * Filters textarea for DISPLAY purposes (text only!!)
-	 * For HTML please use icms_core_HTMLFilter::filterHTMLdisplay()
+	 * For HTML please use \Icms\Core\HTMLFilter::filterHTMLdisplay()
 	 *
 	 * @param string $text
 	 * @param bool $smiley allow smileys?
@@ -514,7 +517,7 @@ class icms_core_DataFilter {
 		$html = self::codeDecode($html);
 		$html = self::codeConv($html, 1, 1);
 
-		$html = icms_core_HTMLFilter::filterHTML($html);
+		$html = \Icms\Core\HTMLFilter::filterHTML($html);
 
 		$purified = strpos($html, '<!-- filtered with htmlpurifier -->');
 		if ($purified === false && $br == 1) {
@@ -551,7 +554,7 @@ class icms_core_DataFilter {
 			$html = self::codeDecode($html);
 			$html = self::codeConv($html, 1, 1);
 
-			$html = icms_core_HTMLFilter::filterHTML($html);
+			$html = \Icms\Core\HTMLFilter::filterHTML($html);
 
 			// $html .= '<!-- warning! output filtered only -->';
 
@@ -778,7 +781,7 @@ class icms_core_DataFilter {
 		if ($imcode != 0) {
 			$patterns = "/\[code](.*)\[\/code\]/sU";
 			$text = preg_replace_callback($patterns, function ($matches) use ($image) {
-				$code = icms_core_DataFilter::codeSanitizer($matches[1], ($image != 0) ? 1 : 0);
+				$code = \Icms\Core\DataFilter::codeSanitizer($matches[1], ($image != 0) ? 1 : 0);
 				return '<div class="icmsCode">' . $code . '</div>';
 			}, $text);
 		}
@@ -1120,7 +1123,7 @@ class icms_core_DataFilter {
 						foreach ($icmsConfigUser['bad_emails'] as $be) {
 							if ((!empty($be) && preg_match('/' . $be . '/i', $data))) return false;
 						}
-						$icmsStopSpammers = new icms_core_StopSpammer();
+						$icmsStopSpammers = new \Icms\Core\StopSpammer();
 						if ($icmsStopSpammers->badEmail($data)) return false;
 					}
 				} else {

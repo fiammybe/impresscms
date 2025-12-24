@@ -23,7 +23,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @author marcan <marcan@impresscms.org>
  * @todo Properly declare all vars with their visibility (private, protected, public) and follow naming convention
  */
-class icms_ipf_view_Table {
+
+namespace Icms\Ipf\View;
+
+class Table {
 	var $_id;
 	var $_objectHandler;
 	var $_columns;
@@ -202,7 +205,7 @@ class icms_ipf_view_Table {
 	 * @param $actions
 	 */
 	public function addWithSelectedActions($actions = array()) {
-		$this->addColumn(new icms_ipf_view_Column('checked', 'center', 20, false, false, '&nbsp;'));
+		$this->addColumn(new \Icms\Ipf\View\Column('checked', 'center', 20, false, false, '&nbsp;'));
 		$this->_withSelectedActions = $actions;
 	}
 
@@ -601,18 +604,18 @@ class icms_ipf_view_Table {
 
 		/* filter the user input - only allow specified variables */
 		if (!empty($_GET)) {
-			$clean_GET = icms_core_DataFilter::checkVarArray($_GET, $filter_get, true);
+			$clean_GET = \Icms\Core\DataFilter::checkVarArray($_GET, $filter_get, true);
 			extract($clean_GET);
 		}
 		if (!empty($_POST)) {
-			$clean_POST = icms_core_DataFilter::checkVarArray($_POST, $filter_post, true);
+			$clean_POST = \Icms\Core\DataFilter::checkVarArray($_POST, $filter_post, true);
 			extract($clean_POST);
 		}
 
-		$server_vars = icms_core_DataFilter::checkVarArray($_SERVER, $filter_server, true);
+		$server_vars = \Icms\Core\DataFilter::checkVarArray($_SERVER, $filter_server, true);
 		$script_name = $server_vars['SCRIPT_NAME'];
 
-		$this->_tpl = new icms_view_Tpl();
+		$this->_tpl = new \Icms\View\Tpl();
 
 		/**
 		 * We need access to the protected vars of the icms_ipf_Object for a few things in the table creation.
@@ -717,7 +720,7 @@ class icms_ipf_view_Table {
 			$new_get_array[] = "limitsel=" . $this->_limitsel;
 			$otherParams = implode('&', $new_get_array);
 
-			$pagenav = new icms_view_PageNav($this->_objectHandler->getCount($this->_criteria), $this->_criteria->getLimit(), $this->_criteria->getStart(), 'start' . $this->_objectHandler->keyName, $otherParams);
+			$pagenav = new \Icms\View\PageNav($this->_objectHandler->getCount($this->_criteria), $this->_criteria->getLimit(), $this->_criteria->getStart(), 'start' . $this->_objectHandler->keyName, $otherParams);
 			$this->_tpl->assign('icms_pagenav', $pagenav->renderNav());
 		}
 		$this->renderOptionSelection($limitsArray, $params_of_the_options_sel);

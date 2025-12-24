@@ -41,6 +41,9 @@
 defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
 
 // RMV-NOTIFY
+
+namespace Icms\Data\Notification;
+
 include_once ICMS_ROOT_PATH . '/include/notification_constants.php';
 
 /**
@@ -55,7 +58,7 @@ include_once ICMS_ROOT_PATH . '/include/notification_constants.php';
  * @category	ICMS
  * @package		Notification
  */
-class icms_data_notification_Handler extends icms_core_ObjectHandler {
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * Create a {@link icms_data_notification_Object}
@@ -333,7 +336,7 @@ class icms_data_notification_Handler extends icms_core_ObjectHandler {
 		}
 
 		if (!isset($mode)) {
-			$user = new icms_member_user_Object($user_id);
+			$user = new \Icms\Member\User\Object($user_id);
 			$mode = $user->getVar('notify_mode');
 		}
 

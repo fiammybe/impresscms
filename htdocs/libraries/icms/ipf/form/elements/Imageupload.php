@@ -14,7 +14,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Imageupload extends icms_ipf_form_elements_Upload {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Imageupload extends \Icms\Ipf\Form\Elements\Upload {
 	/**
 	 * Constructor
 	 * @param	object    $object     object to be passed (@todo : Which object?)

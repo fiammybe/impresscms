@@ -47,7 +47,10 @@
  * @subpackage	Ads
  * @author	    Pierre-Eric MENUET	<pemphp@free.fr>
  */
-class icms_auth_Ads extends icms_auth_Ldap {
+
+namespace Icms\Auth;
+
+class Ads extends \Icms\Auth\Ldap {
 
 	/**
 	 * Authentication Service constructor

@@ -20,9 +20,12 @@
  * @package		Core
  *
  */
+
+namespace Icms\Core;
+
 use \HTMLPurifier;
 
-class icms_core_HTMLFilter extends icms_core_DataFilter {
+class HTMLFilter extends \Icms\Core\DataFilter {
 
 	/**
 	 * variable used by HTML Filter Library
@@ -109,7 +112,7 @@ class icms_core_HTMLFilter extends icms_core_DataFilter {
 		if ($icmsConfigPurifier['purifier_Filter_AllowCustom'] !== 0) {
 			$filterList = array();
 
-			$fileList = icms_core_Filesystem::getFileList($dirPath, '', array('php'), true);
+			$fileList = \Icms\Core\Filesystem::getFileList($dirPath, '', array('php'), true);
 			unset($fileList['ExtractStyleBlocks.php'], $fileList['YouTube.php']);
 			$fileList = array_values($fileList);
 

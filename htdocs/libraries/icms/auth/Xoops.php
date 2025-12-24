@@ -47,7 +47,10 @@
  * @author		Pierre-Eric MENUET <pemphp@free.fr>
  * @copyright	copyright (c) 2000-2003 XOOPS.org
  */
-class icms_auth_Xoops extends icms_auth_Object {
+
+namespace Icms\Auth;
+
+class Xoops extends \Icms\Auth\Object {
 	/**
 	 * Authentication Service constructor
 	 * constructor

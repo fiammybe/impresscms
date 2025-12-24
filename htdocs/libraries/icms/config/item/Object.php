@@ -52,7 +52,10 @@ if (!defined('ICMS_ROOT_PATH')) die("ImpressCMS root path not defined");
  * 				You should have received a copy of XOOPS_copyrights.txt with
  * 				this file. If not, you may obtain a copy from xoops.org
  */
-class icms_config_Item_Object extends icms_core_Object {
+
+namespace Icms\Config\Item;
+
+class Object extends \Icms\Core\Object {
 	/**
 	 * Config options
 	 *
@@ -100,11 +103,11 @@ class icms_config_Item_Object extends icms_core_Object {
 				break;
 
 			case 'textsarea':
-				return icms_core_DataFilter::checkVar($this->getVar('conf_value'), 'text', 'output');
+				return \Icms\Core\DataFilter::checkVar($this->getVar('conf_value'), 'text', 'output');
 				break;
 
 			case 'textarea':
-				return icms_core_DataFilter::checkVar($this->getVar('conf_value'), 'html', 'output');
+				return \Icms\Core\DataFilter::checkVar($this->getVar('conf_value'), 'html', 'output');
 			default:
 				return $this->getVar('conf_value', 'N');
 				break;
@@ -120,10 +123,10 @@ class icms_config_Item_Object extends icms_core_Object {
 	public function setConfValueForInput($value, $force_slash = false) {
 		if ($this->getVar('conf_formtype') == 'textarea' && $this->getVar('conf_valuetype') !== 'array') {
             if (!is_int($value) && !empty($value)) {
-                $value = icms_core_DataFilter::checkVar($value, 'html', 'input');
+                $value = \Icms\Core\DataFilter::checkVar($value, 'html', 'input');
             }
 		} elseif ($this->getVar('conf_formtype') == 'textsarea' && $this->getVar('conf_valuetype') !== 'array') {
-			$value = icms_core_DataFilter::checkVar($value, 'text', 'input');
+			$value = \Icms\Core\DataFilter::checkVar($value, 'text', 'input');
 		} elseif ($this->getVar('conf_formtype') == 'password') {
 			$value = filter_var($value, FILTER_SANITIZE_URL);
 		} else {

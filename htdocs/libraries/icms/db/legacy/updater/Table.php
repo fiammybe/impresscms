@@ -25,7 +25,10 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @author marcan <marcan@smartfactory.ca>
  * @link http://www.smartfactory.ca The SmartFactory
  */
-class icms_db_legacy_updater_Table {
+
+namespace Icms\Db\Legacy\Updater;
+
+class Table {
 	/**
 	 * @var string $_name name of the table
 	 */

@@ -50,11 +50,14 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @category	ICMS
  * @package		Member
  * @subpackage	GroupPermission
- * @see			icms_member_groupperm_Object
+ * @see \Icms\Member\Groupperm\Object
  * @author		Kazumi Ono  <onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
-class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Member\Groupperm;
+
+class Handler extends \Icms\Core\ObjectHandler {
 	static public $_cachedRights;
 
 	/**
@@ -63,7 +66,7 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 	 * @return	bool    $isNew  Flag the object as "new"?
 	 */
 	public function &create($isNew = true) {
-		$perm = new icms_member_groupperm_Object();
+		$perm = new \Icms\Member\Groupperm\Object();
 		if ($isNew) {
 			$perm->setNew();
 		}
@@ -87,7 +90,7 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = icms::$xoopsDB->getRowsNum($result);
 			if ($numrows == 1) {
-				$perm = new icms_member_groupperm_Object();
+				$perm = new \Icms\Member\Groupperm\Object();
 				$perm->assignVars(icms::$xoopsDB->fetchArray($result));
 			}
 		}
@@ -104,7 +107,7 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 	 */
 	public function insert(&$perm) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated and there is no need to replace it */
-		if (!is_a($perm, 'icms_member_groupperm_Object')) {
+		if (!is_a($perm, 'Icms\Member\Groupperm\Object')) {
 			return false;
 		}
 		if (!$perm->isDirty()) {
@@ -157,7 +160,7 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 	 */
 	public function delete(&$perm) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated and does not need to be replaced */
-		if (!is_a($perm, 'icms_member_groupperm_Object')) {
+		if (!is_a($perm, 'Icms\Member\Groupperm\Object')) {
 			return false;
 		}
 		$sql = sprintf(
@@ -193,7 +196,7 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = icms::$xoopsDB->fetchArray($result)) {
-			$perm = new icms_member_groupperm_Object();
+			$perm = new \Icms\Member\Groupperm\Object();
 			$perm->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $perm;

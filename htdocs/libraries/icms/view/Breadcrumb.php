@@ -25,7 +25,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @subpackage	Breadcrumb
  * @author		marcan <marcan@impresscms.org>
  */
-class icms_view_Breadcrumb {
+
+namespace Icms\View;
+
+class Breadcrumb {
 
 	private $_tpl;
 	private $items;
@@ -44,7 +47,7 @@ class icms_view_Breadcrumb {
 	 */
 	public function render($fetchOnly = FALSE) {
 
-		$this->_tpl = new icms_view_Tpl();
+		$this->_tpl = new \Icms\View\Tpl();
 		$this->_tpl->assign('icms_breadcrumb_items', $this->items);
 
 		if ($fetchOnly) {

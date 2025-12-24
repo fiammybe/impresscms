@@ -46,7 +46,10 @@ defined('ICMS_ROOT_PATH') or exit();
  * @author		xoops.org
  * @copyright	copyright (c) 2000-2007 XOOPS.org
  */
-class icms_file_ZipDownloader extends icms_file_DownloadHandler {
+
+namespace Icms\File;
+
+class ZipDownloader extends \Icms\File\DownloadHandler {
 	/**
 	 * Constructor
 	 *
@@ -54,7 +57,7 @@ class icms_file_ZipDownloader extends icms_file_DownloadHandler {
 	 * @param	string    $mimyType    the mimytype (mimetype) of the file
 	 */
 	public function __construct($ext = '.zip', $mimyType = 'application/x-zip') {
-		$this->archiver = new icms_file_ZipFileHandler();
+		$this->archiver = new \Icms\File\ZipFileHandler();
 		$this->ext      = trim($ext);
 		$this->mimeType = trim($mimyType);
 	}

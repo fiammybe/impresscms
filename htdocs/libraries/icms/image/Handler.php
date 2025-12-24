@@ -50,7 +50,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		Kazumi Ono 	<onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
-class icms_image_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Image;
+
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * Create a new {@link icms_image_Object}
@@ -59,7 +62,7 @@ class icms_image_Handler extends icms_core_ObjectHandler {
 	 * @return  object
 	 **/
 	public function &create($isNew = true) {
-		$image = new icms_image_Object();
+		$image = new \Icms\Image\Object();
 		if ($isNew) {
 			$image->setNew();
 		}
@@ -86,7 +89,7 @@ class icms_image_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$image = new icms_image_Object();
+				$image = new \Icms\Image\Object();
 				$image->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -103,7 +106,7 @@ class icms_image_Handler extends icms_core_ObjectHandler {
 		/* As of PHP 5.3, is_a is no longer deprecated, this is an acceptable usage
 		 * and is compatible with more versions of PHP. http://us2.php.net/manual/en/language.operators.type.php
 		 */
-		if (!is_a($image, 'icms_image_Object')) {
+		if (!is_a($image, 'Icms\Image\Object')) {
 			return false;
 		}
 
@@ -190,7 +193,7 @@ class icms_image_Handler extends icms_core_ObjectHandler {
 		/* As of PHP 5.3, is_a is no longer deprecated, this is an acceptable usage
 		 * and is compatible with more versions of PHP. http://us2.php.net/manual/en/language.operators.type.php
 		 */
-		if (!is_a($image, 'icms_image_Object')) {
+		if (!is_a($image, 'Icms\Image\Object')) {
 			return false;
 		}
 
@@ -213,7 +216,7 @@ class icms_image_Handler extends icms_core_ObjectHandler {
 	 * @param bool|string $sql  Extra sql (unused; only used for compatibility function signature)
 	 * @param bool $debug Debug mode?
 	 *
-	 * @return icms_image_Object[]
+	 * @return \Icms\Image\Object[]
 	 */
 	public function getObjects($criteria = null, $id_as_key = false, $getbinary = false, $sql = false, $debug = false) {
 		$ret = array();
@@ -233,14 +236,14 @@ class icms_image_Handler extends icms_core_ObjectHandler {
 			$start = $criteria->getStart();
 		}
 		if ($debug) {
-			icms_core_Debug::message($sql);
+			\Icms\Core\Debug::message($sql);
 		}
 		$result = $this->db->query($sql, $limit, $start);
 		if (!$result) {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$image = new icms_image_Object();
+			$image = new \Icms\Image\Object();
 			$image->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] = &$image;
@@ -275,7 +278,7 @@ class icms_image_Handler extends icms_core_ObjectHandler {
 	 *
 	 * @param int|null $imgcat_id Image category ID
 	 * @param bool|null|int $image_display List only displayed images?
-	 * @param int $notinuse Not use param (only added for fixing Declaration of icms_image_Handler::getList($imgcat_id, $image_display = NULL, $notinuse1 = 0, $debug = false) should be compatible with icms_ipf_Handler::getList($criteria = NULL, $limit = 0, $start = 0, $debug = false) error)
+	 * @param int $notinuse Not use param (only added for fixing Declaration of \Icms\Image\Handler::getList($imgcat_id, $image_display = NULL, $notinuse1 = 0, $debug = false) should be compatible with \Icms\Ipf\Handler::getList($criteria = NULL, $limit = 0, $start = 0, $debug = false) error)
 	 * @param bool $debug Enable debug mode?
 	 *
 	 * @return array Array of <a href='psi_element://icms_image_Object'>icms_image_Object</a> objects

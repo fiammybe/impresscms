@@ -16,7 +16,10 @@
   * @category	ICMS
   * @package	Plugins
   */
-class icms_plugins_Handler {
+
+namespace Icms\Plugins;
+
+class Handler {
 
 	public $pluginPatterns = false;
 
@@ -33,7 +36,7 @@ class icms_plugins_Handler {
 			$function = 'icms_plugin_' . $dirname;
 			if (function_exists($function)) {
 				$array = $function();
-				$ret = new icms_plugins_Object($array);
+				$ret = new \Icms\Plugins\Object($array);
 				return $ret;
 			}
 		}
@@ -56,7 +59,7 @@ class icms_plugins_Handler {
 			$modulesObj[$moduleObj->getVar('dirname')] = $moduleObj;
 		}
 
-		$aFiles = str_replace('.php', '', icms_core_Filesystem::getFileList(ICMS_PLUGINS_PATH . '/' . $path . '/', '', array('php')));
+		$aFiles = str_replace('.php', '', \Icms\Core\Filesystem::getFileList(ICMS_PLUGINS_PATH . '/' . $path . '/', '', array('php')));
 		$ret = array();
 		foreach($aFiles as $pluginName) {
 			$module_xoops_version_file = ICMS_MODULES_PATH . "/$pluginName/xoops_version.php";

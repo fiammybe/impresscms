@@ -50,7 +50,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		Kazumi Ono <onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
-class icms_image_category_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Image\Category;
+
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * Creates a new image category
@@ -59,7 +62,7 @@ class icms_image_category_Handler extends icms_core_ObjectHandler {
 	 * @return object $imgcat {@link icms_image_category_Object} reference to the new image category
 	 **/
 	public function &create($isNew = true) {
-		$imgcat = new icms_image_category_Object();
+		$imgcat = new \Icms\Image\Category\Object();
 		if ($isNew) {
 			$imgcat->setNew();
 		}
@@ -69,7 +72,7 @@ class icms_image_category_Handler extends icms_core_ObjectHandler {
 	/**
 	 * retrieve a specific {@link icms_image_category_Object}
 	 *
-	 * @see icms_image_category_Object
+	 * @see \Icms\Image\Category\Object
 	 * @param integer $id imgcatID (imgcat_id) of the image category
 	 * @return object icms_image_category_Object reference to the image category
 	 **/
@@ -83,7 +86,7 @@ class icms_image_category_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$imgcat = new icms_image_category_Object();
+				$imgcat = new \Icms\Image\Category\Object();
 				$imgcat->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -100,7 +103,7 @@ class icms_image_category_Handler extends icms_core_ObjectHandler {
 		/* As of PHP 5.3, is_a is no longer deprecated, this is an acceptable usage
 		 * and is compatible with more versions of PHP.  http://us2.php.net/manual/en/language.operators.type.php
 		 */
-		if (!is_a($imgcat, 'icms_image_category_Object')) {
+		if (!is_a($imgcat, 'Icms\Image\Category\Object')) {
 			return false;
 		}
 
@@ -164,7 +167,7 @@ class icms_image_category_Handler extends icms_core_ObjectHandler {
 		/* As of PHP 5.3, is_a is no longer deprecated, this is an acceptable usage
 		 * and is compatible with more versions of PHP. http://us2.php.net/manual/en/language.operators.type.php
 		 */
-		if (!is_a($imgcat, 'icms_image_category_Object')) {
+		if (!is_a($imgcat, 'Icms\Image\Category\Object')) {
 			return false;
 		}
 
@@ -198,7 +201,7 @@ class icms_image_category_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$imgcat = new icms_image_category_Object();
+			$imgcat = new \Icms\Image\Category\Object();
 			$imgcat->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] = &$imgcat;
@@ -320,7 +323,7 @@ class icms_image_category_Handler extends icms_core_ObjectHandler {
 		/* As of PHP 5.3, is_a is no longer deprecated, this is an acceptable usage
 		 * and is compatible with more versions of PHP. http://us2.php.net/manual/en/language.operators.type.php
 		 */
-		if (!is_a($imgcat, 'icms_image_category_Object')) {
+		if (!is_a($imgcat, 'Icms\Image\Category\Object')) {
 			return false;
 		}
 		if ($imgcat->getVar('imgcat_pid') != 0) {

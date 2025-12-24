@@ -27,7 +27,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @todo		Properly set visibility of vars
  */
 
-class icms_ipf_About {
+
+namespace Icms\Ipf;
+
+class About {
 	public $_lang_aboutTitle;
 	public $_lang_author_info;
 	public $_lang_developer_lead;
@@ -56,7 +59,7 @@ class icms_ipf_About {
 	 * Initiate the object, based on the module
 	 *
 	 * @param string $aboutTitle text used in the extreme right caption of the menu
-	 * @return icms_ipf_About
+	 * @return \Icms\Ipf\About
 	 */
 
 	public function __construct($aboutTitle = _MODABOUT_ABOUT) {
@@ -92,7 +95,7 @@ class icms_ipf_About {
 	 * @return string sanitized value
 	 */
 	public function sanitize($value) {
-		return icms_core_DataFilter::checkVar($value, 'html', 'input'); // using input
+		return \Icms\Core\DataFilter::checkVar($value, 'html', 'input'); // using input
 	}
 
 	/**
@@ -109,7 +112,7 @@ class icms_ipf_About {
 
 		icms::$module->displayAdminMenu(-1, $this->_aboutTitle . " " . $versioninfo->getInfo('name'));
 
-		$this->_tpl = new icms_view_Tpl();
+		$this->_tpl = new \Icms\View\Tpl();
 
 		$this->_tpl->assign('module_url', ICMS_URL . "/modules/" . icms::$module->getVar('dirname') . "/");
 		$this->_tpl->assign('module_image', $versioninfo->getInfo('image'));
@@ -179,7 +182,7 @@ class icms_ipf_About {
 		}
 
 		// Warning
-		$this->_tpl->assign('module_warning', icms_core_DataFilter::checkVar($versioninfo->getInfo('warning'), 'html', 'input'));
+		$this->_tpl->assign('module_warning', \Icms\Core\DataFilter::checkVar($versioninfo->getInfo('warning'), 'html', 'input'));
 
 		// Author's note
 		$this->_tpl->assign('module_author_word', $versioninfo->getInfo('author_word'));
@@ -191,7 +194,7 @@ class icms_ipf_About {
 
 			$filesize = filesize($filename);
 			$handle = fopen($filename, 'r');
-			$this->_tpl->assign('module_version_history', icms_core_DataFilter::checkVar(fread($handle, $filesize), 'text', 'output'));
+			$this->_tpl->assign('module_version_history', \Icms\Core\DataFilter::checkVar(fread($handle, $filesize), 'text', 'output'));
 			fclose($handle);
 		}
 
@@ -200,7 +203,7 @@ class icms_ipf_About {
 
 			$filesize = filesize($filename);
 			$handle = fopen($filename, 'r');
-			$this->_tpl->assign('module_version_history', icms_core_DataFilter::checkVar(fread($handle, $filesize), 'text', 'output'));
+			$this->_tpl->assign('module_version_history', \Icms\Core\DataFilter::checkVar(fread($handle, $filesize), 'text', 'output'));
 			fclose($handle);
 		}
 
@@ -219,7 +222,7 @@ class icms_ipf_About {
 		if (is_file($filename)) {
 			$filesize = filesize($filename);
 			$handle = fopen($filename, 'r');
-			$this->_tpl->assign('module_license_txt', icms_core_DataFilter::checkVar(fread($handle, $filesize), 'text', 'output'));
+			$this->_tpl->assign('module_license_txt', \Icms\Core\DataFilter::checkVar(fread($handle, $filesize), 'text', 'output'));
 			fclose($handle);
 		}
 

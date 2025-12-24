@@ -24,7 +24,10 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @subpackage	View
  * @author marcan <marcan@smartfactory.ca>
  */
-class icms_ipf_view_Single {
+
+namespace Icms\Ipf\View;
+
+class Single {
 
 	var $_object;
 	var $_userSide;
@@ -58,7 +61,7 @@ class icms_ipf_view_Single {
 	 */
 	public function render($fetchOnly = false, $debug = false) {
 
-		$this->_tpl = new icms_view_Tpl();
+		$this->_tpl = new \Icms\View\Tpl();
 		$vars = $this->_object->vars;
 		$icms_object_array = array();
 

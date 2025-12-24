@@ -26,7 +26,10 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @since		1.1
  * @todo		Properly name the vars using the naming conventions
  */
-class icms_ipf_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Ipf;
+
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 *
@@ -226,7 +229,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 	 * @param str $perm_name
 	 */
 	public function setGrantedObjectsCriteria(&$criteria, $perm_name) {
-		$icmspermissions_handler = new icms_ipf_permission_Handler($this);
+		$icmspermissions_handler = new \Icms\Ipf\Permission\Handler($this);
 		$grantedItems = $icmspermissions_handler->getGrantedItems($perm_name);
 		if (count($grantedItems) > 0) {
 			$criteria->add(new icms_db_criteria_Item($this->keyName, '(' . implode(', ', $grantedItems) . ')', 'IN'));
@@ -272,7 +275,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 	public function getImagePath() {
 		$dir = $this->_uploadPath . $this->_itemname;
 		if (!file_exists($dir)) {
-			icms_core_Filesystem::mkdir($dir);
+			\Icms\Core\Filesystem::mkdir($dir);
 		}
 		return $dir . "/";
 	}
@@ -365,7 +368,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 			$start = $criteria->getStart();
 		}
 		if ($debug) {
-			icms_core_Debug::message($sql);
+			\Icms\Core\Debug::message($sql);
 		}
 
 		$result = $this->db->query($sql, $limit, $start);
@@ -399,7 +402,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 
 		}
 		if ($debug) {
-			icms_core_Debug::message($sql);
+			\Icms\Core\Debug::message($sql);
 		}
 
 		if ($force) {
@@ -533,7 +536,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 		}
 
 		if ($debug) {
-			icms_core_Debug::message($sql);
+			\Icms\Core\Debug::message($sql);
 		}
 
 		$result = $this->db->query($sql, $limit, $start);
@@ -544,7 +547,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 		while ($myrow = $this->db->fetchArray($result)) {
 			//identifiers should be textboxes, so sanitize them like that
 			$ret[$myrow[$this->keyName]] = empty($this->identifierName) ? 1
-				: icms_core_DataFilter::checkVar($myrow[$this->identifierName], 'text', 'output');
+				: \Icms\Core\DataFilter::checkVar($myrow[$this->identifierName], 'text', 'output');
 		}
 		return $ret;
 	}
@@ -736,7 +739,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 
 		if ($obj->seoEnabled) {
 			// Auto create meta tags if empty
-			$icms_metagen = new icms_ipf_Metagen($obj->title(), $obj->getVar('meta_keywords'), $obj->summary());
+			$icms_metagen = new \Icms\Ipf\Metagen($obj->title(), $obj->getVar('meta_keywords'), $obj->summary());
 
 			if (!$obj->getVar('meta_keywords') || !$obj->getVar('meta_description')) {
 
@@ -832,7 +835,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 		}
 
 		if ($debug) {
-			icms_core_Debug::message($sql);
+			\Icms\Core\Debug::message($sql);
 		}
 
 		if (false != $force) {

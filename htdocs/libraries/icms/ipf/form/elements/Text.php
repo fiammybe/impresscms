@@ -14,7 +14,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Text extends icms_form_elements_Text {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Text extends icms_form_elements_Text {
 	/**
 	 * Constructor
 	 * @param	object    $object   reference to targetobject (@link icms_ipf_Object)

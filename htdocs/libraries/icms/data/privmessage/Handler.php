@@ -55,7 +55,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @category	ICMS
  * @package     Privmessage
  */
-class icms_data_privmessage_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Data\Privmessage;
+
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * Create a new {@link icms_data_privmessage_Object} object
@@ -63,7 +66,7 @@ class icms_data_privmessage_Handler extends icms_core_ObjectHandler {
 	 * @return 	object {@link icms_data_privmessage_Object}
 	 **/
 	public function &create($isNew = true) {
-		$pm = new icms_data_privmessage_Object();
+		$pm = new \Icms\Data\Privmessage\Object();
 		if ($isNew) {
 			$pm->setNew();
 		}
@@ -85,7 +88,7 @@ class icms_data_privmessage_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$pm = new icms_data_privmessage_Object();
+				$pm = new \Icms\Data\Privmessage\Object();
 				$pm->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -100,7 +103,7 @@ class icms_data_privmessage_Handler extends icms_core_ObjectHandler {
 	 * @return 	bool
 	 **/
 	public function insert(&$pm, $force = false) {
-		if (!is_a($pm, 'icms_data_privmessage_Object')) {
+		if (!is_a($pm, 'Icms\Data\Privmessage\Object')) {
 			return false;
 		}
 
@@ -155,7 +158,7 @@ class icms_data_privmessage_Handler extends icms_core_ObjectHandler {
 	 * @return 	bool
 	 **/
 	public function delete(&$pm) {
-		if (!is_a($pm, 'icms_data_privmessage_Object')) {
+		if (!is_a($pm, 'Icms\Data\Privmessage\Object')) {
 			return false;
 		}
 
@@ -187,7 +190,7 @@ class icms_data_privmessage_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$pm = new icms_data_privmessage_Object();
+			$pm = new \Icms\Data\Privmessage\Object();
 			$pm->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $pm;
@@ -222,7 +225,7 @@ class icms_data_privmessage_Handler extends icms_core_ObjectHandler {
 	 * @return 	bool
 	 **/
 	public function setRead(&$pm) {
-		if (!is_a($pm, 'icms_data_privmessage_Object')) {
+		if (!is_a($pm, 'Icms\Data\Privmessage\Object')) {
 			return false;
 		}
 

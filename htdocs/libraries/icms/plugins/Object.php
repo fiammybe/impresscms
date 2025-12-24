@@ -16,7 +16,10 @@
   * Enter description here ...
   *
   */
-class icms_plugins_Object {
+
+namespace Icms\Plugins;
+
+class Object {
 
 	public $_infoArray;
 

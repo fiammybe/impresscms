@@ -29,6 +29,9 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 /**
  * Include the language constants for the icms_db_legacy_updater_Handler
  */
+
+namespace Icms\Db\Legacy\Updater;
+
 global $icmsConfigPersona;
 icms_loadLanguageFile('core', 'databaseupdater');
 
@@ -41,7 +44,7 @@ icms_loadLanguageFile('core', 'databaseupdater');
  * @author marcan <marcan@smartfactory.ca>
  * @link http://www.smartfactory.ca The SmartFactory
  */
-class icms_db_legacy_updater_Handler {
+class Handler {
 
 	var $_dbTypesArray;
 
@@ -144,7 +147,7 @@ class icms_db_legacy_updater_Handler {
 	 * @param object $table {@link icms_db_legacy_updater_Table} that will be updated
 	 * @param bool	$force force the query even in a GET process
 	 *
-	 * @see icms_db_legacy_updater_Table
+	 * @see \Icms\Db\Legacy\Updater\Table
 	 *
 	 * @return bool true if success, false if an error occured
 	 */
@@ -261,7 +264,7 @@ class icms_db_legacy_updater_Handler {
 			return false;
 		}
 
-		$table = new icms_db_legacy_updater_Table($dirname . '_' . $item);
+		$table = new \Icms\Db\Legacy\Updater\Table($dirname . '_' . $item);
 		$object = $module_handler->create();
 		$objectVars = $object->getVars();
 

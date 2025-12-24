@@ -51,18 +51,21 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @author		Kazumi Ono <onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
-class icms_view_template_file_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\View\Template\File;
+
+class Handler extends \Icms\Core\ObjectHandler {
 	private $_prefetch_cache = array();
 
 	/**
 	 * create a new template instance
 	 *
-	 * @see icms_view_template_file_Object
+	 * @see \Icms\View\Template\File\Object
 	 * @param bool $isNew is the new tempate new??
 	 * @return object icms_view_template_file_Object {@link icms_view_template_file_Object} reference to the new template
 	 **/
 	public function &create($isNew = true) {
-		$tplfile = new icms_view_template_file_Object();
+		$tplfile = new \Icms\View\Template\File\Object();
 		if ($isNew) {
 			$tplfile->setNew();
 		}
@@ -72,7 +75,7 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 	/**
 	 * gets a new template instance
 	 *
-	 * @see icms_view_template_file_Object
+	 * @see \Icms\View\Template\File\Object
 	 * @param int $id ID of the template to get
 	 * @param bool $getsource would you like to get the source?
 	 * @return object icms_view_template_file_Object {@link icms_view_template_file_Object} reference to the new template
@@ -93,7 +96,7 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$tplfile = new icms_view_template_file_Object();
+				$tplfile = new \Icms\View\Template\File\Object();
 				$tplfile->assignVars($this->db->fetchArray($result));
 			}
 		}
@@ -103,13 +106,13 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 	/**
 	 * Loads Template source from DataBase
 	 *
-	 * @see icms_view_template_file_Object
+	 * @see \Icms\View\Template\File\Object
 	 * @param object $tplfile {@link icms_view_template_file_Object} object of the template file to load
 	 * @return bool TRUE on success, FALSE if fail
 	 **/
 	public function loadSource(&$tplfile) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated */
-		if (!is_a($tplfile, 'icms_view_template_file_Object')) {
+		if (!is_a($tplfile, 'Icms\View\Template\File\Object')) {
 			return false;
 		}
 
@@ -128,13 +131,13 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 	/**
 	 * Inserts Template into the DataBase
 	 *
-	 * @see icms_view_template_file_Object
+	 * @see \Icms\View\Template\File\Object
 	 * @param object $tplfile {@link icms_view_template_file_Object} object of the template file to load
 	 * @return bool TRUE on success, FALSE if fail
 	 **/
 	public function insert(&$tplfile) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated */
-		if (!is_a($tplfile, 'icms_view_template_file_Object')) {
+		if (!is_a($tplfile, 'Icms\View\Template\File\Object')) {
 			return false;
 		}
 		if (!$tplfile->isDirty()) {
@@ -218,7 +221,7 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 	 **/
 	public function forceUpdate(&$tplfile) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated */
-		if (!is_a($tplfile, 'icms_view_template_file_Object')) {
+		if (!is_a($tplfile, 'Icms\View\Template\File\Object')) {
 			return false;
 		}
 		if (!$tplfile->isDirty()) {
@@ -254,7 +257,7 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 	 **/
 	public function delete(&$tplfile) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated */
-		if (!is_a($tplfile, 'icms_view_template_file_Object')) {
+		if (!is_a($tplfile, 'Icms\View\Template\File\Object')) {
 			return false;
 		}
 		$id = (int) ($tplfile->getVar('tpl_id'));
@@ -292,7 +295,7 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$tplfile = new icms_view_template_file_Object();
+			$tplfile = new \Icms\View\Template\File\Object();
 			$tplfile->assignVars($myrow);
 			if (!$id_as_key) {
 				$ret[] =& $tplfile;
@@ -433,7 +436,7 @@ class icms_view_template_file_Handler extends icms_core_ObjectHandler {
 		$result = $this->db->query($sql);
 		if (!$result) return false;
 		while ($myrow = $this->db->fetchArray($result)) {
-			$tplfile = new icms_view_template_file_Object();
+			$tplfile = new \Icms\View\Template\File\Object();
 			$tplfile->assignVars($myrow);
 			$this->_prefetch_cache[] =& $tplfile;
 			unset($tplfile);

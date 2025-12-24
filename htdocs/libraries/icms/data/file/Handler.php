@@ -14,7 +14,10 @@
 
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
-class icms_data_file_Handler extends icms_ipf_Handler {
+
+namespace Icms\Data\File;
+
+class Handler extends \Icms\Ipf\Handler {
 	/**
 	 * constrcutor
 	 *
@@ -29,7 +32,7 @@ class icms_data_file_Handler extends icms_ipf_Handler {
 	 *
 	 * Event automatically triggered by IcmsPersistable Framework after the object is deleted
 	 *
-	 * @param icms_data_file_Object $obj object
+	 * @param \Icms\Data\File\Object $obj object
 	 * @return bool TRUE
 	 */
 	protected function afterDelete(&$obj) {

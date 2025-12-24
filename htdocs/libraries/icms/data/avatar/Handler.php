@@ -52,14 +52,17 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @package		Data
  * @subpackage	Avatar
  */
-class icms_data_avatar_Handler extends icms_core_ObjectHandler {
+
+namespace Icms\Data\Avatar;
+
+class Handler extends \Icms\Core\ObjectHandler {
 
 	/**
 	 * Creates a new avatar object
-	 * @see icms_core_ObjectHandler#create()
+	 * @see \Icms\Core\ObjectHandler#create()
 	 */
 	public function &create($isNew = true) {
-		$avatar = new icms_data_avatar_Object();
+		$avatar = new \Icms\Data\Avatar\Object();
 		if ($isNew) {
 			$avatar->setNew();
 		}
@@ -68,7 +71,7 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 
 	/**
 	 * Gets an avatar object
-	 * @see icms_core_ObjectHandler#get($int_id)
+	 * @see \Icms\Core\ObjectHandler#get($int_id)
 	 * @return mixed
 	 */
 	public function &get($id) {
@@ -82,7 +85,7 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 			}
 			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
-				$avatar = new icms_data_avatar_Object();
+				$avatar = new \Icms\Data\Avatar\Object();
 				$avatar->assignVars($this->db->fetchArray($result));
 				return $avatar;
 			}
@@ -92,14 +95,14 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 
 	/**
 	 * Inserts an avatar or updates an existing avatar
-	 * @see icms_core_ObjectHandler#insert($object)
+	 * @see \Icms\Core\ObjectHandler#insert($object)
 	 * @return boolean
 	 */
 	public function insert(&$avatar) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated
 		 * but, we can use type hinting in the method signature
 		 */
-		if (!is_a($avatar, 'icms_data_avatar_Object')) {
+		if (!is_a($avatar, 'Icms\Data\Avatar\Object')) {
 			return false;
 		}
 		if (!$avatar->isDirty()) {
@@ -160,12 +163,12 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 
 	/**
 	 * Deletes an avatar
-	 * @see icms_core_ObjectHandler#delete($object)
+	 * @see \Icms\Core\ObjectHandler#delete($object)
 	 * @return boolean
 	 */
 	public function delete(&$avatar) {
 		/* As of PHP5.3.0, is_a() is no longer deprecated */
-		if (!is_a($avatar, 'icms_data_avatar_Object')) {
+		if (!is_a($avatar, 'Icms\Data\Avatar\Object')) {
 			return false;
 		}
 
@@ -208,7 +211,7 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 			return $ret;
 		}
 		while ($myrow = $this->db->fetchArray($result)) {
-			$avatar = new icms_data_avatar_Object();
+			$avatar = new \Icms\Data\Avatar\Object();
 			$avatar->assignVars($myrow);
 			$avatar->setUserCount($myrow['count']);
 			if (!$id_as_key) {
@@ -274,7 +277,7 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 		$ret = array();
 
 		/* As of PHP5.3.0, is_a() is no longer deprecated */
-		if (!is_a($avatar, 'icms_data_avatar_Object')) {
+		if (!is_a($avatar, 'Icms\Data\Avatar\Object')) {
 			return false;
 		}
 
@@ -296,13 +299,13 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 	 * @return array
 	 */
 	public function getList($avatar_type = null, $avatar_display = null) {
-		$criteria = new icms_db_criteria_Compo();
+		$criteria = new \Icms\Db\Criteria\Compo();
 		if (isset($avatar_type)) {
 			$avatar_type = ($avatar_type == 'C') ? 'C' : 'S';
-			$criteria->add(new icms_db_criteria_Item('avatar_type', $avatar_type));
+			$criteria->add(new \Icms\Db\Criteria\Item('avatar_type', $avatar_type));
 		}
 		if (isset($avatar_display)) {
-			$criteria->add(new icms_db_criteria_Item('avatar_display', (int) $avatar_display));
+			$criteria->add(new \Icms\Db\Criteria\Item('avatar_display', (int) $avatar_display));
 		}
 		$avatars =& $this->getObjects($criteria, true);
 		$ret = array('blank.gif' => _NONE);
@@ -321,9 +324,9 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 	static public function getListFromDir($avatar_dir="") {
 		$avatars = array();
 		if ($avatar_dir != "") {
-			$avatars = icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/" . $avatar_dir . "/", $avatar_dir . "/", array('gif', 'jpg', 'png'));
+			$avatars = \Icms\Core\Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/" . $avatar_dir . "/", $avatar_dir . "/", array('gif', 'jpg', 'png'));
 		} else {
-			$avatars = icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/", '', array('gif', 'jpg', 'png'));
+			$avatars = \Icms\Core\Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/", '', array('gif', 'jpg', 'png'));
 		}
 		return $avatars;
 	}
@@ -336,10 +339,10 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 	static public function getAllFromDir() {
 		$avatars = array();
 		$dirlist = array();
-		$dirlist = icms_core_Filesystem::getDirList(ICMS_ROOT_PATH . "/images/avatar/");
+		$dirlist = \Icms\Core\Filesystem::getDirList(ICMS_ROOT_PATH . "/images/avatar/");
 		if (count($dirlist) > 0) {
 			foreach ($dirlist as $dir) {
-				$avatars[$dir] =& icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/" . $dir . "/", $dir . "/", array('gif', 'jpg', 'png'));
+				$avatars[$dir] =& \Icms\Core\Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/" . $dir . "/", $dir . "/", array('gif', 'jpg', 'png'));
 			}
 		} else {
 			return false;

@@ -52,7 +52,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @subpackage	Comment
  *
  */
-class icms_data_comment_Object extends icms_core_Object {
+
+namespace Icms\Data\Comment;
+
+class Object extends \Icms\Core\Object {
 
 	/**
 	 * Constructor

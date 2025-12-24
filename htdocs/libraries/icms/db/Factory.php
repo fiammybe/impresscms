@@ -47,14 +47,17 @@
  *
  * @abstract
  */
-abstract class icms_db_Factory {
+
+namespace Icms\Db;
+
+abstract class Factory {
 
 	/**
 	 * PDO database adapter. It represents a PDO connection only
 	 * Access this as icms::$db
 	 *
 	 * @copyright	The ImpressCMS Project <http://www.impresscms.org>
-	 * @var 		icms_db_IConnection
+	 * @var \Icms\Db\IConnection
 	 */
 	static protected $pdoInstance = FALSE;
 
@@ -62,7 +65,7 @@ abstract class icms_db_Factory {
 	 * Legacy database adapter - it can represent a legacy database connection or a PDO connection.
 	 * Access this as icms::$xoopsDB
 	 *
-	 * @var icms_db_legacy_Database
+	 * @var \Icms\Db\Legacy\Database
 	 */
 	static protected $xoopsInstance = FALSE;
 
@@ -146,7 +149,7 @@ abstract class icms_db_Factory {
 		$allowWebChanges = defined('XOOPS_DB_PROXY') ? FALSE : TRUE;
 		if (strpos(XOOPS_DB_TYPE, 'pdo.') === 0) {
 			if (FALSE === self::$pdoInstance) self::pdoInstance();
-			self::$xoopsInstance = new icms_db_legacy_PdoDatabase(self::$pdoInstance, $allowWebChanges);
+			self::$xoopsInstance = new \Icms\Db\Legacy\PdoDatabase(self::$pdoInstance, $allowWebChanges);
 		} else {
 			if (defined('XOOPS_DB_ALTERNATIVE') && class_exists(XOOPS_DB_ALTERNATIVE)) {
 				$class = XOOPS_DB_ALTERNATIVE;
@@ -158,7 +161,7 @@ abstract class icms_db_Factory {
 			/* during a new installation, the icms object does not exist */
 			//self::$xoopsInstance->setLogger(icms::$logger);
 			/* @todo remove the dependency on the logger class */
-			self::$xoopsInstance->setLogger(icms_core_Logger::instance());
+			self::$xoopsInstance->setLogger(\Icms\Core\Logger::instance());
 			if (!self::$xoopsInstance->connect()) {
 				/* this requires that include/functions.php has been loaded */
 				icms_loadLanguageFile('core', 'core');

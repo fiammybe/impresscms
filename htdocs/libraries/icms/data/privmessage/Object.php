@@ -49,7 +49,10 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
  * @category	ICMS
  * @package		Privmessage
  */
-class icms_data_privmessage_Object extends icms_core_Object {
+
+namespace Icms\Data\Privmessage;
+
+class Object extends \Icms\Core\Object {
 
 	/**
 	 * constructor

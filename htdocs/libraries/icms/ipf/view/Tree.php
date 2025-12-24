@@ -28,7 +28,10 @@ defined('ICMS_ROOT_PATH') || die("ImpressCMS root path not defined");
  * @author		marcan <marcan@impresscms.org>
  * @version		$Id: icmspersistabletreetable.php 19651 2010-06-26 06:15:15Z malanciault $
  */
-class icms_ipf_view_Tree extends icms_ipf_view_Table {
+
+namespace Icms\Ipf\View;
+
+class Tree extends \Icms\Ipf\View\Table {
 
 	/**
 	 * Construct the tree object
@@ -129,7 +132,7 @@ class icms_ipf_view_Tree extends icms_ipf_view_Table {
 			}
 		}
 
-		$controller = new icms_ipf_Controller($this->_objectHandler);
+		$controller = new \Icms\Ipf\Controller($this->_objectHandler);
 
 		if (in_array('edit', $this->_actions)) {
 			$actions[] = $controller->getEditItemLink($object, false, true);
@@ -158,7 +161,7 @@ class icms_ipf_view_Tree extends icms_ipf_view_Table {
 	/**
 	 * Create all the rows
 	 *
-	 * @see icms_ipf_view_Table::createTableRows()
+	 * @see \Icms\Ipf\View\Table::createTableRows()
 	 */
 	public function createTableRows() {
 		$this->_aObjects = array();
@@ -179,7 +182,7 @@ class icms_ipf_view_Tree extends icms_ipf_view_Table {
 	/**
 	 * Get all the objects, using parentid as the key
 	 *
-	 * @see icms_ipf_view_Table::fetchObjects()
+	 * @see \Icms\Ipf\View\Table::fetchObjects()
 	 */
 	public function fetchObjects() {
 		$ret = $this->_objectHandler->getObjects($this->_criteria, 'parentid');

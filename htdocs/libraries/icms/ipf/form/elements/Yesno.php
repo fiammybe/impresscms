@@ -14,7 +14,10 @@
 
 defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
-class icms_ipf_form_elements_Yesno extends icms_form_elements_Radioyn {
+
+namespace Icms\Ipf\Form\Elements;
+
+class Yesno extends icms_form_elements_Radioyn {
 	/**
 	 * Constructor
 	 * @param	object    $object   reference to targetobject (@link icms_ipf_Object)

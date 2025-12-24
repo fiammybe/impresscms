@@ -45,7 +45,10 @@
  * @package     Auth
  * @author	    Pierre-Eric MENUET	<pemphp@free.fr>
  */
-class icms_auth_Factory {
+
+namespace Icms\Auth;
+
+class Factory {
 
 	/**
 	 * Get a reference to the only instance of authentication class

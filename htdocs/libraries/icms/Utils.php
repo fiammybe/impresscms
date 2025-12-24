@@ -22,7 +22,10 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * @since		1.3
  * @author		marcan <marcan@impresscms.org>
  */
-class icms_Utils {
+
+namespace Icms;
+
+class Utils {
 	/**
 	 * mimetypes
 	 *

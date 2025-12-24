@@ -17,7 +17,10 @@
  * @author		MekDrop <mekdrop@gmail.com>
  */
 
-interface icms_sys_autotasks_ISystem {
+
+namespace Icms\Sys\Autotasks;
+
+interface ISystem {
 
 	/**
 	 * check if can run
