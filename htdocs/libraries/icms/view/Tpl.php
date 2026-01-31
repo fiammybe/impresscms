@@ -44,7 +44,7 @@ if (!defined('SMARTY_DIR')) {
 /**
  * Base class: Smarty template engine
  */
-//require_once SMARTY_DIR . 'Smarty.class.php';
+require_once SMARTY_DIR . 'Smarty.class.php';
 
 /**
  * Template engine
@@ -55,26 +55,27 @@ if (!defined('SMARTY_DIR')) {
  * @author		Kazumi Ono 	<onokazu@xoops.org>
  * @copyright	Copyright (c) 2000 XOOPS.org
  */
-class icms_view_Tpl extends Smarty {
+class icms_view_Tpl extends Smarty\Smarty {
 
-	public $left_delimiter = '<{';
-	public $right_delimiter = '}>';
-
-	public $template_dir = ICMS_THEME_PATH;
-	public $cache_dir = ICMS_CACHE_PATH;
-	public $compile_dir = ICMS_COMPILE_PATH;
 	public icms_view_theme_Object $currentTheme;
 
 	public function __construct() {
 		global $icmsConfig;
 
+		parent::__construct();
+
+		// Set delimiters using Smarty 5 methods
+		$this->setLeftDelimiter('<{');
+		$this->setRightDelimiter('}>');
+
+		// Set directories using Smarty 5 methods
+		$this->setTemplateDir(ICMS_THEME_PATH);
+		$this->setCacheDir(ICMS_CACHE_PATH);
+		$this->setCompileDir(ICMS_COMPILE_PATH);
+
 		$this->compile_id = $icmsConfig['template_set'] . '-' . $icmsConfig['theme_set'];
-		$this->_compile_id = $this->compile_id;
 		$this->compile_check = ( $icmsConfig['theme_fromfile'] == 1 );
-		$this->plugins_dir = array(
-			ICMS_LIBRARIES_PATH . '/smarty/icms_plugins',
-			SMARTY_DIR . 'plugins',
-		);
+		$this->addPluginsDir(ICMS_LIBRARIES_PATH . '/smarty/icms_plugins');
 
 		if ($icmsConfig['debug_mode']) {
 			$this->debugging_ctrl = 'URL';
@@ -86,7 +87,6 @@ class icms_view_Tpl extends Smarty {
 			}
 		}
 
-		parent::__construct();
 		if (defined('_ADM_USE_RTL') && _ADM_USE_RTL) {
 			$this->assign('icms_rtl', true);
 		}
@@ -115,35 +115,48 @@ class icms_view_Tpl extends Smarty {
 	/**
 	 * Renders output from template data
 	 *
-	 * @param   string  $data		The template to render
+	 * @param   string  $tplSource	The template source to render
 	 * @param	bool	$display	If rendered text should be output or returned
+	 * @param   array   $vars       Optional variables to assign
 	 * @return  string  			Rendered output if $display was false
 	 **/
 	public function fetchFromData($tplSource, $display = false, $vars = null) {
-		if (!function_exists('smarty_function_eval')) {
-			require_once SMARTY_DIR . '/plugins/function.eval.php';
-		}
+		// In Smarty 5, we use the 'eval:' resource type for string templates
 		if (isset($vars)) {
-			$oldVars = $this->_tpl_vars;
+			// Save current variables
+			$oldVars = $this->getTemplateVars();
+			// Assign new variables
 			$this->assign($vars);
-			$out = smarty_function_eval(array('var' => $tplSource), $this);
-			$this->_tpl_vars = $oldVars;
+			// Fetch using eval: resource
+			$out = $this->fetch('eval:' . $tplSource);
+			// Restore old variables
+			$this->clearAllAssign();
+			if (is_array($oldVars)) {
+				$this->assign($oldVars);
+			}
 			return $out;
 		}
-		return smarty_function_eval(array('var' => $tplSource), $this );
+		return $this->fetch('eval:' . $tplSource);
 	}
 
 	/**
 	 * Touch the resource (file) which means get it to recompile the resource
 	 *
-	 * @param   string  $resourcename	Resourcename to touch
-	 * @return  string  $result         Was the resource recompiled
+	 * @param   string  $resourceName	Resourcename to touch
+	 * @return  bool    $result         Was the resource recompiled
 	 **/
 	public function touch($resourceName) {
 		$isForced = $this->force_compile;
 		$this->force_compile = true;
-		$this->clear_cache($resourceName);
-		$result = $this->_compile_resource($resourceName, $this->_get_compile_path($resourceName));
+		$this->clearCache($resourceName);
+		$this->clearCompiledTemplate($resourceName);
+		// Compile the template
+		try {
+			$this->fetch($resourceName);
+			$result = true;
+		} catch (\Exception $e) {
+			$result = false;
+		}
 		$this->force_compile = $isForced;
 		return $result;
 	}
@@ -188,7 +201,7 @@ class icms_view_Tpl extends Smarty {
 			$xoopsTpl->caching = 2;
 			for ($i = 0; $i < $count; $i++) {
 				if ($block_arr[$i]->getVar('template') != '') {
-					$xoopsTpl->clear_cache('db:'.$block_arr[$i]->getVar('template'), 'blk_'.$block_arr[$i]->getVar('bid'));
+					$xoopsTpl->clearCache('db:'.$block_arr[$i]->getVar('template'), 'blk_'.$block_arr[$i]->getVar('bid'));
 				}
 			}
 		}
