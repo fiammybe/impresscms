@@ -44,7 +44,7 @@ if (!defined('SMARTY_DIR')) {
 /**
  * Base class: Smarty template engine
  */
-require_once SMARTY_DIR . 'Smarty.class.php';
+//require_once SMARTY_DIR . 'Smarty.class.php';
 
 /**
  * Template engine
@@ -72,7 +72,7 @@ class icms_view_Tpl extends Smarty {
 		$this->_compile_id = $this->compile_id;
 		$this->compile_check = ( $icmsConfig['theme_fromfile'] == 1 );
 		$this->plugins_dir = array(
-			SMARTY_DIR . 'icms_plugins',
+			ICMS_LIBRARIES_PATH . '/smarty/icms_plugins',
 			SMARTY_DIR . 'plugins',
 		);
 
@@ -85,7 +85,7 @@ class icms_view_Tpl extends Smarty {
 				$this->debugging = true;
 			}
 		}
-		
+
 		parent::__construct();
 		if (defined('_ADM_USE_RTL') && _ADM_USE_RTL) {
 			$this->assign('icms_rtl', true);

@@ -51,9 +51,8 @@
 		"composer/composer": "^2.8",
 		"ezyang/htmlpurifier": "^4.19",
 		"simplepie/simplepie": "^1.9",
+		"smarty/smarty": "2.6.33",
 		"smottt/wideimage": "^1.1"
-	},
-	"require-dev": {
 	},
 	"autoload": {
 		"psr-4": {
@@ -68,6 +67,9 @@
 	},
 	"config": {
 		"optimize-autoloader": true,
+		"audit": {
+			"block-insecure": false
+		},
 		"classmap-authoritative": false,
 		"apcu-autoloader": true,
 		"sort-packages": true,
