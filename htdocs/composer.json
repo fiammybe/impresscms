@@ -50,6 +50,7 @@
 		"ext-zlib": "*",
 		"composer/composer": "^2.8",
 		"ezyang/htmlpurifier": "^4.19",
+		"phpmailer/phpmailer": "^6.9",
 		"simplepie/simplepie": "^1.9",
 		"smottt/wideimage": "^1.1"
 	},
