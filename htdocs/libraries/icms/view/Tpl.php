@@ -77,6 +77,9 @@ class icms_view_Tpl extends Smarty\Smarty {
 		$this->compile_check = ( $icmsConfig['theme_fromfile'] == 1 );
 		$this->addPluginsDir(ICMS_LIBRARIES_PATH . '/smarty/icms_plugins');
 
+		// Register the database resource handler for Smarty 5
+		$this->registerResource('db', new \Smarty\Resource\DbPlugin());
+
 		if ($icmsConfig['debug_mode']) {
 			$this->debugging_ctrl = 'URL';
 			$groups = (is_object(icms::$user)) ? icms::$user->getGroups() : array(ICMS_GROUP_ANONYMOUS);

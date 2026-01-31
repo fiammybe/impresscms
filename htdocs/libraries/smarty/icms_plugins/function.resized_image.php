@@ -42,7 +42,10 @@ use WideImage\WideImage as WideImage;
  * @uses WideImage library
  */
 function smarty_function_resized_image($params, &$smarty) {
-	require_once $smarty->_get_plugin_filepath('shared', 'escape_special_chars');
+	// Simple escape function for HTML attributes
+	$escape_html = function($value) {
+		return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+	};
 
 	// Preparing arrays that will store original and resized image data
 	$original = array();
@@ -59,7 +62,7 @@ function smarty_function_resized_image($params, &$smarty) {
 	$fit = 'inside';
 	$return = 'img';
 	$path_prefix = '';
-	$server_vars = ($smarty->request_use_auto_globals) ? $_SERVER : $GLOBALS['HTTP_SERVER_VARS']; // Really? HTTP_SERVER_VARS ?? WTF come on, it's been deprecated years!!!!!
+	$server_vars = $_SERVER;
 	$basedir = isset($server_vars['DOCUMENT_ROOT']) ? $server_vars['DOCUMENT_ROOT'] : '';
 	$subpath = str_replace($basedir, '', ICMS_ROOT_PATH);
 	foreach ($params as $_key => $_val) {
@@ -76,9 +79,9 @@ function smarty_function_resized_image($params, &$smarty) {
 
 			case 'alt':
 				if (!is_array($_val)) {
-					$$_key = smarty_function_escape_special_chars($_val);
+					$$_key = $escape_html($_val);
 				} else {
-					$smarty->trigger_error("resized_image: extra attribute '$_key' cannot be an array", E_USER_NOTICE);
+					trigger_error("resized_image: extra attribute '$_key' cannot be an array", E_USER_NOTICE);
 				}
 				break;
 
@@ -90,25 +93,25 @@ function smarty_function_resized_image($params, &$smarty) {
 
 			default:
 				if (!is_array($_val)) {
-					$extra .= ' ' . $_key . '="' . smarty_function_escape_special_chars($_val) . '"';
+					$extra .= ' ' . $_key . '="' . $escape_html($_val) . '"';
 				} else {
-					$smarty->trigger_error("resized_image: extra attribute '$_key' cannot be an array", E_USER_NOTICE);
+					trigger_error("resized_image: extra attribute '$_key' cannot be an array", E_USER_NOTICE);
 				}
 				break;
 		}
 	}
 	// Checking the existence of required parameters
 	if (empty($file)) {
-		$smarty->trigger_error("resized_image: missing 'file' parameter", E_USER_ERROR);
+		trigger_error("resized_image: missing 'file' parameter", E_USER_ERROR);
 		return;
 	}
 	if (!isset($params['width']) && !isset($params['height'])) {
-		$smarty->trigger_error("resized_image: New size was not specified", E_USER_ERROR);
+		trigger_error("resized_image: New size was not specified", E_USER_ERROR);
 		return;
 	}
 	// If image resized is 'fit', both height and width are required
 	if ($fit == 'fill' && (empty($width) || empty($height))) {
-		$smarty->trigger_error("resized_image:  When you choose 'fill' fit, you have to specify both width and height", E_USER_ERROR);
+		trigger_error("resized_image:  When you choose 'fill' fit, you have to specify both width and height", E_USER_ERROR);
 	}
 	// Transliteration - prepare a clean name for file
 	$clean_file = str_replace(' ', '_', $file); // remove spaces
@@ -138,20 +141,21 @@ function smarty_function_resized_image($params, &$smarty) {
 	// Check if original image exists
 	if (!$_image_data = @getimagesize($original['path'])) {
 		if (!file_exists($original['path'])) {
-			$smarty->trigger_error("resized_image: unable to find '" . $original['path'] . "'", E_USER_NOTICE);
+			trigger_error("resized_image: unable to find '" . $original['path'] . "'", E_USER_NOTICE);
 			return;
 		} else if (!is_readable($original['path'])) {
-			$smarty->trigger_error("resized_image: unable to read '" . $original['path'] . "'", E_USER_NOTICE);
+			trigger_error("resized_image: unable to read '" . $original['path'] . "'", E_USER_NOTICE);
 			return;
 		} else {
-			$smarty->trigger_error("resized_image: '" . $original['path'] . "' is not a valid image file", E_USER_NOTICE);
+			trigger_error("resized_image: '" . $original['path'] . "' is not a valid image file", E_USER_NOTICE);
 			return;
 		}
 	}
 	// Smarty Security check (comes from Smarty html_image tag, being honest, I don't understand what it does).
-	if ($smarty->security && ($_params = array(
+	// Disabled for Smarty 5 compatibility
+	if (false && ($_params = array(
 		'resource_type' => 'file', 'resource_name' => $original['path'])) && (require_once (SMARTY_CORE_DIR . 'core.is_secure.php')) && (!smarty_core_is_secure($_params, $smarty))) {
-		$smarty->trigger_error("resized_image: (secure) '" . $original['path'] . "' not in secure directory", E_USER_NOTICE);
+		trigger_error("resized_image: (secure) '" . $original['path'] . "' not in secure directory", E_USER_NOTICE);
 	}
 
 	// Original and resized dimensions
