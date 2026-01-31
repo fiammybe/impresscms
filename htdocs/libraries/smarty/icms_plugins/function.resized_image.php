@@ -151,12 +151,9 @@ function smarty_function_resized_image($params, &$smarty) {
 			return;
 		}
 	}
-	// Smarty Security check (comes from Smarty html_image tag, being honest, I don't understand what it does).
-	// Disabled for Smarty 5 compatibility
-	if (false && ($_params = array(
-		'resource_type' => 'file', 'resource_name' => $original['path'])) && (require_once (SMARTY_CORE_DIR . 'core.is_secure.php')) && (!smarty_core_is_secure($_params, $smarty))) {
-		trigger_error("resized_image: (secure) '" . $original['path'] . "' not in secure directory", E_USER_NOTICE);
-	}
+	
+	// Security check removed - Smarty 5 doesn't have the same security model as Smarty 2
+	// If security checks are needed, they should be implemented at the application level
 
 	// Original and resized dimensions
 	if (!isset($params['width'])) {
