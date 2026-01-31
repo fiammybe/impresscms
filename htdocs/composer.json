@@ -1,6 +1,6 @@
 {
 	"name": "impresscms/impresscms",
-	"description": "ImpressCMS - A dynamic and user-friendly Content Management System",
+	"description": "ImpressCMS - A free, open source multilingual Content Management System build on PHP and MySQL",
 	"type": "project",
 	"keywords": [
 		"cms",
@@ -11,6 +11,10 @@
 	],
 	"homepage": "https://www.impresscms.org/",
 	"license": "GPL-2.0",
+	"support": {
+		"issues": "https://github.com/ImpressCMS/impresscms/issues",
+		"source": "https://github.com/ImpressCMS/impresscms"
+	},
 	"authors": [
 		{
 			"name": "Marc-André Lanciault",
