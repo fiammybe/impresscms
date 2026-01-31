@@ -3,3 +3,5 @@
 /.buildpath
 /.settings/
 /.homestead/
+/htdocs/vendor/
+/htdocs/var/cache/
