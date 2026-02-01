@@ -75,10 +75,17 @@ class icms_view_Tpl extends Smarty\Smarty {
 
 		$this->compile_id = $icmsConfig['template_set'] . '-' . $icmsConfig['theme_set'];
 		$this->compile_check = ( $icmsConfig['theme_fromfile'] == 1 );
-		$this->addPluginsDir(ICMS_LIBRARIES_PATH . '/smarty/icms_plugins');
 
 		// Register the database resource handler for Smarty 5
 		$this->registerResource('db', new \Smarty\Resource\DbPlugin());
+
+		// Load custom compiler tag classes
+		require_once ICMS_LIBRARIES_PATH . '/smarty/icms_plugins/compiler.xoImgUrl.php';
+		require_once ICMS_LIBRARIES_PATH . '/smarty/icms_plugins/compiler.xoAppUrl.php';
+
+		// Register ImpressCMS extension for Smarty 5 (replaces deprecated addPluginsDir)
+		require_once ICMS_LIBRARIES_PATH . '/smarty/icms_plugins/IcmsExtension.php';
+		$this->addExtension(new \Smarty\Extension\IcmsExtension());
 
 		if ($icmsConfig['debug_mode']) {
 			$this->debugging_ctrl = 'URL';
