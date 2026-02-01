@@ -44,8 +44,8 @@ if (!defined('SMARTY_DIR')) {
 /**
  * Base class: Smarty template engine
  */
-require_once SMARTY_DIR . 'Smarty.class.php';
 
+use Smarty;
 /**
  * Template engine
  *
@@ -209,5 +209,6 @@ class icms_view_Tpl extends Smarty\Smarty {
 			}
 		}
 	}
+
 }
 
