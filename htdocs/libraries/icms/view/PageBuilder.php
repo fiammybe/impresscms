@@ -75,7 +75,7 @@ class icms_view_PageBuilder {
 	public function xoInit($options = array()) {
 		$this->retrieveBlocks();
 		if ($this->theme) {
-			$this->theme->template->assign_by_ref('xoBlocks', $this->blocks);
+			$this->theme->template->assign('xoBlocks', $this->blocks);
 		}
 		return TRUE;
 	}
