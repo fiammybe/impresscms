@@ -6,7 +6,7 @@
  * Type:     resource
  * Name:     db
  * Purpose:  Fetches templates from a database
- * 
+ *
  * Smarty 5 compatible version
  * -------------------------------------------------------------
  */
@@ -30,23 +30,27 @@ class DbPlugin extends BasePlugin {
 	 */
 	public function populate(Source $source, ?Template $_template = null) {
 		$tpl = $this->getTplInfo($source->name);
-		
+
 		if (!$tpl) {
 			$source->exists = false;
 			$source->timestamp = false;
 			return;
 		}
-		
+
 		$source->exists = true;
-		
+
 		if (is_object($tpl)) {
 			// Template from database
 			$source->timestamp = $tpl->getVar('tpl_lastmodified', 'n');
-			$source->uid = 'db:' . $source->name;
+			// Use only the template name as uid
+			// The uid should be a simple identifier, not a full path
+			$source->uid = $source->name;
 		} else {
 			// Template from filesystem
 			$source->timestamp = filemtime($tpl);
-			$source->uid = 'file:' . $tpl;
+			// Use only the template name as uid, not the full file path
+			// The uid should be a simple identifier that's filesystem-safe
+			$source->uid = $source->name;
 		}
 	}
 
@@ -60,11 +64,11 @@ class DbPlugin extends BasePlugin {
 	 */
 	public function getContent(Source $source) {
 		$tpl = $this->getTplInfo($source->name);
-		
+
 		if (!$tpl) {
 			throw new \Smarty\Exception("Unable to load template 'db:{$source->name}'");
 		}
-		
+
 		if (is_object($tpl)) {
 			// Template from database
 			return $tpl->getVar('tpl_source', 'n');
@@ -87,7 +91,7 @@ class DbPlugin extends BasePlugin {
 
 	/**
 	 * Get template information from database or filesystem
-	 * 
+	 *
 	 * @param string $tpl_name Template name
 	 * @return mixed Template object, file path, or false
 	 */
@@ -104,7 +108,7 @@ class DbPlugin extends BasePlugin {
 		$theme = isset($icmsConfig['theme_set']) ? $icmsConfig['theme_set'] : 'default';
 
 		$tplfile_handler = \icms::handler('icms_view_template_file');
-		
+
 		// If we're not using the "default" template set, then get the templates from the DB
 		if ($tplset != "default") {
 			$tplobj = $tplfile_handler->getPrefetchedBlock($tplset, $tpl_name);
@@ -112,25 +116,25 @@ class DbPlugin extends BasePlugin {
 				return $cache[$tpl_name] = $tplobj[0];
 			}
 		}
-		
+
 		// If we're using the default tplset, get the template from the filesystem
 		$tplobj = $tplfile_handler->getPrefetchedBlock("default", $tpl_name);
 
 		if (!count($tplobj)) {
 			return $cache[$tpl_name] = false;
 		}
-		
+
 		$tplobj = $tplobj[0];
 		$module = $tplobj->getVar('tpl_module', 'n');
 		$type = $tplobj->getVar('tpl_type', 'n');
 		$blockpath = ($type == 'block') ? 'blocks/' : '';
-		
+
 		// First, check for an overloaded version within the selected theme folder (support both themes/ and modules/system/themes)
 		$themeBase = (is_dir(ICMS_MODULES_PATH . '/system/themes/' . $theme))
 			? ICMS_MODULES_PATH . '/system/themes/' . $theme
 			: ICMS_THEME_PATH . "/$theme";
 		$filepath = $themeBase . "/modules/$module/$blockpath$tpl_name";
-		
+
 		if (!file_exists($filepath)) {
 			// If no custom version exists, get the tpl from its default location
 			$filepath = ICMS_ROOT_PATH . "/modules/$module/templates/$blockpath$tpl_name";
@@ -138,7 +142,7 @@ class DbPlugin extends BasePlugin {
 				return $cache[$tpl_name] = $tplobj;
 			}
 		}
-		
+
 		return $cache[$tpl_name] = $filepath;
 	}
 }
