@@ -198,23 +198,24 @@ class icms_form_elements_Select extends icms_form_Element {
 	 * @return	string  HTML
 	 */
 	public function render() {
-		$ele_name = $this->getName();
 		$ele_value = $this->getValue();
-		$ele_options = $this->getOptions();
-		$ret = "<select size='" . $this->getSize() . "' " . $this->getExtra();
-		if ($this->isMultiple() != false) {
-			$ret .= " name='" . $ele_name . "[]' id='" . $ele_name . "' multiple='multiple'>\n";
-		} else {
-			$ret .= " name='" . $ele_name . "' id='" . $ele_name . "'>\n";
+		$options = array();
+		foreach ($this->getOptions() as $value => $name) {
+			$options[] = array(
+				'value'    => htmlspecialchars($value, ENT_QUOTES),
+				'name'     => $name,
+				'selected' => in_array($value, $ele_value),
+			);
 		}
-		foreach ( $ele_options as $value => $name ) {
-			$ret .= "<option value='" . htmlspecialchars($value, ENT_QUOTES) . "'";
-			if (count($ele_value) > 0 && in_array($value, $ele_value)) {
-				$ret .= " selected='selected'";
-			}
-			$ret .= ">" . $name . "</option>\n";
-		}
-		$ret .= "</select>";
-		return $ret;
+
+		$this->tpl = new icms_view_Tpl();
+		$this->tpl->assign('ele_name', $this->getName());
+		$this->tpl->assign('ele_size', $this->getSize());
+		$this->tpl->assign('ele_extra', $this->getExtra());
+		$this->tpl->assign('ele_multiple', $this->isMultiple());
+		$this->tpl->assign('ele_options', $options);
+
+		$element_html_template = $this->customTemplate ? $this->customTemplate : 'icms_form_elements_select_display.html';
+		return $this->tpl->fetch('db:' . $element_html_template);
 	}
 }

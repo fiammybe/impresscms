@@ -84,11 +84,13 @@ class icms_form_elements_File extends icms_form_Element {
 	 * @return	string	HTML
 	 */
 	public function render() {
-		$ele_name = $this->getName();
-		$ret  = "<input type='hidden' name='MAX_FILE_SIZE' value='" . $this->getMaxFileSize() . "' />";
-		$ret .= "<input type='file' name='" . $ele_name . "' id='" . $ele_name . "'" . $this->getExtra() . " />";
-		$ret .= "<input type='hidden' name='xoops_upload_file[]' id='xoops_upload_file[]' value='" . $ele_name . "' />";
-		return $ret;
+		$this->tpl = new icms_view_Tpl();
+		$this->tpl->assign('ele_name', $this->getName());
+		$this->tpl->assign('ele_maxfilesize', $this->getMaxFileSize());
+		$this->tpl->assign('ele_extra', $this->getExtra());
+
+		$element_html_template = $this->customTemplate ? $this->customTemplate : 'icms_form_elements_file_display.html';
+		return $this->tpl->fetch('db:' . $element_html_template);
 	}
 }
 

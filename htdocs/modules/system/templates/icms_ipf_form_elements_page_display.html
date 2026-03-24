@@ -1,0 +1,11 @@
+<select name="visiblein[]" id="visiblein[]" multiple="multiple" size="10">
+<{foreach from=$page_options item=option}>
+<{if $option.type eq 'optgroup_start'}>
+<optgroup label="<{$option.label}>">
+<{elseif $option.type eq 'optgroup_end'}>
+</optgroup>
+<{else}>
+<option value="<{$option.value}>"<{if $option.selected}> selected="selected"<{/if}>><{$option.label}></option>
+<{/if}>
+<{/foreach}>
+</select>

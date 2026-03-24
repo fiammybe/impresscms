@@ -86,7 +86,11 @@ class icms_form_elements_Label extends icms_form_Element {
 	 * @return	string
 	 */
 	public function render() {
-		return $this->getValue();
+		$this->tpl = new icms_view_Tpl();
+		$this->tpl->assign('ele_value', $this->getValue());
+
+		$element_html_template = $this->customTemplate ? $this->customTemplate : 'icms_form_elements_label_display.html';
+		return $this->tpl->fetch('db:' . $element_html_template);
 	}
 }
 

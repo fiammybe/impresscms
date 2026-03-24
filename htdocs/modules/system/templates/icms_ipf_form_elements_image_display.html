@@ -1,0 +1,15 @@
+<{if $image_is_url}>
+<img src="<{$image_src}>" alt="" /><br/><br/>
+<{elseif $image_has_value}>
+<a rel="lightbox" title="<{$image_src}>" href="<{$image_src}>"><img class="acp_object_imageurl" src="<{$image_src}>" alt="<{$image_src}>" height="150" /></a><br/><br/>
+<{/if}>
+<{$fileupload_html}>
+<{if $show_url}>
+<div style="padding-top: 8px; font-size: 80%;"><{$url_file_desc}></div>
+<br /><{$url_file_label}>
+<{$url_input_html}>
+<{/if}>
+<{if $show_delete}>
+<br /><br />
+<{$delete_checkbox_html}>
+<{/if}>

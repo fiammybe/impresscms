@@ -1,0 +1,7 @@
+<{if $ele_is_array}>
+<{foreach from=$ele_values item=value}>
+<input type="hidden" name="<{$ele_name}>[]" id="<{$ele_name}>" value="<{$value}>" />
+<{/foreach}>
+<{else}>
+<input type="hidden" name="<{$ele_name}>" id="<{$ele_name}>" value="<{$ele_value}>" />
+<{/if}>

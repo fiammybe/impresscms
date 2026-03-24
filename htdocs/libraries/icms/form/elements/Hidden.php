@@ -96,16 +96,18 @@ class icms_form_elements_Hidden extends icms_form_Element {
 	 * @return	string	HTML
 	 */
 	public function render() {
-		if (is_array($this->getValue())) {
-			$ret = '';
-			foreach ($this->getValue() as $value){
-				$ret .= "<input type='hidden' name='" . $this->getName() . "[]' id='" . $this->getName() . "' value='" . $value . "' />\n";
-			}
+		$this->tpl = new icms_view_Tpl();
+		$this->tpl->assign('ele_name', $this->getName());
+		$isArray = is_array($this->getValue());
+		$this->tpl->assign('ele_is_array', $isArray);
+		if ($isArray) {
+			$this->tpl->assign('ele_values', $this->getValue());
 		} else {
-			$ret = "<input type='hidden' name='" . $this->getName() . "' id='" . $this->getName() . "' value='" . $this->getValue() . "' />";
+			$this->tpl->assign('ele_value', $this->getValue());
 		}
 
-		return $ret;
+		$element_html_template = $this->customTemplate ? $this->customTemplate : 'icms_form_elements_hidden_display.html';
+		return $this->tpl->fetch('db:' . $element_html_template);
 	}
 }
 

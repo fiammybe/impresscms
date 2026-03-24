@@ -178,19 +178,25 @@ class icms_form_elements_Tray extends icms_form_Element {
 	 */
 	public function render() {
 		$count = 0;
-		$ret = "";
+		$elements_data = array();
 		foreach ($this->getElements() as $ele) {
-			if ($count > 0) {
-				$ret .= $this->getDelimeter();
-			}
-			if ($ele->getCaption() != '') {
-				$ret .= $ele->getCaption() . "&nbsp;";
-			}
-			$ret .= $ele->render() . "\n";
+			$item = array(
+				'caption'       => $ele->getCaption(),
+				'body'          => $ele->render(),
+				'hidden'        => $ele->isHidden(),
+				'has_delimiter' => $count > 0,
+			);
+			$elements_data[] = $item;
 			if (!$ele->isHidden()) {
 				$count++;
 			}
 		}
-		return $ret;
+
+		$this->tpl = new icms_view_Tpl();
+		$this->tpl->assign('tray_elements', $elements_data);
+		$this->tpl->assign('tray_delimeter', $this->getDelimeter());
+
+		$element_html_template = $this->customTemplate ? $this->customTemplate : 'icms_form_elements_tray_display.html';
+		return $this->tpl->fetch('db:' . $element_html_template);
 	}
 }

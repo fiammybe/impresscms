@@ -338,5 +338,16 @@ $modversion['templates'] = array(
 	array('file' => 'icms_form_elements_checkbox_display.html', 'description' => 'Display template for a checkbox'),
 	array('file' => 'icms_form_elements_text_display.html', 'description' => 'Display template for a text'),
 	array('file' => 'icms_form_elements_password_display.html', 'description' => 'Display template for a password field'),
-	array('file' => 'icms_form_elements_passwordtray_display.html', 'description' => 'Display template for a passwordtray')
+	array('file' => 'icms_form_elements_passwordtray_display.html', 'description' => 'Display template for a passwordtray'),
+	array('file' => 'icms_form_elements_hidden_display.html', 'description' => 'Display template for a hidden field'),
+	array('file' => 'icms_form_elements_label_display.html', 'description' => 'Display template for a label'),
+	array('file' => 'icms_form_elements_tray_display.html', 'description' => 'Display template for a form element tray'),
+	array('file' => 'icms_form_elements_select_display.html', 'description' => 'Display template for a select field'),
+	array('file' => 'icms_form_elements_file_display.html', 'description' => 'Display template for a file upload field'),
+	array('file' => 'icms_form_elements_captcha_text_display.html', 'description' => 'Display template for a text CAPTCHA'),
+	array('file' => 'icms_form_elements_captcha_image_display.html', 'description' => 'Display template for an image CAPTCHA'),
+	array('file' => 'icms_ipf_form_elements_upload_display.html', 'description' => 'Display template for an IPF upload field'),
+	array('file' => 'icms_ipf_form_elements_fileupload_display.html', 'description' => 'Display template for an IPF file upload field'),
+	array('file' => 'icms_ipf_form_elements_page_display.html', 'description' => 'Display template for an IPF page selector'),
+	array('file' => 'icms_ipf_form_elements_image_display.html', 'description' => 'Display template for an IPF image field')
 );

@@ -32,8 +32,12 @@ class icms_ipf_form_elements_Fileupload extends icms_ipf_form_elements_Upload {
 	 * @return	string	HTML
 	 */
 	public function render() {
-		return "<input type='hidden' name='MAX_FILE_SIZE' value='" . $this->getMaxFileSize() . "' />
-		        <input type='file' name='" . $this->getName() . "' id='" . $this->getName() . "'" . $this->getExtra() . " />
-		        <input type='hidden' name='icms_upload_file[]' id='icms_upload_file[]' value='" . $this->getName() . "' />";
+		$this->tpl = new icms_view_Tpl();
+		$this->tpl->assign('ele_name', $this->getName());
+		$this->tpl->assign('ele_maxfilesize', $this->getMaxFileSize());
+		$this->tpl->assign('ele_extra', $this->getExtra());
+
+		$element_html_template = $this->customTemplate ? $this->customTemplate : 'icms_ipf_form_elements_fileupload_display.html';
+		return $this->tpl->fetch('db:' . $element_html_template);
 	}
 }

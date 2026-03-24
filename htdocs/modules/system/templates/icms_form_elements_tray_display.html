@@ -1,0 +1,5 @@
+<{foreach from=$tray_elements item=element}>
+<{if $element.has_delimiter}><{$tray_delimeter}><{/if}>
+<{if $element.caption}><{$element.caption}>&nbsp;<{/if}>
+<{$element.body}>
+<{/foreach}>

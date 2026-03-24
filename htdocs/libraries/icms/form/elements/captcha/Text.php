@@ -70,20 +70,19 @@ class icms_form_elements_captcha_Text {
 	 */
 	public function render() {
 		global $icmsConfigCaptcha;
-		$form = $this->loadText()
-			. "&nbsp;&nbsp; <input type='text' name='" . $this->config["name"]
-			."' id='" . $this->config["name"]
-			. "' size='" . $icmsConfigCaptcha['captcha_num_chars']
-			. "' maxlength='" . $icmsConfigCaptcha['captcha_num_chars']
-			. "' value='' />";
-		$rule = constant("ICMS_CAPTCHA_RULE_TEXT");
-		if (!empty($rule)) {
-			$form .= "&nbsp;&nbsp;<small>{$rule}</small>";
-		}
 
+		$expression = $this->loadText();
 		$this->setCode();
 
-		return $form;
+		$tpl = new icms_view_Tpl();
+		$tpl->assign('captcha_name', $this->config['name']);
+		$tpl->assign('captcha_expression', $expression);
+		$tpl->assign('captcha_size', $icmsConfigCaptcha['captcha_num_chars']);
+		$tpl->assign('captcha_maxlength', $icmsConfigCaptcha['captcha_num_chars']);
+		$rule = constant('ICMS_CAPTCHA_RULE_TEXT');
+		$tpl->assign('captcha_rule', !empty($rule) ? $rule : '');
+
+		return $tpl->fetch('db:icms_form_elements_captcha_text_display.html');
 	}
 
 	/**
@@ -101,7 +100,7 @@ class icms_form_elements_captcha_Text {
 			$this->code = $val_a + $val_b;
 		}
 
-		return "<span style='font-style: normal; font-weight: bold; font-size: 100%; font-color: #333; border: 1px solid #333; padding: 1px 5px;'>{$expression}</span>";
+		return $expression;
 	}
 
 }
