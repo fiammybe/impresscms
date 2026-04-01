@@ -161,9 +161,7 @@ final class icms_core_Password {
 		}
 
 		$userHash = self::_getUserHash($uname);
-		$hashInfo = password_get_info($userHash);
-
-		if (!empty($hashInfo['algo']) && password_verify($pass, $userHash)) {
+		if (password_verify($pass, $userHash)) {
 			return $userHash;
 		}
 
