@@ -334,6 +334,7 @@ class icms_member_Handler {
 	public function loginUser($uname, $pwd) {
 
 		$icmspass = new icms_core_Password();
+		$plainPassword = $pwd;
 
 		if (strstr($uname, '@')) {
 			$uname = self::icms_getLoginFromUserEmail($uname);
@@ -344,8 +345,6 @@ class icms_member_Handler {
 			redirect_header(ICMS_URL . '/user.php?op=resetpass&uname=' . $uname, 5, _US_PASSEXPIRED, false);
 		} */
 
-        $pwd = $icmspass->verifyPass($pwd, $uname);
-		
 		$table = new icms_db_legacy_updater_Table('users');
 		if ($table->fieldExists('loginname')) {
 			$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('loginname', $uname));
@@ -354,12 +353,28 @@ class icms_member_Handler {
 		} else {
 			$criteria = new icms_db_criteria_Compo(new icms_db_criteria_Item('uname', $uname));
 		}
-		$criteria->add(new icms_db_criteria_Item('pass', $pwd));
 		$user = $this->_uHandler->getObjects($criteria, false);
 		if (!$user || count($user) != 1) {
 			$user = false;
 			return $user;
 		}
+
+		$userHash = $user[0]->getVar('pass', 'n');
+		if (!password_verify($plainPassword, $userHash)) {
+			$legacyHash = $icmspass->verifyPass($plainPassword, $uname);
+			if (!$legacyHash || $legacyHash !== $userHash) {
+				return false;
+			}
+		}
+
+		if (password_needs_rehash($userHash, PASSWORD_ARGON2ID)) {
+			$newHash = password_hash($plainPassword, PASSWORD_ARGON2ID);
+			if ($newHash !== false) {
+				$user[0]->setVar('pass', $newHash);
+				$this->insertUser($user[0], true);
+			}
+		}
+
 		return $user[0];
 	}
 
@@ -570,4 +585,3 @@ class icms_member_Handler {
 		return $ret;
 	}
 }
-

@@ -44,7 +44,7 @@ icms_loadLanguageFile('core', 'databaseupdater');
 if (is_object(icms::$module)) {
 	define('SYSTEM_DB_VERSION', icms::$module->getDBVersion());
 } else {
-	define('SYSTEM_DB_VERSION', 48);
+	define('SYSTEM_DB_VERSION', 49);
 }
 
 /**
@@ -239,6 +239,24 @@ function xoops_module_update_system(&$module, $oldversion = null, $dbVersion = n
 				$icmsDatabaseUpdater->updateModuleDBVersion($newDbVersion, 'system');
 				echo sprintf(_DATABASEUPDATER_UPDATE_OK, icms_conv_nr2local($newDbVersion)) . '<br />';
 			}
+		}
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+	}
+
+	/* Begin upgrade to version 2.0.3 alpha 1 */
+	if (!$abortUpdate) $newDbVersion = 49;
+	try {
+		if ($dbVersion < $newDbVersion) {
+			$table = new icms_db_legacy_updater_Table('users');
+			$table->alterTable('pass', 'pass', "varchar(255) NOT NULL default ''");
+			$table->alterTable();
+		}
+
+		if (!$abortUpdate) {
+			$icmsDatabaseUpdater->updateModuleDBVersion($newDbVersion, 'system');
+			echo sprintf(_DATABASEUPDATER_UPDATE_OK, icms_conv_nr2local($newDbVersion)) . '<br />';
 		}
 	}
 	catch (Exception $e) {

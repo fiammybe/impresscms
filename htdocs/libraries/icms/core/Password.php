@@ -144,13 +144,7 @@ final class icms_core_Password {
 	 * @return   Hash of users password.
 	 */
 	public function encryptPass($pass) {
-		global $icmsConfigUser;
-
-		$salt = self::createSalt();
-		$iterations = 5000;
-		$enc_type = (isset($icmsConfigUser['enc_type']) ? (int) $icmsConfigUser['enc_type'] : 23);
-
-		return self::_encryptPassword($pass, $salt, $enc_type, $iterations);
+		return password_hash($pass, PASSWORD_ARGON2ID);
 	}
 
 	/**
@@ -164,6 +158,13 @@ final class icms_core_Password {
 	public function verifyPass($pass = '', $uname = '') {
 		if (!isset($pass) || !isset($uname)) {
 			return false;
+		}
+
+		$userHash = self::_getUserHash($uname);
+		$hashInfo = password_get_info($userHash);
+
+		if (!empty($hashInfo['algo']) && password_verify($pass, $userHash)) {
+			return $userHash;
 		}
 
 		return self::_verifyPassword($pass, $uname);
