@@ -223,4 +223,16 @@ class icms_messaging_EmailHandler extends PHPMailer {
 	public function encodeBody(&$text) {
 		return $text;
 	}
+
+	    /** @var bool */
+    private $isHtml = false;
+
+    /**
+     * Enable or disable HTML output for the next email.
+     *
+     * @param bool $flag
+     */
+    public function setIsHtml($flag) {
+        $this->isHtml = (bool) $flag;
+    }
 }
