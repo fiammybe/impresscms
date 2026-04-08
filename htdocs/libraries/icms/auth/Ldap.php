@@ -106,7 +106,7 @@ class icms_auth_Ldap extends icms_auth_Object {
 	}
 
 	public function cp1252_to_utf8($str) {
-		return strtr(utf8_encode($str), $this->cp1252_map);
+		return strtr(mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1'), $this->cp1252_map);
 	}
 
 	/**
