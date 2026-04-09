@@ -49,7 +49,7 @@ if (!is_object(icms::$user)
  *
  */
 function displayUsers() {
-	global $icmsConfig;
+
 	$userstart = isset($_GET['userstart']) ? (int) $_GET['userstart'] : 0;
 
 	icms_cp_header();
@@ -118,7 +118,7 @@ function displayUsers() {
 	$email_value = '';
 	$email_cbox_value = 0;
 	$url_value = '';
-	$timezone_value = $icmsConfig['default_TZ'];
+	$timezone_value = icms::getConfigItem('default_TZ');
 	$icq_value = '';
 	$aim_value = '';
 	$yim_value = '';
@@ -128,8 +128,8 @@ function displayUsers() {
 	$interest_value = '';
 	$sig_value = '';
 	$sig_cbox_value = 0;
-	$umode_value = $icmsConfig['com_mode'];
-	$uorder_value = $icmsConfig['com_order'];
+	$umode_value = icms::getConfigItem('com_mode');
+	$uorder_value = icms::getConfigItem('com_order');
 
 	include_once ICMS_INCLUDE_PATH .'/notification_constants.php';
 	$notify_method_value = XOOPS_NOTIFICATION_METHOD_PM;
@@ -141,7 +141,7 @@ function displayUsers() {
 	$op_value = 'addUser';
 	$form_title = _AM_ADDUSER;
 	$form_isedit = FALSE;
-	$language_value = $icmsConfig['language'];
+	$language_value = icms::getConfigItem('language');
 	$groups = array(XOOPS_GROUP_USERS);
 	include ICMS_MODULES_PATH . '/system/admin/users/userform.php';
 	icms_cp_footer();
@@ -153,7 +153,7 @@ function displayUsers() {
  * @param object $user
  */
 function modifyUser($user) {
-	global $icmsConfig;
+
 	icms_cp_header();
 	echo '<div class="CPbigTitle" style="background-image: url(' . ICMS_MODULES_URL . '/system/admin/users/images/users_big.png)">' . _MD_AM_USER . '</div><br />';
 	$member_handler = icms::handler('icms_member');
@@ -257,7 +257,7 @@ function updateUser($uid, $uname, $login_name, $name, $url, $email, $user_icq, $
 					$notify_mode, $timezone_offset, $user_mailok, $language,
 					$pass_expired, $groups = array()
 					) {
-	global $icmsConfig;
+
 	$userConfig = icms::$config->getConfigsByCat(ICMS_CONF_USER);
 	$member_handler = icms::handler('icms_member');
 	$edituser =& $member_handler->getUser($uid);

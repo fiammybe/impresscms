@@ -118,7 +118,7 @@ function xoops_module_list() {
  * @return string Results of the installation process
  */
 function xoops_module_install($dirname) {
-	global $icmsConfig, $icmsAdminTpl;
+
 	$dirname = trim($dirname);
 	$db = icms_db_Factory::instance();
 	$reservedTables = array('avatar',
@@ -571,7 +571,6 @@ function xoops_module_install($dirname) {
  * @param boolean $block Are you trying to retrieve the template for a block?
  */
 function &xoops_module_gettemplate($dirname, $template, $block = FALSE) {
-	global $icmsConfig;
 	$ret = '';
 	if ($block) {
 		$path = ICMS_MODULES_PATH . '/' . $dirname . '/templates/blocks/' . $template;
@@ -600,7 +599,7 @@ function &xoops_module_gettemplate($dirname, $template, $block = FALSE) {
  * @return string Result messages for uninstallation
  */
 function xoops_module_uninstall($dirname) {
-	global $icmsConfig, $icmsAdminTpl;
+
 
 	$reservedTables = array('avatar',
 		'avatar_users_link',
@@ -639,7 +638,8 @@ function xoops_module_uninstall($dirname) {
 	$icmsAdminTpl->template_clear_module_cache($module->getVar('mid'));
 	if ($module->getVar('dirname') == 'system') {
 		return "<p>" . sprintf(_MD_AM_FAILUNINS, "<strong>" . $module->getVar('name') . "</strong>") . "&nbsp;" . _MD_AM_ERRORSC . "<br /> - " . _MD_AM_SYSNO . "</p>";
-	} elseif ($module->getVar('dirname') == $icmsConfig['startpage']) {
+	} elseif ($module->getVar('dirname') == icms::getConfigItem('startpage')) {
+		$startpage = icms::getConfigItem('startpage');
 		return "<p>" . sprintf(_MD_AM_FAILUNINS, "<strong>" . $module->getVar('name') . "</strong>") . "&nbsp;" . _MD_AM_ERRORSC . "<br /> - " . _MD_AM_STRTNO . "</p>";
 	} else {
 		$msgs = array();
@@ -647,14 +647,14 @@ function xoops_module_uninstall($dirname) {
 		$member_handler = icms::handler('icms_member');
 		$grps = $member_handler->getGroupList();
 		foreach ($grps as $k => $v) {
-			$stararr = explode('-', $icmsConfig['startpage'][$k]);
+			$stararr = explode('-', $startpage[$k]);
 			if (count($stararr) > 0) {
 				if ($module->getVar('mid') == $stararr[0]) {
 					return "<p>" . sprintf(_MD_AM_FAILDEACT, "<strong>" . $module->getVar('name') . "</strong>") . "&nbsp;" . _MD_AM_ERRORSC . "<br /> - " . _MD_AM_STRTNO . "</p>";
 				}
 			}
 		}
-		if (in_array($module->getVar('dirname'), $icmsConfig['startpage'])) {
+		if (in_array($module->getVar('dirname'), icms::getConfigItem('startpage'))) {
 			return "<p>" . sprintf(_MD_AM_FAILDEACT, "<strong>" . $module->getVar('name') . "</strong>") . "&nbsp;" . _MD_AM_ERRORSC . "<br /> - " . _MD_AM_STRTNO . "</p>";
 		}
 
@@ -872,7 +872,7 @@ function xoops_module_activate($mid) {
  * @return string Result message for deactivating the module
  */
 function xoops_module_deactivate($mid) {
-	global $icms_page_handler, $icms_block_handler, $icmsConfig, $icmsAdminTpl;
+	global $icms_page_handler, $icms_block_handler, $icmsAdminTpl;
 	if (!isset($icms_page_handler)) {
 		$icms_page_handler = icms_getModuleHandler('pages', 'system');
 	}
@@ -883,20 +883,21 @@ function xoops_module_deactivate($mid) {
 	$module->setVar('isactive', 0);
 	if ($module->getVar('dirname') == "system") {
 		return "<p>" . sprintf(_MD_AM_FAILDEACT, "<strong>" . $module->getVar('name') . "</strong>") . "&nbsp;" . _MD_AM_ERRORSC . "<br /> - " . _MD_AM_SYSNO . "</p>";
-	} elseif ($module->getVar('dirname') == $icmsConfig['startpage']) {
+	} elseif ($module->getVar('dirname') == icms::getConfigItem('startpage')) {
+		$startpage = icms::getConfigItem('startpage');
 		return "<p>" . sprintf(_MD_AM_FAILDEACT, "<strong>" . $module->getVar('name') . "</strong>") . "&nbsp;" . _MD_AM_ERRORSC . "<br /> - " . _MD_AM_STRTNO . "</p>";
 	} else {
 		$member_handler = icms::handler('icms_member');
 		$grps = $member_handler->getGroupList();
 		foreach ($grps as $k => $v) {
-			$stararr = explode('-', $icmsConfig['startpage'][$k]);
+			$stararr = explode('-', $startpage[$k]);
 			if (count($stararr) > 0) {
 				if ($module->getVar('mid') == $stararr[0]) {
 					return "<p>" . sprintf(_MD_AM_FAILDEACT, "<strong>" . $module->getVar('name') . "</strong>") . "&nbsp;" . _MD_AM_ERRORSC . "<br /> - " . _MD_AM_STRTNO . "</p>";
 				}
 			}
 		}
-		if (in_array($module->getVar('dirname'), $icmsConfig['startpage'])) {
+		if (in_array($module->getVar('dirname'), icms::getConfigItem('startpage'))) {
 			return "<p>" . sprintf(_MD_AM_FAILDEACT, "<strong>" . $module->getVar('name') . "</strong>") . "&nbsp;" . _MD_AM_ERRORSC . "<br /> - " . _MD_AM_STRTNO . "</p>";
 		}
 		if (!$module_handler->insert($module)) {
@@ -942,7 +943,7 @@ function xoops_module_change($mid, $weight, $name) {
  * @return str Result messages from the module update
  */
 function icms_module_update($dirname) {
-	global $icmsConfig, $icmsAdminTpl;
+
 
 	$msgs = array();
 
@@ -1091,7 +1092,7 @@ function icms_module_update($dirname) {
 									$msgs[] = sprintf('&nbsp;&nbsp;<span style="color:#ff0000;">' . _MD_AM_TEMPLATE_UPDATE_FAIL . '</span>', '<strong>' . $blocks[$i]['template'] . '</strong>');
 								} else {
 									$msgs[] = sprintf('&nbsp;&nbsp;' . _MD_AM_TEMPLATE_UPDATED, '<strong>' . $blocks[$i]['template'] . '</strong>');
-									if ($icmsConfig['template_set'] == 'default') {
+									if (icms::getConfigItem('template_set') == 'default') {
 										if (!$icmsAdminTpl->template_touch($tplfile_new->getVar('tpl_id'))) {
 											$msgs[] = sprintf('&nbsp;&nbsp;<span style="color:#ff0000;">' . _MD_AM_TEMPLATE_RECOMPILE_FAIL . '</span>', '<strong>' . $blocks[$i]['template'] . '</strong>');
 										} else {
@@ -1147,7 +1148,7 @@ function icms_module_update($dirname) {
 								} else {
 									$newid = $tplfile->getVar('tpl_id');
 									$msgs[] = sprintf('&nbsp;&nbsp;' . _MD_AM_TEMPLATE_INSERTED, '<strong>' . $blocks[$i]['template'] . '</strong>', '<strong>' . $newid . '</strong>');
-									if ($icmsConfig['template_set'] == 'default') {
+									if (icms::getConfigItem('template_set') == 'default') {
 										if (!$icmsAdminTpl->template_touch($newid)) {
 											$msgs[] = sprintf('&nbsp;&nbsp;<span style="color:#ff0000;">' . _MD_AM_TEMPLATE_RECOMPILE_FAIL . '</span>', '<strong>' . $blocks[$i]['template'] . '</strong>');
 										} else {
