@@ -41,7 +41,7 @@
  * @version		$Id: main.php 12313 2013-09-15 21:14:35Z skenow $
  * @author		Gustavo Pilla (aka nekro) <nekro@impresscms.org>
  */
-if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin($icmsModule->getVar('mid'))) {
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar('mid'))) {
 	exit("Access Denied");
 }
 

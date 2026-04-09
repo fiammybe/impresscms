@@ -38,8 +38,8 @@
  * @version		SVN: $Id: main.php 12455 2014-06-24 09:30:49Z sato-san $
  */
 if (! is_object(icms::$user)
-	|| ! is_object($icmsModule)
-	|| ! icms::$user->isAdmin($icmsModule->getVar('mid'))
+	|| ! is_object(icms::$module)
+	|| ! icms::$user->isAdmin(icms::$module->getVar('mid'))
 	) {
 	exit("Access Denied");
 }
@@ -103,13 +103,14 @@ switch ($op) {
 		if (! is_object($confcat)) {
 			redirect_header('admin.php?fct=preferences', 1);
 		}
-		global $icmsConfigUser;
+		$userConfig = icms::$config->getConfigsByCat(ICMS_CONF_USER);
+		$passLevel = (int) ($userConfig['pass_level'] ?? 0);
+		$passwordInputClass = $passLevel ? 'password_adv' : '';
 		$form = new icms_form_Theme(constant($confcat->getVar('confcat_name')), 'pref_form', 'admin.php?fct=preferences', 'post', TRUE);
-		$config_handler = icms::handler('icms_config');
 		$criteria = new icms_db_criteria_Compo();
 		$criteria->add(new icms_db_criteria_Item('conf_modid', 0));
 		$criteria->add(new icms_db_criteria_Item('conf_catid', $confcat_id));
-		$config = $config_handler->getConfigs($criteria);
+		$config = icms::$config->getConfigs($criteria);
 		$confcount = count($config);
 		for ($i = 0; $i < $confcount; $i++) {
 			$title =(! defined($config[$i]->getVar('conf_desc')) || constant($config[$i]->getVar('conf_desc')) == '') ? constant($config[$i]->getVar('conf_title')) : constant($config[$i]->getVar('conf_title')) . '<img class="helptip" src="'. ICMS_IMAGES_SET_URL . '/actions/acp_help.png" alt="' . _MD_AM_HELP_TIP . '" title="' . _MD_AM_HELP_TIP . '" /><span class="helptext">' . constant($config[$i]->getVar('conf_desc')) . '</span>';
@@ -148,7 +149,7 @@ switch ($op) {
 
 				case 'select' :
 					$ele = new icms_form_elements_Select($title, $config[$i]->getVar('conf_name'),  $config[$i]->getConfValueForOutput());
-					$options = $config_handler->getConfigOptions(new icms_db_criteria_Item('conf_id', $config[$i]->getVar('conf_id')));
+					$options = icms::$config->getConfigOptions(new icms_db_criteria_Item('conf_id', $config[$i]->getVar('conf_id')));
 					$opcount = count($options);
 					for ($j = 0; $j < $opcount; $j++) {
 						$optval = defined($options[$j]->getVar('confop_value')) ? constant($options[$j]->getVar('confop_value')) : $options[$j]->getVar('confop_value');
@@ -159,7 +160,7 @@ switch ($op) {
 
 				case 'select_multi' :
 					$ele = new icms_form_elements_Select($title, $config[$i]->getVar('conf_name'), $config[$i]->getConfValueForOutput(), 5, TRUE);
-					$options = $config_handler->getConfigOptions(new icms_db_criteria_Item('conf_id', $config[$i]->getVar('conf_id')));
+					$options = icms::$config->getConfigOptions(new icms_db_criteria_Item('conf_id', $config[$i]->getVar('conf_id')));
 					$opcount = count($options);
 					for ($j = 0; $j < $opcount; $j++) {
 						$optval = defined($options[$j]->getVar('confop_value'))
@@ -337,7 +338,7 @@ switch ($op) {
 					break;
 
 				case 'password' :
-					$ele = new icms_form_elements_Password($title, $config[$i]->getVar('conf_name'), 50, 255, icms_core_DataFilter::htmlSpecialChars($config[$i]->getConfValueForOutput()), FALSE, ($icmsConfigUser['pass_level']?'password_adv':''));
+					$ele = new icms_form_elements_Password($title, $config[$i]->getVar('conf_name'), 50, 255, icms_core_DataFilter::htmlSpecialChars($config[$i]->getConfValueForOutput()), FALSE, $passwordInputClass);
 					break;
 
 				case 'color' :
@@ -349,7 +350,7 @@ switch ($op) {
 					break;
 
 				case 'password' :
-					$ele = new icms_form_elements_Password($title, $config[$i]->getVar('conf_name'), 50, 255, icms_core_DataFilter::htmlSpecialChars($config[$i]->getConfValueForOutput()), FALSE, ($icmsConfigUser['pass_level']?'password_adv':''));
+					$ele = new icms_form_elements_Password($title, $config[$i]->getVar('conf_name'), 50, 255, icms_core_DataFilter::htmlSpecialChars($config[$i]->getConfValueForOutput()), FALSE, $passwordInputClass);
 					break;
 
 				case 'color' :
@@ -412,13 +413,12 @@ switch ($op) {
 		break;
 
 	case 'showmod':
-		$config_handler = icms::handler('icms_config');
 		$mod = isset($_GET['mod']) ? (int) $_GET['mod'] : 0;
 		if (empty($mod)) {
 			header('Location: admin.php?fct=preferences');
 			exit();
 		}
-		$config = $config_handler->getConfigs(new icms_db_criteria_Item('conf_modid', $mod));
+		$config = icms::$config->getConfigs(new icms_db_criteria_Item('conf_modid', $mod));
 		$count = count($config);
 		if ($count < 1) {
 			redirect_header('admin.php?fct=preferences', 1);
@@ -464,7 +464,7 @@ switch ($op) {
 				case 'select' :
 					$ele = new icms_form_elements_Select($title, $config[$i]->getVar('conf_name'), $config[$i]->getConfValueForOutput());
 
-					$options = & $config_handler->getConfigOptions(new icms_db_criteria_Item('conf_id', $config[$i]->getVar('conf_id')));
+					$options = & icms::$config->getConfigOptions(new icms_db_criteria_Item('conf_id', $config[$i]->getVar('conf_id')));
 					$opcount = count($options);
 					for ($j = 0; $j < $opcount; $j++) {
 						$optval = defined($options[$j]->getVar('confop_value')) ? constant($options[$j]->getVar('confop_value')) : $options[$j]->getVar('confop_value');
@@ -475,7 +475,7 @@ switch ($op) {
 
 				case 'select_multi' :
 					$ele = new icms_form_elements_Select($title, $config[$i]->getVar('conf_name'), $config[$i]->getConfValueForOutput(), 5, TRUE);
-					$options = & $config_handler->getConfigOptions(new icms_db_criteria_Item('conf_id', $config[$i]->getVar('conf_id')));
+					$options = & icms::$config->getConfigOptions(new icms_db_criteria_Item('conf_id', $config[$i]->getVar('conf_id')));
 					$opcount = count($options);
 					for ($j = 0; $j < $opcount; $j++) {
 						$optval = defined($options[$j]->getVar('confop_value')) ? constant($options[$j]->getVar('confop_value')) : $options[$j]->getVar('confop_value');
@@ -566,9 +566,8 @@ switch ($op) {
 		$purifier_style_updated = FALSE;
 		$saved_config_items = array();
 		if ($count > 0) {
-			$config_handler = icms::handler('icms_config');
 			for ($i = 0; $i < $count; $i++) {
-				$config = & $config_handler->getConfig($conf_ids[$i]);
+				$config = & icms::$config->getConfig($conf_ids[$i]);
 				$new_value = & ${$config->getVar('conf_name')};
 				$old_value = $config->getVar('conf_value');
 				icms::$preload->triggerEvent('savingSystemAdminPreferencesItem', array((int) $config->getVar('conf_catid'), $config->getVar('conf_name'), $config->getVar('conf_value')));
@@ -666,7 +665,7 @@ switch ($op) {
 					}
 
 					$config->setConfValueForInput($new_value);
-					$config_handler->insertConfig($config);
+					icms::$config->insertConfig($config);
 				}
 				unset($new_value);
 

@@ -14,7 +14,7 @@
  * @version		SVN: $Id: main.php 12455 2014-06-24 09:30:49Z sato-san $
  */
 
-if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin($icmsModule->getVar('mid'))) {
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar('mid'))) {
 	exit(_NOPERM);
 }
 

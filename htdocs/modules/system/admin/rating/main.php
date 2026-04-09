@@ -10,7 +10,7 @@
  * @todo Complete this feature? You cannot add a rating and there are no ratings to modify
  * @version SVN: $Id: main.php 11147 2011-03-30 14:12:26Z m0nty_ $
  */
-if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin($icmsModule->getVar('mid'))) {
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar('mid'))) {
 	exit("Access Denied");
 }
 

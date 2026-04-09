@@ -13,7 +13,7 @@
  * @version		SVN: $Id: main.php 11145 2011-03-30 13:56:23Z m0nty_ $
  */
 
-if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin($icmsModule->getVar("mid"))) {
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar("mid"))) {
 	exit ("Access Denied");
 }
 

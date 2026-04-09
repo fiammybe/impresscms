@@ -38,8 +38,8 @@
  * @version		SVN: $Id: users.php 12313 2013-09-15 21:14:35Z skenow $
  */
 if (!is_object(icms::$user)
-	|| !is_object($icmsModule)
-	|| !icms::$user->isAdmin($icmsModule->getVar('mid'))
+	|| !is_object(icms::$module)
+	|| !icms::$user->isAdmin(icms::$module->getVar('mid'))
 ) {
 	exit('Access Denied');
 }
@@ -49,7 +49,7 @@ if (!is_object(icms::$user)
  *
  */
 function displayUsers() {
-	global $icmsConfig, $icmsModule, $icmsConfigUser;
+	global $icmsConfig, $icmsConfigUser;
 	$userstart = isset($_GET['userstart']) ? (int) $_GET['userstart'] : 0;
 
 	icms_cp_header();
@@ -153,7 +153,7 @@ function displayUsers() {
  * @param object $user
  */
 function modifyUser($user) {
-	global $icmsConfig, $icmsModule;
+	global $icmsConfig;
 	icms_cp_header();
 	echo '<div class="CPbigTitle" style="background-image: url(' . ICMS_MODULES_URL . '/system/admin/users/images/users_big.png)">' . _MD_AM_USER . '</div><br />';
 	$member_handler = icms::handler('icms_member');
@@ -257,7 +257,7 @@ function updateUser($uid, $uname, $login_name, $name, $url, $email, $user_icq, $
 					$notify_mode, $timezone_offset, $user_mailok, $language,
 					$pass_expired, $groups = array()
 					) {
-	global $icmsConfig, $icmsModule, $icmsConfigUser;
+	global $icmsConfig, $icmsConfigUser;
 	$member_handler = icms::handler('icms_member');
 	$edituser =& $member_handler->getUser($uid);
 	if ($edituser->getVar('uname') != $uname && $member_handler->getUserCount(new icms_db_criteria_Item('uname', $uname)) > 0 || $edituser->getVar('login_name') != $login_name && $member_handler->getUserCount(new icms_db_criteria_Item('login_name', $login_name)) > 0) {

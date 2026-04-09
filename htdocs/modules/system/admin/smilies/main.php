@@ -37,7 +37,7 @@
  * @subpackage	Smilies
  * @version		SVN: $Id: main.php 12313 2013-09-15 21:14:35Z skenow $
  */
-if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin($icmsModule->getVar('mid'))) {
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar('mid'))) {
 	exit("Access Denied");
 }
 /*
@@ -89,7 +89,7 @@ switch ($op) {
 		$db = &icms_db_Factory::instance();
 		for ($i = 0; $i < $count; $i++ ) {
 			$smile_id_single = (int) $smile_id[$i];
-			
+
 			if (empty($smile_id_single)) {
 				continue;
 			}

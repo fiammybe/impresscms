@@ -39,7 +39,7 @@
  * @todo		Validate and sanitize user input using a standard method
  * @version		SVN: $Id: main.php 12399 2014-01-25 17:02:01Z skenow $
  */
-if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin($icmsModule->getVar('mid'))) {
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar('mid'))) {
 	exit("Access Denied");
 }
 /* set get and post filters before including admin_header, if not strings */
@@ -776,7 +776,7 @@ switch ($op) {
 					. _ERROR . ': ' . sprintf(_MD_TPLSET_INSERT_FAILED, '<strong>' . $file . '</strong>') . '</span><br />';
 				} else {
 					if ($tplset == $icmsConfig['template_set']) {
-							
+
 						$icmsAdminTpl->template_touch($newtpl->getVar('tpl_id'));
 					}
 					echo '&nbsp;&nbsp;' . sprintf(_MD_TPLSET_INSERT_OK, '<strong>' . $tplfiles[$i]->getVar('tpl_file') . '</strong>') . '<br />';
@@ -803,7 +803,7 @@ switch ($op) {
 					echo $newtpl->getHtmlErrors();
 				} else {
 					if ($tplset == $icmsConfig['template_set']) {
-							
+
 						$icmsAdminTpl->template_touch($newtpl->getVar('tpl_id'));
 					}
 					echo '&nbsp;&nbsp;&nbsp;&nbsp;' . sprintf(_MD_TPLSET_BLOCK_INSERT_OK, '<strong>' . $tplfiles[$i]->getVar('tpl_file') . '</strong>') . '<br />';
@@ -951,7 +951,7 @@ switch ($op) {
 			redirect_header('admin.php?fct=tplsets', 3, implode('<br />', icms::$security->getErrors()));
 		}
 
-			
+
 		$html = icms_core_DataFilter::stripSlashesGPC($html);
 		$tpltpl_handler =& icms::handler('icms_view_template_file');
 		$tplfile =& $tpltpl_handler->get($id, TRUE);

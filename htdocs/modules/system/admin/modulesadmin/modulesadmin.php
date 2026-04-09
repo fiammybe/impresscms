@@ -38,7 +38,7 @@
  * @author Sina Asghari (aka stranger) <pesian_stranger@users.sourceforge.net>
  * @version SVN: $Id: modulesadmin.php 12403 2014-01-26 21:35:08Z skenow $
  */
-if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin($icmsModule->getVar('mid'))) {
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar('mid'))) {
 	exit("Access Denied");
 }
 

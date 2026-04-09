@@ -10,7 +10,7 @@
  * @author marcan <marcan@impresscms.org>
  * @version SVN: $Id: main.php 11012 2011-02-06 16:37:43Z skenow $
  */
-if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin($icmsModule->getVar("mid"))) {
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar("mid"))) {
 	exit("Access Denied");
 }
 
