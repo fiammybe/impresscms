@@ -158,7 +158,7 @@ class icms_view_PageBuilder {
 		if (is_array($icmsConfig['startpage'])) {
 			$member_handler = icms::handler('icms_member');
 			$group = $member_handler->getUserBestGroup((is_object(icms::$user) ? icms::$user->getVar('uid') : 0));
-			$icmsConfig['startpage'] = $icmsConfig['startpage'][$group];
+			$icmsConfig['startpage'] = $icmsConfig['startpage'][$group] ?? [];
 		}
 
 		$startMod = ($icmsConfig['startpage'] == '--') ? 'system' : $icmsConfig['startpage'];
