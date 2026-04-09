@@ -61,8 +61,13 @@ class icms_core_Session {
 	static public function service() {
 		global $icmsConfig;
 		$instance = new icms_core_Session(icms::$xoopsDB);
-		session_set_save_handler(array($instance, 'open'), array($instance, 'close'), array($instance, 'read'),
-			array($instance, 'write'), array($instance, 'destroy'), array($instance, 'gc'));
+		if (PHP_VERSION_ID >= 80400) {
+			require_once __DIR__ . '/SessionSaveHandler.php';
+			session_set_save_handler(new icms_core_SessionSaveHandler($instance), true);
+		} else {
+			session_set_save_handler(array($instance, 'open'), array($instance, 'close'), array($instance, 'read'),
+				array($instance, 'write'), array($instance, 'destroy'), array($instance, 'gc'));
+		}
 		$sslpost_name = isset($_POST[$icmsConfig['sslpost_name']]) ? $_POST[$icmsConfig['sslpost_name']] : "";
 		$instance->sessionStart($sslpost_name);
 
