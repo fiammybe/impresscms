@@ -567,113 +567,124 @@ switch ($op) {
 		$saved_config_items = array();
 		if ($count > 0) {
 			$config_handler = icms::handler('icms_config');
-			for ($i = 0; $i < $count; $i++) {
-				$config = & $config_handler->getConfig($conf_ids[$i]);
-				$new_value = & ${$config->getVar('conf_name')};
-				$old_value = $config->getVar('conf_value');
-				icms::$preload->triggerEvent('savingSystemAdminPreferencesItem', array((int) $config->getVar('conf_catid'), $config->getVar('conf_name'), $config->getVar('conf_value')));
+				for ($i = 0; $i < $count; $i++) {
+					$config = & $config_handler->getConfig($conf_ids[$i]);
+					$config_name = $config->getVar('conf_name');
+					if (isset(${$config_name})) {
+						$new_value = ${$config_name};
+					} elseif (isset($_POST[$config_name])) {
+						$new_value = $_POST[$config_name];
+					} else {
+						$new_value = null;
+					}
+					$old_value = $config->getVar('conf_value');
+					icms::$preload->triggerEvent('savingSystemAdminPreferencesItem', array((int) $config->getVar('conf_catid'), $config->getVar('conf_name'), $config->getVar('conf_value')));
 
-				if (is_array($new_value) || $new_value != $config->getVar('conf_value')) {
-					// if language has been changed
-					if (!$lang_updated && $config->getVar('conf_catid') == ICMS_CONF && $config->getVar('conf_name') == 'language') {
-						$icmsConfig['language'] = ${$config->getVar('conf_name')};
-						$lang_updated = TRUE;
-					}
-					// if default theme has been changed
-					if (!$theme_updated && $config->getVar('conf_catid') == ICMS_CONF && $config->getVar('conf_name') == 'theme_set') {
-						$member_handler = icms::handler('icms_member');
-						$member_handler->updateUsersByField('theme', ${$config->getVar('conf_name')});
-						$theme_updated = TRUE;
-					}
-					// if password encryption has been changed
-					if (!$encryption_updated && $config->getVar('conf_catid') == ICMS_CONF_USER && $config->getVar('conf_name') == 'enc_type') {
-						if ($icmsConfig['closesite'] !== 1) {
+					if (is_array($new_value) || $new_value != $config->getVar('conf_value')) {
+						// if language has been changed
+						if (!$lang_updated && $config->getVar('conf_catid') == ICMS_CONF && $config_name == 'language') {
+							$icmsConfig['language'] = $new_value;
+							$lang_updated = TRUE;
+						}
+						// if default theme has been changed
+						if (!$theme_updated && $config->getVar('conf_catid') == ICMS_CONF && $config_name == 'theme_set') {
 							$member_handler = icms::handler('icms_member');
-							$member_handler->updateUsersByField('pass_expired', 1);
-							$encryption_updated = TRUE;
-						} else {
-							redirect_header('admin.php?fct=preferences', 2, _MD_AM_UNABLEENCCLOSED);
+							$member_handler->updateUsersByField('theme', $new_value);
+							$theme_updated = TRUE;
 						}
-					}
-
-					if (!$purifier_style_updated
-						&& $config->getVar('conf_catid') == ICMS_CONF_PURIFIER
-						&& $config->getVar('conf_name') == 'purifier_Filter_ExtractStyleBlocks'
-						) {
-						if ($config->getVar('purifier_Filter_ExtractStyleBlocks') == 1) {
-							if (!file_exists(ICMS_PLUGINS_PATH . '/csstidy/class.csstidy.php')) {
-								redirect_header('admin.php?fct=preferences', 5, _MD_AM_UNABLECSSTIDY);
+						// if password encryption has been changed
+						if (!$encryption_updated && $config->getVar('conf_catid') == ICMS_CONF_USER && $config->getVar('conf_name') == 'enc_type') {
+							if ($icmsConfig['closesite'] !== 1) {
+								$member_handler = icms::handler('icms_member');
+								$member_handler->updateUsersByField('pass_expired', 1);
+								$encryption_updated = TRUE;
+							} else {
+								redirect_header('admin.php?fct=preferences', 2, _MD_AM_UNABLEENCCLOSED);
 							}
-							$purifier_style_updated = TRUE;
 						}
-					}
 
-					// if default template set has been changed
-					if (! $tpl_updated && $config->getVar('conf_catid') == ICMS_CONF && $config->getVar('conf_name') == 'template_set') {
-						// clear cached/compiled files and regenerate them if default theme has been changed
-						if ($icmsConfig['template_set'] != ${$config->getVar('conf_name')}) {
-							$newtplset = ${$config->getVar('conf_name')};
-							// clear all compiled and cachedfiles
-							$xoopsTpl->clear_compiled_tpl();
-							// generate compiled files for the new theme
-							// block files only for now..
-							$tplfile_handler = icms::handler('icms_view_template_file');
-							$dtemplates = & $tplfile_handler->find('default', 'block');
-							$dcount = count($dtemplates);
-
-							// need to do this to pass to $icmsAdminTpl->template_touch function
-							$GLOBALS['icmsConfig']['template_set'] = $newtplset;
-
-							for ($i = 0; $i < $dcount; $i++) {
-								$found = & $tplfile_handler->find($newtplset, 'block', $dtemplates[$i]->getVar('tpl_refid'), NULL);
-								if (count($found) > 0) {
-									// template for the new theme found, compile it
-									$icmsAdminTpl->template_touch($found[0]->getVar('tpl_id'));
-								} else {
-									// not found, so compile 'default' template file
-									$icmsAdminTpl->template_touch($dtemplates[$i]->getVar('tpl_id'));
+						if (!$purifier_style_updated
+							&& $config->getVar('conf_catid') == ICMS_CONF_PURIFIER
+							&& $config->getVar('conf_name') == 'purifier_Filter_ExtractStyleBlocks'
+							) {
+							if ($config->getVar('purifier_Filter_ExtractStyleBlocks') == 1) {
+								if (!file_exists(ICMS_PLUGINS_PATH . '/csstidy/class.csstidy.php')) {
+									redirect_header('admin.php?fct=preferences', 5, _MD_AM_UNABLECSSTIDY);
 								}
+								$purifier_style_updated = TRUE;
 							}
 						}
-						$tpl_updated = TRUE;
-					}
 
-					// add read permission for the start module to all groups
-					if (! $startmod_updated && $new_value != '--' && $config->getVar('conf_catid') == ICMS_CONF && $config->getVar('conf_name') == 'startpage') {
-						$moduleperm_handler = icms::handler('icms_member_groupperm');
-						$module_handler = icms::handler('icms_module');
+						// if default template set has been changed
+						if (! $tpl_updated && $config->getVar('conf_catid') == ICMS_CONF && $config_name == 'template_set') {
+							// clear cached/compiled files and regenerate them if default theme has been changed
+							if ($icmsConfig['template_set'] != $new_value) {
+								$newtplset = $new_value;
+								// clear all compiled and cachedfiles
+								$xoopsTpl->clear_compiled_tpl();
+								// generate compiled files for the new theme
+								// block files only for now..
+								$tplfile_handler = icms::handler('icms_view_template_file');
+								$dtemplates = & $tplfile_handler->find('default', 'block');
+								$dcount = count($dtemplates);
 
-						foreach ($new_value as $k => $v) {
-							$arr = explode('-', $v);
-							if (count($arr) > 1) {
-								$mid = $arr[0];
-								$module = & $module_handler->get($mid);
-								if ($arr[0] == 1 && $arr[1] > 0) { //Set read permission to the content page for the selected group
-									if (! $moduleperm_handler->checkRight('content_read', $arr[1], $k)) {
-										$moduleperm_handler->addRight('content_read', $arr[1], $k);
+								// need to do this to pass to $icmsAdminTpl->template_touch function
+								$GLOBALS['icmsConfig']['template_set'] = $newtplset;
+
+								for ($i = 0; $i < $dcount; $i++) {
+									$found = & $tplfile_handler->find($newtplset, 'block', $dtemplates[$i]->getVar('tpl_refid'), NULL);
+									if (count($found) > 0) {
+										// template for the new theme found, compile it
+										$icmsAdminTpl->template_touch($found[0]->getVar('tpl_id'));
+									} else {
+										// not found, so compile 'default' template file
+										$icmsAdminTpl->template_touch($dtemplates[$i]->getVar('tpl_id'));
 									}
 								}
-							} else {
-								$module = & $module_handler->getByDirname($v);
 							}
-							if (is_object($module)) {
-								if (! $moduleperm_handler->checkRight('module_read', $module->getVar('mid'), $k)) {
-									$moduleperm_handler->addRight('module_read', $module->getVar('mid'), $k);
+							$tpl_updated = TRUE;
+						}
+
+						// add read permission for the start module to all groups
+						if (! $startmod_updated && is_array($new_value) && $config->getVar('conf_catid') == ICMS_CONF && $config_name == 'startpage') {
+							$moduleperm_handler = icms::handler('icms_member_groupperm');
+							$module_handler = icms::handler('icms_module');
+
+							foreach ($new_value as $k => $v) {
+								if ($v == '--') {
+									continue;
+								}
+
+								$arr = explode('-', $v);
+								if (count($arr) > 1) {
+									$mid = $arr[0];
+									$module = & $module_handler->get($mid);
+									if ($arr[0] == 1 && $arr[1] > 0) { //Set read permission to the content page for the selected group
+										if (! $moduleperm_handler->checkRight('content_read', $arr[1], $k)) {
+											$moduleperm_handler->addRight('content_read', $arr[1], $k);
+										}
+									}
+								} else {
+									$module = & $module_handler->getByDirname($v);
+								}
+								if (is_object($module)) {
+									if (! $moduleperm_handler->checkRight('module_read', $module->getVar('mid'), $k)) {
+										$moduleperm_handler->addRight('module_read', $module->getVar('mid'), $k);
+									}
 								}
 							}
+							$startmod_updated = TRUE;
 						}
-						$startmod_updated = TRUE;
+
+						$config->setConfValueForInput($new_value);
+						$config_handler->insertConfig($config);
 					}
+					unset($config_name, $new_value);
 
-					$config->setConfValueForInput($new_value);
-					$config_handler->insertConfig($config);
-				}
-				unset($new_value);
-
-				if (!isset($saved_config_items[$config->getVar('conf_catid')])) {
-					$saved_config_items[$config->getVar('conf_catid')] = array();
-				}
-				$saved_config_items[$config->getVar('conf_catid')][$config->getVar('conf_name')] = array($old_value, $config->getVar('conf_value'));
+					if (!isset($saved_config_items[$config->getVar('conf_catid')])) {
+						$saved_config_items[$config->getVar('conf_catid')] = array();
+					}
+					$saved_config_items[$config->getVar('conf_catid')][$config->getVar('conf_name')] = array($old_value, $config->getVar('conf_value'));
 
 			}
 		}
