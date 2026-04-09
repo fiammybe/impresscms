@@ -49,7 +49,7 @@ if (!is_object(icms::$user)
  *
  */
 function displayUsers() {
-	global $icmsConfig, $icmsConfigUser;
+	global $icmsConfig;
 	$userstart = isset($_GET['userstart']) ? (int) $_GET['userstart'] : 0;
 
 	icms_cp_header();
@@ -257,7 +257,8 @@ function updateUser($uid, $uname, $login_name, $name, $url, $email, $user_icq, $
 					$notify_mode, $timezone_offset, $user_mailok, $language,
 					$pass_expired, $groups = array()
 					) {
-	global $icmsConfig, $icmsConfigUser;
+	global $icmsConfig;
+	$userConfig = icms::$config->getConfigsByCat(ICMS_CONF_USER);
 	$member_handler = icms::handler('icms_member');
 	$edituser =& $member_handler->getUser($uid);
 	if ($edituser->getVar('uname') != $uname && $member_handler->getUserCount(new icms_db_criteria_Item('uname', $uname)) > 0 || $edituser->getVar('login_name') != $login_name && $member_handler->getUserCount(new icms_db_criteria_Item('login_name', $login_name)) > 0) {
@@ -274,9 +275,9 @@ function updateUser($uid, $uname, $login_name, $name, $url, $email, $user_icq, $
 		$edituser->setVar('url', $url);
 		$edituser->setVar('user_icq', $user_icq);
 		$edituser->setVar('user_from', $user_from);
-		if ($icmsConfigUser['allow_htsig'] == 0) {
+		if ($userConfig['allow_htsig'] == 0) {
 			$signature = strip_tags(icms_core_DataFilter::codeDecode($user_sig, 1));
-			$edituser->setVar('user_sig', icms_core_DataFilter::icms_substr($signature, 0, (int) $icmsConfigUser['sig_max_length']));
+			$edituser->setVar('user_sig', icms_core_DataFilter::icms_substr($signature, 0, (int) $userConfig['sig_max_length']));
 		} else {
 			$signature = icms_core_DataFilter::checkVar($user_sig, 'html', 'input');
 			$edituser->setVar('user_sig', $signature);

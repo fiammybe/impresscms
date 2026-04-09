@@ -40,12 +40,13 @@
  * @author	modified by UnderDog <underdog@impresscms.org>
  * @version	$Id: userform.php 12313 2013-09-15 21:14:35Z skenow $
  */
-global $icmsConfigUser, $icmsConfigAuth;
+global $icmsConfigAuth;
+$userConfig = icms::$config->getConfigsByCat(ICMS_CONF_USER);
 
 $uid_label = new icms_form_elements_Label(_AM_USERID, $uid_value);
 $uname_text = new icms_form_elements_Text(_AM_NICKNAME, "username", 25, 25, $uname_value);
 $login_name_text = new icms_form_elements_Text(_AM_LOGINNAME, "login_name", 25, 25, $login_name_value);
-if ($icmsConfigUser['pass_level'] > 20) {
+if ($userConfig['pass_level'] > 20) {
 	icms_PasswordMeter("password_adv", "login_name");
 }
 $name_text = new icms_form_elements_Text(_AM_NAME, "name", 30, 60, $name_value);
@@ -99,7 +100,7 @@ $location_text = new icms_form_elements_Text(_AM_LOCATION, "user_from", 30, 100,
 $occupation_text = new icms_form_elements_Text(_AM_OCCUPATION, "user_occ", 30, 100, $occ_value);
 $interest_text = new icms_form_elements_Text(_AM_INTEREST, "user_intrest", 30, 150, $interest_value);
 $sig_tray = new icms_form_elements_Tray(_AM_SIGNATURE, "<br />");
-if ($icmsConfigUser['allow_htsig'] == 0) {$sig_tarea = new icms_form_elements_Textarea("", "user_sig", $sig_value);}
+if ($userConfig['allow_htsig'] == 0) {$sig_tarea = new icms_form_elements_Textarea("", "user_sig", $sig_value);}
 else {$sig_tarea = new icms_form_elements_Dhtmltextarea("", "user_sig", $sig_value);}
 $sig_tray->addElement($sig_tarea);
 $sig_cbox = new icms_form_elements_Checkbox("", "attachsig", $sig_cbox_value);
@@ -126,8 +127,7 @@ if (count($ranklist) > 0) {
 } else {
 	$rank_select->addOption(0, _AM_NSRID);
 }
-global $icmsConfigUser;
-$pwd_text = new icms_form_elements_Password(_AM_PASSWORD, "password", 10, 255, '', false, ($icmsConfigUser['pass_level']?'password_adv':''));
+$pwd_text = new icms_form_elements_Password(_AM_PASSWORD, "password", 10, 255, '', false, ($userConfig['pass_level']?'password_adv':''));
 $pwd_text2 = new icms_form_elements_Password(_AM_RETYPEPD, "pass2", 10, 255);
 $mailok_radio = new icms_form_elements_Radioyn(_US_MAILOK, 'user_mailok', (int) ($mailok_value));
 

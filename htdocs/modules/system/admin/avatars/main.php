@@ -40,6 +40,7 @@
 if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar('mid'))) {
 	exit("Access Denied");
 } else {
+	$userConfig = icms::$config->getConfigsByCat(ICMS_CONF_USER);
 
 	if (!empty($_POST)) foreach ($_POST as $k => $v) ${$k} = StopXSS($v);
 	if (!empty($_GET)) foreach ($_GET as $k => $v) ${$k} = StopXSS($v);
@@ -67,13 +68,13 @@ if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmi
 		$form = new icms_form_Theme(_MD_ADDAVT, 'avatar_form', 'admin.php', "post", TRUE);
 		$form->setExtra('enctype="multipart/form-data"');
 		$form->addElement(new icms_form_elements_Text(_IMAGENAME, 'avatar_name', 50, 255), TRUE);
-		$form->addElement(new icms_form_elements_File(_IMAGEFILE, 'avatar_file', $icmsConfigUser['avatar_maxsize']));
+		$form->addElement(new icms_form_elements_File(_IMAGEFILE, 'avatar_file', $userConfig['avatar_maxsize']));
 		$form->addElement(new icms_form_elements_Text(_IMGWEIGHT, 'avatar_weight', 3, 4, 0));
 		$form->addElement(new icms_form_elements_Radioyn(_IMGDISPLAY, 'avatar_display', 1, _YES, _NO));
 
-		$restrictions  = _MD_AM_AVATARMAX . ": " . $icmsConfigUser['avatar_maxsize'] . "<br />";
-		$restrictions .= _MD_AM_AVATARW . ": " . $icmsConfigUser['avatar_width'] . "px<br />";
-		$restrictions .= _MD_AM_AVATARH . ": ". $icmsConfigUser['avatar_height']. "px";
+		$restrictions  = _MD_AM_AVATARMAX . ": " . $userConfig['avatar_maxsize'] . "<br />";
+		$restrictions .= _MD_AM_AVATARW . ": " . $userConfig['avatar_width'] . "px<br />";
+		$restrictions .= _MD_AM_AVATARH . ": ". $userConfig['avatar_height']. "px";
 
 		$form->addElement(new icms_form_elements_Label(_MD_RESTRICTIONS, $restrictions));
 		$form->addElement(new icms_form_elements_Hidden('op', 'addfile'));
@@ -209,7 +210,7 @@ if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmi
 		if (!icms::$security->check()) {
 			redirect_header('admin.php?fct=avatars', 3, implode('<br />', icms::$security->getErrors()));
 		}
-		$uploader = new icms_file_MediaUploadHandler(ICMS_UPLOAD_PATH, array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png'), $icmsConfigUser['avatar_maxsize'], $icmsConfigUser['avatar_width'], $icmsConfigUser['avatar_height']);
+		$uploader = new icms_file_MediaUploadHandler(ICMS_UPLOAD_PATH, array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png'), $userConfig['avatar_maxsize'], $userConfig['avatar_width'], $userConfig['avatar_height']);
 		$uploader->setPrefix('savt');
 		$err = array();
 		if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
