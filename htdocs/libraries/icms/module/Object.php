@@ -121,13 +121,64 @@ class icms_module_Object extends icms_core_Object {
 	 */
 	public function registerClassPath($isactive = NULL) {
 		if ($this->getVar("dirname") == "system") return;
+		$class_path = ICMS_ROOT_PATH . "/modules/" . $this->getVar("dirname") . "/class";
 
-		// With Composer autoloader, module classes are automatically loaded
-		// via the classmap configuration in composer.json
-		// No manual registration needed
+		// check if class path exists
+		if (!is_dir($class_path)) return;
 
 		// check if module is active (only if applicable)
 		if ($isactive !== NULL && $this->getVar("isactive") != (int) $isactive) return;
+
+		// register class path with the live Composer ClassLoader so that
+		// module classes (e.g. mod_content_ContentHandler) resolve via
+		// class_exists() without requiring a manual include_once.
+		if ($this->getVar("ipf")) {
+			$modname = ($this->getVar("modname") != "") ? $this->getVar("modname") : $this->getVar("dirname");
+			$this->registerModuleClassMap($class_path, "mod_" . $modname . "_");
+		} else {
+			$this->registerModuleClassMap($class_path);
+		}
+	}
+
+	/**
+	 * Build a classmap from the PHP files found in $class_path and push it
+	 * into Composer's live ClassLoader.
+	 *
+	 * Each "<BaseName>.php" in $class_path is mapped to "<prefix><BaseName>",
+	 * matching the ImpressCMS IPF convention where file ContentHandler.php
+	 * declares class mod_content_ContentHandler (prefix "mod_content_").
+	 *
+	 * @param string $class_path Absolute path to the module class directory
+	 * @param string $prefix     Class-name prefix (empty for non-IPF modules)
+	 * @return void
+	 */
+	private function registerModuleClassMap($class_path, $prefix = "") {
+		$composerLoader = $this->getComposerClassLoader();
+		if (!$composerLoader) return;
+		$classMap = array();
+		foreach (glob($class_path . "/*.php") as $file) {
+			$classMap[$prefix . basename($file, ".php")] = $file;
+		}
+		if ($classMap) {
+			$composerLoader->addClassMap($classMap);
+		}
+	}
+
+	/**
+	 * Locate the active Composer ClassLoader instance among registered
+	 * SPL autoloaders, or null if Composer is unavailable.
+	 *
+	 * @return \Composer\Autoload\ClassLoader|null
+	 */
+	private function getComposerClassLoader() {
+		if (!class_exists("Composer\\Autoload\\ClassLoader", false)) return null;
+		foreach (spl_autoload_functions() as $autoloader) {
+			if (is_array($autoloader) && isset($autoloader[0]) && is_object($autoloader[0])
+				&& $autoloader[0] instanceof Composer\Autoload\ClassLoader) {
+				return $autoloader[0];
+			}
+		}
+		return null;
 	}
 
 	/**
