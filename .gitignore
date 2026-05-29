@@ -3,3 +3,12 @@
 /.buildpath
 /.settings/
 /.homestead/
+/.env
+/.env.*
+/vendor/
+/storage/
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/htdocs/vendor/
+/htdocs/var/cache/composer/
+/.phpunit.cache/
