@@ -283,7 +283,7 @@ class setting_manager {
 
 	function getDBList()
 	{
-		$dirname = '../class/database/drivers';
+		$dirname = dirname(__DIR__, 2) . '/class/database/drivers';
 		$list = icms_core_Filesystem::getDirList($dirname);
 		// TODO: Add any verification of compatibility between the database drivers and the system.
 		return $list;

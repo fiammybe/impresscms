@@ -17,12 +17,12 @@
 /**
  *
  */
-require_once 'common.inc.php';
+require_once __DIR__ . '/common.inc.php';
 if (!defined( 'XOOPS_INSTALL' ) )	exit();
 
-include_once "../mainfile.php";
+include_once dirname(__DIR__) . "/mainfile.php";
 
-icms_core_Filesystem::chmod("../mainfile.php", 0444);
+icms_core_Filesystem::chmod(dirname(__DIR__) . "/mainfile.php", 0444);
 if (defined('XOOPS_TRUST_PATH') && XOOPS_TRUST_PATH != '') {
 	icms_core_Filesystem::chmod(XOOPS_TRUST_PATH, 0777);
 	icms_core_Filesystem::chmod(XOOPS_ROOT_PATH.'/modules', 0777);
@@ -45,7 +45,7 @@ $pageHasHelp = false;
 
 $vars =& $_SESSION['settings'];
 
-include_once './class/dbmanager.php';
+include_once __DIR__ . '/class/dbmanager.php';
 $dbm = new db_manager();
 
 if (!$dbm->isConnectable()) {
@@ -70,9 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} else {
 		$driver = XOOPS_DB_TYPE;
 	}
-	$result = $dbm->queryFromFile( './sql/' . $driver . '.structure.sql' );
+	$result = $dbm->queryFromFile(__DIR__ . '/sql/' . $driver . '.structure.sql');
 	$content = $dbm->report();
-	include 'install_tpl.php';
+	include __DIR__ . '/install_tpl.php';
 	exit();
 }
 
@@ -91,4 +91,4 @@ if ($process == 'create') {
 
 $content = ob_get_contents();
 ob_end_clean();
-include 'install_tpl.php';
+include __DIR__ . '/install_tpl.php';

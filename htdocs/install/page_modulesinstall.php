@@ -13,7 +13,7 @@
  * @version		$Id: page_modulesinstall.php 12389 2014-01-17 16:58:21Z skenow $
  */
 
-require_once 'common.inc.php';
+require_once __DIR__ . '/common.inc.php';
 
 if (!defined( 'XOOPS_INSTALL' ) )	exit();
 
@@ -23,11 +23,11 @@ $pageHasHelp = false;
 
 $vars =& $_SESSION['settings'];
 
-include_once "../mainfile.php";
-include_once "../include/common.php";
-include_once "../include/cp_functions.php";
-include_once './class/dbmanager.php';
-include "modulesadmin.php";
+include_once dirname(__DIR__) . "/mainfile.php";
+include_once dirname(__DIR__) . "/include/common.php";
+include_once dirname(__DIR__) . "/include/cp_functions.php";
+include_once __DIR__ . '/class/dbmanager.php';
+include __DIR__ . "/modulesadmin.php";
 $dbm = new db_manager();
 
 if (!$dbm->isConnectable()) {
@@ -102,4 +102,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$content .= '<input type="hidden" name="mod" value="1" />';
 }
 
-include 'install_tpl.php';
+include __DIR__ . '/install_tpl.php';

@@ -47,14 +47,16 @@
  **/
 class mainfile_manager {
 
-	var $path = '../mainfile.php';
-	var $distfile = './templates/mainfile.dist.php';
+	var $path = '';
+	var $distfile = '';
 	var $rewrite = array();
 
 	var $report = '';
 	var $error = false;
 
 	function  __construct() {
+		$this->path = dirname(__DIR__, 2) . '/mainfile.php';
+		$this->distfile = dirname(__DIR__) . '/templates/mainfile.dist.php';
 	}
 
 	function setRewrite($def, $val) {

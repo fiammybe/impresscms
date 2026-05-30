@@ -26,5 +26,5 @@
  */
 
 
-require_once 'page_langselect.php';
+require_once __DIR__ . '/page_langselect.php';
 exit();

@@ -37,7 +37,9 @@ date_default_timezone_set(@date_default_timezone_get());
  * any output is sent – all includes below are definition-only files, so this
  * is safe.
  */
-session_start();
+if (session_status() !== PHP_SESSION_ACTIVE) {
+	session_start();
+}
 if (!@is_array($_SESSION["settings"])) {
 	$_SESSION["settings"] = [];
 }

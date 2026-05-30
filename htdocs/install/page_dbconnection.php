@@ -18,7 +18,7 @@
 /**
  *
  */
-require_once 'common.inc.php';
+require_once __DIR__ . '/common.inc.php';
 if (!defined( 'XOOPS_INSTALL' ) )    exit();
 
 $wizard->setPage( 'dbconnection' );
@@ -150,4 +150,4 @@ ob_start();
 <?php
 $content = ob_get_contents();
 ob_end_clean();
-include 'install_tpl.php';
+include __DIR__ . '/install_tpl.php';

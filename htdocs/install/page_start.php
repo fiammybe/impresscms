@@ -17,18 +17,18 @@
 /**
  *
  */
-require_once 'common.inc.php';
+require_once __DIR__ . '/common.inc.php';
 if (!defined( 'XOOPS_INSTALL' ) )	exit();
 
-icms_core_Filesystem::chmod("../modules", 0777);
-icms_core_Filesystem::chmod("../mainfile.php", 0777);
-icms_core_Filesystem::chmod("../uploads", 0777);
-icms_core_Filesystem::chmod("../templates_c", 0777);
-icms_core_Filesystem::chmod("../cache", 0777);
+icms_core_Filesystem::chmod(dirname(__DIR__) . "/modules", 0777);
+icms_core_Filesystem::chmod(dirname(__DIR__) . "/mainfile.php", 0777);
+icms_core_Filesystem::chmod(dirname(__DIR__) . "/uploads", 0777);
+icms_core_Filesystem::chmod(dirname(__DIR__) . "/templates_c", 0777);
+icms_core_Filesystem::chmod(dirname(__DIR__) . "/cache", 0777);
 $wizard->setPage( 'start' );
 $pageHasForm = false;
 
 $content = "";
-include "./language/$wizard->language/welcome.php";
+include __DIR__ . "/language/$wizard->language/welcome.php";
 
-include 'install_tpl.php';
+include __DIR__ . '/install_tpl.php';

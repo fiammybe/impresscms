@@ -15,7 +15,7 @@
 /**
  *
  */
-require_once 'common.inc.php';
+require_once __DIR__ . '/common.inc.php';
 if (!defined( 'XOOPS_INSTALL' ) )	exit();
 
 $wizard->setPage( 'no_php5' );
@@ -26,4 +26,4 @@ echo NO_PHP5_CONTENT;
 $content = ob_get_contents();
 ob_end_clean();
 
-include 'install_tpl.php';
+include __DIR__ . '/install_tpl.php';

@@ -27,7 +27,7 @@
 
 /**
  */
-require_once 'common.inc.php';
+require_once __DIR__ . '/common.inc.php';
 if (!defined('XOOPS_INSTALL')) exit();
 
 $wizard->setPage('configsave');
@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		exit();
 	}
 	$content = '<p class="errorMsg">' . $error . '</p>';
-	include 'install_tpl.php';
+	include __DIR__ . '/install_tpl.php';
 	exit();
 }
 
@@ -190,4 +190,4 @@ foreach ($vars as $k => $v) {
 <?php
 $content = ob_get_contents();
 ob_end_clean();
-include 'install_tpl.php';
+include __DIR__ . '/install_tpl.php';

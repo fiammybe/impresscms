@@ -15,7 +15,7 @@
  * @version		$Id: page_tablesfill.php 12426 2014-02-24 16:19:49Z fiammy $
  */
 
-require_once 'common.inc.php';
+require_once __DIR__ . '/common.inc.php';
 if (!defined( 'XOOPS_INSTALL' ) )	exit();
 
 $wizard->setPage( 'tablesfill' );
@@ -24,8 +24,8 @@ $pageHasHelp = false;
 
 $vars =& $_SESSION['settings'];
 
-include_once "../mainfile.php";
-include_once './class/dbmanager.php';
+include_once dirname(__DIR__) . "/mainfile.php";
+include_once __DIR__ . '/class/dbmanager.php';
 $dbm = new db_manager();
 
 if (!$dbm->isConnectable()) {
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$wizard->redirectToPage( '+0' );
 		exit();
 	}
-	include_once './makedata.php';
+	include_once __DIR__ . '/makedata.php';
 	$cm = 'dummy';
 
 	$wizard->loadLangFile( 'install2' );
@@ -58,8 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} else {
 		$driver = XOOPS_DB_TYPE;
 	}
-	$result = $dbm->queryFromFile('./sql/'. $driver .'.data.sql');
-	$result = $dbm->queryFromFile('./language/' . $language . '/'. $driver . '.lang.data.sql');
+	$result = $dbm->queryFromFile(__DIR__ . '/sql/'. $driver .'.data.sql');
+	$result = $dbm->queryFromFile(__DIR__ . '/language/' . $language . '/'. $driver . '.lang.data.sql');
 	$group = make_groups( $dbm );
 	$result = make_data( $dbm, $cm, $adminname, $adminlogin_name, $adminpass, $adminmail, $language, $group );
 	$content = $dbm->report();
@@ -70,4 +70,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$content = "<p class='x2-note'>$msg</p>";
 }
 
-include 'install_tpl.php';
+include __DIR__ . '/install_tpl.php';

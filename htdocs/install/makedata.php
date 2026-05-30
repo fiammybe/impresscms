@@ -24,7 +24,7 @@
  * @version		$Id: makedata.php 12329 2013-09-19 13:53:36Z skenow $
  */
 
-include_once './class/dbmanager.php';
+include_once __DIR__ . '/class/dbmanager.php';
 
 // RMV
 // TODO: Shouldn't we insert specific field names??  That way we can use
@@ -99,15 +99,15 @@ function make_data(&$dbm, &$cm, $adminname, $adminlogin_name, $adminpass, $admin
 
 	// system modules
 
-	if (!file_exists('../modules/system/language/'.$language.'/modinfo.php')) {
+	if (!file_exists(dirname(__DIR__) . '/modules/system/language/' . $language . '/modinfo.php')) {
 		$language = 'english';
 	}
-	include_once '../modules/system/language/'.$language.'/modinfo.php';
-	include_once '../modules/system/language/'.$language.'/common.php';
-	include_once '../language/' . $language . '/global.php';
+	include_once dirname(__DIR__) . '/modules/system/language/' . $language . '/modinfo.php';
+	include_once dirname(__DIR__) . '/modules/system/language/' . $language . '/common.php';
+	include_once dirname(__DIR__) . '/language/' . $language . '/global.php';
 	
 	$modversion = array();
-	include_once '../modules/system/icms_version.php';
+	include_once dirname(__DIR__) . '/modules/system/icms_version.php';
 	$time = time();
 
 	// RMV-NOTIFY (updated for extra column in table)
@@ -117,16 +117,18 @@ function make_data(&$dbm, &$cm, $adminname, $adminlogin_name, $adminpass, $admin
 	$dbm->insert("modules", " VALUES (1, '"._MI_SYSTEM_NAME."','" . $modversion['version'] . "', ".$time.", 0, 1, 'system', 0, 1, 0, 0, 0, 0, 40, 'system', 0)");
 
 	foreach ($modversion['templates'] as $tplfile) {
-		if ($fp = fopen('../modules/system/templates/'.$tplfile['file'], 'r')) {
+		$templatePath = dirname(__DIR__) . '/modules/system/templates/' . $tplfile['file'];
+		if ($fp = fopen($templatePath, 'r')) {
 			$newtplid = $dbm->insert('tplfile', " VALUES (0, 1, 'system', 'default', '".addslashes($tplfile['file'])."', '".addslashes($tplfile['description'])."', ".$time.", ".$time.", 'module')");
-			$tplsource = fread($fp, filesize('../modules/system/templates/'.$tplfile['file']));
+			$tplsource = fread($fp, filesize($templatePath));
 			fclose($fp);
 			$dbm->insert('tplsource', " (tpl_id, tpl_source) VALUES (".$newtplid.", '".addslashes($tplsource)."')");
 		}
 	}
 
 	foreach ($modversion['blocks'] as $func_num => $newblock) {
-		if ($fp = fopen('../modules/system/templates/blocks/'.$newblock['template'], 'r')) {
+		$blockTemplatePath = dirname(__DIR__) . '/modules/system/templates/blocks/' . $newblock['template'];
+		if ($fp = fopen($blockTemplatePath, 'r')) {
 			if (in_array($newblock['template'], array('system_block_user.html', 'system_block_login.html', 'system_block_mainmenu.html', 'system_block_socialbookmark.html', 'system_block_themes.html', 'system_block_search.html','system_admin_block_warnings.html','system_admin_block_cp.html','system_admin_block_modules.html','system_block_newusers.html','system_block_online.html','system_block_waiting.html','system_block_topusers.html'))) {
 				$visible = 1;
 			} else {
@@ -157,7 +159,7 @@ function make_data(&$dbm, &$cm, $adminname, $adminlogin_name, $adminpass, $admin
 			$newbid = $dbm->insert('newblocks', " VALUES (0, 1, ".$func_num.", '".addslashes($options)."', '".addslashes($newblock['name'])."', '".addslashes($newblock['name'])."', '', ".$canvaspos.", 0, ".$visible.", 'S', 'H', 1, 'system', '".addslashes($newblock['file'])."', '".addslashes($newblock['show_func'])."', '".addslashes($edit_func)."', '".addslashes($newblock['template'])."', 0, ".$time.")");
 
 			$newtplid = $dbm->insert('tplfile', " VALUES (0, ".$newbid.", 'system', 'default', '".addslashes($newblock['template'])."', '".addslashes($newblock['description'])."', ".$time.", ".$time.", 'block')");
-			$tplsource = fread($fp, filesize('../modules/system/templates/blocks/'.$newblock['template']));
+			$tplsource = fread($fp, filesize($blockTemplatePath));
 			fclose($fp);
 			$dbm->insert('tplsource', " (tpl_id, tpl_source) VALUES (".$newtplid.", '".addslashes($tplsource)."')");
 			$dbm->insert("group_permission", " VALUES (0, ".$gruops['XOOPS_GROUP_ADMIN'].", ".$newbid.", 1, 'block_read')"

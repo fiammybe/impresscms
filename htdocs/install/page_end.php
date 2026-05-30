@@ -19,9 +19,9 @@
 /**
  *
  */
-require_once 'common.inc.php';
+require_once __DIR__ . '/common.inc.php';
 if (!defined( 'XOOPS_INSTALL' ) )	exit();
-include_once "../mainfile.php";
+include_once dirname(__DIR__) . "/mainfile.php";
 $success = isset($_GET['success'])?trim($_GET['success']):false;
 if ($success) {
 	if (is_dir(ICMS_ROOT_PATH.'/install')) {
@@ -34,7 +34,7 @@ if ($success) {
 $wizard->setPage( 'end' );
 $pageHasForm = false;
 $content = "";
-include "./language/$wizard->language/finish.php";
+include __DIR__ . "/language/$wizard->language/finish.php";
 
 // destroy all the installation session
 unset($_SESSION);
@@ -45,4 +45,4 @@ if(isset($_COOKIE[session_name()]))
 session_unset();
 session_destroy();
 
-include 'install_tpl.php';
+include __DIR__ . '/install_tpl.php';
