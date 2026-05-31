@@ -35,6 +35,9 @@ if (!function_exists('icms_legacy_autoloader_register')) {
 
         $librariesDir = __DIR__;
         $icmsDir = $librariesDir . DIRECTORY_SEPARATOR . 'icms';
+        $psr4FileMap = [
+            'Icms\\Form\\Form' => $icmsDir . DIRECTORY_SEPARATOR . 'Form' . DIRECTORY_SEPARATOR . 'Base.php',
+        ];
 
         // Legacy name → modern PSR-4 class map for identifiers that were
         // renamed (not just moved) during the refactor, e.g. when the modern
@@ -56,7 +59,7 @@ if (!function_exists('icms_legacy_autoloader_register')) {
         ];
 
         spl_autoload_register(
-            static function (string $class) use ($librariesDir, $icmsDir, $renameMap): void {
+            static function (string $class) use ($librariesDir, $icmsDir, $renameMap, $psr4FileMap): void {
                 if (isset($renameMap[$class])) {
                     $target = $renameMap[$class];
                     if (class_exists($target, true) || interface_exists($target, true) || trait_exists($target, true)) {
@@ -117,6 +120,10 @@ if (!function_exists('icms_legacy_autoloader_register')) {
 
                 // PSR-4: Icms\Ipf\Handler → libraries/icms/Ipf/Handler.php
                 if (strncmp($class, 'Icms\\', 5) === 0) {
+                    if (isset($psr4FileMap[$class])) {
+                        require_once $psr4FileMap[$class];
+                        return;
+                    }
                     $file = $icmsDir . DIRECTORY_SEPARATOR
                         . str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 5))
                         . '.php';
