@@ -92,7 +92,15 @@ class Base extends \icms_form_Theme {
 	 * @param	string  $var            some form variables?
 	 * @param	bool    $required       is this a "required" element?
 	 */
-	public function addElement(&$formElement, $key = FALSE, $var = FALSE, $required = 'notset'){
+	public function addElement($formElement, $keyOrRequired = false, $var = false, $required = 'notset'): void {
+		$isLegacyCall = $var !== false || $required !== 'notset' || is_string($keyOrRequired) || is_int($keyOrRequired);
+
+		if (!$isLegacyCall) {
+			parent::addElement($formElement, (bool) $keyOrRequired);
+			return;
+		}
+
+		$key = $keyOrRequired;
 		if ($key) {
 			if ($this->targetObject->vars[$key]['readonly']) {
 				$formElement->setExtra('disabled="disabled"');
@@ -117,11 +125,10 @@ class Base extends \icms_form_Theme {
 			if(isset($controls[$key]['js'])){
 				$formElement->customValidationCode[] = $controls[$key]['js'];
 			}
-			parent::addElement($formElement, $required == 'notset' ? $var['required'] : $required);
+			parent::addElement($formElement, $required == 'notset' ? (bool) $var['required'] : (bool) $required);
 		} else {
-			parent::addElement($formElement, $required == 'notset' ? FALSE : TRUE);
+			parent::addElement($formElement, $required == 'notset' ? false : (bool) $required);
 		}
-		unset($formElement);
 	}
 
 	/**
