@@ -62,7 +62,7 @@ class Autocomplete extends \icms_form_elements_Text {
 	 * @global	\icms_view_theme_Object	$xoTheme	theme object
 	 * @return	string					$ret		the constructed HTML
 	 */
-	public function render() {
+	public function render(): string {
 		global $xoTheme;
 
 		if (!is_file(ICMS_ROOT_PATH . "/" . $this->_file)) return parent::render();

@@ -38,7 +38,7 @@ class Passwordtray extends \icms_form_elements_Tray {
 		$this->_key = $key;
 	}
 
-	public function render() {
+	public function render(): string {
 		// Use template-based rendering instead of direct HTML generation
 		$this->tpl = new \icms_view_Tpl();
 

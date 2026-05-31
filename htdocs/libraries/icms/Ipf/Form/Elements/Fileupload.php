@@ -34,7 +34,7 @@ class Fileupload extends \icms_ipf_form_elements_Upload {
 	 *
 	 * @return	string	HTML
 	 */
-	public function render() {
+	public function render(): string {
 		return "<input type='hidden' name='MAX_FILE_SIZE' value='" . $this->getMaxFileSize() . "' />
 		        <input type='file' name='" . $this->getName() . "' id='" . $this->getName() . "'" . $this->getExtra() . " />
 		        <input type='hidden' name='icms_upload_file[]' id='icms_upload_file[]' value='" . $this->getName() . "' />";

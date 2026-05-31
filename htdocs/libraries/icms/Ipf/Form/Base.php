@@ -499,7 +499,7 @@ class Base extends \icms_form_Theme {
 	 * @copyright	copyright (c) 2000-2003 XOOPS.org
 	 * @return	string  $ret
 	 */
-	public function render() {
+	public function render(): string {
 		$this->createButtons($this->_form_name, $this->_form_caption, $this->_submit_button_caption);
 		$required =& $this->getRequired();
 		$ret = "

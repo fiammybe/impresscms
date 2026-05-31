@@ -78,7 +78,7 @@ class Checkbox extends \icms_form_elements_Checkbox {
 	 *
 	 * @return	string  the constructed input form element string
 	 */
-	public function render() {
+	public function render(): string {
 		// Use the parent class render method which uses the unified template
 		// This ensures both standard and IPF checkboxes use the same template
 		return parent::render();

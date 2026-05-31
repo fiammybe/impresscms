@@ -68,8 +68,10 @@ class Section extends \icms_form_Element {
 	 *
 	 * @return	string
 	 */
-	public function render() {
-		if ($this->_close) return;
+	public function render(): string {
+		if ($this->_close) {
+			return '';
+		}
 		return $this->getValue();
 	}
 }

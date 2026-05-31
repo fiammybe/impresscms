@@ -49,7 +49,7 @@ class Source extends \icms_form_elements_Textarea {
 	 * Renders the editor
 	 * @return	string  the constructed html string for the editor
 	 */
-	public function render() {
+	public function render(): string {
 		if ($this->_editor) {
 			return $this->_editor->render();
 		} else {

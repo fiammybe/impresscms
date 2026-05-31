@@ -58,6 +58,8 @@ namespace Icms\Form;
  */
 abstract class Form
 {
+	private const DEFAULT_CHARSET = 'UTF-8';
+
 	/**#@+
 	 * @access  private
 	 */
@@ -139,7 +141,7 @@ abstract class Form
 	 */
 	public function getTitle(bool $encode = false): string
 	{
-		return $encode ? htmlspecialchars($this->_title, ENT_QUOTES, \ICMS_CHARSET) : $this->_title;
+		return $encode ? htmlspecialchars($this->_title, ENT_QUOTES, $this->getCharset()) : $this->_title;
 	}
 
 	/**
@@ -151,7 +153,7 @@ abstract class Form
 	 */
 	public function getName(bool $encode = true): string
 	{
-		return $encode ? htmlspecialchars($this->_name, ENT_QUOTES, \ICMS_CHARSET) : $this->_name;
+		return $encode ? htmlspecialchars($this->_name, ENT_QUOTES, $this->getCharset()) : $this->_name;
 	}
 
 	/**
@@ -162,7 +164,20 @@ abstract class Form
 	 */
 	public function getAction(bool $encode = true): string
 	{
-		return $encode ? htmlspecialchars($this->_action, ENT_QUOTES, \ICMS_CHARSET) : $this->_action;
+		return $encode ? htmlspecialchars($this->_action, ENT_QUOTES, $this->getCharset()) : $this->_action;
+	}
+
+	private function getCharset(): string
+	{
+		if (\defined('ICMS_CHARSET')) {
+			return (string) \ICMS_CHARSET;
+		}
+
+		if (\defined('_CHARSET')) {
+			return (string) \constant('_CHARSET');
+		}
+
+		return self::DEFAULT_CHARSET;
 	}
 
 	/**
@@ -187,7 +202,7 @@ abstract class Form
 	): void {
 		if ($formElement instanceof \Stringable) {
 			$this->_elements[] = $formElement;
-		} elseif ($formElement instanceof \Element) {
+		} elseif ($formElement instanceof Element) {
 			$this->_elements[] = $formElement;
 			if (!$formElement->isContainer()) {
 				if ($required) {
@@ -218,7 +233,7 @@ abstract class Form
 			$ret = [];
 			$count = count($this->_elements);
 			for ($i = 0; $i < $count; $i++) {
-				if ($this->_elements[$i] instanceof \Object) {
+				if ($this->_elements[$i] instanceof Element) {
 					if (!$this->_elements[$i]->isContainer()) {
 						$ret[] = $this->_elements[$i];
 					} else {
@@ -277,7 +292,7 @@ abstract class Form
 	public function setElementValue(string $name, string $value): void
 	{
 		$ele = $this->getElementByName($name);
-		if ($ele instanceof \Object && method_exists($ele, 'setValue')) {
+		if ($ele instanceof Element && method_exists($ele, 'setValue')) {
 			$ele->setValue($value);
 		}
 	}
@@ -311,7 +326,7 @@ abstract class Form
 	public function getElementValue(string $name, bool $encode = false): ?string
 	{
 		$ele = $this->getElementByName($name);
-		if ($ele instanceof \Object && method_exists($ele, 'getValue')) {
+		if ($ele instanceof Element && method_exists($ele, 'getValue')) {
 			return $ele->getValue($encode);
 		}
 		return null;
@@ -356,8 +371,9 @@ abstract class Form
 	 */
 	public function getExtra(): string
 	{
-		$extra = '' !== implode('', $this->_extra);
-		return $extra;
+		$extra = implode(' ', $this->_extra);
+
+		return $extra === '' ? '' : ' ' . $extra;
 	}
 
 	/**
