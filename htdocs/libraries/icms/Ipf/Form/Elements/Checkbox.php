@@ -90,7 +90,7 @@ class Checkbox extends \icms_form_elements_Checkbox {
 	 * @copyright	copyright (c) 2000-2003 XOOPS.org
 	 * @return	string    $js   the constructed javascript
 	 */
-	public function renderValidationJS() {
+	public function renderValidationJS(): string {
 		$js = "";
 		$js .= "var hasSelections = false;";
 		$eltname = $this->getName();

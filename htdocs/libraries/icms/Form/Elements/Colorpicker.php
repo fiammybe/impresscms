@@ -88,7 +88,7 @@ class icms_form_elements_Colorpicker extends icms_form_elements_Text {
 	 *
 	 * @return	string	Element validation Javascript
 	 */
-	public function renderValidationJS() {
+	public function renderValidationJS(): string {
 		$eltname = $this->getName();
 		$eltcaption = $this->getCaption();
 		$eltmsg = empty($eltcaption) ? sprintf(_FORM_ENTER, $eltname) : sprintf(_FORM_ENTER, $eltcaption);

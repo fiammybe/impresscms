@@ -583,7 +583,7 @@ class Base extends \icms_form_Theme {
 	 * @param	  bool  $withtags   whether to add script HTML tag to the $js string
 	 * @return	bool  $js         the constructed javascript validation string
 	 */
-	public function renderValidationJS($withtags = TRUE) {
+	public function renderValidationJS(bool $withtags = true): string {
 		$js = "";
 		if ($withtags) {
 			$js .= "\n<!-- Start Form Validation JavaScript //-->\n<script type='text/javascript'>\n<!--//\n";

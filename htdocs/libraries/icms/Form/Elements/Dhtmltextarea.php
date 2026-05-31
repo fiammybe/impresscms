@@ -236,7 +236,7 @@ class icms_form_elements_Dhtmltextarea extends icms_form_elements_Textarea {
 	 *
 	 * @return	mixed  rendered validation javascript or empty string
 	 */
-	public function renderValidationJS() {
+	public function renderValidationJS(): string {
 		if ($this->htmlEditor && is_object($this->htmlEditor) && method_exists($this->htmlEditor, "renderValidationJS")) {
 			if (!isset($this->htmlEditor->isEnabled) || $this->htmlEditor->isEnabled) {
 				return $this->htmlEditor->renderValidationJS();
