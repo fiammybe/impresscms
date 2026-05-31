@@ -73,7 +73,7 @@ class icms_form_elements_Colorpicker extends icms_form_elements_Text {
 	 * Render the color picker
 	 * @return  $string	rendered color picker HTML
 	 */
-	public function render() {
+	public function render(): string {
 		if (isset($GLOBALS ['xoTheme'])) {
 			$GLOBALS ['xoTheme']->addScript('include/color-picker.js');
 		} else {

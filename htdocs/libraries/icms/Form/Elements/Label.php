@@ -85,8 +85,7 @@ class icms_form_elements_Label extends icms_form_Element {
 	 *
 	 * @return	string
 	 */
-	public function render() {
+	public function render(): string {
 		return $this->getValue();
 	}
 }
-

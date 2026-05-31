@@ -176,7 +176,7 @@ class icms_form_elements_Tray extends icms_form_Element {
 	 *
 	 * @return	string  HTML output
 	 */
-	public function render() {
+	public function render(): string {
 		$count = 0;
 		$ret = "";
 		foreach ($this->getElements() as $ele) {

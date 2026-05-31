@@ -119,7 +119,7 @@ class icms_form_elements_Dhtmltextarea extends icms_form_elements_Textarea {
 	 *
 	 * @return	string  HTML
 	 */
-	public function render() {
+	public function render(): string {
 		global $icmsConfigPlugins, $icmsConfigMultilang;
 		$editor = false;
 		if ($this->htmlEditor && is_object($this->htmlEditor)) {
@@ -262,4 +262,3 @@ class icms_form_elements_Dhtmltextarea extends icms_form_elements_Textarea {
 		return $ret;
 	}
 }
-

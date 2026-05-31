@@ -68,7 +68,7 @@ class icms_form_elements_captcha_Text {
 	 * Render the form
 	 * @return string	$form the Captcha Form
 	 */
-	public function render() {
+	public function render(): string {
 		global $icmsConfigCaptcha;
 		$form = $this->loadText()
 			. "&nbsp;&nbsp; <input type='text' name='" . $this->config["name"]

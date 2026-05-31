@@ -168,7 +168,7 @@ class icms_form_elements_Radio extends icms_form_Element {
 	 *
 	 * @return	string	HTML
 	 */
-	public function render() {
+	public function render(): string {
 		$ret = "";
 		$ele_name = $this->getName();
 		$ele_value = $this->getValue();
@@ -185,4 +185,3 @@ class icms_form_elements_Radio extends icms_form_Element {
 		return $ret;
 	}
 }
-

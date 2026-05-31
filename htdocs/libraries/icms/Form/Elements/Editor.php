@@ -75,7 +75,7 @@ class icms_form_elements_Editor extends icms_form_elements_Textarea {
 	 * Renders the editor
 	 * @return	string  the constructed html string for the editor
 	 */
-	function render()
+	function render(): string
 	{
 		return $this->editor->render();
 	}

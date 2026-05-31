@@ -134,7 +134,7 @@ class icms_form_elements_Text extends icms_form_Element {
 	 *
 	 * @return	string  HTML
 	 */
-	public function render() {
+	public function render(): string {
 		$this->tpl = new icms_view_Tpl();
 		$this->tpl->assign('ele_name', $this->getName());
 		$this->tpl->assign('ele_id', $this->getName());
@@ -147,4 +147,3 @@ class icms_form_elements_Text extends icms_form_Element {
 		return $this->tpl->fetch('db:' . $element_html_template);
 	}
 }
-

@@ -128,7 +128,7 @@ class icms_form_elements_Textarea extends icms_form_Element {
 	 *
 	 * @return string HTML
 	 */
-	public function render(){
+	public function render(): string{
 		return "<textarea name='" . $this->getName()
 			. "' id='" . $this->getName() . '_tarea'
 			. "' rows='" . $this->getRows()
@@ -138,4 +138,3 @@ class icms_form_elements_Textarea extends icms_form_Element {
 			. "</textarea>";
 	}
 }
-

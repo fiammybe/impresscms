@@ -228,7 +228,7 @@ class icms_form_elements_Checkbox extends icms_form_Element {
 	 *
 	 * @return    string
 	 */
-	public function render() {
+	public function render(): string {
 		$ele_name = $this->getName();
 		$ele_value = $this->getValue();
 		$ele_options = $this->getOptions();

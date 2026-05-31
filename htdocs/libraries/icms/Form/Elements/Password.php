@@ -162,7 +162,7 @@ class icms_form_elements_Password extends icms_form_Element {
 	 *
 	 * @return	string	HTML
 	 */
-	public function render() {
+	public function render(): string {
 
 		$this->tpl = new icms_view_Tpl();
 		$this->tpl->assign('ele_name', $this->getName());

@@ -83,7 +83,7 @@ class icms_form_elements_File extends icms_form_Element {
 	 *
 	 * @return	string	HTML
 	 */
-	public function render() {
+	public function render(): string {
 		$ele_name = $this->getName();
 		$ret  = "<input type='hidden' name='MAX_FILE_SIZE' value='" . $this->getMaxFileSize() . "' />";
 		$ret .= "<input type='file' name='" . $ele_name . "' id='" . $ele_name . "'" . $this->getExtra() . " />";
@@ -91,4 +91,3 @@ class icms_form_elements_File extends icms_form_Element {
 		return $ret;
 	}
 }
-

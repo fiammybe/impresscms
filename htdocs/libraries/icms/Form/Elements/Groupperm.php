@@ -112,7 +112,7 @@ class icms_form_elements_Groupperm extends icms_form_Element {
 	 * @return string
 	 * @access public
 	 */
-	function render() {
+	function render(): string {
 		$ele_name = $this->getName();
 		$ret = '<table class="outer"><tr><td class="odd"><table><tr>';
 		$cols = 1;

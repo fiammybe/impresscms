@@ -60,7 +60,7 @@ class icms_form_elements_captcha_Image {
 	 * Renders the Captcha image Returns form with image in it
 	 * @return  string String that contains the Captcha Image form
 	 */
-	public function render() {
+	public function render(): string {
 		global $icmsConfigCaptcha;
 		$form = "<input type='text' name='" . $this->config["name"]
 			. "' id='" . $this->config["name"]

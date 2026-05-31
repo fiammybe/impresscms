@@ -234,7 +234,7 @@ class icms_form_elements_captcha_Object {
 	 * Render
 	 * @return  string  the rendered form
 	 */
-	public function render() {
+	public function render(): string {
 		global $icmsConfigCaptcha;
 		$form = "";
 

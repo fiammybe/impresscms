@@ -68,7 +68,7 @@ class icms_form_elements_Date extends icms_form_elements_Text {
     /**
      * Render the Date field
      */
-    public function render() {
+    public function render(): string {
         global $icmsConfigPersona;
         $ele_name = $this->getName();
         $ele_value = $this->getValue(false);

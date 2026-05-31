@@ -115,7 +115,7 @@ class icms_form_elements_Button extends icms_form_Element {
 	 *
 	 * @return	string
 	 */
-	public function render() {
+	public function render(): string {
 	$this->tpl = new icms_view_Tpl();
 	$this->tpl->assign('type', $this->getType());
 	$this->tpl->assign('name', $this->getName());

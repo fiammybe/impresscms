@@ -84,10 +84,9 @@ class icms_form_elements_Captcha extends icms_form_Element {
 	 *
 	 * @see htdocs/libraries/icms/form/icms_form_Element::render()
 	 */
-	public function render() {
+	public function render(): string {
 		if (!$this->isHidden()) {
 			return $this->_captchaHandler->render();
 		}
 	}
 }
-
