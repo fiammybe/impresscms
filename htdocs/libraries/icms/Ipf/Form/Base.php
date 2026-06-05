@@ -46,7 +46,7 @@ class Base extends \icms_form_Theme {
 		$this->_form_caption = $form_caption;
 		$this->_submit_button_caption = $submit_button_caption;
 
-		if (!isset($form_action)) {
+		if (empty($form_action)) {
 			$form_action = xoops_getenv('SCRIPT_NAME');
 		}
 
@@ -548,7 +548,7 @@ class Base extends \icms_form_Theme {
 	 * @see           Smarty
 	 * @param	mixed   $smartyName   if smartyName is passed, assign it to the smarty call else assign the name of the form element
 	 */
-	public function assign(&$tpl, $smartyName = FALSE){
+	public function assign(&$tpl, $smartyName = FALSE): void {
 		$this->createButtons($this->_form_name, $this->_form_caption, $this->_submit_button_caption);
 		$i = 0;
 		$elements = array();
