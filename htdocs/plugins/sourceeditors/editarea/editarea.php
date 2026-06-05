@@ -61,7 +61,7 @@ class IcmsSourceEditorEditArea extends icms_form_elements_Textarea {
 		return is_readable(ICMS_ROOT_PATH . $this->rootpath . "/editarea.php");
 	}
 
-	public function render() {
+	public function render(): string {
 		global $xoTheme;
 		$ret = parent::render();
 		$xoTheme->addScript(ICMS_URL . $this->rootpath . '/editor/edit_area_full_with_plugins.js', array('type' => 'text/javascript'),'');
