@@ -81,14 +81,14 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 		$id = (int) $id;
 		$perm = false;
 		if ($id > 0) {
-			$sql = sprintf("SELECT * FROM %s WHERE gperm_id = '%u'", icms::$xoopsDB->prefix('group_permission'), $id);
-			if (!$result = icms::$xoopsDB->query($sql)) {
+			$sql = sprintf("SELECT * FROM %s WHERE gperm_id = '%u'", $this->db->prefix('group_permission'), $id);
+			if (!$result = $this->db->queryF($sql)) {
 				return $perm;
 			}
-			$numrows = icms::$xoopsDB->getRowsNum($result);
+			$numrows = $this->db->getRowsNum($result);
 			if ($numrows == 1) {
 				$perm = new icms_member_groupperm_Object();
-				$perm->assignVars(icms::$xoopsDB->fetchArray($result));
+				$perm->assignVars($this->db->fetchArray($result));
 			}
 		}
 		return $perm;
@@ -117,32 +117,32 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 			${$k} = $v;
 		}
 		if ($perm->isNew()) {
-			$gperm_id = icms::$xoopsDB->genId('group_permission_gperm_id_seq');
+			$gperm_id = $this->db->genId('group_permission_gperm_id_seq');
 			$sql = sprintf(
 				"INSERT INTO %s (gperm_id, gperm_groupid, gperm_itemid, gperm_modid, gperm_name)
 				VALUES ('%u', '%u', '%u', '%u', %s)",
-				icms::$xoopsDB->prefix('group_permission'),
+				$this->db->prefix('group_permission'),
 				(int) $gperm_id,
 				(int) $gperm_groupid,
 				(int) $gperm_itemid,
 				(int) $gperm_modid,
-				icms::$xoopsDB->quoteString($gperm_name)
+				$this->db->quoteString($gperm_name)
 				);
 		} else {
 			$sql = sprintf(
 				"UPDATE %s SET gperm_groupid = '%u', gperm_itemid = '%u', gperm_modid = '%u' WHERE gperm_id = '%u'",
-				icms::$xoopsDB->prefix('group_permission'),
+				$this->db->prefix('group_permission'),
 				(int) $gperm_groupid,
 				(int) $gperm_itemid,
 				(int) $gperm_modid,
 				(int) $gperm_id
 				);
 		}
-		if (!$result = icms::$xoopsDB->query($sql)) {
+		if (!$result = $this->db->queryF($sql)) {
 			return false;
 		}
 		if (empty($gperm_id)) {
-			$gperm_id = icms::$xoopsDB->getInsertId();
+			$gperm_id = $this->db->getInsertId();
 		}
 		$perm->assignVar('gperm_id', $gperm_id);
 		return true;
@@ -162,10 +162,10 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 		}
 		$sql = sprintf(
 			"DELETE FROM %s WHERE gperm_id = '%u'",
-			icms::$xoopsDB->prefix('group_permission'),
+			$this->db->prefix('group_permission'),
 			(int) ($perm->getVar('gperm_id'))
 		);
-		if (!$result = icms::$xoopsDB->query($sql)) {
+		if (!$result = $this->db->queryF($sql)) {
 			return false;
 		}
 		return true;
@@ -182,17 +182,17 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 	public function getObjects($criteria = null, $id_as_key = false) {
 		$ret = array();
 		$limit = $start = 0;
-		$sql = 'SELECT * FROM '.icms::$xoopsDB->prefix('group_permission');
+		$sql = 'SELECT * FROM '.$this->db->prefix('group_permission');
 		if (isset($criteria) && is_subclass_of($criteria, 'icms_db_criteria_Element')) {
 			$sql .= ' ' . $criteria->renderWhere();
 			$limit = $criteria->getLimit();
 			$start = $criteria->getStart();
 		}
-		$result = icms::$xoopsDB->query($sql, $limit, $start);
+		$result = $this->db->query($sql, $limit, $start);
 		if (!$result) {
 			return $ret;
 		}
-		while ($myrow = icms::$xoopsDB->fetchArray($result)) {
+		while ($myrow = $this->db->fetchArray($result)) {
 			$perm = new icms_member_groupperm_Object();
 			$perm->assignVars($myrow);
 			if (!$id_as_key) {
@@ -213,15 +213,15 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 	 * @return	int
 	 */
 	public function getCount($criteria = null) {
-		$sql = 'SELECT COUNT(*) FROM '.icms::$xoopsDB->prefix('group_permission');
+		$sql = 'SELECT COUNT(*) FROM '.$this->db->prefix('group_permission');
 		if (isset($criteria) && is_subclass_of($criteria, 'icms_db_criteria_Element')) {
 			$sql .= ' ' . $criteria->renderWhere();
 		}
-		$result = icms::$xoopsDB->query($sql);
+		$result = $this->db->query($sql);
 		if (!$result) {
 			return 0;
 		}
-		list($count) = icms::$xoopsDB->fetchRow($result);
+		list($count) = $this->db->fetchRow($result);
 		return $count;
 	}
 
@@ -233,11 +233,11 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 	 * @return	bool    TRUE on success
 	 */
 	public function deleteAll($criteria = null) {
-		$sql = sprintf("DELETE FROM %s", icms::$xoopsDB->prefix('group_permission'));
+		$sql = sprintf("DELETE FROM %s", $this->db->prefix('group_permission'));
 		if (isset($criteria) && is_subclass_of($criteria, 'icms_db_criteria_Element')) {
 			$sql .= ' ' . $criteria->renderWhere();
 		}
-		if (!$result = icms::$xoopsDB->query($sql)) {
+		if (!$result = $this->db->query($sql)) {
 			return false;
 		}
 		return true;
@@ -396,4 +396,3 @@ class icms_member_groupperm_Handler extends icms_core_ObjectHandler {
 		return $ret;
 	}
 }
-
