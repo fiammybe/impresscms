@@ -299,9 +299,11 @@ abstract class icms
 	 * @param bool  $optional	Is the handler optional?
 	 * @return		object		$inst		The instance of the object that was created
 	 */
-	public static function &handler($name, $optional = false)
+	public static function &handler($name, $optional = false, $db = null)
 	{
-		if (!isset(self::$handlers[$name])) {
+		$db = $db ?: self::$xoopsDB;
+		$handlerKey = $name . ':' . \spl_object_id($db);
+		if (!isset(self::$handlers[$handlerKey])) {
 			$class = $name . "Handler";
 			if (!class_exists($class)) {
 				$class = $name . "_Handler";
@@ -342,17 +344,17 @@ abstract class icms
 					}
 				}
 			}
-			self::$handlers[$name] = $class
-				? new $class(self::$xoopsDB)
+			self::$handlers[$handlerKey] = $class
+				? new $class($db)
 				: false;
 		}
-		if (!self::$handlers[$name] && !$optional) {
+		if (!self::$handlers[$handlerKey] && !$optional) {
 			//trigger_error(sprintf("Handler <b>%s</b> does not exist", $name), E_USER_ERROR);
 			throw new RuntimeException(
 				sprintf("Handler <b>%s</b> does not exist", $name),
 			);
 		}
-		return self::$handlers[$name];
+		return self::$handlers[$handlerKey];
 	}
 
 	/**
