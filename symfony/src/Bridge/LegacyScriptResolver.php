@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 final class LegacyScriptResolver
 {
     /** @var string[] */
-    private array $blockedPathSegments = ['cache', 'templates_c', 'uploads', 'vendor', '.git'];
+    private array $blockedPathSegments = ['cache', 'templates_c', 'vendor', '.git'];
 
     public function __construct(
         private readonly string $legacyRoot,
@@ -38,10 +38,8 @@ final class LegacyScriptResolver
             ];
         }
 
-        $candidatePaths = [];
-        if (str_ends_with($path, '.php')) {
-            $candidatePaths[] = $path;
-        } else {
+        $candidatePaths = [$path];
+        if (!str_ends_with($path, '.php')) {
             $candidatePaths[] = rtrim($path, '/') . '/index.php';
         }
 
@@ -85,7 +83,7 @@ final class LegacyScriptResolver
         return [
             'script_path' => $realPath,
             'script_name' => $cleanPath,
-            'resolution' => 'direct_script',
+            'resolution' => str_ends_with($cleanPath, '.php') ? 'direct_script' : 'direct_asset',
         ];
     }
 }
