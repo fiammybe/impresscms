@@ -487,7 +487,7 @@ class Session {
 		if (!\icms::$xoopsDB->getAffectedRows()) {
 			$sql = sprintf("INSERT INTO %s (sess_id, sess_updated, sess_ip, sess_data)" . " VALUES (%s, '%u', %s, %s)",
 				\icms::$xoopsDB->prefix('session'), $sess_id, time(), \icms::$xoopsDB->quoteString($_SERVER['REMOTE_ADDR']), $sess_data);
-			return \icms::$xoopsDB->queryF($sql);
+			return (bool) \icms::$xoopsDB->queryF($sql);
 		}
 		return true;
 	}

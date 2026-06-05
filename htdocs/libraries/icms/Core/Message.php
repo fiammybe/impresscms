@@ -147,12 +147,12 @@ class Message
 		if (is_array($value)) {
 			foreach ($value as $caption => $newvalue) {
 				echo '<input type="radio" name="' . $name . '" value="'
-					. htmlspecialchars($newvalue) . '" /> ' . $caption;
+					. htmlspecialchars((string) $newvalue) . '" /> ' . $caption;
 			}
 			echo '<br />';
 		} else {
 			echo '<input type="hidden" name="' . $name . '" value="'
-				. htmlspecialchars($value) . '" />';
+				. htmlspecialchars((string) $value) . '" />';
 		}
 	}
 	if ($addtoken !== false) {
