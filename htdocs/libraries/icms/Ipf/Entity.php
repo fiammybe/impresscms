@@ -444,10 +444,14 @@ class Entity extends \icms_core_Object {
 				$this->setErrors($str, $prefix);
 			}
 		} else {
+			if ($err_str === null) {
+				return;
+			}
+
 			if ($prefix) {
 				$err_str = "[" . $prefix . "] " . $err_str;
 			}
-			parent::setErrors($err_str);
+			parent::setErrors((string) $err_str);
 		}
 	}
 
