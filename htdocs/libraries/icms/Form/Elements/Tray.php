@@ -90,7 +90,7 @@ class icms_form_elements_Tray extends icms_form_Element {
 	 *
 	 * @return	bool true
 	 */
-	public function isContainer() {
+	public function isContainer(): bool {
 		return true;
 	}
 
@@ -99,7 +99,7 @@ class icms_form_elements_Tray extends icms_form_Element {
 	 *
 	 * @return	bool
 	 */
-	public function isRequired() {
+	public function isRequired(): bool {
 		return !empty($this->_required);
 	}
 
