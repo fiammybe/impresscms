@@ -43,6 +43,12 @@ class Handler {
 		$this->handler = $handler;
 	}
 
+	protected function getGrouppermHandler() {
+		$db = method_exists($this->handler, 'getDb') ? $this->handler->getDb() : null;
+
+		return \icms::handler('icms_member_groupperm', false, $db);
+	}
+
 	/**
 	 * Returns permissions for a certain type
 	 *
@@ -57,7 +63,7 @@ class Handler {
 		if (!isset($groups[$gperm_name]) || ($id != null && !isset($groups[$gperm_name][$id]))) {
 			$icmsModule =& $this->handler->getModuleInfo();
 			//Get group permissions handler
-			$gperm_handler = \icms::handler('icms_member_groupperm');
+			$gperm_handler = $this->getGrouppermHandler();
 
 			//Get groups allowed for an item id
 			$allowedgroups = $gperm_handler->getGroupIds($gperm_name, $id, $icmsModule->getVar('mid'));
@@ -95,7 +101,7 @@ class Handler {
 		}
 
 		//Get group permissions handler
-		$gperm_handler = \icms::handler('icms_member_groupperm');
+		$gperm_handler = $this->getGrouppermHandler();
 
 		$permissionsObj = $gperm_handler->getObjects($criteria);
 
@@ -129,7 +135,7 @@ class Handler {
 			if (is_object($icmsModule)) {
 
 				//Get group permissions handler
-				$gperm_handler = \icms::handler('icms_member_groupperm');
+				$gperm_handler = $this->getGrouppermHandler();
 
 				//Get user's groups
 				$groups = is_object(\icms::$user) ? \icms::$user->getGroups() : array(ICMS_GROUP_ANONYMOUS);
@@ -148,9 +154,11 @@ class Handler {
 	 * @param int $id
 	 */
 	public function storeAllPermissionsForId($id) {
+		$result = true;
 		foreach ($this->handler->getPermissions() as $permission) {
-			$this->saveItem_Permissions($_POST[$permission['perm_name']], $id, $permission['perm_name']);
+			$result = $this->saveItem_Permissions($_POST[$permission['perm_name']] ?? [], $id, $permission['perm_name']) && $result;
 		}
+		return $result;
 	}
 
 	/**
@@ -168,15 +176,21 @@ class Handler {
 
 		$result = true;
 		$module_id = $icmsModule->getVar('mid');
-		$gperm_handler = \icms::handler('icms_member_groupperm');
+		$gperm_handler = $this->getGrouppermHandler();
 
 		// First, if the permissions are already there, delete them
-		$gperm_handler->deleteByModule($module_id, $perm_name, $itemid);
+		$result = $gperm_handler->deleteByModule($module_id, $perm_name, $itemid) && $result;
 
 		// Save the new permissions
+		if ($groups === null) {
+			$groups = [];
+		} elseif (!is_array($groups)) {
+			$groups = [$groups];
+		}
+
 		if (count($groups) > 0) {
 			foreach ($groups as $group_id) {
-				$gperm_handler->addRight($perm_name, $itemid, $group_id, $module_id);
+				$result = $gperm_handler->addRight($perm_name, $itemid, $group_id, $module_id) && $result;
 			}
 		}
 		return $result;
@@ -222,11 +236,10 @@ class Handler {
 		$gperm_modid = $icmsModule->getVar('mid')   ;
 
 		//Get group permissions handler
-		$gperm_handler = \icms::handler('icms_member_groupperm');
+		$gperm_handler = $this->getGrouppermHandler();
 
 		return $gperm_handler->checkRight($gperm_name, $gperm_itemid, $gperm_groupid, $gperm_modid);
 	}
 }
 
 \class_alias(Handler::class, 'icms_ipf_permission_Handler');
-
