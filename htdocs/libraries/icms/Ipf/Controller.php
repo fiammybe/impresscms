@@ -237,7 +237,11 @@ class Controller {
 		if ($storeResult) {
 			if ($this->handler->getPermissions()) {
 				$icmspermissions_handler = new \icms_ipf_permission_Handler($this->handler);
-				$icmspermissions_handler->storeAllPermissionsForId($icmsObj->id());
+				$permissionsResult = $icmspermissions_handler->storeAllPermissionsForId($icmsObj->id());
+				if (!$permissionsResult) {
+					$icmsObj->setErrors('An error occurred while saving permissions');
+					$storeResult = false;
+				}
 			}
 		}
 
