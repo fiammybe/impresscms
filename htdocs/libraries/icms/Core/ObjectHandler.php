@@ -82,6 +82,10 @@ abstract class ObjectHandler {
 		$this->db =& $db;
 	}
 
+	public function getDb() {
+		return $this->db;
+	}
+
 	/**
 	 * creates a new object
 	 *

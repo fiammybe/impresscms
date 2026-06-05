@@ -109,12 +109,22 @@ class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms
 			$sql .= ' LIMIT ' . $start . (int) $limit;
 		}
 		try {
-			$result = $this->pdo->query($sql);
-			if ($result) { // added by claudia, ImpressCMS.org
-				$this->rowCount = $result->rowCount();
-			} else { // added by claudia, ImpressCMS.org
-				$this->rowCount = FALSE; // added by claudia, ImpressCMS.org
-			} // added by claudia, ImpressCMS.org
+			if (preg_match('/^\s*(SELECT|SHOW|DESCRIBE|EXPLAIN|PRAGMA)\b/i', $sql)) {
+				$result = $this->pdo->query($sql);
+				if ($result) { // added by claudia, ImpressCMS.org
+					$this->rowCount = $result->rowCount();
+				} else { // added by claudia, ImpressCMS.org
+					$this->rowCount = FALSE; // added by claudia, ImpressCMS.org
+				} // added by claudia, ImpressCMS.org
+			} else {
+				$affectedRows = $this->pdo->exec($sql);
+				if ($affectedRows !== false) {
+					$this->rowCount = $affectedRows;
+					$result = true;
+				} else {
+					$this->rowCount = FALSE;
+				}
+			}
 		} catch (Exception $e) {
 		}
 		return $result;
