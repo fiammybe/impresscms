@@ -1,5 +1,4 @@
 <?php
-// $Id: user.php 12474 2014-11-08 14:18:35Z skenow $
 // ------------------------------------------------------------------------ //
 // XOOPS - PHP Content Management System //
 // Copyright (c) 2000 XOOPS.org //
@@ -36,30 +35,28 @@
  * @author      skenow <skenow@impresscms.org>
  * @package		Member
  * @subpackage	Users
- * @version		SVN: $Id: user.php 12474 2014-11-08 14:18:35Z skenow $
  */
 $xoopsOption['pagetype'] = 'user';
 include 'mainfile.php';
 
 $op = (isset($_GET['op'])) ? trim(filter_input(INPUT_GET, 'op', FILTER_SANITIZE_STRING)) : ((isset($_POST['op'])) ? trim(filter_input(INPUT_POST, 'op', FILTER_SANITIZE_STRING)) : 'main');
 
-$redirect = (isset($_GET['xoops_redirect']) ? $_GET['xoops_redirect'] : isset($_POST['xoops_redirect'])) ? $_POST['xoops_redirect'] : FALSE;
-if ($redirect) {
-	$redirect = htmlspecialchars(trim($redirect), ENT_QUOTES);
-	$isExternal = FALSE;
-	$pos = strpos($redirect, '://');
-	if ($pos !== FALSE) {
-		$icmsLocation = substr(ICMS_URL, strpos(ICMS_URL, '://') + 3);
-		if (substr($redirect, $pos + 3, strlen($icmsLocation)) != $icmsLocation) {
-			$redirect = ICMS_URL;
-		} elseif (substr($redirect, $pos + 3, strlen($icmsLocation) + 1) == $icmsLocation . '.') {
-			$redirect = ICMS_URL;
-		}
-	}
+$redirect = $_POST['xoops_redirect'] ?? $_GET['xoops_redirect'] ?? '';
+$redirect = trim($redirect);
+
+if ($redirect !== '') {
+    $redirect = htmlspecialchars($redirect, ENT_QUOTES);
+
+    if ($redirect === htmlspecialchars($_SERVER['REQUEST_URI'])) {
+        $redirect = ICMS_URL;
+    } elseif (strpos($redirect, '://') !== false) {
+        $host = parse_url(ICMS_URL, PHP_URL_HOST);
+        $redirectHost = parse_url($redirect, PHP_URL_HOST);
+        if ($redirectHost !== $host) {
+            $redirect = ICMS_URL;
+        }
+    }
 }
-
-if ($redirect && $redirect !== htmlspecialchars($_SERVER['REQUEST_URI'])) $redirect = ICMS_URL;
-
 switch ($op) {
 	default:
 	case 'main':
