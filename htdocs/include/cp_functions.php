@@ -598,3 +598,470 @@ function xoops_module_write_admin_menu($content) {
 	icms_core_Filesystem::writeIndexFile(ICMS_CACHE_PATH);
 	return true;
 }
+
+// ============================================================================
+// Legacy wrapper functions
+//
+// The functions below provide full backward compatibility with any code that
+// calls the icms_cp_* API directly.  Each wrapper instantiates the matching
+// PSR-4 class and delegates to the appropriate method.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Admin UI & Navigation  (Icms\Admin\Ui\*)
+// ----------------------------------------------------------------------------
+
+/**
+ * Display a generic informational/status message in the admin panel.
+ *
+ * @param string $message Human-readable message text.
+ * @param string $type    Alert type: info|success|warning|danger.
+ * @return void
+ */
+function icms_cp_showmessage(string $message, string $type = 'info'): void
+{
+	(new \Icms\Admin\Ui\AdminUi())->showMessage($message, $type);
+}
+
+/**
+ * Display a warning message in the admin panel.
+ *
+ * @param string $message Human-readable warning text.
+ * @return void
+ */
+function icms_cp_showwarning(string $message): void
+{
+	(new \Icms\Admin\Ui\AdminUi())->showWarning($message);
+}
+
+/**
+ * Display an error message in the admin panel.
+ *
+ * @param string $message Human-readable error text.
+ * @return void
+ */
+function icms_cp_showerror(string $message): void
+{
+	(new \Icms\Admin\Ui\AdminUi())->showError($message);
+}
+
+/**
+ * Add a breadcrumb segment to the shared AdminNavigation instance.
+ *
+ * @param string $title Human-readable breadcrumb label.
+ * @param string $url   Link target, or empty string for the active (last) item.
+ * @return void
+ */
+function icms_cp_breadcrumb(string $title, string $url = ''): void
+{
+	icms_cp_get_navigation()->breadcrumb($title, $url);
+}
+
+/**
+ * Register a navigation item with the shared AdminNavigation instance.
+ *
+ * @param string $title Human-readable label.
+ * @param string $url   Link target.
+ * @param string $icon  Optional icon class or image path.
+ * @return void
+ */
+function icms_cp_addnav(string $title, string $url, string $icon = ''): void
+{
+	icms_cp_get_navigation()->addNavigationItem($title, $url, $icon);
+}
+
+/**
+ * Render and return the current navigation HTML from the shared AdminNavigation instance.
+ *
+ * @return string Rendered HTML fragment.
+ */
+function icms_cp_rendernav(): string
+{
+	return icms_cp_get_navigation()->renderNavigation();
+}
+
+/**
+ * Return the shared AdminNavigation singleton for this request.
+ *
+ * @return \Icms\Admin\Ui\AdminNavigation
+ */
+function icms_cp_get_navigation(): \Icms\Admin\Ui\AdminNavigation
+{
+	static $nav = null;
+	if ($nav === null) {
+		$nav = new \Icms\Admin\Ui\AdminNavigation();
+	}
+	return $nav;
+}
+
+// ----------------------------------------------------------------------------
+// Admin Templating & Theme  (Icms\Admin\Ui\AdminTemplate / AdminTheme)
+// ----------------------------------------------------------------------------
+
+/**
+ * Render a template resource and return the output as a string.
+ *
+ * @param string $template Template resource string (e.g. 'db:system_admin.html').
+ * @return string Rendered output.
+ */
+function icms_cp_template(string $template): string
+{
+	return (new \Icms\Admin\Ui\AdminTemplate())->render($template);
+}
+
+/**
+ * Assign a template variable on a fresh AdminTemplate instance.
+ *
+ * Note: for assigning multiple variables you should use the class directly.
+ *
+ * @param string $name  Template variable name.
+ * @param mixed  $value Value to assign.
+ * @return void
+ */
+function icms_cp_assign(string $name, mixed $value): void
+{
+	(new \Icms\Admin\Ui\AdminTemplate())->assign($name, $value);
+}
+
+/**
+ * Render a template resource and send the output to the browser.
+ *
+ * @param string $template Template resource string.
+ * @return void
+ */
+function icms_cp_display(string $template): void
+{
+	(new \Icms\Admin\Ui\AdminTemplate())->display($template);
+}
+
+/**
+ * Enqueue a stylesheet on the active admin theme.
+ *
+ * @param string               $url        Stylesheet URL.
+ * @param array<string, mixed> $attributes Optional HTML attributes.
+ * @return void
+ */
+function icms_cp_theme_css(string $url, array $attributes = []): void
+{
+	(new \Icms\Admin\Ui\AdminTheme())->addCss($url, $attributes);
+}
+
+/**
+ * Enqueue a JavaScript file on the active admin theme.
+ *
+ * @param string               $url        Script URL.
+ * @param array<string, mixed> $attributes Optional HTML attributes.
+ * @param string               $inline     Optional inline script body.
+ * @return void
+ */
+function icms_cp_theme_js(string $url, array $attributes = [], string $inline = ''): void
+{
+	(new \Icms\Admin\Ui\AdminTheme())->addJs($url, $attributes, $inline);
+}
+
+// ----------------------------------------------------------------------------
+// Admin Notifications  (Icms\Admin\Ui\AdminNotifications)
+// ----------------------------------------------------------------------------
+
+/**
+ * Display or queue a success notification.
+ *
+ * @param string $message Human-readable message text.
+ * @param bool   $session Store in session for post-redirect display.
+ * @return void
+ */
+function icms_cp_notify_success(string $message, bool $session = false): void
+{
+	(new \Icms\Admin\Ui\AdminNotifications())->success($message, $session);
+}
+
+/**
+ * Display or queue a warning notification.
+ *
+ * @param string $message Human-readable message text.
+ * @param bool   $session Store in session for post-redirect display.
+ * @return void
+ */
+function icms_cp_notify_warning(string $message, bool $session = false): void
+{
+	(new \Icms\Admin\Ui\AdminNotifications())->warning($message, $session);
+}
+
+/**
+ * Display or queue an error notification.
+ *
+ * @param string $message Human-readable message text.
+ * @param bool   $session Store in session for post-redirect display.
+ * @return void
+ */
+function icms_cp_notify_error(string $message, bool $session = false): void
+{
+	(new \Icms\Admin\Ui\AdminNotifications())->error($message, $session);
+}
+
+/**
+ * Display or queue an informational notification.
+ *
+ * @param string $message Human-readable message text.
+ * @param bool   $session Store in session for post-redirect display.
+ * @return void
+ */
+function icms_cp_notify_info(string $message, bool $session = false): void
+{
+	(new \Icms\Admin\Ui\AdminNotifications())->info($message, $session);
+}
+
+// ----------------------------------------------------------------------------
+// Module Management  (Icms\Admin\Module\ModuleManager)
+// ----------------------------------------------------------------------------
+
+/**
+ * Install a module by directory name.
+ *
+ * @param string $dirname Module directory name.
+ * @return bool
+ */
+function icms_cp_module_install(string $dirname): bool
+{
+	return (new \Icms\Admin\Module\ModuleManager())->install($dirname);
+}
+
+/**
+ * Uninstall a module by directory name.
+ *
+ * @param string $dirname Module directory name.
+ * @return bool
+ */
+function icms_cp_module_uninstall(string $dirname): bool
+{
+	return (new \Icms\Admin\Module\ModuleManager())->uninstall($dirname);
+}
+
+/**
+ * Update (re-install) a module by directory name.
+ *
+ * @param string $dirname Module directory name.
+ * @return bool
+ */
+function icms_cp_module_update(string $dirname): bool
+{
+	return (new \Icms\Admin\Module\ModuleManager())->update($dirname);
+}
+
+/**
+ * Activate a module by directory name.
+ *
+ * @param string $dirname Module directory name.
+ * @return bool
+ */
+function icms_cp_module_activate(string $dirname): bool
+{
+	return (new \Icms\Admin\Module\ModuleManager())->activate($dirname);
+}
+
+/**
+ * Deactivate a module by directory name.
+ *
+ * @param string $dirname Module directory name.
+ * @return bool
+ */
+function icms_cp_module_deactivate(string $dirname): bool
+{
+	return (new \Icms\Admin\Module\ModuleManager())->deactivate($dirname);
+}
+
+/**
+ * Return an array of all installed module objects.
+ *
+ * @param bool $activeOnly When true only active modules are returned.
+ * @return \icms_module_Object[]
+ */
+function icms_cp_module_list(bool $activeOnly = false): array
+{
+	return (new \Icms\Admin\Module\ModuleManager())->listModules($activeOnly);
+}
+
+// ----------------------------------------------------------------------------
+// Module Permissions  (Icms\Admin\Module\ModulePermissions)
+// ----------------------------------------------------------------------------
+
+/**
+ * Retrieve the group IDs that have admin access to a module.
+ *
+ * @param int $moduleId Numeric module ID.
+ * @return int[]
+ */
+function icms_cp_module_permissions(int $moduleId): array
+{
+	return (new \Icms\Admin\Module\ModulePermissions())->getPermissions($moduleId);
+}
+
+/**
+ * Overwrite the admin-access permissions for a module.
+ *
+ * @param int   $moduleId Numeric module ID.
+ * @param int[] $groupIds Group IDs that should receive admin access.
+ * @return bool
+ */
+function icms_cp_module_setpermissions(int $moduleId, array $groupIds): bool
+{
+	return (new \Icms\Admin\Module\ModulePermissions())->setPermissions($moduleId, $groupIds);
+}
+
+// ----------------------------------------------------------------------------
+// Configuration Management  (Icms\Admin\Config\AdminConfigManager)
+// ----------------------------------------------------------------------------
+
+/**
+ * Retrieve a single configuration value.
+ *
+ * @param string $key      Configuration key name.
+ * @param int    $modId    Module ID (1 = system).
+ * @param int    $category Config category ID.
+ * @return mixed
+ */
+function icms_cp_getconfig(string $key, int $modId = 1, int $category = 0): mixed
+{
+	return (new \Icms\Admin\Config\AdminConfigManager())->get($key, $modId, $category);
+}
+
+/**
+ * Persist a single configuration value.
+ *
+ * @param string $key      Configuration key name.
+ * @param mixed  $value    New value to store.
+ * @param int    $modId    Module ID (1 = system).
+ * @param int    $category Config category ID.
+ * @return bool
+ */
+function icms_cp_setconfig(string $key, mixed $value, int $modId = 1, int $category = 0): bool
+{
+	return (new \Icms\Admin\Config\AdminConfigManager())->set($key, $value, $modId, $category);
+}
+
+/**
+ * Load all configuration values for a module/category pair.
+ *
+ * @param int $modId    Module ID (1 = system).
+ * @param int $category Config category ID.
+ * @return array<string, mixed>
+ */
+function icms_cp_loadconfig(int $modId = 1, int $category = 0): array
+{
+	return (new \Icms\Admin\Config\AdminConfigManager())->load($modId, $category);
+}
+
+/**
+ * Persist an associative array of configuration values.
+ *
+ * @param array<string, mixed> $data     Key → value pairs to save.
+ * @param int                  $modId    Module ID.
+ * @param int                  $category Config category ID.
+ * @return bool
+ */
+function icms_cp_saveconfig(array $data, int $modId = 1, int $category = 0): bool
+{
+	return (new \Icms\Admin\Config\AdminConfigManager())->save($data, $modId, $category);
+}
+
+/**
+ * Render the HTML configuration form for a module/category.
+ *
+ * @param int    $modId    Module ID (1 = system).
+ * @param int    $category Config category ID.
+ * @param string $action   Form action URL.
+ * @return string Rendered HTML form.
+ */
+function icms_cp_configform(int $modId = 1, int $category = 0, string $action = ''): string
+{
+	return (new \Icms\Admin\Config\AdminConfigManager())->renderForm($modId, $category, $action);
+}
+
+// ----------------------------------------------------------------------------
+// Routing & Redirects  (Icms\Routing\*)
+// ----------------------------------------------------------------------------
+
+/**
+ * Redirect the browser to a URL and optionally set a flash message.
+ *
+ * @param string $url     Target URL.
+ * @param string $message Optional flash message.
+ * @param int    $status  HTTP status code (default 302).
+ * @return never
+ */
+function icms_cp_redirect(string $url, string $message = '', int $status = 302): never
+{
+	(new \Icms\Routing\Redirector())->redirect($url, $message, $status);
+}
+
+/**
+ * Build an absolute URL from a path and optional query parameters.
+ *
+ * @param string               $path   Relative path.
+ * @param array<string, mixed> $params Optional query string parameters.
+ * @return string Fully-qualified URL.
+ */
+function icms_cp_makeuri(string $path, array $params = []): string
+{
+	return (new \Icms\Routing\UrlGenerator())->make($path, $params);
+}
+
+/**
+ * Build an admin control-panel URL.
+ *
+ * @param string               $path   Optional sub-path / fct value.
+ * @param array<string, mixed> $params Optional additional query parameters.
+ * @return string Fully-qualified admin URL.
+ */
+function icms_cp_adminurl(string $path = '', array $params = []): string
+{
+	return (new \Icms\Routing\UrlGenerator())->admin($path, $params);
+}
+
+// ----------------------------------------------------------------------------
+// Admin System Helpers  (Icms\Admin\Module\ModuleInfo)
+// ----------------------------------------------------------------------------
+
+/**
+ * Return the full info array for a module.
+ *
+ * @param string $dirname Module directory name.
+ * @return array<string, mixed>|null Module info array, or null.
+ */
+function icms_cp_getmoduleinfo(string $dirname): ?array
+{
+	return (new \Icms\Admin\Module\ModuleInfo())->getInfo($dirname);
+}
+
+/**
+ * Return the version string for a module.
+ *
+ * @param string $dirname Module directory name.
+ * @return string|null Version string, or null.
+ */
+function icms_cp_getmoduleversion(string $dirname): ?string
+{
+	return (new \Icms\Admin\Module\ModuleInfo())->getVersion($dirname);
+}
+
+/**
+ * Return the credits text/URL for a module.
+ *
+ * @param string $dirname Module directory name.
+ * @return string|null Credits text, or null.
+ */
+function icms_cp_getmodulecredits(string $dirname): ?string
+{
+	return (new \Icms\Admin\Module\ModuleInfo())->getCredits($dirname);
+}
+
+/**
+ * Return the help URL for a module.
+ *
+ * @param string $dirname Module directory name.
+ * @return string|null Help URL, or null.
+ */
+function icms_cp_getmodulehelp(string $dirname): ?string
+{
+	return (new \Icms\Admin\Module\ModuleInfo())->getHelp($dirname);
+}
