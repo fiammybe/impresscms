@@ -1,6 +1,6 @@
 # Tiptap editor for ImpressCMS
 
-This editor plugin wires a bundled Tiptap frontend to ImpressCMS form textareas and uses `ueberdosis/tiptap-php` to normalize existing HTML before it is loaded into the editor when the PHP dependency is available.
+This editor plugin wires a bundled Tiptap frontend to ImpressCMS form textareas and ships the `ueberdosis/tiptap-php` 1.4.0 source so existing HTML can be normalized before it is loaded into the editor.
 
 ## Rebuild the frontend bundle
 
@@ -8,11 +8,4 @@ This editor plugin wires a bundled Tiptap frontend to ImpressCMS form textareas 
 cd /home/runner/work/impresscms/impresscms/htdocs/editors/Tiptap
 npm install
 npm run build
-```
-
-## Refresh the PHP dependency
-
-```bash
-cd /home/runner/work/impresscms/impresscms/htdocs/editors/Tiptap
-composer install --no-dev
 ```
