@@ -76,7 +76,6 @@ class icmsFormTiptap extends icms_form_elements_Textarea
                 )
             )
             . ');'
-            . 'window.ImpressCmsTiptap.flush();'
         );
 
         $ret = '<div class="icms-tiptap">';

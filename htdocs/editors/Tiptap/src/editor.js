@@ -149,18 +149,19 @@ function create(config) {
   return new ImpressCmsTiptapEditor(config)
 }
 
-window.ImpressCmsTiptap = window.ImpressCmsTiptap || {
-  queue: [],
-  create,
-  enqueue(config) {
-    this.queue.push(config)
-  },
-  flush() {
-    while (this.queue.length > 0) {
-      create(this.queue.shift())
-    }
-  },
+const bridge = window.ImpressCmsTiptap || { queue: [] }
+
+bridge.create = create
+bridge.enqueue = function enqueue(config) {
+  this.queue.push(config)
 }
+bridge.flush = function flush() {
+  while (this.queue.length > 0) {
+    create(this.queue.shift())
+  }
+}
+
+window.ImpressCmsTiptap = bridge
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
