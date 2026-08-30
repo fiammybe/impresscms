@@ -118,7 +118,7 @@ class icmsFormTiptap extends icms_form_elements_Textarea
      */
     protected function prepareContent()
     {
-        $content = (string) $this->getValue(false);
+        $content = $this->normalizeContent((string) $this->getValue(false));
         $document = null;
 
         if (!$this->canUsePhpBridge() || $content === '') {
@@ -150,6 +150,23 @@ class icmsFormTiptap extends icms_form_elements_Textarea
             'html' => $content,
             'document' => $document,
         );
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return string
+     */
+    protected function normalizeContent($content)
+    {
+        if (
+            strpos($content, '<') === false
+            && preg_match('/&lt;\/?(?:a|blockquote|br|code|div|em|h[1-6]|hr|img|li|ol|p|pre|span|strong|table|tbody|td|th|thead|tr|ul)\b/i', $content)
+        ) {
+            return icms_core_DataFilter::undoHtmlSpecialChars($content);
+        }
+
+        return $content;
     }
 
     /**
