@@ -131,9 +131,15 @@ class icmsFormTiptap extends icms_form_elements_Textarea
         require_once __DIR__ . '/vendor/autoload.php';
 
         try {
-            $tiptap = new \Tiptap\Editor();
+            $extensions = array(
+                new \Tiptap\Extensions\StarterKit(),
+                new \Tiptap\Marks\Link(),
+                new \Tiptap\Nodes\Image(),
+            );
+
+            $tiptap = new \Tiptap\Editor(array('extensions' => $extensions));
             $content = $tiptap->sanitize($content);
-            $document = (new \Tiptap\Editor())
+            $document = (new \Tiptap\Editor(array('extensions' => $extensions)))
                 ->setContent($content)
                 ->getDocument();
         } catch (\Throwable $exception) {

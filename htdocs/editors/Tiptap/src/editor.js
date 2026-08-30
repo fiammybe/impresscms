@@ -1,4 +1,6 @@
 import { Editor } from '@tiptap/core'
+import Image from '@tiptap/extension-image'
+import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
 
 class ImpressCmsTiptapEditor {
@@ -14,7 +16,15 @@ class ImpressCmsTiptapEditor {
 
     this.editor = new Editor({
       element: this.element,
-      extensions: [StarterKit],
+      extensions: [
+        StarterKit,
+        Link.configure({
+          openOnClick: false,
+        }),
+        Image.configure({
+          inline: true,
+        }),
+      ],
       content: config.document || config.content || '',
       editorProps: {
         attributes: {
