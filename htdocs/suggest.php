@@ -11,7 +11,7 @@
 include 'mainfile.php';
 icms::$logger->disableLogger();
 if (isset($_POST['queryString'])) {
-	$queryString = icms::$xoopsDB->escape($_POST['queryString']);
+	$queryString = addslashes($_POST['queryString']);
 
 	// Is the string length greater than 2?
 	if (strlen($queryString) > 2) {
