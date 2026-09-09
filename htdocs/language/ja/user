@@ -1,0 +1,194 @@
+<?php
+// $Id: user.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: user.php 12229 2013-07-19 08:08:05Z fiammy $
+//%%%%%%		File Name user.php 		%%%%%
+define('_US_NOTREGISTERED','現在未登録です。<a href="register.php">こちら</a>から登録しませんか？');
+define('_US_LOSTPASSWORD','パスワードを忘れましたか？');
+define('_US_NOPROBLEM','問題ありません。登録したEmailアドレスを入力し、ボタンをクリックしてください。');
+define('_US_YOUREMAIL','Emailアドレス: ');
+define('_US_SENDPASSWORD','パスワード送信');
+define('_US_LOGGEDOUT','ログアウトしました。');
+define('_US_THANKYOUFORVISIT','管理システムに入る際は、再びログインして下さい。');
+define('_US_INCORRECTLOGIN','入力した登録情報が間違っていませんか？');
+define('_US_LOGGINGU','%s さん、ログインありがとうございます！');
+define('_US_RESETPASSWORD','パスワードをリセット');
+define('_US_SUBRESETPASSWORD','パスワードのリセット');
+define('_US_RESETPASSTITLE','パスワードの有効期限が切れました。');
+define('_US_RESETPASSINFO','パスワードをリセットするために、次のフォームに記入してください。メールアドレス・ユーザ名・現在のパスワードが全て正しければ、パスワードが新しいものに直ちに変更されます。');
+define('_US_PASSEXPIRED','パスワードの有効期限が切れました。<br />パスワード更新ページに移動します。');
+define('_US_SORRYUNAMENOTMATCHEMAIL','そのユーザ名で登録しているメールアドレスは異なります。');
+define('_US_PWDRESET','パスワードを更新しました。');
+define('_US_SORRYINCORRECTPASS','現在のパスワードを正しく入力してください。');
+
+// 2001-11-17 ADD
+define('_US_NOACTTPADM','選択したユーザアカウントは、未登録か未承認状態です。<br />詳しくは、管理者にお問い合せ下さい。');
+define('_US_ACTKEYNOT','承認キーに誤りがあります。');
+define('_US_ACONTACT','そのアカウントはすでに承認が完了しています');
+define('_US_ACTLOGIN','ユーザ登録（承認）が完了しました。この登録情報で是非ログインしてください。');
+define('_US_NOPERMISS','申し訳ありません。この処理を行うことはできません。');
+define('_US_SURETODEL','あなたの登録情報を削除してもいいですか？');
+define('_US_REMOVEINFO','削除すると、全てのデータを消去します。');
+define('_US_BEENDELED','登録情報を削除しました');
+define('_US_REMEMBERME', 'ログイン状態を記憶する');
+
+//%%%%%%		File Name register.php 		%%%%%
+define('_US_USERREG','ユーザ登録');
+define('_US_EMAIL','Emailアドレス');
+define('_US_ALLOWVIEWEMAIL','他の人にもこのメールアドレスを公開する');
+define('_US_WEBSITE','ホームページ');
+define('_US_TIMEZONE','タイムゾーン');
+define('_US_AVATAR','アバター（似顔絵）');
+define('_US_VERIFYPASS','パスワードの確認');
+define('_US_SUBMIT','送信');
+define('_US_LOGINNAME','ユーザ名');
+define('_US_FINISH','完了');
+define('_US_REGISTERNG','新規ユーザを登録出来ませんでした。');
+define('_US_MAILOK','このサイトのいろんなメールを受け取りますか？');
+define('_US_DISCLAIMER','サイト利用規約');
+define('_US_IAGREE','私は上記の事項に同意します。');
+define('_US_UNEEDAGREE', '申し訳ありません。登録するには免責事項に同意してください。');
+define('_US_NOREGISTER','申し訳ありません。現在新規登録をおこなっておりません。');
+
+// %s is username. This is a subject for email
+define('_US_USERKEYFOR','%s さんの承認キーです。');
+
+define('_US_YOURREGISTERED','新規登録が完了しました。承認キーをEmailにてあなたにお送りさせて頂きました。受け取ったメールに従って承認処理を完了してください。 ');
+define('_US_YOURREGMAILNG','現在登録処理が行われましたが、こちらの問題であなた宛承認キーが含まれたEmailをお送りすることができませんでした。誠に申し訳ありませんが、管理者までお問い合せ下さい。');
+define('_US_YOURREGISTERED2','新規登録が完了しました。管理者があなたの登録を承認するまで、少々お待ちください。承認の際にはEmailを送らせて頂きます。');
+
+// %s is your site name
+define('_US_NEWUSERREGAT','新規ユーザ登録(%s)');
+// %s is a username
+define('_US_HASJUSTREG','%s さんが、新しく登録しました。');
+
+define('_US_INVALIDMAIL','エラー: 無効なEmailアドレス');
+define('_US_INVALIDNICKNAME','エラー: 無効なユーザ名');
+define('_US_NICKNAMETOOLONG','ユーザ名は %s 文字以下で登録してください。');
+define('_US_NICKNAMETOOSHORT','ユーザ名は %s 文字以上で登録してください。');
+define('_US_NAMERESERVED','エラー: このユーザ名は使用出来ません');
+define('_US_NICKNAMENOSPACES','ユーザ名に空白(スペース)を含むことはできません。');
+define('_US_LOGINNAMETAKEN','エラー: このユーザ名は他の方がすでに登録しています。');
+define('_US_NICKNAMETAKEN','エラー: この表示名は他の方がすでに登録しています。');
+define('_US_EMAILTAKEN','エラー: このメールアドレスはすでに登録されています。');
+define('_US_ENTERPWD','エラー: パスワードを入力して下さい。');
+define('_US_SORRYNOTFOUND','ユーザ情報が見つかりませんでした。');
+
+define('_US_USERINVITE', 'メンバーからの招待');
+define('_US_INVITENONE','エラー: 登録は招待制になっています');
+define('_US_INVITEINVALID','エラー: 招待コードが違います。');
+define('_US_INVITEEXPIRED','エラー: 招待コードはすでに使われているか有効期限が切れています。');
+
+define('_US_INVITEBYMEMBER','登録済みの登録ユーザのみが新しいユーザを招待することができます。どなたか登録済みのメンバーに招待してもらえるようリクエストしてください。');
+define('_US_INVITEMAILERR','内部エラーが発生したために、登録のために必要なメールを送信することができませんでした。お詫び申し上げます。サーバー管理者に左記の不具合をご連絡下されば幸いです。 <br />');
+define('_US_INVITEDBERR','内部エラーが発生したために、登録作業を続行することができません。お詫び申し上げます。サーバー管理者に左記の不具合をご連絡下されば幸いです。 <br />');
+define('_US_INVITESENT','登録を完了するためのメールが送られました。メールに記述されている指示に従い、登録を完了してください。メール送信には数分程度の時間がかかってしまう可能性があります。');
+
+// %s (%s) is your site name (site URL)
+define('_US_INVITEREGLINK','Registration invitation from %s (%s)');
+
+// %s (%s) is your site name (site URL)
+define('_US_NEWPWDREQ','New Password Request at %s (%s)');
+define('_US_YOURACCOUNT', 'Your account at %s (%s)');
+
+define('_US_MAILPWDNG','パスワードを送信出来ませんでした。管理者にお問い合せ下さい。');
+define('_US_RESETPWDNG','パスワードリセット: ユーザ情報を更新出来ませんでした。管理者にお問い合せ下さい。');
+
+// %s (%s) is your site name (site URL)
+define('_US_RESETPWDREQ','Reset Password Request at %s (%s)');
+define('_US_MAILRESETPWDNG','パスワードリセット: ユーザ情報を更新出来ませんでした。管理者にお問い合せ下さい。');
+define('_US_NEWPASSWORD','新パスワード');
+define('_US_YOURUSERNAME','ユーザ名');
+define('_US_CURRENTPASS','原パスワード');
+define('_US_BADPWD','パスワード不良です。パスワードにはユーザ名を含んではいけません。');
+
+// %s is a username
+define('_US_PWDMAILED','%s さんのパスワードを送信しました。');
+define('_US_CONFMAIL','%s さんに確認メールを送信しました。');
+define('_US_ACTVMAILNG', '%s さんにメールを送ることができませんでした。');
+define('_US_ACTVMAILOK', '%s さんに確認メールを送信しました。');
+
+//%%%%%%		File Name userinfo.php 		%%%%%
+define('_US_SELECTNG','ユーザが選択されていません。ご確認下さい。');
+define('_US_PM','PM');
+define('_US_ICQ','ICQ');
+define('_US_AIM','AIM');
+define('_US_YIM','YIM');
+define('_US_MSNM','MSNM');
+define('_US_LOCATION','住所');
+define('_US_OCCUPATION','職業');
+define('_US_INTEREST','趣味');
+define('_US_SIGNATURE','署名');
+define('_US_EXTRAINFO','追加情報');
+define('_US_EDITPROFILE','プロフィールを編集');
+define('_US_LOGOUT','ログアウト');
+define('_US_INBOX','受信箱');
+define('_US_MEMBERSINCE','登録日');
+define('_US_RANK','ランク');
+define('_US_POSTS','投稿数');
+define('_US_LASTLOGIN','前回ログイン日');
+define('_US_ALLABOUT','%s さんの情報');
+define('_US_STATISTICS','統計情報');
+define('_US_MYINFO','個人情報');
+define('_US_BASICINFO','基本情報');
+define('_US_MOREABOUT','もっと詳しく');
+define('_US_SHOWALL','すべてを表示');
+
+//%%%%%%		File Name edituser.php 		%%%%%
+define('_US_PROFILE','プロフィール');
+define('_US_REALNAME','本名');
+define('_US_SHOWSIG','投稿するときには常に署名を付加する');
+define('_US_CDISPLAYMODE','コメント表示モード');
+define('_US_CSORTORDER','コメントの並べ替え');
+define('_US_PASSWORD','パスワード');
+define('_US_TYPEPASSTWICE','(パスワード変更時のみ記入してください)');
+define('_US_SAVECHANGES','変更を保存');
+define('_US_NOEDITRIGHT',"申し訳ありません。あなたにはユーザ情報を編集する権限がありません。");
+define('_US_PASSNOTSAME','パスワード不一致です。同じパスワードを入力してください。');
+define('_US_PWDTOOSHORT','パスワードは最低<b>%s</b>文字以上でお願いします。');
+define('_US_PROFUPDATED','あなたのプロフィールが更新されました！');
+define('_US_USECOOKIE','あなたのユーザ名を１年間ＰＣ(クッキー)に保存する');
+define('_US_NO','いいえ');
+define('_US_DELACCOUNT','ユーザ削除');
+define('_US_MYAVATAR', '登録アバター');
+define('_US_UPLOADMYAVATAR', 'アバターを送信');
+define('_US_MAXPIXEL','最大画像サイズ（ピクセル）');
+define('_US_MAXIMGSZ','最大画像サイズ（バイト）');
+define('_US_SELFILE','ファイル選択');
+define('_US_OLDDELETED','従来のアバターは削除されます。');
+define('_US_CHOOSEAVT', 'アバターをリストから選んでください。');
+define('_US_SELECT_THEME', '基本テーマ');
+define('_US_SELECT_LANG', '標準の言語');
+
+define('_US_PRESSLOGIN', '下のボタンをクリックしてログインしてください。');
+
+define('_US_ADMINNO', '管理者ユーザは削除出来ません');
+define('_US_GROUPS', '所属するグループ');
+
+define('_US_YOURREGISTRATION', '%sでの登録');
+define('_US_WELCOMEMSGFAILED', 'ウエルカムメール送信中のエラー');
+define('_US_NEWUSERNOTIFYADMINFAIL', '新ユーザ登録情報の管理者への通知に失敗しました。');
+define('_US_REGFORM_NOJAVASCRIPT', 'このサイトにログインするには JAVAスクリプト対応のブラウザが必要です。');
+define('_US_REGFORM_WARNING', 'このサイトに登録するためには、より安全なパスワードが必要です。 文字種類（大文字と小文字・数字・記号）を混ぜるなどしてもう一度登録してください。できるだけ複雑にした方が安全なパスワードになります。');
+define('_US_CHANGE_PASSWORD', 'パスワード変更?');
+define('_US_POSTSNOTENOUGH','申し訳ありません。アバターをアップロードするためには、最低でも <b>%s</b> の投稿が必要です。');
+define('_US_UNCHOOSEAVT', 'それまでは、リストからアバターをご選択下さい。');
+
+define('_US_ALREADY_LOGED_IN', 'あなたはログイン済みです。ログイン中には登録を行うことができません。');
+define('_US_SERVER_PROBLEM_OCCURRED','スパムリストに、記述がありました。');
+define('_US_INVALIDIP','ERROR: This IP address is not allowed to register');
+
+######################## Added in 1.2 ###################################
+define('_US_LOGIN_NAME', "ログイン名");
+define('_US_OLD_PASSWORD', "旧パスワード");
+define('_US_NICKNAME','表示名');
+define('_US_MULTLOGIN', 'It was not possible to login on the site!! <br />
+        <p align="left" style="color:red;">
+        Possible causes:<br />
+         - You are already logged in on the site.<br />
+         - Someone else logged in on the site using your username and password.<br />
+         - You left the site or close the browser window without clicking the logout button.<br />
+        </p>
+        Wait a few minutes and try again later. If the problems still persists contact the site administrator.');
+
+######################## Added in 1.3 ###################################
+define('_US_NOTIFICATIONS', "お知らせ");

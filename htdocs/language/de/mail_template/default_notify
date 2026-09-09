@@ -1,0 +1,20 @@
+Hallo {X_UNAME},
+
+Ein Kommentar wurde dem {X_ITEM_TYPE} "{X_ITEM_NAME}" hinzugefügt, das Sie im Modul {X_MODULE} auf unserer Webseite beobachten.
+
+Sie können die {X_ITEM_TYPE} hier anzeigen:
+{X_ITEM_URL}
+
+-----------
+
+Sie haben sich für diese Art von Benachrichtigungen angemeldet.
+
+Wenn dies ein Fehler ist oder keine weiteren Nachrichten dieser Art mehr gesendet werden sollen, bitte diesem Link folgen:
+{X_UNSUBSCRIBE_URL}
+
+Bitte antworten Sie auf diese Nachricht nicht.
+
+-----------
+{X_SITENAME} ({X_SITEURL}) 
+Der Webmaster
+{X_ADMINMAIL}

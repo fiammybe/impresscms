@@ -1,0 +1,11 @@
+Sveiki {X_UNAME},
+
+Naujas vartotojas {USERNAME} (prisijungimo vardas: {USERLOGINNAME}) (E-pastas: {USEREMAIL}) yra tikėtinai užregistruotas naudotojas į {X_SITENAME}.
+Spustelėjąsi nuolat nurodytojo linksą, pradėsime aktivuoti šio naujausio vartotojo paskyros:
+
+{USERACTLINK}
+
+-----------
+{X_SITENAME} ({X_SITEURL})
+webmaster
+{X_ADMINMAIL}

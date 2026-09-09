@@ -1,0 +1,14 @@
+Hallo {X_UNAME},
+
+Iemand vanop {IP} heeft zojuist een nieuw wachtwoord aangevraagd voor uw account op {SITENAME}.
+
+Uw wachtwoord wordt alleen opnieuw ingesteld door op de onderstaande link te klikken:
+
+{RESETPWD_LINK}
+
+Als u hier niet om hebt gevraagd, maakt u zich geen zorgen. Verwijder gewoon deze e-mail en er zal niets worden gewijzigd.
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}

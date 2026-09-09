@@ -1,0 +1,26 @@
+<?php
+define("_ER_UP_MIMETYPELOAD", "Definiton des MIME-Types konnte nicht geladen werden");
+define("_ER_UP_FILENOTFOUND", "Datei konnte nicht gefunden werden");
+define("_ER_UP_INVALIDFILESIZE", "Die Größe der Datei ist ungültig");
+define("_ER_UP_FILENAMEEMPTY", "Der Name der Datei wurde nicht angegeben");
+define("_ER_UP_NOFILEUPLOADED", "Es wurde keine Datei hochgeladen");
+define("_ER_UP_ERROROCCURRED", "Es ist ein Fehler aufgetreten: Fehler #%s");
+define("_ER_UP_UPLOADDIRNOTSET", "Das Verzeichnis für den Upload wurde nicht angegeben");
+define("_ER_UP_FAILEDOPENDIR", "Das Verzeichnis %s konnte nicht geöffnet werden");
+define("_ER_UP_FAILEDOPENDIRWRITE", "Das Verzeichnis %s konnte nicht mit Schreibrechten geöffnet werden");
+define("_ER_UP_FILESIZETOOLARGE", "Die Datei ist zu groß (max. %u Bytes): %u Bytes");
+define("_ER_UP_FILEWIDTHTOOLARGE", "Die Datei ist zu breit (max. %u px): %u px");
+define("_ER_UP_FILEHEIGHTTOOLARGE", "Die Datei ist zu hoch (max. %u px): %u px");
+define("_ER_UP_MIMETYPENOTALLOWED", "MIME-Type %s ist nicht erlaubt");
+define("_ER_UP_FAILEDFETCHIMAGESIZE", "Die Größe des Bildes %s konnte nicht ermittelt werden, die Überprüfung wird übersprungen...");
+define("_ER_UP_UNKNOWNFILETYPEREJECTED", "Das Dateiformat ist nicht bekannt, die Datei wurde deshalb abgelehnt");
+define("_ER_UP_ERRORSRETURNED", "Beim Hochladen wurde ein Fehler zurückgeliefert");
+define("_ER_UP_INVALIDIMAGEFILE", "Die Bilddatei ist ungültig");
+define("_ER_UP_SUSPICIOUSREFUSED", "Das Bild ist verdächtig, die Datei wurde deshalb abgelehnt");
+define("_ER_UP_INVALIDFILENAME", "Der Name der Datei ist ungültig");
+define("_ER_UP_FAILEDSAVEFILE", "Die Datei konnte nicht nach %s gespeichert werden");
+// added in 1.3
+define("_ER_UP_PARTIALLY", "Die Datei wurde nur zum Teil hochgeladen.");
+define("_ER_UP_NO_TMP_DIR", "Ein temporäres Verzeichnis konnte nicht gefunden werden. Bitte die Administratoren informieren.");
+define("_ER_UP_CANT_WRITE", "Die Datei konnte nicht geschrieben werden. Bitte die Administratoren informieren.");
+?>

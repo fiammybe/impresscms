@@ -1,0 +1,65 @@
+<?php
+// formselectuser.php
+
+define("_MA_USER_MORE", "ユーザー検索");
+define("_MA_USER_REMOVE", "選んでいないユーザーを削除");
+
+//%%%%%%	File Name findusers.php 	%%%%%
+define("_MA_USER_ADD_SELECTED", "選択したユーザーを追加");
+
+define("_MA_USER_GROUP", "グループ");
+define("_MA_USER_LEVEL", "レベル");
+define("_MA_USER_LEVEL_ACTIVE", "アクティブ");
+define("_MA_USER_LEVEL_INACTIVE", "非アクティブ");
+define("_MA_USER_LEVEL_DISABLED", "使用不可");
+define("_MA_USER_RANK", "ランク");
+
+define("_MA_USER_FINDUS","ユーザを見つける");
+define("_MA_USER_REALNAME","本名");
+define("_MA_USER_REGDATE","登録日");
+define("_MA_USER_EMAIL","メール");
+define("_MA_USER_PREVIOUS","前へ");
+define("_MA_USER_NEXT","次へ");
+define("_MA_USER_USERSFOUND","%s ユーザいらっしゃいます");
+
+define("_MA_USER_ACTUS", "アクティブなユーザ数: %s");
+define("_MA_USER_INACTUS", "アクティブじゃないユーザ数: %s");
+define("_MA_USER_NOFOUND","ユーザが見つかりません");
+define("_MA_USER_UNAME","ユーザ名");
+define("_MA_USER_ICQ","ICQ番号");
+define("_MA_USER_AIM","AIMハンドル");
+define("_MA_USER_YIM","YIMハンドル");
+define("_MA_USER_MSNM","MSNMハンドル");
+define("_MA_USER_LOCATION","お住まい");
+define("_MA_USER_OCCUPATION","ご職業");
+define("_MA_USER_INTEREST","ご趣味");
+define("_MA_USER_URLC","ホームページ");
+define("_MA_USER_SORT","検索方法");
+define("_MA_USER_ORDER","並替");
+define("_MA_USER_LASTLOGIN","前回ログイン");
+define("_MA_USER_POSTS","投稿した数");
+define("_MA_USER_ASC","昇順");
+define("_MA_USER_DESC","降順");
+define("_MA_USER_LIMIT","1ページあたりのユーザ数");
+define("_MA_USER_RESULTS", "検索結果");
+define("_MA_USER_SHOWMAILOK", "ユーザー表示方法");
+define("_MA_USER_MAILOK","ユーザーメール可能");
+define("_MA_USER_MAILNG","ユーザーメール不可能");
+define("_MA_USER_BOTH", "すべて");
+
+define("_MA_USER_RANGE_LAST_LOGIN","過去<span style='color:#ff0000;'>X</span>日の間にログインした方");
+define("_MA_USER_RANGE_USER_REGDATE","過去<span style='color:#ff0000;'>X</span>日以内に登録した方");
+define("_MA_USER_RANGE_POSTS","投稿数");
+
+define("_MA_USER_HASAVATAR", "アバターを利用");
+define("_MA_USER_MODE_SIMPLE", "シンプルモード");
+define("_MA_USER_MODE_ADVANCED", "アドバンスモード");
+define("_MA_USER_MODE_QUERY", "クエリモード");
+define("_MA_USER_QUERY", "クエリ");
+
+define("_MA_USER_SEARCHAGAIN", "再検索");
+define("_MA_USER_NOUSERSELECTED", "誰も選択されていません");
+define("_MA_USER_USERADDED", "ユーザーが追加されました");
+
+define("_MA_USER_SENDMAIL","メール送信");
+?>

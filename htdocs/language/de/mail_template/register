@@ -1,0 +1,20 @@
+Hallo {X_USERLOGINNAME},
+
+Vielen Dank, dass Sie sich bei {X_SITENAME} angemeldet haben. Als registriertes Mitglied können Sie:
+- Private Nachrichten unter den Mitgliedern senden
+- An den Diskussionsforen teilnehmen
+- Aktuelle News erhalten
+- Inhalt senden
+- Much, viel mehr....
+
+Die E-Mail-Adresse ({X_UEMAIL}) wurde verwendet, um ein Konto zu registrieren.
+
+Um Mitglied von {X_SITENAME}zu werden, bestätigen Sie bitte Ihre
+anfrage, indem du auf den folgenden Link klickst:
+
+{X_UACTLINK}
+
+-----------
+Herzliche Grüße
+{X_SITENAME}
+{X_ADMINMAIL}

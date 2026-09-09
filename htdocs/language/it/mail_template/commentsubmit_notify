@@ -1,0 +1,20 @@
+Ciao {X_UNAME},
+
+Un commento è stato inviato (ma non ancora approvato) all' {X_ITEM_TYPE} "{X_ITEM_NAME}" stai monitorando nel modulo {X_MODULE} sul nostro sito.
+
+Puoi vedere il commento qui (se hai il permesso):
+{X_COMMENT_URL}
+
+-----------
+
+Stai ricevendo questo messaggio perché hai scelto di essere avvisato quando i commenti vengono inviati a questo {X_ITEM_TYPE}.
+
+Se si tratta di un errore o non si desidera ricevere ulteriori notifiche, si prega di aggiornare i vostri abbonamenti visitando il link qui sotto:
+{X_UNSUBSCRIBE_URL}
+
+Non rispondere a questo messaggio.
+
+-----------
+{X_SITENAME} ({X_SITEURL}) 
+webmaster
+{X_ADMINMAIL}

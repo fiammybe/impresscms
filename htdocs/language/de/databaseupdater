@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * $Id: databaseupdater.php 11630 2012-03-06 04:09:43Z skenow $
+ * Author: The SmartFactory <www.smartfactory.ca>
+ * Licence: GNU
+ */
+defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
+
+define("_DATABASEUPDATER_IMPORT", "Importieren");
+define("_DATABASEUPDATER_CURRENTVER", "Aktuelle Version: <span class='currentVer'>%s</span>");
+define("_DATABASEUPDATER_DBVER", "Datenbank Version %s");
+define("_DATABASEUPDATER_MSG_ADD_DATA", "Daten in Tabelle %s hinzugefügt");
+define("_DATABASEUPDATER_MSG_ADD_DATA_ERR", "Fehler beim Hinzufügen der Daten in Tabelle %s");
+define("_DATABASEUPDATER_MSG_CHGFIELD", "Änderung des Feldes %s in Tabelle %s");
+define("_DATABASEUPDATER_MSG_CHGFIELD_ERR", "Fehler beim Ändern des Feldes %s in Tabelle %s");
+define("_DATABASEUPDATER_MSG_CREATE_TABLE", "Tabelle %s erstellt");
+define("_DATABASEUPDATER_MSG_CREATE_TABLE_ERR", "Fehler beim Erstellen der Tabelle %s");
+define("_DATABASEUPDATER_MSG_NEWFIELD", "Feld %s erfolgreich hinzugefügt");
+define("_DATABASEUPDATER_MSG_NEWFIELD_ERR", "Fehler beim Hinzufügen des Feldes %s");
+define("_DATABASEUPDATER_NEEDUPDATE", "Die Datenbank ist nicht mehr aktuell. Bitte die Tabellen in der Datenbank aktualisieren!<br /><b>Hinweis : Wir empfehlen dringend vor dem Ausführen des Upgrade Scripts eine Sicherungskopie aller Tabellen zu erstellen.</b><br />");
+define("_DATABASEUPDATER_NOUPDATE", "Die Datenbank ist aktuell. Keine Updates erforderlich.");
+define("_DATABASEUPDATER_UPDATE_DB", "Datenbank aktualisieren");
+define("_DATABASEUPDATER_UPDATE_ERR", "Fehler beim Aktualisieren auf Version %s");
+define("_DATABASEUPDATER_UPDATE_NOW", "Jetzt aktualisieren!");
+define("_DATABASEUPDATER_UPDATE_OK", "Aktualisierung auf Version %s erfolgreich durchgeführt");
+define("_DATABASEUPDATER_UPDATE_TO", "Aktualisierung auf Version %s");
+define("_DATABASEUPDATER_UPDATE_UPDATING_DATABASE", " Aktualisierung der Datenbank...");
+
+define("_DATABASEUPDATER_MSG_UPDATE_TABLE", "Datensätze der Tabelle %s wurden erfolgreich aktualisiert");
+define("_DATABASEUPDATER_MSG_UPDATE_TABLE_ERR", "Fehler bei Aktualisieren der Datensätze in der Tabelle %s");
+define("_DATABASEUPDATER_MSG_DELETE_TABLE", "Festgelegte Datensätze der Tabelle %s wurde erfolgreich gelöscht.");
+define("_DATABASEUPDATER_MSG_DELETE_TABLE_ERR", "Fehler beim Löschen der Datensätze in der Tabelle %s");
+############# added since 1.2 #############
+define("_DATABASEUPDATER_MSG_DB_VERSION_ERR", "Die Datenbankversion des Modules konnte nicht aktualisiert werden");
+define("_DATABASEUPDATER_LATESTVER", "Letzte Datenbank Version: <span class='currentVer'>%s</span>");
+define("_DATABASEUPDATER_MSG_CONFIG_ERR", "Folgende Konfiguration konnte nicht hinzugefügt werden: %s");
+define("_DATABASEUPDATER_MSG_CONFIG_SCC", "Die Konfiguration %s wurde erfolgreich hinzugefügt");
+
+/* added in 1.3 */
+define( '_DATABASEUPDATER_MSG_FROM_112', "<code><h3>You have updated your site from ImpressCMS 1.1.x to ImpressCMS 1.2 so you <strong>must install the new Content module</strong> to update the core content manager. You will be redirected to the installation process in 20 seconds. If this does not happen click <a href='" . ICMS_URL . "/modules/system/admin.php?fct=modulesadmin&op=install&module=content&from_112=1'>here</a>.</h3></code>" );
+define('_DATABASEUPDATER_MSG_DROPFIELD_ERR', 'Beim Löschen der festgelegten Felder %1$s aus der Tabelle %2$s ist ein Fehler aufgetreten');
+define("_DATABASEUPDATER_MSG_DROPFIELD", 'Feld %1$s wurde erfolgreich aus der Tabelle %2$s entfernt');
+
+// Added in 1.2.7/1.3.1
+define("_DATABASEUPDATER_MSG_DROP_TABLE", "Datenbanktabelle %s erfolgreich gelöscht");
+define("_DATABASEUPDATER_MSG_DROP_TABLE_ERR", "Fehler beim Entfernen der Datenbanktabelle %s");
+
+// Added in 1.3.2
+define("_DATABASEUPDATER_MSG_QUERY_SUCCESSFUL", "Datenbank-Abfrage erfolgreich: %s");
+define("_DATABASEUPDATER_MSG_QUERY_FAILED", "Datenbank-Abfrage fehlgeschlagen: %s");

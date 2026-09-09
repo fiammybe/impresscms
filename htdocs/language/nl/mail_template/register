@@ -1,0 +1,20 @@
+Hallo {X_USERLOGINNAME},
+
+Bedankt voor het aanmelden op {X_SITENAME}. Als een geregistreerde gebruiker kunt u:
+- Privéberichten verzenden tussen gebruikers
+- Deelnemen aan discussiefora
+- Ontvang het laatste nieuws
+- Inhoud toevoegen
+- Nog veel, veel meer...
+
+Het e-mailadres ({X_UEMAIL}) is gebruikt om een account te registreren.
+
+Om lid van de {X_SITENAME} te worden, bevestig uw
+verzoek door op de onderstaande link te klikken:
+
+{X_UACTLINK}
+
+-----------
+Met vriendelijke groeten
+{X_SITENAME}
+{X_ADMINMAIL}

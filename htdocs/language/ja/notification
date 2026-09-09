@@ -1,0 +1,90 @@
+<?php
+// $Id: notification.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: notification.php 12229 2013-07-19 08:08:05Z fiammy $
+
+// RMV-NOTIFY
+
+// Text for various templates...
+
+define ('_NOT_NOTIFICATIONOPTIONS', 'お知らせのオプション');
+define ('_NOT_UPDATENOW', '今すぐ更新');
+define ('_NOT_UPDATEOPTIONS', 'お知らせオプションを更新');
+
+define ('_NOT_CLEAR', 'クリア');
+define ('_NOT_CHECKALL', '全てチェック');
+define ('_NOT_MODULE', 'モジュール');
+define ('_NOT_CATEGORY', 'カテゴリ');
+define ('_NOT_ITEMID', 'ID');
+define ('_NOT_ITEMNAME', 'お名前');
+define ('_NOT_EVENT', 'イベント');
+define ('_NOT_EVENTS', 'イベント');
+define ('_NOT_ACTIVENOTIFICATIONS', 'アクティブなイベント告知');
+define ('_NOT_NAMENOTAVAILABLE', '無効な名前');
+// RMV-NEW : TODO: remove NAMENOTAVAILBLE above
+define ('_NOT_ITEMNAMENOTAVAILABLE', '項目名が無効');
+define ('_NOT_ITEMTYPENOTAVAILABLE', '項目種類が無効');
+define ('_NOT_ITEMURLNOTAVAILABLE', '項目のURLが無効');
+define ('_NOT_DELETINGNOTIFICATIONS', 'お知らせを削除');
+define ('_NOT_DELETESUCCESS', 'お知らせは削除されました。');
+define ('_NOT_UPDATEOK', 'お知らせオプションは更新されました。');
+define ('_NOT_NOTIFICATIONMETHODIS', 'お知らせする方法');
+define ('_NOT_EMAIL', 'Email');
+define ('_NOT_PM', 'プライベートメッセージ');
+define ('_NOT_DISABLE', 'お知らせしない');
+define ('_NOT_CHANGE', '変更');
+
+define ('_NOT_NOACCESS', 'このページにアクセスする献言がありません。');
+
+// Text for module config options
+
+define ('_NOT_NOTIFICATION', 'お知らせ');
+
+define ('_NOT_CONFIG_ENABLED', 'お知らせする');
+define ('_NOT_CONFIG_ENABLEDDSC', 'このモジュールは、何か変化が起こったらユーザにお知らせする機能があります.  その機能を有効にするには「はい」を選んでください。');
+
+define ('_NOT_CONFIG_EVENTS', '特別なお知らせをする');
+define ('_NOT_CONFIG_EVENTSDSC', 'ユーザが投稿したときなどのときにお知らせする内容を選択してください。');
+
+define ('_NOT_CONFIG_ENABLE', 'お知らせ機能の設定');
+define ('_NOT_CONFIG_ENABLEDSC', 'このモジュールは、何か変化が起こったらユーザにお知らせする機能があります。 お知らせオプションの表示をブロック形式にするか、インライン方式にするかを選択してください。');
+define ('_NOT_CONFIG_DISABLE', 'お知らせ機能を設定しない');
+define ('_NOT_CONFIG_ENABLEBLOCK', 'ブロック形式のみ');
+define ('_NOT_CONFIG_ENABLEINLINE', 'インライン形式のみ');
+define ('_NOT_CONFIG_ENABLEBOTH', 'どちらも');
+
+// For notification about comment events
+
+define ('_NOT_COMMENT_NOTIFY', 'コメント追加');
+define ('_NOT_COMMENT_NOTIFYCAP', '新しいコメントが追加されたときにお知らせします');
+define ('_NOT_COMMENT_NOTIFYDSC', 'あたらしコメントが追加さえたときにはいつでもお知らせする');
+define ('_NOT_COMMENT_NOTIFYSBJ', '[{X_SITENAME}] {X_MODULE} のコメントが{X_ITEM_TYPE}で追加されました');
+
+define ('_NOT_COMMENTSUBMIT_NOTIFY', 'コメント送信');
+define ('_NOT_COMMENTSUBMIT_NOTIFYCAP', '承認待ちのコメントが送信されたときにお知らせします。');
+define ('_NOT_COMMENTSUBMIT_NOTIFYDSC', '承認待ちのコメントが送信されたときはいつでもお知らせします。');
+define ('_NOT_COMMENTSUBMIT_NOTIFYSBJ', '[{X_SITENAME}] {X_MODULE} のコメントが{X_ITEM_TYPE}で追加されました（承認待ち）');
+
+// For notification bookmark feature
+// (Not really notification, but easy to do with this module)
+
+define ('_NOT_BOOKMARK_NOTIFY', 'ブックマーク');
+define ('_NOT_BOOKMARK_NOTIFYCAP', 'このページをブックマークする');
+define ('_NOT_BOOKMARK_NOTIFYDSC', '通知無しにこのページをブックマークします。');
+
+// For user profile
+// FIXME: These should be reworded a little...
+
+define ('_NOT_NOTIFYMETHOD', 'お知らせはどのような形で受け取りますか？');
+define ('_NOT_METHOD_EMAIL', 'Email (登録したメールアドレスに)');
+define ('_NOT_METHOD_PM', 'プライベートメッセージ');
+define ('_NOT_METHOD_DISABLE', 'とりあえず受け取らない');
+
+define ('_NOT_NOTIFYMODE', '通常の送信モード');
+define ('_NOT_MODE_SENDALWAYS', '何かあったらいつでも送る');
+define ('_NOT_MODE_SENDONCE', '一回だけ送る');
+define ('_NOT_MODE_SENDONCEPERLOGIN', 'ログインにしたときに１回だけ送る');
+
+define ('_NOT_NOTHINGTODELETE', '削除するものがありません。');
+
+// Added in 1.3.1
+define("_NOT_RUSUREDEL", "Are you sure you want to delete these notifications?");

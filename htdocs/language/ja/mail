@@ -1,0 +1,8 @@
+<?php
+define("_MAIL_MSGBODY", "メール本文が準備されていません.");
+define("_MAIL_FAILOPTPL", "テンプレートファイルを開けませんでした.");
+define("_MAIL_SENDMAILNG", "%sさんにメールを送ることができません。");
+define("_MAIL_MAILGOOD", "%sさんにメールを送信しました。");
+define("_MAIL_SENDPMNG", "プライベートメッセージを%sさんに送ることはできません.");
+define("_MAIL_PMGOOD", "%sさんにプライベートメッセージを送信しました。");
+?>

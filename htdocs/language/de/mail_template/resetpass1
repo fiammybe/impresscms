@@ -1,0 +1,14 @@
+Hallo {X_UNAME},
+
+Ein Webbenutzer von {IP} hat soeben ein neues Passwort für Ihr Konto bei {SITENAME} angefordert.
+
+Ihr Passwort wird nur zurückgesetzt, indem Sie auf den unten stehenden Link klicken:
+
+{RESETPWD_LINK}
+
+Wenn Sie nicht darum gebeten haben, keine Sorge. Löschen Sie einfach diese E-Mail und nichts wird geändert.
+
+-----------
+{SITENAME} ({SITEURL}) 
+Der Webmaster
+{ADMINMAIL}
