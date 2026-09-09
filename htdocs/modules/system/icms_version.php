@@ -46,7 +46,7 @@ defined("ICMS_ROOT_PATH") || die("ICMS root path not defined");
  */
 $modversion = array(
 	'name' => _MI_SYSTEM_NAME,
-	'version' => '2.0.1',
+	'version' => '2.0.2',
 	'description' => _MI_SYSTEM_DESC,
 	'author' => "fiammybe",
 	'credits' => "The ImpressCMS Project",
@@ -64,10 +64,10 @@ $modversion = array(
 	'image' => "images/system_slogo.png", /* for backward compatibility */
 
 /**  Development information */
-	'status_version' => "2.0.1 Final",
+	'status_version' => "2.0.2",
 	'status' => "Final",
-	'date' => "08 Jan 2025",
-	'author_word' => "Fixing a typo in the system module",
+	'date' => "01 October 2025",
+	'author_word' => "Multiple improvements and bugfixes",
 	'warning' => _CO_ICMS_WARNING_FINAL,
 
 	/**
@@ -337,5 +337,6 @@ $modversion['templates'] = array(
 	array('file' => 'icms_form_elements_button_display.html', 'description' => 'Display template for a button'),
 	array('file' => 'icms_form_elements_checkbox_display.html', 'description' => 'Display template for a checkbox'),
 	array('file' => 'icms_form_elements_text_display.html', 'description' => 'Display template for a text'),
-	array('file' => 'icms_form_elements_password_display.html', 'description' => 'Display template for a password field')
+	array('file' => 'icms_form_elements_password_display.html', 'description' => 'Display template for a password field'),
+	array('file' => 'icms_form_elements_passwordtray_display.html', 'description' => 'Display template for a passwordtray')
 );

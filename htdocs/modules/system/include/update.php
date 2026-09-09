@@ -41,7 +41,11 @@
 icms_loadLanguageFile('core', 'databaseupdater');
 
 // this needs to be the latest db version - and the constant must start with the module's dirname
-define('SYSTEM_DB_VERSION', icms::$module->getDBVersion());
+if (is_object(icms::$module)) {
+	define('SYSTEM_DB_VERSION', icms::$module->getDBVersion());
+} else {
+	define('SYSTEM_DB_VERSION', 48);
+}
 
 /**
  * Automatic update of the system module
@@ -230,16 +234,17 @@ function xoops_module_update_system(&$module, $oldversion = null, $dbVersion = n
 				$filetoremove = ICMS_ROOT_PATH . '/content.php';
 				icms_core_Filesystem::deleteFile($filetoremove);
 			}
+			/* Finish up this portion of the db update */
+			if (!$abortUpdate) {
+				$icmsDatabaseUpdater->updateModuleDBVersion($newDbVersion, 'system');
+				echo sprintf(_DATABASEUPDATER_UPDATE_OK, icms_conv_nr2local($newDbVersion)) . '<br />';
+			}
 		}
 	}
 	catch (Exception $e) {
 		echo $e->getMessage();
 	}
-	/* Finish up this portion of the db update */
-	if (!$abortUpdate) {
-		$icmsDatabaseUpdater->updateModuleDBVersion($newDbVersion, 'system');
-		echo sprintf(_DATABASEUPDATER_UPDATE_OK, icms_conv_nr2local($newDbVersion)) . '<br />';
-	}
+
 	/**
 	 * This portion of the upgrade must remain as the last section of code to execute
 	 * Place all release upgrade steps above this point
