@@ -223,12 +223,12 @@ if ($_icms_vendor_from_trustpath) {
 					return;
 				}
 
-				// PSR-4: Icms\Core\Password  →  libraries/icms/Core/Password.php
+				// PSR-4: Icms\Core\Password  →  libraries/Icms/Core/Password.php
 				if (strncmp($class, "Icms\\", 5) === 0) {
 					$file =
 						$__icms_fallback_lib .
 						DIRECTORY_SEPARATOR .
-						"icms" .
+						"Icms" .
 						DIRECTORY_SEPARATOR .
 						str_replace(
 							"\\",

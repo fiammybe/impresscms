@@ -122,7 +122,7 @@ unset($_icms_autoload);
 //
 //   "icms"     (classmap entry)  →  libraries/icms.php
 //   "icms_*"   (PSR-0 style)     →  libraries/<underscore/separated/path>.php
-//   "Icms\*"   (PSR-4 style)     →  libraries/icms/<Namespace/Path>.php
+//   "Icms\*"   (PSR-4 style)     →  libraries/Icms/<Namespace/Path>.php
 if ($_icms_autoload_from_trustpath) {
 	$_icms_root_lib = ICMS_ROOT_PATH . DIRECTORY_SEPARATOR . "libraries";
 	spl_autoload_register(
@@ -147,12 +147,12 @@ if ($_icms_autoload_from_trustpath) {
 				}
 				return;
 			}
-			// PSR-4: Icms\Core\DataFilter → libraries/icms/Core/DataFilter.php
+			// PSR-4: Icms\Core\DataFilter → libraries/Icms/Core/DataFilter.php
 			if (strncmp($class, "Icms\\", 5) === 0) {
 				$file =
 					$_icms_root_lib .
 					DIRECTORY_SEPARATOR .
-					"icms" .
+					"Icms" .
 					DIRECTORY_SEPARATOR .
 					str_replace("\\", DIRECTORY_SEPARATOR, substr($class, 5)) .
 					".php";
