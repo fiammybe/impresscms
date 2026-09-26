@@ -65,10 +65,10 @@ $modversion = array(
 
 /**  Development information */
 	'status_version' => "2.1.0",
-	'status' => "Alpha",
-	'date' => "26 July 2026",
+	'status' => "Beta",
+	'date' => "26 Sept 2026",
 	'author_word' => "Transform IPF class structure as-is to PSR-4 and PHP 8.2+",
-	'warning' => _CO_ICMS_WARNING_ALPHA,
+	'warning' => _CO_ICMS_WARNING_BETA,
 
 	/**
 	 * Contributors
