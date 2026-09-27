@@ -110,7 +110,9 @@ if (!empty($_POST)) {
 
 	$limit = 100;
 
-	if (!icms::$security->check() || $op === "form") {
+	$icmsSecurityCheck = icms::$security->check();
+
+	if (!$icmsSecurityCheck || $op === "form") {
 		icms_cp_header();
 		echo '<div class="CPbigTitle" style="background-image: url(' . ICMS_MODULES_URL . '/system/admin/mailusers/images/mailusers_big.png)">' . _MD_AM_MLUS . '</div><br />';
 		if ($op != "form" && $error_msg = icms::$security->getErrors(TRUE)) {
@@ -121,7 +123,7 @@ if (!empty($_POST)) {
 		$form->display();
 		icms_cp_footer();
 	}
-	elseif ($op === "send" && !empty($mail_send_to))
+	elseif ($icmsSecurityCheck && $op === "send" && !empty($mail_send_to))
 	{
 		$added = array();
 		$added_id = array();
