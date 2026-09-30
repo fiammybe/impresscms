@@ -691,73 +691,146 @@ class icms_core_Backup {
 		}
 
 		$fileCount = 0;
+		$failCount = 0;
 		$totalFiles = $zip->numFiles;
 		$this->messages[] = "Backup contains " . $totalFiles . " files";
 
-		// Extract files one by one for better control and progress feedback
-		for ($i = 0; $i < $totalFiles; $i++) {
-			$stat = $zip->statIndex($i);
-			if ($stat === false) {
-				$this->messages[] = "Warning: Could not get info for file at index " . $i;
-				continue;
-			}
+		$root = realpath($this->sourceDir);
+		if ($root === false) {
+			$zip->close();
+			$this->errors[] = "Target directory does not exist: " . $this->sourceDir;
+			return false;
+		}
+		$root = rtrim(str_replace('\\', '/', $root), '/');
 
-			$filename = $stat['name'];
-			$targetPath = $this->sourceDir . '/' . $filename;
-
-			// Skip directories (they'll be created automatically)
-			if (substr($filename, -1) === '/') {
-				continue;
-			}
-
-			// Create target directory if it doesn't exist
-			$targetDir = dirname($targetPath);
-			if (!is_dir($targetDir)) {
-				if (!icms_core_Filesystem::mkdir($targetDir, 0755, '')) {
-					$this->messages[] = "Warning: Could not create directory: " . $targetDir;
+		try {
+			for ($i = 0; $i < $totalFiles; $i++) {
+				$stat = $zip->statIndex($i);
+				if ($stat === false) {
+					$this->errors[] = "Could not get info for entry at index " . $i;
+					$failCount++;
 					continue;
 				}
-			}
 
-			// Extract the file
-			$fileContent = $zip->getFromIndex($i);
-			if ($fileContent === false) {
-				$this->messages[] = "Warning: Could not extract file: " . $filename;
-				continue;
-			}
+				$filename = $stat['name'];
 
-			// Write the file
-			if (file_put_contents($targetPath, $fileContent) !== false) {
+				// Skip directories (they'll be created automatically)
+				if (substr($filename, -1) === '/') {
+					continue;
+				}
+
+				$relative = $this->validateEntryName($filename);
+				if ($relative === false) {
+					$this->errors[] = "Unsafe path in backup rejected: " . $filename;
+					$failCount++;
+					continue;
+				}
+
+				$targetPath = $root . '/' . $relative;
+				$targetDir = dirname($targetPath);
+				if (!is_dir($targetDir) && !@mkdir($targetDir, 0755, true) && !is_dir($targetDir)) {
+					$this->errors[] = "Could not create directory for: " . $relative;
+					$failCount++;
+					continue;
+				}
+
+				// Make sure the resolved directory is still inside the target root
+				$realDir = realpath($targetDir);
+				$realDir = $realDir === false ? false : str_replace('\\', '/', $realDir);
+				if ($realDir === false || ($realDir !== $root && strpos($realDir, $root . '/') !== 0)) {
+					$this->errors[] = "Path escapes target directory: " . $relative;
+					$failCount++;
+					continue;
+				}
+
+				// Stream to a temp file, then rename into place
+				$in = $zip->getStream($filename);
+				if ($in === false) {
+					$this->errors[] = "Could not read from backup: " . $relative;
+					$failCount++;
+					continue;
+				}
+
+				$tmpPath = $targetPath . '.restore-' . uniqid() . '.tmp';
+				$out = @fopen($tmpPath, 'wb');
+				$ok = false;
+				if ($out !== false) {
+					$ok = stream_copy_to_stream($in, $out) !== false;
+					fclose($out);
+				}
+				fclose($in);
+
+				if ($ok && !@rename($tmpPath, $targetPath)) {
+					// Windows cannot rename over an existing file
+					if (@unlink($targetPath)) {
+						$ok = @rename($tmpPath, $targetPath);
+					} else {
+						$ok = false;
+					}
+				}
+
+				if (!$ok) {
+					if (file_exists($tmpPath)) {
+						@unlink($tmpPath);
+					}
+					$this->errors[] = "Could not write file: " . $relative;
+					$failCount++;
+					continue;
+				}
+
 				$fileCount++;
 
 				// Set file permissions if available
 				if (isset($stat['external_attr'])) {
 					$perms = ($stat['external_attr'] >> 16) & 0777;
 					if ($perms > 0) {
-						chmod($targetPath, $perms);
+						@chmod($targetPath, $perms);
 					}
 				}
 
-				// Progress feedback
 				if ($fileCount % 100 === 0) {
 					$this->messages[] = "Restored " . $fileCount . " of " . $totalFiles . " files";
-					// Flush output to show progress
 					if (ob_get_level()) {
 						ob_flush();
 						flush();
 					}
 				}
-			} else {
-				$this->messages[] = "Warning: Could not write file: " . $targetPath;
 			}
+		} finally {
+			$zip->close();
 		}
 
-		$zip->close();
-
-		$this->messages[] = "Restoration completed successfully";
 		$this->messages[] = "Files restored: " . $fileCount . " of " . $totalFiles;
 
+		if ($failCount > 0) {
+			$this->errors[] = "Restoration finished with " . $failCount . " failed file(s)";
+			return false;
+		}
+
+		$this->messages[] = "Restoration completed successfully";
 		return true;
+	}
+
+	/**
+	 * Validate a ZIP entry name and return it normalized, or false if unsafe
+	 *
+	 * @param string $name Entry name from the archive
+	 * @return string|false
+	 */
+	private function validateEntryName($name) {
+		if ($name === '' || strpos($name, "\0") !== false) {
+			return false;
+		}
+		$name = str_replace('\\', '/', $name);
+		if ($name[0] === '/' || preg_match('#^[A-Za-z]:#', $name)) {
+			return false;
+		}
+		foreach (explode('/', $name) as $segment) {
+			if ($segment === '..') {
+				return false;
+			}
+		}
+		return $name;
 	}
 
 	/**
