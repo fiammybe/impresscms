@@ -73,6 +73,18 @@ class icms_core_Backup {
 	private $includeUploads;
 
 	/**
+	 * Whether to include a SQL dump of the database in the backup
+	 * @var bool
+	 */
+	private $includeDatabase = false;
+
+	/**
+	 * Path of the archive entry that holds the database dump
+	 * @var string
+	 */
+	const DB_DUMP_ENTRY = '_database/database.sql';
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $sourceDir Source directory to backup (defaults to ICMS_ROOT_PATH)
@@ -231,6 +243,24 @@ class icms_core_Backup {
 	}
 
 	/**
+	 * Set whether to include a database dump in the backup
+	 *
+	 * @param bool $include Whether to include the database
+	 */
+	public function setIncludeDatabase($include) {
+		$this->includeDatabase = (bool)$include;
+	}
+
+	/**
+	 * Get whether the database is included in the backup
+	 *
+	 * @return bool
+	 */
+	public function getIncludeDatabase() {
+		return $this->includeDatabase;
+	}
+
+	/**
 	 * Check if a file should be excluded from backup
 	 *
 	 * @param string $relativePath Relative path of the file
@@ -284,9 +314,10 @@ class icms_core_Backup {
 	 * @param string $backupName Optional backup name (auto-generated if not provided)
 	 * @param bool $useGzip Use gzip compression (ignored, always uses ZIP)
 	 * @param bool $includeUploads Whether to include uploads directory
+	 * @param bool $includeDatabase Whether to include a database dump
 	 * @return string|false Backup file path on success, false on failure
 	 */
-	public function createBackup($backupName = null, $useGzip = true, $includeUploads = null) {
+	public function createBackup($backupName = null, $useGzip = true, $includeUploads = null, $includeDatabase = null) {
 		if (!self::canCreateBackup()) {
 			$this->errors[] = "Permission denied";
 			return false;
@@ -299,6 +330,15 @@ class icms_core_Backup {
 		// Set uploads inclusion if specified
 		if ($includeUploads !== null) {
 			$this->setIncludeUploads($includeUploads);
+		}
+
+		if ($includeDatabase !== null) {
+			$this->setIncludeDatabase($includeDatabase);
+		}
+
+		if ($this->includeDatabase && !is_object(icms::$db)) {
+			$this->errors[] = "PDO database connection not available";
+			return false;
 		}
 
 		// Generate backup name if not provided
@@ -318,6 +358,7 @@ class icms_core_Backup {
 		$this->messages[] = "Creating backup: " . $backupName . $extension;
 		$this->messages[] = "Source directory: " . $this->sourceDir;
 		$this->messages[] = "Include uploads: " . ($this->includeUploads ? 'Yes' : 'No');
+		$this->messages[] = "Include database: " . ($this->includeDatabase ? 'Yes' : 'No');
 
 		try {
 			// Use streaming ZIP backup approach
@@ -404,8 +445,28 @@ class icms_core_Backup {
 			}
 		}
 
+		// Add the database dump (the temp file must survive until close())
+		$dumpFile = null;
+		if ($this->includeDatabase) {
+			$dumpFile = $this->backupDir . '/dump-' . uniqid() . '.tmp';
+			if (!$this->dumpDatabase($dumpFile) || !$zip->addFile($dumpFile, self::DB_DUMP_ENTRY)) {
+				if (!count($this->errors)) {
+					$this->errors[] = "Failed to add database dump to ZIP";
+				}
+				$zip->unchangeAll();
+				$zip->close();
+				@unlink($dumpFile);
+				@unlink($backupPath);
+				return false;
+			}
+		}
+
 		// Close the ZIP archive
 		$result = $zip->close();
+
+		if ($dumpFile !== null) {
+			@unlink($dumpFile);
+		}
 
 		if (!$result) {
 			$this->errors[] = "Failed to finalize ZIP archive";
@@ -426,6 +487,112 @@ class icms_core_Backup {
 			$this->errors[] = "Backup file was not created successfully";
 			return false;
 		}
+	}
+
+	/**
+	 * Record the last PDO error for a failed call
+	 *
+	 * @param string $context What was being attempted
+	 */
+	private function addDbError($context) {
+		$err = icms::$db->errorInfo();
+		$this->errors[] = $context . (isset($err[2]) ? ': ' . $err[2] : '');
+	}
+
+	/**
+	 * Write a SQL dump of all tables with the site prefix to a file
+	 *
+	 * Format: one statement per ";\n"-terminated block. String values are quoted
+	 * with PDO::quote(), so they never contain raw newlines.
+	 *
+	 * @param string $file Path of the file to write
+	 * @return bool Success status
+	 */
+	private function dumpDatabase($file) {
+		$db = icms::$db;
+		if (!is_object($db)) {
+			$this->errors[] = "PDO database connection not available";
+			return false;
+		}
+
+		$out = @fopen($file, 'wb');
+		if ($out === false) {
+			$this->errors[] = "Cannot write database dump file: " . $file;
+			return false;
+		}
+
+		$prefix = str_replace(array('\\', '_', '%'), array('\\\\', '\\_', '\\%'), XOOPS_DB_PREFIX . '_');
+		$stmt = $db->query('SHOW TABLES LIKE ' . $db->quote($prefix . '%'));
+		if ($stmt === false) {
+			$this->addDbError("Could not list database tables");
+			fclose($out);
+			return false;
+		}
+		$tables = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+		$stmt->closeCursor();
+
+		$wasBuffered = $db->getAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY);
+		$ok = true;
+
+		fwrite($out, "-- ImpressCMS database dump " . date('Y-m-d H:i:s') . "\n");
+		fwrite($out, "SET NAMES binary;\n");
+		fwrite($out, "SET FOREIGN_KEY_CHECKS=0;\n");
+
+		foreach ($tables as $table) {
+			$ident = '`' . str_replace('`', '``', $table) . '`';
+
+			$stmt = $db->query('SHOW CREATE TABLE ' . $ident);
+			$row = $stmt === false ? false : $stmt->fetch(PDO::FETCH_NUM);
+			if ($stmt !== false) {
+				$stmt->closeCursor();
+			}
+			if ($row === false || !isset($row[1])) {
+				$this->addDbError("Could not read structure of table " . $table);
+				$ok = false;
+				break;
+			}
+			fwrite($out, "DROP TABLE IF EXISTS " . $ident . ";\n" . $row[1] . ";\n");
+
+			// Stream rows without buffering the whole table in memory
+			$db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+			$stmt = $db->query('SELECT * FROM ' . $ident);
+			if ($stmt === false) {
+				$db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, $wasBuffered);
+				$this->addDbError("Could not read data of table " . $table);
+				$ok = false;
+				break;
+			}
+
+			$batch = array();
+			while (($row = $stmt->fetch(PDO::FETCH_NUM)) !== false) {
+				$values = array();
+				foreach ($row as $value) {
+					$values[] = $value === null ? 'NULL' : $db->quote($value);
+				}
+				$batch[] = '(' . implode(',', $values) . ')';
+				if (count($batch) >= 100) {
+					fwrite($out, "INSERT INTO " . $ident . " VALUES " . implode(',', $batch) . ";\n");
+					$batch = array();
+				}
+			}
+			$stmt->closeCursor();
+			$db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, $wasBuffered);
+
+			if ($batch) {
+				fwrite($out, "INSERT INTO " . $ident . " VALUES " . implode(',', $batch) . ";\n");
+			}
+		}
+
+		fwrite($out, "SET FOREIGN_KEY_CHECKS=1;\n");
+		if (!fclose($out)) {
+			$this->errors[] = "Failed to write database dump file";
+			$ok = false;
+		}
+
+		if ($ok) {
+			$this->messages[] = "Database tables dumped: " . count($tables);
+		}
+		return $ok;
 	}
 
 	/**
