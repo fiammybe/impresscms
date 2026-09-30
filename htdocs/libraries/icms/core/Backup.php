@@ -76,11 +76,11 @@ class icms_core_Backup {
 	 * Constructor
 	 *
 	 * @param string $sourceDir Source directory to backup (defaults to ICMS_ROOT_PATH)
-	 * @param string $backupDir Backup directory (defaults to ICMS_CACHE_PATH/backups)
+	 * @param string $backupDir Backup directory (defaults to ICMS_TRUST_PATH/backups)
 	 */
 	public function __construct($sourceDir = null, $backupDir = null) {
 		$this->sourceDir = $sourceDir ?: ICMS_ROOT_PATH;
-		$this->backupDir = $backupDir ?: ICMS_CACHE_PATH . '/backups';
+		$this->backupDir = $backupDir ?: ICMS_TRUST_PATH . '/backups';
 
 		// Default exclusions for ImpressCMS
 		$this->excludeDirs = array('cache', 'uploads', 'templates_c', 'backups');
@@ -111,6 +111,45 @@ class icms_core_Backup {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Sanitize a backup name: only [A-Za-z0-9._-], no .zip extension, no leading dots
+	 *
+	 * @param string $name Raw backup name or filename
+	 * @return string|false Sanitized name (without extension) or false if invalid
+	 */
+	public function sanitizeName($name) {
+		$name = basename(str_replace('\\', '/', (string)$name));
+		$name = preg_replace('/\.zip$/i', '', $name);
+		$name = preg_replace('/[^A-Za-z0-9._-]/', '', $name);
+		if ($name === '' || $name[0] === '.') {
+			return false;
+		}
+		return $name;
+	}
+
+	/**
+	 * Resolve a backup name to an existing .zip file inside the backup directory
+	 *
+	 * @param string $backupName Backup name or filename
+	 * @return string|false Real path on success, false on failure (error recorded)
+	 */
+	private function resolveBackupPath($backupName) {
+		$name = $this->sanitizeName($backupName);
+		if ($name === false) {
+			$this->errors[] = "Invalid backup name";
+			return false;
+		}
+
+		$real = realpath($this->backupDir . '/' . $name . '.zip');
+		$realDir = realpath($this->backupDir);
+		if ($real === false || $realDir === false || !is_file($real)
+			|| dirname($real) !== $realDir || strtolower(substr($real, -4)) !== '.zip') {
+			$this->errors[] = "Backup file not found: " . $name . ".zip";
+			return false;
+		}
+		return $real;
 	}
 
 	/**
@@ -248,6 +287,11 @@ class icms_core_Backup {
 	 * @return string|false Backup file path on success, false on failure
 	 */
 	public function createBackup($backupName = null, $useGzip = true, $includeUploads = null) {
+		if (!self::canCreateBackup()) {
+			$this->errors[] = "Permission denied";
+			return false;
+		}
+
 		if (!$this->createBackupDirectory()) {
 			return false;
 		}
@@ -260,6 +304,12 @@ class icms_core_Backup {
 		// Generate backup name if not provided
 		if ($backupName === null) {
 			$backupName = 'backup-' . date('Y-m-d-H-i-s');
+		}
+
+		$backupName = $this->sanitizeName($backupName);
+		if ($backupName === false) {
+			$this->errors[] = "Invalid backup name";
+			return false;
 		}
 
 		$extension = '.zip';
@@ -313,15 +363,15 @@ class icms_core_Backup {
 		$iterator = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::LEAVES_ONLY);
 
 		// Get normalized paths for exclusion checking (similar to Filesystem class)
-		$cache_dir = preg_replace('#[\|/]#', DIRECTORY_SEPARATOR, ICMS_CACHE_PATH);
-		$templates_dir = preg_replace('#[\|/]#', DIRECTORY_SEPARATOR, ICMS_COMPILE_PATH);
+		$cache_dir = str_replace('\\', '/', ICMS_CACHE_PATH);
+		$templates_dir = str_replace('\\', '/', ICMS_COMPILE_PATH);
 
 		foreach ($iterator as $name => $item) {
 			if ($item->isFile()) {
 				$filePath = $item->getPathname();
 				$relativePath = $this->getRelativePath($filePath);
 				$fileSize = $item->getSize();
-				$itemPath = $item->getPath();
+				$itemPath = str_replace('\\', '/', $item->getPath());
 
 				// Use similar exclusion logic as icms_core_Filesystem::generateChecksum()
 				// Skip cache and templates_c directories automatically
@@ -385,9 +435,12 @@ class icms_core_Backup {
 	 * @return string Relative path
 	 */
 	private function getRelativePath($absolutePath) {
-		$relativePath = str_replace($this->sourceDir . DIRECTORY_SEPARATOR, '', $absolutePath);
-		$relativePath = str_replace('\\', '/', $relativePath); // Normalize path separators
-		return $relativePath;
+		$source = rtrim(str_replace('\\', '/', $this->sourceDir), '/') . '/';
+		$path = str_replace('\\', '/', $absolutePath);
+		if (strpos($path, $source) === 0) {
+			return substr($path, strlen($source));
+		}
+		return $path;
 	}
 
 	/**
@@ -430,12 +483,16 @@ class icms_core_Backup {
 	 * @return bool Success status
 	 */
 	public function deleteBackup($backupName) {
-		$backupPath = $this->backupDir . '/' . $backupName;
-
-		if (!file_exists($backupPath)) {
-			$this->errors[] = "Backup file not found: " . $backupName;
+		if (!self::canCreateBackup()) {
+			$this->errors[] = "Permission denied";
 			return false;
 		}
+
+		$backupPath = $this->resolveBackupPath($backupName);
+		if ($backupPath === false) {
+			return false;
+		}
+		$backupName = basename($backupPath);
 
 		if (!is_writable($backupPath)) {
 			$this->errors[] = "Cannot delete backup file (permission denied): " . $backupName;
@@ -574,12 +631,16 @@ class icms_core_Backup {
 	 * @return bool Success status
 	 */
 	public function restoreBackup($backupName, $createBackupBeforeRestore = true) {
-		$backupPath = $this->backupDir . '/' . $backupName;
-
-		if (!file_exists($backupPath)) {
-			$this->errors[] = "Backup file not found: " . $backupName;
+		if (!self::canRestoreBackup()) {
+			$this->errors[] = "Permission denied";
 			return false;
 		}
+
+		$backupPath = $this->resolveBackupPath($backupName);
+		if ($backupPath === false) {
+			return false;
+		}
+		$backupName = basename($backupPath);
 
 		// Check if ZipArchive is available
 		if (!class_exists('ZipArchive')) {
@@ -706,12 +767,11 @@ class icms_core_Backup {
 	 * @return array|false Backup information or false on error
 	 */
 	public function getBackupInfo($backupName) {
-		$backupPath = $this->backupDir . '/' . $backupName;
-
-		if (!file_exists($backupPath)) {
-			$this->errors[] = "Backup file not found: " . $backupName;
+		$backupPath = $this->resolveBackupPath($backupName);
+		if ($backupPath === false) {
 			return false;
 		}
+		$backupName = basename($backupPath);
 
 		$info = array(
 			'name' => $backupName,
@@ -745,10 +805,8 @@ class icms_core_Backup {
 	 * @return array|false Array of file information or false on error
 	 */
 	public function listBackupContents($backupName, $limit = 100) {
-		$backupPath = $this->backupDir . '/' . $backupName;
-
-		if (!file_exists($backupPath)) {
-			$this->errors[] = "Backup file not found: " . $backupName;
+		$backupPath = $this->resolveBackupPath($backupName);
+		if ($backupPath === false) {
 			return false;
 		}
 
