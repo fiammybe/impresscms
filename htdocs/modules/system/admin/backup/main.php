@@ -11,97 +11,115 @@
  * @author		ImpressCMS Development Team
  */
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 include_once '../../../../mainfile.php';
 include_once ICMS_ROOT_PATH . '/include/cp_functions.php';
+include_once dirname(__FILE__) . '/class/BackupInfo.php';
 
 // Security check
-if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin()) {
+if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmin(icms::$module->getVar('mid'))) {
 	exit("Access Denied");
 }
 
-// Handle actions
-$action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : '');
+/**
+ * Escape a value for HTML output
+ *
+ * @param string $text
+ * @return string
+ */
+function backup_h($text) {
+	return htmlspecialchars((string)$text, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Join backup class messages into escaped HTML
+ *
+ * @param array $items
+ * @return string
+ */
+function backup_join($items) {
+	return implode('<br />', array_map('backup_h', $items));
+}
+
 $backup = new icms_core_Backup();
 $message = '';
 $error = '';
+$infoObj = null;
+$backupContents = null;
+
+$isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
+$action = $isPost
+	? (string)filter_input(INPUT_POST, 'action', FILTER_UNSAFE_RAW)
+	: (string)filter_input(INPUT_GET, 'action', FILTER_UNSAFE_RAW);
+
+// State-changing actions require POST and a valid security token
+$stateChanging = array('create', 'checksum', 'delete', 'restore');
+if (in_array($action, $stateChanging, true) && (!$isPost || !icms::$security->check())) {
+	$error = "Invalid request: security token check failed or POST required.";
+	$action = '';
+}
 
 switch ($action) {
 	case 'create':
-		if (icms_core_Backup::canCreateBackup()) {
-			$backupName = isset($_POST['backup_name']) && !empty(trim($_POST['backup_name']))
-				? trim($_POST['backup_name'])
-				: 'manual-backup-' . date('Y-m-d-H-i-s');
+		$rawName = trim((string)filter_input(INPUT_POST, 'backup_name', FILTER_UNSAFE_RAW));
+		$backupName = $rawName !== '' ? $backup->sanitizeName($rawName) : 'manual-backup-' . date('Y-m-d-H-i-s');
+		$includeUploads = (bool)filter_input(INPUT_POST, 'include_uploads', FILTER_VALIDATE_BOOLEAN);
 
-			$includeUploads = isset($_POST['include_uploads']) ? (bool)$_POST['include_uploads'] : false;
-
-			$backupPath = $backup->createBackup($backupName, true, $includeUploads);
-
-			if ($backupPath) {
-				$message = "Backup created successfully: " . basename($backupPath);
-			} else {
-				$error = "Failed to create backup: " . $backup->getErrors(true);
-			}
+		if ($backupName === false) {
+			$error = "Invalid backup name. Use only letters, numbers, dots, dashes and underscores.";
+		} elseif ($backupPath = $backup->createBackup($backupName, true, $includeUploads)) {
+			$message = "Backup created successfully: " . basename($backupPath);
 		} else {
-			$error = "Permission denied";
+			$error = "Failed to create backup: " . backup_join($backup->getErrors(false));
 		}
 		break;
 
 	case 'checksum':
-		if (icms_core_Backup::canCreateBackup()) {
-			if ($backup->generateChecksum()) {
-				$message = "Checksum file generated successfully";
-			} else {
-				$error = "Failed to generate checksum: " . $backup->getErrors(true);
-			}
+		if ($backup->generateChecksum()) {
+			$message = "Checksum file generated successfully";
 		} else {
-			$error = "Permission denied";
+			$error = "Failed to generate checksum: " . backup_join($backup->getErrors(false));
 		}
 		break;
 
 	case 'delete':
-		if (icms_core_Backup::canCreateBackup() && isset($_GET['file'])) {
-			$filename = basename($_GET['file']); // Security: only filename, no path
-
-			if ($backup->deleteBackup($filename)) {
-				$message = "Backup deleted successfully: " . $filename;
-			} else {
-				$error = "Failed to delete backup: " . $backup->getErrors(true);
-			}
+		$filename = $backup->sanitizeName((string)filter_input(INPUT_POST, 'backup_file', FILTER_UNSAFE_RAW));
+		if ($filename !== false && $backup->deleteBackup($filename)) {
+			$message = "Backup deleted successfully: " . $filename . ".zip";
 		} else {
-			$error = "Permission denied or invalid file";
+			$error = "Failed to delete backup: " . backup_join($backup->getErrors(false));
 		}
 		break;
 
 	case 'restore':
-		if (icms_core_Backup::canRestoreBackup() && isset($_POST['backup_file'])) {
-			$filename = basename($_POST['backup_file']); // Security: only filename, no path
-			$createPreBackup = isset($_POST['create_pre_backup']) ? (bool)$_POST['create_pre_backup'] : true;
+		$filename = $backup->sanitizeName((string)filter_input(INPUT_POST, 'backup_file', FILTER_UNSAFE_RAW));
+		$createPreBackup = (bool)filter_input(INPUT_POST, 'create_pre_backup', FILTER_VALIDATE_BOOLEAN);
 
-			if ($backup->restoreBackup($filename, $createPreBackup)) {
-				$message = "Backup restored successfully: " . $filename;
-			} else {
-				$error = "Failed to restore backup: " . $backup->getErrors(true);
-			}
+		if ($filename !== false && $backup->restoreBackup($filename, $createPreBackup)) {
+			$message = "Backup restored successfully: " . $filename . ".zip";
 		} else {
-			$error = "Permission denied or invalid backup file";
+			$error = "Failed to restore backup: " . backup_join($backup->getErrors(false));
 		}
 		break;
 
 	case 'info':
-		if (isset($_GET['file'])) {
-			$filename = basename($_GET['file']); // Security: only filename, no path
+		$filename = $backup->sanitizeName((string)filter_input(INPUT_GET, 'file', FILTER_UNSAFE_RAW));
+		if ($filename !== false) {
 			$backupInfo = $backup->getBackupInfo($filename);
-			$backupContents = $backup->listBackupContents($filename, 50); // Show first 50 files
+			if ($backupInfo) {
+				$infoObj = new SystemBackupInfo($backupInfo);
+				$backupContents = $backup->listBackupContents($filename, 50); // Show first 50 files
+			} else {
+				$error = backup_join($backup->getErrors(false));
+			}
+		} else {
+			$error = "Invalid backup name";
 		}
 		break;
 }
 
 // Get list of backups
 $backups = $backup->listBackups();
+$tokenHtml = icms::$security->getTokenHTML();
 
 icms_cp_header();
 ?>
@@ -109,7 +127,7 @@ icms_cp_header();
 <div class="CPbigTitle" style="background-image: url(<?php echo ICMS_URL; ?>/modules/system/admin/backup/images/backup_big.png)">Backup Manager</div><br />
 
 <?php if ($message): ?>
-<div class="successMsg"><?php echo $message; ?></div>
+<div class="successMsg"><?php echo backup_h($message); ?></div>
 <?php endif; ?>
 
 <?php if ($error): ?>
@@ -121,9 +139,9 @@ icms_cp_header();
 </div>
 
 <div class="even">
-	<?php if (icms_core_Backup::canCreateBackup()): ?>
 	<form method="post" action="">
 		<input type="hidden" name="action" value="create" />
+		<?php echo $tokenHtml; ?>
 		<div style="margin-bottom: 10px;">
 			<label for="backup_name">Backup Name (optional):</label><br />
 			<input type="text" name="backup_name" id="backup_name" placeholder="Leave empty for auto-generated name" style="width: 300px;" />
@@ -145,11 +163,9 @@ icms_cp_header();
 
 	<form method="post" action="" style="margin-top: 10px;">
 		<input type="hidden" name="action" value="checksum" />
+		<?php echo $tokenHtml; ?>
 		<input type="submit" value="Generate Checksum File" class="formButton" onclick="return confirm('Generate a checksum file for integrity verification?');" />
 	</form>
-	<?php else: ?>
-	<div class="errorMsg">You do not have permission to create backups.</div>
-	<?php endif; ?>
 </div>
 
 <div class="head" style="padding: 2px; margin-bottom: 5px; margin-top: 20px;">
@@ -170,23 +186,20 @@ icms_cp_header();
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($backups as $backupInfo): ?>
+				<?php foreach ($backups as $item): ?>
 				<tr>
-					<td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($backupInfo['name']); ?></td>
-					<td style="padding: 8px; border: 1px solid #ddd;"><?php echo $backupInfo['size_formatted']; ?></td>
-					<td style="padding: 8px; border: 1px solid #ddd;"><?php echo $backupInfo['created_formatted']; ?></td>
+					<td style="padding: 8px; border: 1px solid #ddd;"><?php echo backup_h($item['name']); ?></td>
+					<td style="padding: 8px; border: 1px solid #ddd;"><?php echo backup_h($item['size_formatted']); ?></td>
+					<td style="padding: 8px; border: 1px solid #ddd;"><?php echo backup_h($item['created_formatted']); ?></td>
 					<td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
-						<?php if (icms_core_Backup::canRestoreBackup()): ?>
-						<a href="?action=info&file=<?php echo urlencode($backupInfo['name']); ?>" style="color: blue;">Info</a> |
-						<a href="javascript:void(0);" onclick="showRestoreForm('<?php echo htmlspecialchars($backupInfo['name'], ENT_QUOTES); ?>');" style="color: green;">Restore</a>
-						<?php endif; ?>
-						<?php if (icms_core_Backup::canCreateBackup()): ?>
-						| <a href="?action=delete&file=<?php echo urlencode($backupInfo['name']); ?>"
-						   onclick="return confirm('Are you sure you want to delete this backup?');"
-						   style="color: red;">Delete</a>
-						<?php else: ?>
-						<span style="color: #999;">No permission</span>
-						<?php endif; ?>
+						<a href="?action=info&amp;file=<?php echo urlencode($item['name']); ?>" style="color: blue;">Info</a> |
+						<a href="javascript:void(0);" data-name="<?php echo backup_h($item['name']); ?>" onclick="showRestoreForm(this.getAttribute('data-name'));" style="color: green;">Restore</a> |
+						<form method="post" action="" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this backup?');">
+							<input type="hidden" name="action" value="delete" />
+							<input type="hidden" name="backup_file" value="<?php echo backup_h($item['name']); ?>" />
+							<?php echo icms::$security->getTokenHTML(); ?>
+							<input type="submit" value="Delete" style="color: red; background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0;" />
+						</form>
 					</td>
 				</tr>
 				<?php endforeach; ?>
@@ -200,8 +213,8 @@ icms_cp_header();
 </div>
 
 <div class="even">
-	<p><strong>Backup Directory:</strong> <?php echo htmlspecialchars($backup->getBackupDir()); ?></p>
-	<p><strong>Source Directory:</strong> <?php echo htmlspecialchars($backup->getSourceDir()); ?></p>
+	<p><strong>Backup Directory:</strong> <?php echo backup_h($backup->getBackupDir()); ?> (stored outside the web root)</p>
+	<p><strong>Source Directory:</strong> <?php echo backup_h($backup->getSourceDir()); ?></p>
 	<p><strong>Backup Format:</strong> ZIP (compressed)</p>
 	<p><strong>Default Excluded Directories:</strong> cache, templates_c, backups</p>
 	<p><strong>Uploads Directory:</strong> Excluded by default (can be included via checkbox)</p>
@@ -218,6 +231,7 @@ icms_cp_header();
 		<form method="post" action="" onsubmit="return confirmRestore();">
 			<input type="hidden" name="action" value="restore" />
 			<input type="hidden" name="backup_file" id="restore_backup_file" value="" />
+			<?php echo $tokenHtml; ?>
 
 			<p><strong>Selected Backup:</strong> <span id="restore_backup_name"></span></p>
 
@@ -239,27 +253,29 @@ icms_cp_header();
 	</div>
 </div>
 
-<?php if (isset($backupInfo) && $backupInfo): ?>
+<?php if ($infoObj): ?>
 <!-- Backup Information Display -->
 <div class="head" style="padding: 2px; margin-bottom: 5px; margin-top: 20px;">
-	<strong>Backup Information: <?php echo htmlspecialchars($backupInfo['name']); ?></strong>
+	<strong>Backup Information: <?php echo $infoObj->getVar('name'); ?></strong>
 </div>
 
 <div class="odd">
-	<p><strong>File:</strong> <?php echo htmlspecialchars($backupInfo['name']); ?></p>
-	<p><strong>Size:</strong> <?php echo $backupInfo['size_formatted']; ?></p>
-	<p><strong>Created:</strong> <?php echo $backupInfo['created_formatted']; ?></p>
-	<p><strong>Files:</strong> <?php echo number_format($backupInfo['files']); ?></p>
-	<p><strong>Valid ZIP:</strong> <?php echo $backupInfo['valid_zip'] ? 'Yes' : 'No'; ?></p>
+	<?php
+	$singleView = new icms_ipf_view_Single($infoObj, false, array(), false);
+	foreach (array('name', 'size', 'created', 'files', 'valid_zip') as $key) {
+		$singleView->addRow(new icms_ipf_view_Row($key));
+	}
+	$singleView->render();
+	?>
 
-	<?php if (isset($backupContents) && $backupContents): ?>
-	<h4>Contents (showing first <?php echo $backupContents['showing']; ?> of <?php echo number_format($backupContents['total_files']); ?> files):</h4>
+	<?php if ($backupContents): ?>
+	<h4>Contents (showing first <?php echo (int)$backupContents['showing']; ?> of <?php echo number_format($backupContents['total_files']); ?> files):</h4>
 	<div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
 		<?php foreach ($backupContents['files'] as $file): ?>
 			<?php if (!$file['is_directory']): ?>
 			<div style="margin: 2px 0; font-family: monospace; font-size: 12px;">
-				<?php echo htmlspecialchars($file['name']); ?>
-				<span style="color: #666;">(<?php echo $file['size_formatted']; ?>)</span>
+				<?php echo backup_h($file['name']); ?>
+				<span style="color: #666;">(<?php echo backup_h($file['size_formatted']); ?>)</span>
 			</div>
 			<?php endif; ?>
 		<?php endforeach; ?>
@@ -328,4 +344,3 @@ function confirmRestore() {
 
 <?php
 icms_cp_footer();
-?>
