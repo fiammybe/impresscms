@@ -63,10 +63,11 @@ switch ($action) {
 		$rawName = trim((string)filter_input(INPUT_POST, 'backup_name', FILTER_UNSAFE_RAW));
 		$backupName = $rawName !== '' ? $backup->sanitizeName($rawName) : 'manual-backup-' . date('Y-m-d-H-i-s');
 		$includeUploads = (bool)filter_input(INPUT_POST, 'include_uploads', FILTER_VALIDATE_BOOLEAN);
+		$includeDatabase = (bool)filter_input(INPUT_POST, 'include_database', FILTER_VALIDATE_BOOLEAN);
 
 		if ($backupName === false) {
 			$error = "Invalid backup name. Use only letters, numbers, dots, dashes and underscores.";
-		} elseif ($backupPath = $backup->createBackup($backupName, true, $includeUploads)) {
+		} elseif ($backupPath = $backup->createBackup($backupName, true, $includeUploads, $includeDatabase)) {
 			$message = "Backup created successfully: " . basename($backupPath);
 		} else {
 			$error = "Failed to create backup: " . backup_join($backup->getErrors(false));
@@ -94,7 +95,7 @@ switch ($action) {
 		$filename = $backup->sanitizeName((string)filter_input(INPUT_POST, 'backup_file', FILTER_UNSAFE_RAW));
 		$createPreBackup = (bool)filter_input(INPUT_POST, 'create_pre_backup', FILTER_VALIDATE_BOOLEAN);
 
-		if ($filename !== false && $backup->restoreBackup($filename, $createPreBackup)) {
+		if ($filename !== false && $backup->restoreBackup($filename, $createPreBackup, (bool)filter_input(INPUT_POST, 'restore_database', FILTER_VALIDATE_BOOLEAN))) {
 			$message = "Backup restored successfully: " . $filename . ".zip";
 		} else {
 			$error = "Failed to restore backup: " . backup_join($backup->getErrors(false));
@@ -158,7 +159,17 @@ icms_cp_header();
 			</div>
 		</div>
 
-		<input type="submit" value="Create Backup" class="formButton" onclick="return confirmBackupCreation();" />
+		<div style="margin-bottom: 15px;">
+				<label>
+					<input type="checkbox" name="include_database" value="1" id="include_database" />
+					Include database dump
+				</label>
+				<div style="margin-left: 20px; margin-top: 5px; color: #666; font-size: 12px;">
+					Dumps all tables with the site prefix (structure and data) to <code>_database/database.sql</code> inside the archive.
+				</div>
+			</div>
+
+			<input type="submit" value="Create Backup" class="formButton" onclick="return confirmBackupCreation();" />
 	</form>
 
 	<form method="post" action="" style="margin-top: 10px;">
@@ -218,6 +229,7 @@ icms_cp_header();
 	<p><strong>Backup Format:</strong> ZIP (compressed)</p>
 	<p><strong>Default Excluded Directories:</strong> cache, templates_c, backups</p>
 	<p><strong>Uploads Directory:</strong> Excluded by default (can be included via checkbox)</p>
+	<p><strong>Database:</strong> Optional SQL dump of all site-prefixed tables, stored as <code>_database/database.sql</code> in the archive. Never restored unless requested.</p>
 	<p><strong>Excluded Files:</strong> *.log, *.tmp, .DS_Store, Thumbs.db</p>
 	<p><strong>Maximum File Size:</strong> 50MB</p>
 </div>
@@ -243,6 +255,16 @@ icms_cp_header();
 			</div>
 
 			<div style="margin: 10px 0;">
+				<label>
+					<input type="checkbox" name="restore_database" value="1" />
+					Also restore the database dump (if the backup contains one)
+				</label>
+				<div style="margin-left: 20px; color: #c00; font-size: 12px;">
+					Warning: this drops and recreates every site-prefixed table contained in the dump, overwriting current data.
+				</div>
+			</div>
+
+			<div style="margin: 10px 0;">
 				<strong style="color: red;">Warning:</strong> This will overwrite your current installation files.
 				Make sure you have a recent backup before proceeding.
 			</div>
@@ -262,7 +284,7 @@ icms_cp_header();
 <div class="odd">
 	<?php
 	$singleView = new icms_ipf_view_Single($infoObj, false, array(), false);
-	foreach (array('name', 'size', 'created', 'files', 'valid_zip') as $key) {
+	foreach (array('name', 'size', 'created', 'files', 'valid_zip', 'has_database') as $key) {
 		$singleView->addRow(new icms_ipf_view_Row($key));
 	}
 	$singleView->render();

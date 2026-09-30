@@ -32,6 +32,7 @@ class SystemBackupInfo extends icms_ipf_Object {
 		$this->initVar('created', XOBJ_DTYPE_TXTBOX, '', false, 50, '', false, 'Created');
 		$this->initVar('files', XOBJ_DTYPE_TXTBOX, '', false, 50, '', false, 'Files');
 		$this->initVar('valid_zip', XOBJ_DTYPE_TXTBOX, '', false, 10, '', false, 'Valid ZIP');
+		$this->initVar('has_database', XOBJ_DTYPE_TXTBOX, '', false, 10, '', false, 'Contains database');
 
 		if ($info) {
 			$this->setVar('name', $info['name']);
@@ -39,6 +40,7 @@ class SystemBackupInfo extends icms_ipf_Object {
 			$this->setVar('created', $info['created_formatted']);
 			$this->setVar('files', number_format($info['files']));
 			$this->setVar('valid_zip', $info['valid_zip'] ? 'Yes' : 'No');
+			$this->setVar('has_database', !empty($info['has_database']) ? 'Yes' : 'No');
 		}
 	}
 }

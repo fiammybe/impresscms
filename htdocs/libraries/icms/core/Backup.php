@@ -795,9 +795,10 @@ class icms_core_Backup {
 	 *
 	 * @param string $backupName Backup filename to restore
 	 * @param bool $createBackupBeforeRestore Create a backup before restoring
+	 * @param bool $restoreDatabase Also restore the database dump, if the backup has one
 	 * @return bool Success status
 	 */
-	public function restoreBackup($backupName, $createBackupBeforeRestore = true) {
+	public function restoreBackup($backupName, $createBackupBeforeRestore = true, $restoreDatabase = false) {
 		if (!self::canRestoreBackup()) {
 			$this->errors[] = "Permission denied";
 			return false;
@@ -815,11 +816,16 @@ class icms_core_Backup {
 			return false;
 		}
 
+		if ($restoreDatabase && !is_object(icms::$db)) {
+			$this->errors[] = "PDO database connection not available";
+			return false;
+		}
+
 		// Create a backup before restoring if requested
 		if ($createBackupBeforeRestore) {
 			$this->messages[] = "Creating backup before restore...";
 			$preRestoreBackup = 'pre-restore-' . date('Y-m-d-H-i-s');
-			$preRestorePath = $this->createBackup($preRestoreBackup, true);
+			$preRestorePath = $this->createBackup($preRestoreBackup, true, null, (bool)$restoreDatabase);
 
 			if (!$preRestorePath) {
 				$this->errors[] = "Failed to create pre-restore backup. Restoration aborted for safety.";
@@ -835,11 +841,97 @@ class icms_core_Backup {
 		$this->messages[] = "Target directory: " . $this->sourceDir;
 
 		try {
-			return $this->restoreFromZip($backupPath);
+			if (!$this->restoreFromZip($backupPath)) {
+				return false;
+			}
+			return $restoreDatabase ? $this->restoreDatabase($backupPath) : true;
 		} catch (Exception $e) {
 			$this->errors[] = "Restoration failed: " . $e->getMessage();
 			return false;
 		}
+	}
+
+	/**
+	 * Restore the database from the dump stored in a backup ZIP
+	 *
+	 * @param string $backupPath Path to backup ZIP file
+	 * @return bool Success status
+	 */
+	private function restoreDatabase($backupPath) {
+		$zip = new ZipArchive();
+		if ($zip->open($backupPath) !== true) {
+			$this->errors[] = "Cannot open backup ZIP file for database restore";
+			return false;
+		}
+		$in = $zip->getStream(self::DB_DUMP_ENTRY);
+		if ($in === false) {
+			$zip->close();
+			$this->errors[] = "This backup does not contain a database dump";
+			return false;
+		}
+
+		// Extract to a temp file first so a broken archive is detected before touching the DB
+		$tmp = $this->backupDir . '/restore-' . uniqid() . '.tmp';
+		$out = @fopen($tmp, 'wb');
+		$ok = $out !== false && stream_copy_to_stream($in, $out) !== false;
+		if ($out !== false) {
+			fclose($out);
+		}
+		fclose($in);
+		$zip->close();
+		if (!$ok) {
+			@unlink($tmp);
+			$this->errors[] = "Could not extract database dump";
+			return false;
+		}
+
+		$db = icms::$db;
+
+		// The dump switches the connection charset; remember it to put it back
+		$cs = $db->query('SELECT @@character_set_client, @@character_set_results, @@character_set_connection');
+		$oldCs = $cs === false ? false : $cs->fetch(PDO::FETCH_NUM);
+		if ($cs !== false) {
+			$cs->closeCursor();
+		}
+
+		$fh = fopen($tmp, 'rb');
+		$buffer = '';
+		$count = 0;
+		$failed = 0;
+		while (($line = fgets($fh)) !== false) {
+			if ($buffer === '' && strncmp($line, '--', 2) === 0) {
+				continue;
+			}
+			$buffer .= $line;
+			if (substr(rtrim($line, "\r\n"), -1) !== ';') {
+				continue;
+			}
+			if ($db->exec($buffer) === false) {
+				$this->addDbError("Database statement failed");
+				$failed++;
+				break;
+			}
+			$buffer = '';
+			$count++;
+		}
+		fclose($fh);
+		@unlink($tmp);
+
+		// Make sure FK checks are back on even after a failure
+		$db->exec('SET FOREIGN_KEY_CHECKS=1');
+		if ($oldCs !== false) {
+			$db->exec('SET character_set_client=' . $db->quote($oldCs[0])
+				. ', character_set_results=' . $db->quote($oldCs[1])
+				. ', character_set_connection=' . $db->quote($oldCs[2]));
+		}
+
+		$this->messages[] = "Database statements executed: " . $count;
+		if ($failed > 0) {
+			$this->errors[] = "Database restoration failed";
+			return false;
+		}
+		$this->messages[] = "Database restored successfully";
+		return true;
 	}
 
 	/**
@@ -883,6 +975,11 @@ class icms_core_Backup {
 
 				// Skip directories (they'll be created automatically)
 				if (substr($filename, -1) === '/') {
+					continue;
+				}
+
+				// The database dump is not a site file; restoreDatabase() handles it
+				if (strpos(str_replace('\\', '/', $filename), '_database/') === 0) {
 					continue;
 				}
 
@@ -1021,7 +1118,8 @@ class icms_core_Backup {
 			'created' => filemtime($backupPath),
 			'created_formatted' => date('Y-m-d H:i:s', filemtime($backupPath)),
 			'files' => 0,
-			'valid_zip' => false
+			'valid_zip' => false,
+			'has_database' => false
 		);
 
 		// Check if it's a valid ZIP and get file count
@@ -1030,6 +1128,7 @@ class icms_core_Backup {
 			if ($zip->open($backupPath) === TRUE) {
 				$info['valid_zip'] = true;
 				$info['files'] = $zip->numFiles;
+				$info['has_database'] = $zip->locateName(self::DB_DUMP_ENTRY) !== false;
 				$zip->close();
 			}
 		}
