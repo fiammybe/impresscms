@@ -352,6 +352,24 @@ function xoops_module_update_system(
 	 * Place all release upgrade steps above this point
 	 */
 
+	if (!$abortUpdate) {
+		/*
+		 * Remove the legacy lowercase libraries/icms folder once the PSR-4 Icms folder
+		 * is in place. Compare the exact names in the directory listing: on a
+		 * case-insensitive filesystem both spellings are one and the same folder,
+		 * which must never be deleted. Deferred, because this request may still
+		 * autoload classes from it.
+		 */
+		$libraryFolders = scandir(ICMS_LIBRARIES_PATH) ?: [];
+		if (in_array("icms", $libraryFolders, true) && in_array("Icms", $libraryFolders, true)) {
+			$legacyLibrary = ICMS_LIBRARIES_PATH . "/icms";
+			register_shutdown_function(
+				static fn() => icms_core_Filesystem::deleteRecursive($legacyLibrary, true),
+			);
+			echo "The legacy libraries/icms folder will be removed at the end of this update.<br />";
+		}
+	}
+
 	echo "</code>";
 	if ($abortUpdate) {
 		icms_core_Message::error(
