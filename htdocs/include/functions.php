@@ -1620,9 +1620,10 @@ function &icms_getModuleHandler($name = null, $module_dir = null, $module_basena
 				$hnd_file = ICMS_ROOT_PATH . "/modules/{$module_dir}/admin/{$name}/class/{$name}.php";
 			}
 			if (file_exists($hnd_file)) {include_once $hnd_file;}
-			$class = ucfirst(strtolower($module_basename)) . ucfirst($name) . 'Handler';
-			if (class_exists($class)) {
-				$handlers[$module_dir][$name] = new $class(icms::$xoopsDB);
+			if (class_exists($modernClass)) {
+				$handlers[$module_dir][$name] = new $modernClass(icms::$xoopsDB);
+			} elseif (class_exists($legacyClass)) {
+				$handlers[$module_dir][$name] = new $legacyClass(icms::$xoopsDB);
 			}
 		}
 	}
