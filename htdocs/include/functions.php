@@ -192,12 +192,7 @@ function redirect_header($url, $time = 3, $message = '', $addredirect = true, $a
 	{
 		if(preg_match('/^\b(java)?script:([\s]*)history\.go\(-[0-9]*\)([\s]*[;]*[\s]*)$/si', $url)) {$url = ICMS_URL;}
 	}
-	if(!$allowExternalLink && $pos = strpos($url, '://' ))
-	{
-		$xoopsLocation = substr(ICMS_URL, strpos(ICMS_URL, '://') + 3);
-		if(substr($url, $pos + 3, strlen($xoopsLocation)) != $xoopsLocation) {$url = ICMS_URL;}
-		elseif(substr($url, $pos + 3, strlen($xoopsLocation)+1) == $xoopsLocation.'.') {$url = ICMS_URL;}
-	}
+	if(!$allowExternalLink && !icms_core_Security::isLocalUrl((string) $url)) {$url = ICMS_URL;}
 	$theme = $icmsConfig['theme_set'];
 	// if the user selected a theme in the theme block, let's use this theme
 	if(isset($_SESSION['xoopsUserTheme']) && in_array($_SESSION['xoopsUserTheme'], $icmsConfig['theme_set_allowed'])) {$theme = $_SESSION['xoopsUserTheme'];}
@@ -851,7 +846,7 @@ function icms_cleanTags($sSource, $aAllowedTags = array('<h1>','<b>','<u>','<a>'
 function icms_setCookieVar($name, $value, $time = 0)
 {
 	if($time === 0) {$time = time() + 3600 * 24 * 365;}
-	setcookie($name, $value, ['expires' => $time, 'path' => '/' ,'secure' => strpos(ICMS_URL, 'https') === 0, 'httponly' => true]);
+	setcookie($name, $value, ['expires' => $time, 'path' => '/' ,'secure' => strpos(ICMS_URL, 'https') === 0, 'httponly' => true, 'samesite' => 'Lax']);
 
 }
 

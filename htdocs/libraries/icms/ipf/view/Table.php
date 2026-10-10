@@ -804,6 +804,9 @@ class icms_ipf_view_Table {
 		if (!empty($this->_withSelectedActions)) {
 			$this->_tpl->assign('icms_withSelectedActions', $this->_withSelectedActions);
 		}
+		if ($this->_actionButtons || !empty($this->_withSelectedActions)) {
+			$this->_tpl->assign('icms_token', icms::$security->getTokenHTML());
+		}
 
 		$icms_table_template = $this->_customTemplate ? $this->_customTemplate : 'system_persistabletable_display.html';
 		if ($fetchOnly) {

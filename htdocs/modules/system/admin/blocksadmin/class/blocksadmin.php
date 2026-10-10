@@ -82,9 +82,9 @@ class SystemBlocksadmin extends icms_view_block_Object {
 	 */
 	private function visible() {
 		if ($this->getVar('visible', 'n') == 1) {
-			$rtn = '<a href="' . ICMS_URL . '/modules/system/admin.php?fct=blocksadmin&op=visible&bid=' . $this->getVar('bid') . '" title="' . _VISIBLE . '" ><img src="' . ICMS_IMAGES_SET_URL . '/actions/button_ok.png" alt="' . _VISIBLE . '"/></a>';
+			$rtn = '<a href="' . ICMS_URL . '/modules/system/admin.php?fct=blocksadmin&op=visible&bid=' . $this->getVar('bid') . '&' . icms::$security->getTokenQueryParameter() . '" title="' . _VISIBLE . '" ><img src="' . ICMS_IMAGES_SET_URL . '/actions/button_ok.png" alt="' . _VISIBLE . '"/></a>';
 		} else {
-			$rtn = '<a href="' . ICMS_URL . '/modules/system/admin.php?fct=blocksadmin&op=visible&bid=' . $this->getVar('bid') . '" title="' . _VISIBLE . '" ><img src="' . ICMS_IMAGES_SET_URL . '/actions/button_cancel.png" alt="' . _VISIBLE . '"/></a>';
+			$rtn = '<a href="' . ICMS_URL . '/modules/system/admin.php?fct=blocksadmin&op=visible&bid=' . $this->getVar('bid') . '&' . icms::$security->getTokenQueryParameter() . '" title="' . _VISIBLE . '" ><img src="' . ICMS_IMAGES_SET_URL . '/actions/button_cancel.png" alt="' . _VISIBLE . '"/></a>';
 		}
 		return $rtn;
 	}
@@ -119,7 +119,7 @@ class SystemBlocksadmin extends icms_view_block_Object {
 	 * Renders a graphic and link to move the block up (lower weight)
 	 */
 	public function getUpActionLink() {
-		$rtn = '<a href="' . ICMS_URL . '/modules/system/admin.php?fct=blocksadmin&op=up&bid=' . $this->getVar('bid') . '" title="' . _UP . '" ><img src="' . ICMS_IMAGES_SET_URL . '/actions/up.png" alt="' . _UP . '"/></a>';
+		$rtn = '<a href="' . ICMS_URL . '/modules/system/admin.php?fct=blocksadmin&op=up&bid=' . $this->getVar('bid') . '&' . icms::$security->getTokenQueryParameter() . '" title="' . _UP . '" ><img src="' . ICMS_IMAGES_SET_URL . '/actions/up.png" alt="' . _UP . '"/></a>';
 		return $rtn;
 	}
 
@@ -127,7 +127,7 @@ class SystemBlocksadmin extends icms_view_block_Object {
 	 * Renders a graphic and link to move the block down (increase weight)
 	 */
 	public function getDownActionLink() {
-		$rtn = '<a href="' . ICMS_URL . '/modules/system/admin.php?fct=blocksadmin&op=down&bid=' . $this->getVar('bid') . '" title="' . _DOWN . '" ><img src="' . ICMS_IMAGES_SET_URL . '/actions/down.png" alt="' . _DOWN . '"/></a>';
+		$rtn = '<a href="' . ICMS_URL . '/modules/system/admin.php?fct=blocksadmin&op=down&bid=' . $this->getVar('bid') . '&' . icms::$security->getTokenQueryParameter() . '" title="' . _DOWN . '" ><img src="' . ICMS_IMAGES_SET_URL . '/actions/down.png" alt="' . _DOWN . '"/></a>';
 		return $rtn;
 	}
 
@@ -194,13 +194,25 @@ class SystemBlocksadmin extends icms_view_block_Object {
 	 * @see icms_ipf_ObjectForm::icms_ipf_ObjectForm()
 	 */
 	public function getForm($form_caption, $form_name, $form_action = FALSE, $submit_button_caption = _CO_ICMS_SUBMIT, $cancel_js_action = FALSE, $captcha = FALSE) {
+		$this->prepareFormFields();
+		return parent::getForm($form_caption, $form_name, $form_action, $submit_button_caption, $cancel_js_action, $captcha);
+	}
+
+	/**
+	 * Create the secure form for this object
+	 *
+	 * @return a {@link icms_ipf_form_Secure} object for this object
+	 */
+	public function getSecureForm($form_caption, $form_name, $form_action = FALSE, $submit_button_caption = _CO_ICMS_SUBMIT, $cancel_js_action = FALSE, $captcha = FALSE) {
+		$this->prepareFormFields();
+		return parent::getSecureForm($form_caption, $form_name, $form_action, $submit_button_caption, $cancel_js_action, $captcha);
+	}
+
+	private function prepareFormFields() {
 		if (!$this->isNew() && $this->getVar('block_type') != 'C') {
 			$this->hideFieldFromForm('content');
 			$this->hideFieldFromForm('c_type');
 		}
-
-		$form = new icms_ipf_form_Base($this, $form_name, $form_caption, $form_action, NULL, $submit_button_caption, $cancel_js_action, $captcha);
-		return $form;
 	}
 
 	/**

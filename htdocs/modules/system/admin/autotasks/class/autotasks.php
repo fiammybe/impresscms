@@ -207,6 +207,20 @@ class SystemAutoTasks extends icms_ipf_Object {
 	 * @see icms_ipf_Object::getForm()
 	 */
 	public function getForm($form_caption, $form_name, $form_action = FALSE, $submit_button_caption = _CO_ICMS_SUBMIT, $cancel_js_action = FALSE, $captcha = FALSE) {
+		$this->prepareFormFields();
+		return parent::getForm($form_caption, $form_name, $form_action, $submit_button_caption, $cancel_js_action, $captcha);
+	}
+
+	/**
+	 * Custom secure form generation for autotasks
+	 * @see icms_ipf_Object::getSecureForm()
+	 */
+	public function getSecureForm($form_caption, $form_name, $form_action = FALSE, $submit_button_caption = _CO_ICMS_SUBMIT, $cancel_js_action = FALSE, $captcha = FALSE) {
+		$this->prepareFormFields();
+		return parent::getSecureForm($form_caption, $form_name, $form_action, $submit_button_caption, $cancel_js_action, $captcha);
+	}
+
+	private function prepareFormFields() {
 		if ($this->getType(0)=='addon') {
 			$this->doHideFieldFromForm('sat_code');
 			$this->doHideFieldFromForm('sat_onfinish');
@@ -214,7 +228,6 @@ class SystemAutoTasks extends icms_ipf_Object {
 			$this->doShowFieldOnForm('sat_code');
 			$this->doShowFieldOnForm('sat_onfinish');
 		}
-		return parent::getForm($form_caption, $form_name, $form_action, $submit_button_caption, $cancel_js_action, $captcha);
 	}
 
 	/**
