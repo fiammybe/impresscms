@@ -227,6 +227,42 @@ class icms_core_Security {
 	}
 
 	/**
+	 * Check that a redirect target stays on this site: a relative URL, or an http(s) URL on the host of ICMS_URL
+	 *
+	 * Browsers ignore tabs and newlines in URLs and treat backslashes as slashes, so
+	 * the check runs on a normalized copy to catch targets like "/\evil.com".
+	 *
+	 * @param string $url
+	 *
+	 * @return bool
+	 */
+	public static function isLocalUrl($url) {
+		$normalizedUrl = str_replace('\\', '/', preg_replace('/[\x00-\x20]/', '', (string) $url));
+		if (substr($normalizedUrl, 0, 2) === '//') {
+			$normalizedUrl = "http:{$normalizedUrl}";
+		}
+
+		$parts = parse_url($normalizedUrl);
+		if ($parts === false) {
+			return false;
+		}
+
+		if (!isset($parts['scheme'])) {
+			return true;
+		}
+
+		if (!in_array(strtolower($parts['scheme']), array('http', 'https'), true)) {
+			return false;
+		}
+
+		if (!isset($parts['host'])) {
+			return false;
+		}
+
+		return strtolower($parts['host']) === strtolower((string) parse_url(ICMS_URL, PHP_URL_HOST));
+	}
+
+	/**
 	 * Normalize a URL to its scheme://host:port origin
 	 *
 	 * @param string $url
