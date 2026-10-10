@@ -194,13 +194,25 @@ class SystemBlocksadmin extends icms_view_block_Object {
 	 * @see icms_ipf_ObjectForm::icms_ipf_ObjectForm()
 	 */
 	public function getForm($form_caption, $form_name, $form_action = FALSE, $submit_button_caption = _CO_ICMS_SUBMIT, $cancel_js_action = FALSE, $captcha = FALSE) {
+		$this->prepareFormFields();
+		return parent::getForm($form_caption, $form_name, $form_action, $submit_button_caption, $cancel_js_action, $captcha);
+	}
+
+	/**
+	 * Create the secure form for this object
+	 *
+	 * @return a {@link icms_ipf_form_Secure} object for this object
+	 */
+	public function getSecureForm($form_caption, $form_name, $form_action = FALSE, $submit_button_caption = _CO_ICMS_SUBMIT, $cancel_js_action = FALSE, $captcha = FALSE) {
+		$this->prepareFormFields();
+		return parent::getSecureForm($form_caption, $form_name, $form_action, $submit_button_caption, $cancel_js_action, $captcha);
+	}
+
+	private function prepareFormFields() {
 		if (!$this->isNew() && $this->getVar('block_type') != 'C') {
 			$this->hideFieldFromForm('content');
 			$this->hideFieldFromForm('c_type');
 		}
-
-		$form = new icms_ipf_form_Base($this, $form_name, $form_caption, $form_action, NULL, $submit_button_caption, $cancel_js_action, $captcha);
-		return $form;
 	}
 
 	/**

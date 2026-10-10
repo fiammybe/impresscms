@@ -28,12 +28,12 @@ function editpage($page_id = 0, $clone = FALSE) {
 	$pageObj = $icms_page_handler->get($page_id);
 
 	if (!$clone && !$pageObj->isNew()) {
-		$sform = $pageObj->getForm (_AM_SYSTEM_PAGES_EDIT, 'addpage');
+		$sform = $pageObj->getSecureForm (_AM_SYSTEM_PAGES_EDIT, 'addpage');
 		$sform->assign ($icmsAdminTpl);
 
 	} else {
 		$pageObj->setVar('page_type', 'C');
-		$sform = $pageObj->getForm (_AM_SYSTEM_PAGES_CREATE, 'addpage');
+		$sform = $pageObj->getSecureForm (_AM_SYSTEM_PAGES_CREATE, 'addpage');
 		$sform->assign ($icmsAdminTpl);
 
 	}
@@ -91,6 +91,10 @@ if (in_array($clean_op, $valid_op, TRUE)) {
 			break;
 
 		case "addpage" :
+			if (!icms::$security->check()) {
+				redirect_header('admin.php?fct=pages', 3, implode('<br />', icms::$security->getErrors()));
+			}
+
 			global $icms_page_handler;
 			$controller = new icms_ipf_Controller($icms_page_handler);
 			$controller->storeFromDefaultForm(_AM_SYSTEM_PAGES_CREATED, _AM_SYSTEM_PAGES_MODIFIED);

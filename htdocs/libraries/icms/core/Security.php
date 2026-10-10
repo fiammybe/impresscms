@@ -181,24 +181,56 @@ class icms_core_Security {
 		}
 	}
 	/**
-	 * Check the user agent's HTTP REFERER against ICMS_URL
+	 * Check that the user agent's HTTP REFERER has the same origin (scheme, host and port) as ICMS_URL
 	 *
 	 * @param int $docheck 0 to not check the referer (used with XML-RPC), 1 to actively check it
 	 *
 	 * @return bool
 	 **/
 	public function checkReferer($docheck = 1) {
-		$ref = xoops_getenv('HTTP_REFERER');
 		if ($docheck == 0) {
 			return true;
 		}
-		if ($ref == '') {
+
+		$ref = (string) xoops_getenv('HTTP_REFERER');
+		if ($ref === '') {
 			return false;
 		}
-		if (strpos($ref, ICMS_URL) !== 0 ) {
+
+		$refererOrigin = $this->getOrigin($ref);
+		if ($refererOrigin === null) {
 			return false;
 		}
-		return true;
+
+		return $refererOrigin === $this->getOrigin(ICMS_URL);
+	}
+
+	/**
+	 * Normalize a URL to its scheme://host:port origin
+	 *
+	 * @param string $url
+	 *
+	 * @return string|null null when the URL has no scheme or host
+	 */
+	private function getOrigin($url) {
+		$parts = parse_url($url);
+		if ($parts === false) {
+			return null;
+		}
+
+		if (!isset($parts['scheme'])) {
+			return null;
+		}
+
+		if (!isset($parts['host'])) {
+			return null;
+		}
+
+		$scheme = strtolower($parts['scheme']);
+		$host = strtolower($parts['host']);
+		$port = isset($parts['port']) ? $parts['port'] : ($scheme === 'https' ? 443 : 80);
+
+		return "{$scheme}://{$host}:{$port}";
 	}
 
 	/**
