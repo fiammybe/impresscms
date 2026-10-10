@@ -140,6 +140,7 @@
 </table>
 <{if  $icms_actionButtons || $icms_withSelectedActions}>
 	<input type='hidden' name='op' id='op' value='' />
+	<{$icms_token}>
 	<{if $icms_withSelectedActions}>
 		<div style="padding: 5px;text-align: <{$smarty.const._GLOBAL_LEFT}>; border-left: 1px solid silver; border-bottom: 1px solid silver; border-right: 1px solid silver;">
 		<{$smarty.const._CO_ICMS_WITH_SELECTED}>

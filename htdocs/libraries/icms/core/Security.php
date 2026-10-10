@@ -52,6 +52,9 @@ class icms_core_Security {
 
 	public $errors = array();
 
+	/** @var array<string, string> */
+	private $linkTokens = array();
+
 	/**
 	 * Initialize the icms::$security service
 	 */
@@ -106,6 +109,24 @@ class icms_core_Security {
 		$token_data = array('id' => $token_id, 'expire' => time() + (int) ($timeout));
 		array_push($_SESSION[$name . '_SESSION'], $token_data);
 		return md5($token_id.$_SERVER['HTTP_USER_AGENT'].XOOPS_DB_PREFIX);
+	}
+
+	/**
+	 * Get a query string parameter carrying a token, for links that change state
+	 *
+	 * The token is created once per request so every link on a page can share it.
+	 * Validate it with check(false), so using one link does not invalidate the others.
+	 *
+	 * @param string $name session name
+	 *
+	 * @return string name=value pair, ready to append to a query string
+	 */
+	public function getTokenQueryParameter($name = _CORE_TOKEN) {
+		if (!isset($this->linkTokens[$name])) {
+			$this->linkTokens[$name] = $this->createToken(0, $name);
+		}
+
+		return "{$name}_REQUEST={$this->linkTokens[$name]}";
 	}
 
 	/**
