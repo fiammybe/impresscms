@@ -34,6 +34,10 @@ if (!$allowed) {
 	$icmsTheme =& $themeFactory->createInstance(array("plugins" => array()));
 	$icmsTheme->addScript('/include/xoops.js', array('type' => 'text/javascript'));
 	$icmsTpl =& $icmsTheme->template;
+	$GLOBALS['icmsTheme'] =& $icmsTheme;
+	$GLOBALS['xoTheme'] =& $icmsTheme;
+	$GLOBALS['icmsTpl'] =& $icmsTpl;
+	$GLOBALS['xoopsTpl'] =& $icmsTpl;
 
 	$icmsTpl->assign(array(
 		'icms_theme' => $icmsConfig['theme_set'],

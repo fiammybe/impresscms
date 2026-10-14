@@ -65,6 +65,19 @@ To install and use this package, transfer this package to your web server, putti
 
 More detailed installation instructions are available [on the ImpressCMS site](https://www.impresscms.org/modules/simplywiki/index.php?page=Installation)
 
+
+## Symfony strangler migration (phase 1)
+
+A Symfony shell now exists in `/symfony` and is used by `htdocs/index.php` as the primary bootstrap entrypoint.
+
+- Symfony-owned diagnostic endpoints:
+  - `/__migration/status`
+  - `/__symfony/health`
+- Non-Symfony requests are delegated to legacy ImpressCMS through a dedicated bridge.
+- This design is shared-hosting friendly and does not require nginx/apache vhost routing customization.
+
+See `/docs/symfony-phase1-strangler.md` for architecture, fallback behavior, and deployment notes.
+
 ## Do you need any help?
 
 You can find our official documentation at [our wiki](https://www.impresscms.org/modules/simplywiki/).
