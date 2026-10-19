@@ -4,46 +4,85 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Legacy\LegacyRuntime;
+use App\Legacy\Dbal\LegacyTables;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Users come from the ImpressCMS session (IcmsSessionAuthenticator). A token
- * Symfony kept in the session is only refreshed while the same user is still
- * logged in to ImpressCMS; otherwise it is dropped.
+ * ImpressCMS users from the database, with DBAL: no legacy boot is needed to
+ * know who is logged in. Users that are deleted or not active (level < 1)
+ * are not found, so their login ends with the next request.
  *
  * @implements UserProviderInterface<IcmsUser>
  */
 final class IcmsUserProvider implements UserProviderInterface
 {
-    public function __construct(private readonly LegacyRuntime $runtime)
-    {
+    /**
+     * @param \Closure(): \Doctrine\DBAL\Connection $connection created on first use: the
+     *                                                  database settings come from mainfile.php
+     */
+    public function __construct(
+        #[AutowireServiceClosure('doctrine.dbal.default_connection')]
+        private readonly \Closure $connection,
+        private readonly LegacyTables $tables,
+    ) {
     }
 
-    public function loadUserByIdentifier(string $identifier): UserInterface
+    /**
+     * @param string $identifier the user name (uname)
+     */
+    public function loadUserByIdentifier(string $identifier): IcmsUser
     {
-        $user = $this->runtime->service('user');
-        if (!is_object($user) || $user->getVar('uname', 'n') !== $identifier) {
-            throw new UserNotFoundException(sprintf('"%s" is not the user logged in to ImpressCMS.', $identifier));
-        }
-
-        return IcmsUser::fromLegacy($user);
+        return $this->load('uname = ?', $identifier)
+            ?? throw new UserNotFoundException(sprintf('No active ImpressCMS user "%s".', $identifier));
     }
 
-    public function refreshUser(UserInterface $user): UserInterface
+    public function loadUserById(int $id): IcmsUser
+    {
+        return $this->load('uid = ?', $id)
+            ?? throw new UserNotFoundException(sprintf('No active ImpressCMS user with id %d.', $id));
+    }
+
+    public function refreshUser(UserInterface $user): IcmsUser
     {
         if (!$user instanceof IcmsUser) {
             throw new UnsupportedUserException(sprintf('Unsupported user "%s".', $user::class));
         }
 
-        return $this->loadUserByIdentifier($user->getUserIdentifier());
+        return $this->loadUserById($user->getId());
     }
 
     public function supportsClass(string $class): bool
     {
         return $class === IcmsUser::class;
+    }
+
+    private function load(string $condition, int|string $value): ?IcmsUser
+    {
+        $row = ($this->connection)()->fetchAssociative(
+            'SELECT uid, uname, name FROM ' . $this->tables->name('users') . ' WHERE ' . $condition . ' AND level > 0',
+            [$value],
+        );
+        if ($row === false) {
+            return null;
+        }
+
+        $groups = array_map('intval', ($this->connection)()->fetchFirstColumn(
+            'SELECT groupid FROM ' . $this->tables->name('groups_users_link') . ' WHERE uid = ? ORDER BY groupid',
+            [(int) $row['uid']],
+        ));
+        $uname = (string) $row['uname'];
+        $name = trim((string) $row['name']);
+
+        return new IcmsUser(
+            (int) $row['uid'],
+            $uname,
+            $name !== '' ? $name : $uname,
+            array_values(array_unique($groups)),
+            defined('ICMS_GROUP_ADMIN') ? (int) constant('ICMS_GROUP_ADMIN') : 1,
+        );
     }
 }

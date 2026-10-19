@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * The ImpressCMS user (icms::$user) as the Symfony user (design D11).
+ * An ImpressCMS user as the Symfony user: the identity of both applications
+ * (App\Security\IcmsUserProvider loads it, icms::$user is the same user).
  *
  * Roles: ROLE_USER for every logged-in user, ROLE_WEBMASTER for members of
  * the webmasters group (ICMS_GROUP_ADMIN) and ROLE_GROUP_<id> per group.
+ * Equal by id, so that a change of groups does not end the login.
  */
-final class IcmsUser implements UserInterface
+final class IcmsUser implements UserInterface, EquatableInterface
 {
     /**
      * @param list<int> $groups
@@ -87,6 +90,11 @@ final class IcmsUser implements UserInterface
     public function getUserIdentifier(): string
     {
         return $this->uname;
+    }
+
+    public function isEqualTo(UserInterface $user): bool
+    {
+        return $user instanceof self && $user->id === $this->id;
     }
 
     public function eraseCredentials(): void

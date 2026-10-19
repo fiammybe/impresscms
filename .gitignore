@@ -19,4 +19,5 @@
 /config/reference.php
 # probe preload installed by tests/Http/ModuleBootTest.php
 /htdocs/plugins/preloads/zzicmstestprobe.php
+/htdocs/plugins/preloads/zzicmstestlogin.php
 /htdocs/trust_dist/

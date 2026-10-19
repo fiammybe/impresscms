@@ -13,17 +13,15 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageFactoryInterface;
 
 /**
- * ImpressCMS owns the session (design D10): before Symfony touches it, the
- * legacy services boot, so Icms\Core\Session sets the session name, cookie
- * parameters and database save handler and starts the session. Symfony's
- * php_bridge storage then works on that very session, with attributes that
- * are the $_SESSION entries legacy code uses (LegacySessionAttributeBag).
+ * The host's session, with attributes that are the $_SESSION entries legacy
+ * code uses (LegacySessionAttributeBag). The storage is
+ * App\Session\IcmsSessionStorageFactory; legacy code reaches the session
+ * through App\Security\LegacySessionHost.
  */
 #[AsDecorator('session.factory')]
 final class LegacySessionFactory implements SessionFactoryInterface
 {
     public function __construct(
-        private readonly LegacyRuntime $runtime,
         private readonly RequestStack $requestStack,
         #[Autowire(service: 'session.storage.factory')]
         private readonly SessionStorageFactoryInterface $storageFactory,
@@ -34,8 +32,6 @@ final class LegacySessionFactory implements SessionFactoryInterface
 
     public function createSession(): SessionInterface
     {
-        $this->runtime->bootTo('services');
-
         $usageReporter = $this->sessionListener !== null && method_exists($this->sessionListener, 'onSessionUsage')
             ? $this->sessionListener->onSessionUsage(...)
             : null;

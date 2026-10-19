@@ -50,8 +50,9 @@ final class KernelBootTest extends TestCase
         $classes = array_filter(
             array_merge(get_declared_classes(), get_declared_interfaces()),
             static fn (string $class): bool => str_starts_with($class, 'Icms\\')
-                // guard-free interfaces the compiler may reflect for error messages
-                && !in_array($class, ['Icms\\Db\\IConnection'], true),
+                // guard-free interfaces the compiler may reflect: for error messages,
+                // or because a host service implements them (App\Security\LegacySessionHost)
+                && !in_array($class, ['Icms\\Db\\IConnection', 'Icms\\Core\\SessionHost'], true),
         );
         sort($classes);
 

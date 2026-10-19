@@ -143,15 +143,8 @@ if (FALSE != $user) {
 	/* Continue with login - all negative checks have been passed */
 	$user->setVar('last_login', time());
 	if (!$member_handler->insertUser($user)) {}
-	// Regenerate a new session id and destroy old session
-	session_regenerate_id(TRUE);
-	$_SESSION = array();
-	$_SESSION['xoopsUserId'] = $user->getVar('uid');
-	$_SESSION['xoopsUserGroups'] = $user->getGroups();
-
-	if ($icmsConfig['use_mysession'] && $icmsConfig['session_name'] != '') {
-		icms_setCookieVar($icmsConfig['session_name'], session_id(), time()+(60 * $icmsConfig['session_expire']));
-	}
+	// a new session id, without the data of the old session (through the host, if any)
+	icms::$session->login($user);
 
 	$_SESSION['xoopsUserLastLogin'] = $user->getVar('last_login');
 

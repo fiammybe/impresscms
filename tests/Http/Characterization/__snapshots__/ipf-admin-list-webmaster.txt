@@ -1,7 +1,7 @@
 GET /modules/system/admin.php?fct=userrank (webmaster)
 status: 200
 content-type: text/html; charset=utf-8
-cache-control: private, no-cache
+cache-control: max-age=0, must-revalidate, no-cache, private
 pragma: no-cache
 x-frame-options: SAMEORIGIN
 set-cookie: tbl_SystemUserrank_sortsel=*; domain={HOSTNAME}; expires; httponly; max-age; path=/

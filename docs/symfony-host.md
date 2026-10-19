@@ -266,15 +266,30 @@ preloads run first and are not affected.
 
 ## Session and identity
 
-ImpressCMS owns the session: `Icms\Core\Session` sets the name (`session_name`
-with `use_mysession`), the lifetime and the database save handler. Symfony uses
-the `php_bridge` storage, and `App\Legacy\LegacySessionFactory` boots the
-legacy services before Symfony touches the session. Symfony's session
-attributes are the ImpressCMS `$_SESSION` entries.
+The host owns the session and the identity (OpenSpec change
+`symfony-owns-the-session`).
 
-The user logged in to ImpressCMS is the Symfony user (`App\Security\IcmsUser`).
-Login, logout and autologin stay in ImpressCMS. The lazy firewall reads the
-user again on every request that needs it.
+- **Storage.** Symfony starts native PHP sessions and stores them in the
+  ImpressCMS `session` table (`App\Session\IcmsDatabaseSessionHandler`, bound to
+  the first three IPv4 blocks or seven IPv6 groups, as before). The name and
+  lifetime follow the preferences `use_mysession`, `session_name` and
+  `session_expire`, read with DBAL (`App\Session\SessionSettings`). The
+  cookie is `HttpOnly` and `SameSite=Lax`. Symfony's session attributes are the
+  ImpressCMS `$_SESSION` entries (`App\Legacy\LegacySessionAttributeBag`).
+- **Identity.** The security token in the session decides who is logged in.
+  `App\Security\IcmsUserProvider` loads `App\Security\IcmsUser` and its groups
+  with DBAL; a deleted or deactivated user is anonymous on the next request.
+- **Legacy.** `App\Security\LegacySessionHost` implements
+  `Icms\Core\SessionHost` and is installed with `Icms\Core\Session::setHost()`
+  on every request. `Icms\Core\Session::service()` then starts the host's
+  session and sets `icms::$user` from the token; `$_SESSION['xoopsUserId']` and
+  `xoopsUserGroups` are written as a mirror for modules, never read. Without a
+  host (command line, isolated tests) ImpressCMS keeps its own handler.
+- **Login and logout.** `include/checklogin.php` checks the credentials and
+  calls `Icms\Core\Session::login()`, which logs in through `Security::login()`
+  with `App\Security\LegacyLoginAuthenticator` (new session id). A preload that
+  sets `xoopsUserId` during `sessionStart`, such as the autologin preload, logs
+  the user in the same way. The legacy logout invalidates the session.
 
 | Role / attribute | Granted to |
 |---|---|

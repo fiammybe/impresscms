@@ -1,9 +1,8 @@
 GET / (site closed, anonymous)
 status: 200
 content-type: text/html; charset=UTF-8
-cache-control: no-store, no-cache, must-revalidate
+cache-control: max-age=0, must-revalidate, no-cache, no-store, private
 pragma: no-cache
-set-cookie: ICMSSESSION=*; path=/
 
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">

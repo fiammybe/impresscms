@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Test;
 
+use App\Legacy\LegacyRuntime;
 use App\Security\Attribute\RequiresLegacyToken;
 use App\Security\IcmsUser;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,8 +23,10 @@ final class IdentityTestController
      * The visitor as Symfony sees it, without access restriction.
      */
     #[Route('/_test/identity', name: 'test_identity', methods: ['GET'], env: 'test')]
-    public function identity(#[CurrentUser] ?IcmsUser $user, Request $request): JsonResponse
+    public function identity(#[CurrentUser] ?IcmsUser $user, Request $request, LegacyRuntime $runtime): JsonResponse
     {
+        // icms::$user as a legacy page sees it
+        $legacyUser = $runtime->service('user');
         $session = $request->getSession();
 
         return new JsonResponse([
@@ -31,8 +34,8 @@ final class IdentityTestController
             'id' => $user?->getId(),
             'uname' => $user?->getUname(),
             'groups' => $user?->getGroups() ?? [(int) ICMS_GROUP_ANONYMOUS],
-            'legacy_user_id' => is_object(\icms::$user) ? (int) \icms::$user->getVar('uid') : null,
-            'legacy_groups' => is_object(\icms::$user) ? array_map('intval', \icms::$user->getGroups()) : null,
+            'legacy_user_id' => is_object($legacyUser) ? (int) $legacyUser->getVar('uid') : null,
+            'legacy_groups' => is_object($legacyUser) ? array_map('intval', $legacyUser->getGroups()) : null,
             'session_name' => $session->getName(),
             'session_user_id' => $session->get('xoopsUserId'),
         ]);

@@ -60,8 +60,28 @@ class Session {
 	 *
 	 * @return self
 	 */
+	/**
+	 * The host that owns the session and the authentication, if any
+	 */
+	private static ?SessionHost $host = null;
+
+	/**
+	 * Hands the session and the authentication to the hosting application, or
+	 * back to ImpressCMS with null.
+	 */
+	public static function setHost(?SessionHost $host): void {
+		self::$host = $host;
+	}
+
+	public static function host(): ?SessionHost {
+		return self::$host;
+	}
+
 	public static function service(): self {
 		global $icmsConfig;
+		if (self::$host !== null) {
+			return self::hostedService(self::$host);
+		}
 		$instance = new self(\icms::$xoopsDB);
 		session_set_save_handler(array($instance, 'open'), array($instance, 'close'), array($instance, 'read'),
 			array($instance, 'write'), array($instance, 'destroy'), array($instance, 'gc'));
@@ -91,13 +111,78 @@ class Session {
 	}
 
 	/**
+	 * The session service inside the host: the host starts the session, and its
+	 * authenticated user is icms::$user. $_SESSION['xoopsUserId'] and
+	 * $_SESSION['xoopsUserGroups'] are written for code that reads them; a
+	 * preload that sets xoopsUserId while the session starts (autologin) logs
+	 * that user in.
+	 */
+	private static function hostedService(SessionHost $host): self {
+		global $icmsConfig;
+		$instance = new self(\icms::$xoopsDB);
+		$host->start();
+
+		$uid = $host->userId();
+		// the token decides; the keys only mirror it (also for the preloads below)
+		unset($_SESSION['xoopsUserId'], $_SESSION['xoopsUserGroups']);
+		if ($uid > 0) {
+			$_SESSION['xoopsUserId'] = $uid;
+		}
+		\Icms\Event::trigger('icms_core_Session', 'sessionStart', $instance);
+		if ($uid === 0 && !empty($_SESSION['xoopsUserId'])) {
+			$uid = (int) $_SESSION['xoopsUserId'];
+			$host->login($uid);
+		}
+		unset($_SESSION['xoopsUserId'], $_SESSION['xoopsUserGroups']);
+
+		if ($uid > 0) {
+			$user = \icms::handler('icms_member')->getUser($uid);
+			if (!is_object($user) || $user->getVar('level', 'n') < 1) {
+				$host->logout();
+			} else {
+				\icms::$user = $user;
+				$_SESSION['xoopsUserId'] = (int) $user->getVar('uid');
+				$_SESSION['xoopsUserGroups'] = $user->getGroups();
+				if (!isset($_SESSION['UserLanguage']) || empty($_SESSION['UserLanguage'])) {
+					$_SESSION['UserLanguage'] = $user->getVar('language', 'n');
+				}
+			}
+		}
+		return $instance;
+	}
+
+	/**
+	 * Logs the user in for this and later requests, with a new session id.
+	 * Earlier session data is discarded.
+	 *
+	 * @param object $user an icms_member_user_Object
+	 */
+	public function login(object $user): void {
+		global $icmsConfig;
+		if (self::$host !== null) {
+			$_SESSION = array();
+			self::$host->login((int) $user->getVar('uid'));
+		} else {
+			session_regenerate_id(true);
+			$_SESSION = array();
+			if ($icmsConfig['use_mysession'] && $icmsConfig['session_name'] != '') {
+				\icms_setCookieVar($icmsConfig['session_name'], session_id(), time() + (60 * $icmsConfig['session_expire']));
+			}
+		}
+		\icms::$user = $user;
+		$_SESSION['xoopsUserId'] = (int) $user->getVar('uid');
+		$_SESSION['xoopsUserGroups'] = $user->getGroups();
+	}
+
+	/**
 	 * Database connection
 	 *
 	 * @var object
 	 * @access private
 	 */
 	private $db;
-	private string $mainSaltKey = XOOPS_DB_SALT;
+	// set in the constructor: the host calls setHost() before mainfile.php is read
+	private string $mainSaltKey;
 
 	/**
 	 * Security checking level
@@ -148,6 +233,7 @@ class Session {
 	 */
 	public function __construct($db) {
 		$this->db = $db;
+		$this->mainSaltKey = XOOPS_DB_SALT;
 	}
 
 	/**
@@ -336,10 +422,15 @@ class Session {
 		global $icmsConfig;
 
 		$uid = (int) $uid;
-		session_regenerate_id(true);
-		$_SESSION = array();
-		if ($icmsConfig['use_mysession'] && $icmsConfig['session_name'] != '') {
-			\icms_setCookieVar($icmsConfig['session_name'], '', time() - 3600);
+		if (self::$host !== null) {
+			$_SESSION = array();
+			self::$host->logout();
+		} else {
+			session_regenerate_id(true);
+			$_SESSION = array();
+			if ($icmsConfig['use_mysession'] && $icmsConfig['session_name'] != '') {
+				\icms_setCookieVar($icmsConfig['session_name'], '', time() - 3600);
+			}
 		}
 		// clear entry from online users table
 		if ($uid > 0) {

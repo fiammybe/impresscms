@@ -1,8 +1,9 @@
-# The ImpressCMS session is the identity (design D11). Login, logout and
-# autologin stay in ImpressCMS. The firewall is lazy, so legacy pages and routes
-# that do not ask for the user never boot ImpressCMS here; when a route asks,
-# the user is read from the ImpressCMS session again, on every request. (A
-# stateless firewall cannot be lazy.)
+# The security token is the identity of the whole site (OpenSpec change
+# symfony-owns-the-session): legacy pages take icms::$user from it through
+# App\Security\LegacySessionHost. The legacy login checks the credentials and
+# logs in programmatically with App\Security\LegacyLoginAuthenticator, which is
+# also the entry point (the ImpressCMS login page). The firewall is lazy, so
+# requests that never ask for the user do not touch the session.
 security:
     providers:
         icms:
@@ -13,8 +14,8 @@ security:
             lazy: true
             provider: icms
             custom_authenticators:
-                - App\Security\IcmsSessionAuthenticator
-            entry_point: App\Security\IcmsSessionAuthenticator
+                - App\Security\LegacyLoginAuthenticator
+            entry_point: App\Security\LegacyLoginAuthenticator
 
     # Restrict Symfony routes with #[IsGranted('ROLE_USER')], 'ROLE_WEBMASTER',
     # 'ROLE_GROUP_<id>' or 'icms_perm:<permission>' (App\Security\ModulePermissionVoter).

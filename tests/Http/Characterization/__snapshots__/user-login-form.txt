@@ -1,10 +1,10 @@
 GET /user.php
 status: 200
 content-type: text/html; charset=utf-8
-cache-control: private, no-cache
+cache-control: max-age=0, must-revalidate, no-cache, private
 pragma: no-cache
 x-frame-options: SAMEORIGIN
-set-cookie: ICMSSESSION=*; path=/
+set-cookie: ICMSSESSION=*; httponly; path=/; samesite=lax
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">

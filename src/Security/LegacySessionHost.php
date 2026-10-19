@@ -1,0 +1,140 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Security;
+
+use App\Session\IcmsDatabaseSessionHandler;
+use Icms\Core\Session as LegacySession;
+use Icms\Core\SessionHost;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionUtils;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+
+/**
+ * The host's session and authentication for ImpressCMS (design D3-D5 of
+ * symfony-owns-the-session): installed with Icms\Core\Session::setHost() for
+ * every main request, so that the session legacy code starts is Symfony's and
+ * icms::$user is the user of the security token.
+ *
+ * Legacy pages run after HttpKernel::handle(), when the request is no longer
+ * on the request stack; the host keeps the request it was installed for and
+ * puts it back for Security::login().
+ */
+final class LegacySessionHost implements SessionHost
+{
+    private ?Request $request = null;
+
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly Security $security,
+        private readonly IcmsUserProvider $users,
+        private readonly IcmsDatabaseSessionHandler $sessions,
+    ) {
+    }
+
+    /** After the session listener (128) gave the request its session, before the firewall (8). */
+    #[AsEventListener(event: KernelEvents::REQUEST, priority: 100)]
+    public function install(RequestEvent $event): void
+    {
+        if (!$event->isMainRequest() || !interface_exists(SessionHost::class)) {
+            return;
+        }
+        $this->request = $event->getRequest();
+        LegacySession::setHost($this);
+    }
+
+    public function start(): void
+    {
+        $this->request()->getSession()->start();
+        $this->withoutPhpSessionCookie();
+    }
+
+    public function userId(): int
+    {
+        $user = $this->tokenStorage->getToken()?->getUser();
+        if ($user instanceof IcmsUser) {
+            return $user->getId();
+        }
+
+        // A session that ImpressCMS stored itself, before the host owned the
+        // session (an upgrade): its login is taken over once. Symfony stamps
+        // every session it stores, so later the keys are only a mirror.
+        $uid = (int) ($_SESSION['xoopsUserId'] ?? 0);
+        if ($uid > 0 && $this->sessionFromBeforeTheHost()) {
+            $this->login($uid);
+            $user = $this->tokenStorage->getToken()?->getUser();
+
+            return $user instanceof IcmsUser ? $user->getId() : 0;
+        }
+
+        return 0;
+    }
+
+    private function sessionFromBeforeTheHost(): bool
+    {
+        $session = $this->request()->getSession();
+
+        return $session->isStarted() && $this->sessions->storedBeforeTheHost($session->getId());
+    }
+
+    public function login(int $uid): void
+    {
+        try {
+            $user = $this->users->loadUserById($uid);
+        } catch (UserNotFoundException) {
+            $this->logout();
+
+            return;
+        }
+
+        $request = $this->request();
+        $pushed = $this->requestStack->getCurrentRequest() !== $request;
+        if ($pushed) {
+            $this->requestStack->push($request);
+        }
+        try {
+            $this->security->login($user, LegacyLoginAuthenticator::class, 'main');
+            $this->withoutPhpSessionCookie();
+        } finally {
+            if ($pushed) {
+                $this->requestStack->pop();
+            }
+        }
+    }
+
+    public function logout(): void
+    {
+        $this->tokenStorage->setToken(null);
+        $this->request()->getSession()->invalidate();
+        $this->withoutPhpSessionCookie();
+    }
+
+    /**
+     * PHP sends the session cookie whenever it starts or regenerates a session,
+     * and the bridge would pass that header on with a legacy page. Symfony's
+     * session listener sends the cookie itself when the session is new or its id
+     * changed (as it does for Symfony routes), so PHP's header is removed.
+     */
+    private function withoutPhpSessionCookie(): void
+    {
+        $session = $this->request()->getSession();
+        if ($session->isStarted()) {
+            SessionUtils::popSessionCookie($session->getName(), $session->getId());
+        }
+    }
+
+    private function request(): Request
+    {
+        return $this->request
+            ?? $this->requestStack->getMainRequest()
+            ?? throw new \LogicException('The session host has no request.');
+    }
+}
