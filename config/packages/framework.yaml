@@ -4,10 +4,10 @@ framework:
     handle_all_throwables: true
     # The host owns the session (OpenSpec change symfony-owns-the-session): native
     # PHP sessions in the ImpressCMS `session` table, named and timed by the
-    # ImpressCMS preferences (App\Session\IcmsSessionStorageFactory); legacy code
-    # uses it through App\Security\LegacySessionHost
+    # ImpressCMS preferences (App\Session\Storage\Factory); legacy code
+    # uses it through App\Session\Host
     session:
-        storage_factory_id: App\Session\IcmsSessionStorageFactory
+        storage_factory_id: App\Session\Storage\Factory
         handler_id: ~
     php_errors:
         log: true

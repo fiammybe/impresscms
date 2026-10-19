@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Security\User;
 
-use App\Legacy\Dbal\LegacyTables;
+use App\Legacy\Dbal\Tables;
 use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -16,9 +16,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  * know who is logged in. Users that are deleted or not active (level < 1)
  * are not found, so their login ends with the next request.
  *
- * @implements UserProviderInterface<IcmsUser>
+ * @implements UserProviderInterface<Entity>
  */
-final class IcmsUserProvider implements UserProviderInterface
+final class Provider implements UserProviderInterface
 {
     /**
      * @param \Closure(): \Doctrine\DBAL\Connection $connection created on first use: the
@@ -27,28 +27,28 @@ final class IcmsUserProvider implements UserProviderInterface
     public function __construct(
         #[AutowireServiceClosure('doctrine.dbal.default_connection')]
         private readonly \Closure $connection,
-        private readonly LegacyTables $tables,
+        private readonly Tables $tables,
     ) {
     }
 
     /**
      * @param string $identifier the user name (uname)
      */
-    public function loadUserByIdentifier(string $identifier): IcmsUser
+    public function loadUserByIdentifier(string $identifier): Entity
     {
         return $this->load('uname = ?', $identifier)
             ?? throw new UserNotFoundException(sprintf('No active ImpressCMS user "%s".', $identifier));
     }
 
-    public function loadUserById(int $id): IcmsUser
+    public function loadUserById(int $id): Entity
     {
         return $this->load('uid = ?', $id)
             ?? throw new UserNotFoundException(sprintf('No active ImpressCMS user with id %d.', $id));
     }
 
-    public function refreshUser(UserInterface $user): IcmsUser
+    public function refreshUser(UserInterface $user): Entity
     {
-        if (!$user instanceof IcmsUser) {
+        if (!$user instanceof Entity) {
             throw new UnsupportedUserException(sprintf('Unsupported user "%s".', $user::class));
         }
 
@@ -57,10 +57,10 @@ final class IcmsUserProvider implements UserProviderInterface
 
     public function supportsClass(string $class): bool
     {
-        return $class === IcmsUser::class;
+        return $class === Entity::class;
     }
 
-    private function load(string $condition, int|string $value): ?IcmsUser
+    private function load(string $condition, int|string $value): ?Entity
     {
         $row = ($this->connection)()->fetchAssociative(
             'SELECT uid, uname, name FROM ' . $this->tables->name('users') . ' WHERE ' . $condition . ' AND level > 0',
@@ -77,7 +77,7 @@ final class IcmsUserProvider implements UserProviderInterface
         $uname = (string) $row['uname'];
         $name = trim((string) $row['name']);
 
-        return new IcmsUser(
+        return new Entity(
             (int) $row['uid'],
             $uname,
             $name !== '' ? $name : $uname,

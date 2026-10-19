@@ -63,17 +63,17 @@ class Session {
 	/**
 	 * The host that owns the session and the authentication, if any
 	 */
-	private static ?SessionHost $host = null;
+	private static ?Session\IHost $host = null;
 
 	/**
 	 * Hands the session and the authentication to the hosting application, or
 	 * back to ImpressCMS with null.
 	 */
-	public static function setHost(?SessionHost $host): void {
+	public static function setHost(?Session\IHost $host): void {
 		self::$host = $host;
 	}
 
-	public static function host(): ?SessionHost {
+	public static function host(): ?Session\IHost {
 		return self::$host;
 	}
 
@@ -117,7 +117,7 @@ class Session {
 	 * preload that sets xoopsUserId while the session starts (autologin) logs
 	 * that user in.
 	 */
-	private static function hostedService(SessionHost $host): self {
+	private static function hostedService(Session\IHost $host): self {
 		global $icmsConfig;
 		$instance = new self(\icms::$xoopsDB);
 		$host->start();

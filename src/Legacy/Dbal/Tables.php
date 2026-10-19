@@ -11,7 +11,7 @@ use App\Legacy\LegacyRuntime;
  * (XOOPS_DB_PREFIX) and the table name, as icms::$xoopsDB->prefix() builds it.
  * Reads mainfile.php only (the `constants` stage), so it boots no services.
  */
-final class LegacyTables
+final class Tables
 {
     public function __construct(private readonly LegacyRuntime $runtime)
     {

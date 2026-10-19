@@ -15,8 +15,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageFactoryInterf
 /**
  * The host's session, with attributes that are the $_SESSION entries legacy
  * code uses (LegacySessionAttributeBag). The storage is
- * App\Session\IcmsSessionStorageFactory; legacy code reaches the session
- * through App\Security\LegacySessionHost.
+ * App\Session\Storage\Factory; legacy code reaches the session
+ * through App\Session\Host.
  */
 #[AsDecorator('session.factory')]
 final class LegacySessionFactory implements SessionFactoryInterface

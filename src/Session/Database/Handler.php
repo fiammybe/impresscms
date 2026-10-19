@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Session;
+namespace App\Session\Database;
 
-use App\Legacy\Dbal\LegacyTables;
+use App\Legacy\Dbal\Tables;
 use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
 
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHand
  * the first three IPv4 blocks, or the first seven IPv6 groups. No locking, as
  * before.
  */
-final class IcmsDatabaseSessionHandler extends AbstractSessionHandler
+final class Handler extends AbstractSessionHandler
 {
     private const IPV4_BLOCKS = 3;
     private const IPV6_GROUPS = 7;
@@ -35,7 +35,7 @@ final class IcmsDatabaseSessionHandler extends AbstractSessionHandler
     public function __construct(
         #[AutowireServiceClosure('doctrine.dbal.default_connection')]
         private readonly \Closure $connection,
-        private readonly LegacyTables $tables,
+        private readonly Tables $tables,
     ) {
     }
 

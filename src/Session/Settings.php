@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Session;
 
-use App\Legacy\Dbal\LegacyTables;
+use App\Legacy\Dbal\Tables;
 use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 
 /**
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
  * use_mysession, session_name, session_expire), read with one DBAL query, so
  * that the host can start the session before any legacy code runs.
  */
-final class SessionSettings
+final class Settings
 {
     /** The session name ImpressCMS uses without a custom one. */
     public const DEFAULT_NAME = 'ICMSSESSION';
@@ -27,7 +27,7 @@ final class SessionSettings
     public function __construct(
         #[AutowireServiceClosure('doctrine.dbal.default_connection')]
         private readonly \Closure $connection,
-        private readonly LegacyTables $tables,
+        private readonly Tables $tables,
     ) {
     }
 

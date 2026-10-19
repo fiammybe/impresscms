@@ -42,7 +42,7 @@ final class ModulePermissionVoter extends Voter
     {
         $this->runtime->bootTo('module');
         $user = $token->getUser();
-        $groups = $user instanceof IcmsUser ? $user->getGroups() : [(int) ICMS_GROUP_ANONYMOUS];
+        $groups = $user instanceof User\Entity ? $user->getGroups() : [(int) ICMS_GROUP_ANONYMOUS];
 
         $module = \icms::$module;
         $moduleId = is_object($module) ? (int) $module->getVar('mid') : self::SYSTEM_MODULE_ID;

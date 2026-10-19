@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Session;
 
-use App\Session\IcmsDatabaseSessionHandler;
+use App\Security\Authenticator\Legacy as LegacyAuthenticator;
+use App\Security\User\Entity as User;
+use App\Security\User\Provider as Users;
 use Icms\Core\Session as LegacySession;
-use Icms\Core\SessionHost;
+use Icms\Core\Session\IHost;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +29,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
  * on the request stack; the host keeps the request it was installed for and
  * puts it back for Security::login().
  */
-final class LegacySessionHost implements SessionHost
+final class Host implements IHost
 {
     private ?Request $request = null;
 
@@ -35,8 +37,8 @@ final class LegacySessionHost implements SessionHost
         private readonly RequestStack $requestStack,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly Security $security,
-        private readonly IcmsUserProvider $users,
-        private readonly IcmsDatabaseSessionHandler $sessions,
+        private readonly Users $users,
+        private readonly Database\Handler $sessions,
     ) {
     }
 
@@ -44,7 +46,7 @@ final class LegacySessionHost implements SessionHost
     #[AsEventListener(event: KernelEvents::REQUEST, priority: 100)]
     public function install(RequestEvent $event): void
     {
-        if (!$event->isMainRequest() || !interface_exists(SessionHost::class)) {
+        if (!$event->isMainRequest() || !interface_exists(IHost::class)) {
             return;
         }
         $this->request = $event->getRequest();
@@ -60,7 +62,7 @@ final class LegacySessionHost implements SessionHost
     public function userId(): int
     {
         $user = $this->tokenStorage->getToken()?->getUser();
-        if ($user instanceof IcmsUser) {
+        if ($user instanceof User) {
             return $user->getId();
         }
 
@@ -72,7 +74,7 @@ final class LegacySessionHost implements SessionHost
             $this->login($uid);
             $user = $this->tokenStorage->getToken()?->getUser();
 
-            return $user instanceof IcmsUser ? $user->getId() : 0;
+            return $user instanceof User ? $user->getId() : 0;
         }
 
         return 0;
@@ -101,7 +103,7 @@ final class LegacySessionHost implements SessionHost
             $this->requestStack->push($request);
         }
         try {
-            $this->security->login($user, LegacyLoginAuthenticator::class, 'main');
+            $this->security->login($user, LegacyAuthenticator::class, 'main');
             $this->withoutPhpSessionCookie();
         } finally {
             if ($pushed) {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Security\Authenticator;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,11 +18,11 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
  *
  * No request triggers it: ImpressCMS checks the credentials (include/checklogin.php
  * and the auth methods behind it) and logs the user in programmatically through
- * App\Security\LegacySessionHost, which uses this authenticator for
+ * App\Session\Host, which uses this authenticator for
  * Security::login(). It is also the firewall's entry point: anonymous visitors
  * that a route denies go to the ImpressCMS login with the URL to return to.
  */
-final class LegacyLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
+final class Legacy extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     public function supports(Request $request): ?bool
     {

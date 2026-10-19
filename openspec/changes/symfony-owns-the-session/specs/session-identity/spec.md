@@ -19,7 +19,7 @@ The system SHALL use a single session for both applications, started and stored 
 
 ### Requirement: The ImpressCMS user is the authenticated identity in the new application
 **Reason**: The Symfony security token is now the identity of both applications.
-**Migration**: Replaced by "The security token is the identity of both applications". New-application routes keep using `IcmsUser` and the same roles.
+**Migration**: Replaced by "The security token is the identity of both applications". New-application routes keep the same user (now `App\Security\User\Entity`) and the same roles.
 
 ### Requirement: Login, logout and session expiry remain owned by ImpressCMS
 **Reason**: Login and logout go through the host's security layer.

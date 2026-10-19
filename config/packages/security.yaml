@@ -1,21 +1,21 @@
 # The security token is the identity of the whole site (OpenSpec change
 # symfony-owns-the-session): legacy pages take icms::$user from it through
-# App\Security\LegacySessionHost. The legacy login checks the credentials and
-# logs in programmatically with App\Security\LegacyLoginAuthenticator, which is
+# App\Session\Host. The legacy login checks the credentials and
+# logs in programmatically with App\Security\Authenticator\Legacy, which is
 # also the entry point (the ImpressCMS login page). The firewall is lazy, so
 # requests that never ask for the user do not touch the session.
 security:
     providers:
         icms:
-            id: App\Security\IcmsUserProvider
+            id: App\Security\User\Provider
 
     firewalls:
         main:
             lazy: true
             provider: icms
             custom_authenticators:
-                - App\Security\LegacyLoginAuthenticator
-            entry_point: App\Security\LegacyLoginAuthenticator
+                - App\Security\Authenticator\Legacy
+            entry_point: App\Security\Authenticator\Legacy
 
     # Restrict Symfony routes with #[IsGranted('ROLE_USER')], 'ROLE_WEBMASTER',
     # 'ROLE_GROUP_<id>' or 'icms_perm:<permission>' (App\Security\ModulePermissionVoter).

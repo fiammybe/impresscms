@@ -6,7 +6,7 @@ namespace App\Controller\Test;
 
 use App\Legacy\LegacyRuntime;
 use App\Security\Attribute\RequiresLegacyToken;
-use App\Security\IcmsUser;
+use App\Security\User\Entity as User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ final class IdentityTestController
      * The visitor as Symfony sees it, without access restriction.
      */
     #[Route('/_test/identity', name: 'test_identity', methods: ['GET'], env: 'test')]
-    public function identity(#[CurrentUser] ?IcmsUser $user, Request $request, LegacyRuntime $runtime): JsonResponse
+    public function identity(#[CurrentUser] ?User $user, Request $request, LegacyRuntime $runtime): JsonResponse
     {
         // icms::$user as a legacy page sees it
         $legacyUser = $runtime->service('user');

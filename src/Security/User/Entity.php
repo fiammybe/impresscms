@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Security\User;
 
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * An ImpressCMS user as the Symfony user: the identity of both applications
- * (App\Security\IcmsUserProvider loads it, icms::$user is the same user).
+ * (App\Security\User\Provider loads it, icms::$user is the same user).
  *
  * Roles: ROLE_USER for every logged-in user, ROLE_WEBMASTER for members of
  * the webmasters group (ICMS_GROUP_ADMIN) and ROLE_GROUP_<id> per group.
  * Equal by id, so that a change of groups does not end the login.
  */
-final class IcmsUser implements UserInterface, EquatableInterface
+final class Entity implements UserInterface, EquatableInterface
 {
     /**
      * @param list<int> $groups

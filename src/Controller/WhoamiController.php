@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Security\IcmsUser;
+use App\Security\User\Entity as User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -18,7 +18,7 @@ final class WhoamiController
 {
     #[Route('/whoami', name: 'whoami', methods: ['GET'], env: ['dev', 'test'])]
     #[IsGranted('ROLE_WEBMASTER')]
-    public function __invoke(#[CurrentUser] IcmsUser $user): JsonResponse
+    public function __invoke(#[CurrentUser] User $user): JsonResponse
     {
         return new JsonResponse([
             'id' => $user->getId(),

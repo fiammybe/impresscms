@@ -29,7 +29,7 @@
 
 ### D1. Keep the `session` table, with a DBAL handler
 
-`App\Session\IcmsDatabaseSessionHandler` is an `AbstractSessionHandler`. It reads and writes `sess_id`, `sess_updated`, `sess_ip` and `sess_data` the way `Icms\Core\Session` did, including the IP binding: A.B.C for IPv4, seven groups for IPv6.
+`App\Session\Database\Handler` is an `AbstractSessionHandler`. It reads and writes `sess_id`, `sess_updated`, `sess_ip` and `sess_data` the way `Icms\Core\Session` did, including the IP binding: A.B.C for IPv4, seven groups for IPv6.
 
 Both use PHP's session serialization, so existing sessions remain valid. There is no locking, as before.
 
@@ -37,9 +37,9 @@ Both use PHP's session serialization, so existing sessions remain valid. There i
 
 ### D2. Session settings without booting legacy
 
-`App\Session\SessionSettings` reads `use_mysession`, `session_name` and `session_expire` from the `config` table with one DBAL query. The table prefix comes from `mainfile.php` (`LegacyRuntime::bootTo('constants')`).
+`App\Session\Settings` reads `use_mysession`, `session_name` and `session_expire` from the `config` table with one DBAL query. The table prefix comes from `mainfile.php` (`LegacyRuntime::bootTo('constants')`).
 
-`App\Session\IcmsSessionStorageFactory` builds a `NativeSessionStorage`:
+`App\Session\Storage\Factory` builds a `NativeSessionStorage`:
 - **name**: `session_name` with `use_mysession`, otherwise `ICMSSESSION`;
 - **cookie lifetime and `gc_maxlifetime`**: `session_expire` minutes with `use_mysession`, otherwise a browser session;
 - **cookie flags**: `cookie_httponly`, `cookie_samesite=lax`, and `cookie_secure` for HTTPS requests;
@@ -47,9 +47,9 @@ Both use PHP's session serialization, so existing sessions remain valid. There i
 
 So `GET /up` still touches nothing, and a Symfony route can start the session before any legacy code runs.
 
-### D3. A seam in the legacy library: `Icms\Core\SessionHost`
+### D3. A seam in the legacy library: `Icms\Core\Session\IHost`
 
-The legacy library defines the interface `SessionHost`, with four methods: `start()`, `userId()`, `login(int)` and `logout()`. The host implements it as `App\Security\LegacySessionHost` and installs it with `Icms\Core\Session::setHost()` on every main request (kernel.request).
+The legacy library defines the interface `Icms\Core\Session\IHost`, with four methods: `start()`, `userId()`, `login(int)` and `logout()`. The host implements it as `App\Session\Host` and installs it with `Icms\Core\Session::setHost()` on every main request (kernel.request).
 
 Without an installed host, `Icms\Core\Session` keeps its own handler and behaviour. Command-line scripts and isolated legacy tests are therefore unaffected.
 
@@ -66,11 +66,11 @@ With a host, `Icms\Core\Session::service()`:
 
 Writing the mirror keys anywhere else has no effect.
 
-**One exception: logins from before the upgrade.** These sessions were stored by `Icms\Core\Session` itself. Their data has no Symfony metadata (`_sf2_meta`), and `IcmsDatabaseSessionHandler` notices this when it reads them. For such a session, `LegacySessionHost::userId()` logs in the user of `xoopsUserId` once. Symfony stamps every session it stores, so from then on the keys are only a mirror. That way an upgrade does not log anyone out.
+**One exception: logins from before the upgrade.** These sessions were stored by `Icms\Core\Session` itself. Their data has no Symfony metadata (`_sf2_meta`), and `Session\Database\Handler` notices this when it reads them. For such a session, `Session\Host::userId()` logs in the user of `xoopsUserId` once. Symfony stamps every session it stores, so from then on the keys are only a mirror. That way an upgrade does not log anyone out.
 
-**`IcmsUserProvider`** loads `IcmsUser` with DBAL from `users` and `groups_users_link`. Users with `level < 1` and deleted users are not found, so their token is dropped.
+**`User\Provider`** loads `App\Security\User\Entity` with DBAL from `users` and `groups_users_link`. Users with `level < 1` and deleted users are not found, so their token is dropped.
 
-**`IcmsUser`** implements `EquatableInterface` on the id. A group change therefore does not log the user out. That matches the old behaviour: groups were taken at login, and from the database on each page.
+**`User\Entity`** implements `EquatableInterface` on the id. A group change therefore does not log the user out. That matches the old behaviour: groups were taken at login, and from the database on each page.
 
 ### D5. Legacy login and logout through the host
 
@@ -80,7 +80,7 @@ session_regenerate_id(true);
 $_SESSION = [];
 $_SESSION['xoopsUserId'] = …;
 ```
-With a host it clears `$_SESSION` and calls `SessionHost::login()`, which runs `Security::login()` with `App\Security\LegacyLoginAuthenticator`.
+With a host it clears `$_SESSION` and calls `IHost::login()`, which runs `Security::login()` with `App\Security\Authenticator\Legacy`.
 - **The authenticator** is never triggered by a request. It only gives programmatic login a firewall authenticator, and it is the firewall's entry point (redirect to `/user.php?xoops_redirect=`).
 - **Symfony** migrates the session id on login and stores the token at kernel.response. The host dispatches kernel.response for legacy responses too, also after `exit()`.
 

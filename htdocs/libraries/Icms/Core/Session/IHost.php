@@ -14,9 +14,9 @@
  * @since		3.0
  */
 
-namespace Icms\Core;
+namespace Icms\Core\Session;
 
-interface SessionHost {
+interface IHost {
 
 	/**
 	 * Starts the host's session; $_SESSION holds its data afterwards.

@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Session;
+namespace App\Session\Storage;
+
+use App\Session\Database\Handler;
+use App\Session\Settings;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
@@ -15,11 +18,11 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
  * native PHP sessions in the ImpressCMS `session` table, with the session
  * name and lifetime of the ImpressCMS preferences.
  */
-final class IcmsSessionStorageFactory implements SessionStorageFactoryInterface
+final class Factory implements SessionStorageFactoryInterface
 {
     public function __construct(
-        private readonly SessionSettings $settings,
-        private readonly IcmsDatabaseSessionHandler $handler,
+        private readonly Settings $settings,
+        private readonly Handler $handler,
     ) {
     }
 
