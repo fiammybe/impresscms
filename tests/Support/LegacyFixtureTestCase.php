@@ -14,8 +14,7 @@ use Symfony\Component\HttpClient\HttpClient;
  * Bridge mechanics against tests/Fixtures/legacy-root instead of ImpressCMS:
  * small scripts that report their environment, redirect, set cookies, throw
  * or leave output buffers open, served by the host through a php -S router.
- * Runs once per CI run: at routing level 3 (the default) and without an
- * external server (ICMS_TEST_BASE_URL).
+ * Runs without an external server (ICMS_TEST_BASE_URL) only.
  */
 abstract class LegacyFixtureTestCase extends TestCase
 {
@@ -49,7 +48,7 @@ abstract class LegacyFixtureTestCase extends TestCase
     protected function setUp(): void
     {
         if (static::$server === null) {
-            self::markTestSkipped('Bridge fixture tests run at routing level 3 without ICMS_TEST_BASE_URL.');
+            self::markTestSkipped('Bridge fixture tests run without ICMS_TEST_BASE_URL.');
         }
         $this->browser = new HttpBrowser(HttpClient::create(['timeout' => 30]), null, new CookieJar());
         $this->browser->followRedirects(false);
@@ -62,7 +61,7 @@ abstract class LegacyFixtureTestCase extends TestCase
 
     private static function runs(): bool
     {
-        return ServerProcess::routing() === 3 && ServerProcess::externalBaseUri() === null;
+        return ServerProcess::externalBaseUri() === null;
     }
 
     /**

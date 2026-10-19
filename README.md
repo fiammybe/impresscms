@@ -66,9 +66,9 @@ For each type of website ImpressCMS offers different functionality with a collec
 
 The installer asks for a *trust path*: a folder outside the web root for everything that must not be public. It installs the Symfony host there from the package's `trust_dist/` folder. That covers the application, its Composer libraries and the site's settings in `.env.local`.
 
-No web server configuration is needed. To let Symfony pages use clean URLs, or to run every page through the host, use `htdocs/htaccess.txt` (Apache) or the examples in [docs/server/](docs/server/) (nginx, FrankenPHP, Laravel Herd).
+The web server must send every PHP request to `index.php`. On Apache and LiteSpeed the installer writes `.htaccess` from `htaccess.txt` when there is none; otherwise rename it yourself. For nginx, FrankenPHP and Laravel Herd, use the examples in [docs/server/](docs/server/).
 
-**Upgrading** from 2.0.x or 2.1: upload the new files over your site, log in as webmaster and update the system module. The update installs the host into your trust path.
+**Upgrading** from 2.0.x or 2.1: upload the new files over your site, log in as webmaster and update the system module. The update installs the host into your trust path once the web server sends every PHP request to `index.php`; until then it explains what to configure.
 
 **From a repository checkout:** run `composer install` in the repository root and `php bin/build-dist` to create `htdocs/trust_dist/`. To build a package for a hosting account, run `php bin/build-package`. It writes `var/dist/impresscms-<version>-<commit>.zip` from the last commit; unzip it straight into the web root.
 

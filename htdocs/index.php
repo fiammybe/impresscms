@@ -59,6 +59,8 @@ if (!defined('ICMS_HOST_AUTOLOADED')) {
 	// No host (not installed yet, or before the system module update): a web
 	// server that routes every PHP request here asked for another script.
 	if (null !== $__icms_host = icms_host_requested_script(__DIR__)) {
+		// proves routing level 3 to the installer and the system module update
+		define('ICMS_ROUTED_BY_INDEX', true);
 		chdir(dirname($__icms_host));
 		$_SERVER['SCRIPT_FILENAME'] = $__icms_host;
 		$_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = icms_host_base_path(__DIR__)

@@ -32,6 +32,10 @@ define(
 	"VENDOR_MOVE_NOT_FOUND",
 	"<strong>Warning:</strong> The package's <code>trust_dist</code> directory was not found in the web root, and the trust path contains no host files. Upload the complete package, including <code>trust_dist</code>, then reload this page.",
 );
+define(
+	"HOST_ROUTING_REQUIRED",
+	"<strong>The web server is not configured yet.</strong> ImpressCMS needs every PHP request to be sent to <code>index.php</code> (routing level 3); this request was not.",
+);
 define("VENDOR_MOVE_SOURCE", "From (web root):");
 define("VENDOR_MOVE_DESTINATION", "To (trust path):");
 define(

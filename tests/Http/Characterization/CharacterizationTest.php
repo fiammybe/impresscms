@@ -14,9 +14,8 @@ use Symfony\Component\BrowserKit\Response;
  * Pins the observable behaviour of ImpressCMS for a fixed URL corpus.
  *
  * The snapshots in __snapshots__/ were recorded with `htdocs/` as document
- * root before the host existed. They must match at routing level 2 (legacy
- * scripts executed directly) and level 3 (every request through the host),
- * and on every supported web server (ICMS_TEST_BASE_URL).
+ * root before the host existed. They must match with every request running
+ * through the host, on every supported web server (ICMS_TEST_BASE_URL).
  *
  * Each case starts from a freshly restored database, because pages such as
  * the home page reflect earlier requests (online users, last login).

@@ -30,10 +30,10 @@ ErrorDocument 504 /error.php?e=504
 ErrorDocument 505 /error.php?e=505
 
 # ----------------------------------------------------------------------------
-# ImpressCMS host (docs/symfony-host.md). Rename this file to .htaccess, or copy
-# the parts you need into your own .htaccess or virtual host. Without any of it
-# the site works too: / and /index.php then run through the host, every other
-# script runs directly (routing level 1).
+# ImpressCMS host (docs/symfony-host.md). Required: every PHP request must reach
+# index.php (routing level 3). Rename this file to .htaccess, or copy the block
+# below into your own .htaccess or virtual host. The installer and the system
+# module update write .htaccess from this file when the web root has none.
 <IfModule mod_rewrite.c>
 	Options +SymLinksIfOwnerMatch
 	RewriteEngine On
@@ -49,11 +49,10 @@ ErrorDocument 505 /error.php?e=505
 
 	RewriteRule ^index\.php$ - [L]
 
-	# Routing level 3: every PHP script runs through the host (the full
-	# strangler fig). Remove the # from the next line to enable it.
-	#RewriteRule \.php$ index.php [L]
+	# Every PHP script runs through the host, which runs the legacy script
+	RewriteRule \.php$ index.php [L]
 
-	# Routing level 2: unknown paths go to index.php (Symfony routes)
+	# Unknown paths go to index.php too (routes of the new application)
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^ index.php [L]

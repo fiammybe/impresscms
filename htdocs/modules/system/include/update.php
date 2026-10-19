@@ -359,6 +359,16 @@ function xoops_module_update_system(
 		// Every release ships the host in the staging directory trust_dist/, so the
 		// host is installed whenever that directory exists, not only once.
 		$stagingPath = ICMS_ROOT_PATH . "/" . icms_core_Filesystem::TRUST_DISTRIBUTION_DIR;
+		if (!$abortUpdate && ($dbVersion < $newDbVersion || is_dir($stagingPath)) && !icms_host_installable()) {
+			// Once installed, the host refuses scripts the web server runs itself
+			// (include/common.php): install it only on a server that sends every
+			// PHP request to index.php, as this one did if the request was routed.
+			$abortUpdate = true;
+			echo '<span style="color:red;">' .
+				"ERROR: The host was not installed: ImpressCMS needs every PHP request to be sent to index.php (routing level 3). " .
+				icms_host_routing_advice(icms_host_write_htaccess(ICMS_ROOT_PATH, (string) ($_SERVER["SERVER_SOFTWARE"] ?? ""))) .
+				" Then run this update again.</span><br />";
+		}
 		if (!$abortUpdate && ($dbVersion < $newDbVersion || is_dir($stagingPath))) {
 			// This request may still load classes from the trust path or the staging
 			// directory, so the verified copy is activated at the end of the request.

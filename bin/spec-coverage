@@ -41,13 +41,33 @@ $specFiles = $change !== null
         ),
     );
 
+// Requirements that an active change removes: their scenarios need no tests.
+/** @var array<string, array<string, true>> $removed capability => [requirement => true] */
+$removed = [];
+foreach ($specFiles ?: [] as $file) {
+    if (preg_match('/^## REMOVED Requirements\s*$(.*?)(?=^## |\z)/ms', (string) file_get_contents($file), $section)) {
+        preg_match_all('/^###\s+Requirement:\s*(.+?)\s*$/m', $section[1], $rm);
+        foreach ($rm[1] as $requirement) {
+            $removed[basename(dirname($file))][$requirement] = true;
+        }
+    }
+}
+
 /** @var array<string, array<string, string>> $scenarios capability => [name => file] */
 $scenarios = [];
 foreach ($specFiles ?: [] as $file) {
     $capability = basename(dirname($file));
-    preg_match_all('/^####\s+Scenario:\s*(.+?)\s*$/m', (string) file_get_contents($file), $m);
-    foreach ($m[1] as $name) {
-        $scenarios[$capability][$name] = $file;
+    $code = (string) file_get_contents($file);
+    // drop the REMOVED section, then each requirement block that a change removes
+    $code = (string) preg_replace('/^## REMOVED Requirements\s*$.*?(?=^## |\z)/ms', '', $code);
+    foreach (preg_split('/^(?=###\s+Requirement:)/m', $code) ?: [] as $block) {
+        if (preg_match('/^###\s+Requirement:\s*(.+?)\s*$/m', $block, $rq) && isset($removed[$capability][$rq[1]])) {
+            continue;
+        }
+        preg_match_all('/^####\s+Scenario:\s*(.+?)\s*$/m', $block, $m);
+        foreach ($m[1] as $name) {
+            $scenarios[$capability][$name] = $file;
+        }
     }
 }
 

@@ -44,6 +44,10 @@ defined("XOOPS_MAINFILE_INCLUDED") or die();
 require_once ICMS_ROOT_PATH . "/include/requirements.php";
 icms_requirements_check(ICMS_ROOT_PATH);
 
+// once the host is installed, every PHP request must reach it through index.php
+require_once ICMS_ROOT_PATH . "/include/host.php";
+icms_host_require_routing(ICMS_ROOT_PATH);
+
 // The boot sequence lives in Icms\Kernel\Bootstrap (stages: constants, autoload,
 // services, output, language, themeSelection, siteState, module, online). It is
 // loaded explicitly because the autoloader is only set up by its second stage.

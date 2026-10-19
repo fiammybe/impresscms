@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Web server configuration needed</title>
+<!--
+  Shown by include/host.php (icms_host_require_routing()) instead of a legacy
+  script that the web server executed itself, without index.php, once the host
+  is installed. Self-contained on purpose, like requirements.html.
+-->
+<style>
+:root {
+	--bg: #f4f5f7;
+	--panel: #ffffff;
+	--text: #1f2933;
+	--muted: #52606d;
+	--accent: #1d5c8c;
+	--border: #d9dee3;
+	--code-bg: #eef1f4;
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #15191e;
+		--panel: #1f252c;
+		--text: #e4e7eb;
+		--muted: #9aa5b1;
+		--accent: #6cb2e8;
+		--border: #323a43;
+		--code-bg: #2a323b;
+	}
+}
+* { box-sizing: border-box; }
+body {
+	margin: 0;
+	padding: 48px 16px;
+	background: var(--bg);
+	color: var(--text);
+	font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+main {
+	max-width: 720px;
+	margin: 0 auto;
+	padding: 32px;
+	background: var(--panel);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+}
+.brand {
+	margin: 0 0 24px;
+	color: var(--accent);
+	font-weight: 600;
+	letter-spacing: .02em;
+}
+h1 { margin: 0 0 16px; font-size: 1.5rem; line-height: 1.3; }
+h2 { margin: 28px 0 8px; font-size: 1.1rem; }
+p { margin: 0 0 12px; }
+code { padding: 1px 4px; background: var(--code-bg); border-radius: 4px; font-size: .9em; }
+pre {
+	margin: 0 0 12px;
+	padding: 12px 16px;
+	overflow-x: auto;
+	background: var(--code-bg);
+	border-radius: 6px;
+	font-size: .85rem;
+	line-height: 1.5;
+}
+pre code { padding: 0; background: none; }
+.note { color: var(--muted); font-size: .875rem; }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+	<p class="brand">ImpressCMS</p>
+	<h1>The web server needs one more setting</h1>
+	<p>ImpressCMS needs every PHP request to be sent to <code>index.php</code>. This web server still runs the requested script itself, so the page cannot be shown.</p>
+
+	<h2>Apache or LiteSpeed</h2>
+	<p>Rename <code>htaccess.txt</code> in the web root to <code>.htaccess</code>. If you already have a <code>.htaccess</code>, copy the <code>&lt;IfModule mod_rewrite.c&gt;</code> block of <code>htaccess.txt</code> into it. The server needs <code>mod_rewrite</code> and must allow <code>.htaccess</code> files (<code>AllowOverride</code>).</p>
+
+	<h2>nginx</h2>
+	<pre><code>location / {
+    try_files $uri $uri/ /index.php$is_args$args;
+}
+location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+    fastcgi_param SCRIPT_NAME /index.php;
+    fastcgi_pass php;   # your PHP-FPM upstream
+}</code></pre>
+
+	<h2>FrankenPHP or Caddy</h2>
+	<pre><code>@php path *.php
+rewrite @php /index.php
+php_server</code></pre>
+
+	<p>The complete example configurations, including the folders that must never be served, are in <a href="https://github.com/ImpressCMS/impresscms/tree/main/docs/server">docs/server</a>. Reload this page once the server is configured.</p>
+
+	<p class="note">Your content and database are untouched. On shared hosting without access to the server configuration, ask your hosting provider to enable <code>.htaccess</code> rewriting.</p>
+</main>
+</body>
+</html>

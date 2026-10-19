@@ -2,30 +2,20 @@
 # Start a web server for the Http suite with the example configuration from
 # docs/server/ (or htdocs/htaccess.txt), on http://127.0.0.1:8080.
 #
-# Usage: .github/scripts/webserver.sh <apache|nginx|frankenphp> <2|3>
+# Usage: .github/scripts/webserver.sh <apache|nginx|frankenphp>
 #
+# Every PHP request reaches index.php (routing level 3), as ImpressCMS requires.
 # Only what a test run needs is changed: addresses and paths, the test site's
 # mainfile (ICMS_MAINFILE) and APP_ENV=test, passed as server variables.
 set -euo pipefail
 
 server=$1
-level=$2
 repo=$(pwd)
 webroot="$repo/htdocs"
 mainfile="$repo/var/test/mainfile.php"
 php_version=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
 socket="/run/php/php${php_version}-fpm.sock"
 work=$(mktemp -d)
-
-# Select a routing level in a configuration file: level 2 keeps "# level 2"
-# lines; level 3 drops them and uncomments "# level 3" lines.
-select_level() {
-    if [ "$level" = 3 ]; then
-        sed -E '/# level 2$/d; s/^([[:space:]]*)#(.*# level 3)$/\1\2/'
-    else
-        cat
-    fi
-}
 
 # The web server users must reach the checkout: every directory above it.
 dir=$repo
@@ -50,8 +40,7 @@ start_fpm() {
 case "$server" in
     nginx)
         start_fpm
-        select_level < docs/server/nginx.conf \
-            | sed -E "s#server unix:/run/php/php-fpm.sock;#server unix:${socket};#; s#listen 80;#listen 8080;#; s#root /var/www/impresscms;#root ${webroot};#" \
+        sed -E "s#server unix:/run/php/php-fpm.sock;#server unix:${socket};#; s#listen 80;#listen 8080;#; s#root /var/www/impresscms;#root ${webroot};#" docs/server/nginx.conf \
             | sed -E "s#^([[:space:]]*)include fastcgi_params;#\1include fastcgi_params;\n\1fastcgi_param ICMS_MAINFILE ${mainfile};\n\1fastcgi_param APP_ENV test;#" \
             | sudo tee /etc/nginx/sites-available/impresscms > /dev/null
         sudo rm -f /etc/nginx/sites-enabled/default
@@ -61,15 +50,8 @@ case "$server" in
         ;;
     apache)
         start_fpm
-        select_level_htaccess() {
-            if [ "$level" = 3 ]; then
-                sed -E 's/^([[:space:]]*)#(RewriteRule \\\.php\$ index\.php \[L\])$/\1\2/'
-            else
-                cat
-            fi
-        }
-        select_level_htaccess < htdocs/htaccess.txt > htdocs/.htaccess
-        grep -q '^[[:space:]]*RewriteEngine On' htdocs/.htaccess
+        cp htdocs/htaccess.txt htdocs/.htaccess
+        grep -q '^[[:space:]]*RewriteRule \\\.php\$ index\.php \[L\]' htdocs/.htaccess
         sed -E "s#<VirtualHost \*:80>#<VirtualHost *:8080>#; s#/var/www/impresscms#${webroot}#g; s#unix:/run/php/php-fpm.sock#unix:${socket}#" docs/server/apache-vhost.conf \
             | sed -E "s#^([[:space:]]*)DocumentRoot (.*)#\1DocumentRoot \2\n\1SetEnv ICMS_MAINFILE ${mainfile}\n\1SetEnv APP_ENV test#" \
             | sudo tee /etc/apache2/sites-available/impresscms.conf > /dev/null
@@ -87,8 +69,7 @@ case "$server" in
         "$work/frankenphp" version
         {
             printf '{\n\tauto_https off\n\tadmin off\n}\n\n'
-            select_level < docs/server/Caddyfile \
-                | sed -E "s#^example\.test \{#:8080 {#; s#root \* /var/www/impresscms#root * ${webroot}#" \
+            sed -E "s#^example\.test \{#:8080 {#; s#root \* /var/www/impresscms#root * ${webroot}#" docs/server/Caddyfile \
                 | sed -E "s#^([[:space:]]*)php_server\$#\1php_server {\n\1\tenv ICMS_MAINFILE ${mainfile}\n\1\tenv APP_ENV test\n\1}#"
         } > "$work/Caddyfile"
         cat "$work/Caddyfile"
@@ -103,7 +84,7 @@ esac
 
 for _ in $(seq 1 30); do
     if curl -fsS -o /dev/null http://127.0.0.1:8080/up; then
-        echo "$server (routing level $level) is up on http://127.0.0.1:8080"
+        echo "$server is up on http://127.0.0.1:8080"
         exit 0
     fi
     sleep 1

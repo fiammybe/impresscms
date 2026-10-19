@@ -8,7 +8,9 @@ use App\Tests\Support\HttpTestCase;
 use App\Tests\Support\ServerProcess;
 use App\Tests\Support\TestSite;
 use PHPUnit\Framework\Attributes\Group;
+use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpClient\HttpClient;
 
 /**
  * Upgrading a site from before the host: its trust path has neither the host
@@ -16,8 +18,8 @@ use Symfony\Component\Filesystem\Filesystem;
  * release (with the staging directory htdocs/trust_dist from bin/build-dist)
  * have just been uploaded. The system module update installs the host.
  *
- * Served like a site without any server configuration (routing level 2, no
- * environment variables visible to PHP), so after the update the host runs
+ * Served with every request routed to index.php (as ImpressCMS requires) and
+ * no environment variables visible to PHP, so after the update the host runs
  * with the settings it wrote to .env.local. Runs only when htdocs/trust_dist
  * exists; the update removes it, so build it again for another run.
  */
@@ -89,13 +91,51 @@ final class HostUpgradeTest extends HttpTestCase
 
     protected static function createServer(): ServerProcess
     {
+        return self::server(TestSite::legacyRoot() . '/index.php');
+    }
+
+    private static function server(?string $router): ServerProcess
+    {
         return new ServerProcess(
             TestSite::legacyRoot(),
-            null,
+            $router,
             ['ICMS_MAINFILE' => self::siteDir() . '/mainfile.php'],
             null,
             // what PHP-FPM, mod_php and FrankenPHP commonly do: no environment in $_ENV
             ['variables_order' => 'GPCS'],
+        );
+    }
+
+    /**
+     * Runs first: the host is not installed yet.
+     *
+     * @scenario The host is installed only on a routing server
+     */
+    public function testTheUpdateDoesNotInstallTheHostOnAServerThatRunsScriptsItself(): void
+    {
+        TestSite::restoreSnapshot();
+        TestSite::connection()->exec('UPDATE ' . TestSite::table('modules') . " SET dbversion = 48 WHERE dirname = 'system'");
+        $server = self::server(null);
+        $server->start();
+        $browser = new HttpBrowser(HttpClient::create(['timeout' => 120]));
+        try {
+            $browser->request('GET', $server->baseUri() . '/user.php');
+            $browser->request('POST', $server->baseUri() . '/user.php', ['op' => 'login', 'uname' => TestSite::WEBMASTER_UNAME, 'pass' => TestSite::WEBMASTER_PASS], [], ['HTTP_REFERER' => $server->baseUri() . '/user.php']);
+            $crawler = $browser->request('GET', $server->baseUri() . '/modules/system/admin.php?fct=modulesadmin&op=update&module=system');
+            $browser->submit($crawler->filterXPath('//input[@name="confirm_submit"]')->form());
+            $update = $browser->getInternalResponse()->getContent();
+        } finally {
+            $server->stop();
+        }
+
+        self::assertStringContainsString('The host was not installed', $update, $server->log());
+        self::assertStringContainsString('example configurations', $update, 'php -S is not Apache: no .htaccess, but instructions');
+        self::assertFileDoesNotExist(TestSite::legacyRoot() . '/.htaccess');
+        self::assertFileDoesNotExist(self::trust() . '/host.php');
+        self::assertDirectoryExists(self::staging(), 'the staging directory is kept for the next attempt');
+        self::assertLessThan(
+            50,
+            (int) TestSite::connection()->query('SELECT dbversion FROM ' . TestSite::table('modules') . " WHERE dirname = 'system'")->fetchColumn(),
         );
     }
 

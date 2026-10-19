@@ -45,7 +45,7 @@ also resolves the legacy `icms_*` names.
 ## Request flow
 
 1. The web server hands a request to the web root's `index.php` (see
-   *Routing levels*). The preamble finds `<trust>/host.php`. It records the web
+   *Web servers*). The preamble finds `<trust>/host.php`. It records the web
    root and the trust path in `$_SERVER` (`ICMS_LEGACY_ROOT`,
    `ICMS_TRUST_PATH`) and requires the host. `host.php` defines
    `ICMS_HOST_AUTOLOADED`, so ImpressCMS skips its own autoloader, loads the
@@ -91,31 +91,37 @@ also resolves the legacy `icms_*` names.
    generic 500 page. Details appear only with `APP_DEBUG=1`, and are always
    logged to `<trust>/var/log/<env>.log`.
 
-## Routing levels and web servers
+## Web servers: every PHP request through index.php
 
-The host needs no web server configuration. Each step of configuration routes
-more requests through it:
+ImpressCMS requires the web server to send every PHP request, and every request
+for an unknown path, to the web root's `index.php` ("routing level 3"). The
+host owns the session and the identity, so a legacy script must never run
+beside it.
 
-| Level | Through the host | Web server |
-|---|---|---|
-| 1 | `/`, `/index.php`, `/index.php/<route>` | nothing to configure; works right after an upgrade |
-| 2 | and unknown paths, so Symfony routes with clean URLs | fallback to `index.php`; the default of FrankenPHP's `php_server`, Herd and `php -S` |
-| 3 | and every existing `.php` script (the full strangler fig) | every `.php` request to `index.php` |
-
-Scripts that the web server executes itself (levels 1 and 2) work as without
-the host. They share the session and the identity with Symfony routes, because
-both use ImpressCMS' database session. Routes that claim existing `.php` URLs,
-and the legacy event forwarder, only apply to requests that reach the host.
-
-Example configurations for levels 2 and 3, tested in CI against the HTTP suite
-(job `webservers`):
+- **A script the web server executes itself** is refused once the host is
+  installed. `include/common.php` calls `icms_host_require_routing()`, which
+  answers 503 with the self-contained page `htdocs/routing.html`. Command-line
+  scripts are exempt.
+- **Before the host is installed**, every script still runs. That covers the
+  installer and a 2.0.x site that has just been uploaded.
+- **Routing is detected from the request itself.** `index.php` defines
+  `ICMS_ROUTED_BY_INDEX` before it runs a requested script on a site without a
+  host, and the host defines `ICMS_HOST_AUTOLOADED`. `icms_host_routed()` checks
+  both.
+- **The host is only installed on a routing server.** The installer's host step
+  and the system module update are scripts other than `index.php`, so their own
+  request shows whether the server routes. If it does not, they keep the
+  staging directory, explain what to configure, and on Apache and LiteSpeed
+  write `.htaccess` from `htaccess.txt` when the web root has none. An existing
+  `.htaccess` is never changed.
+Example configurations, tested in CI against the HTTP suite (job `webservers`):
 
 | Server | File |
 |---|---|
 | Apache 2.4 | `htdocs/htaccess.txt` (rename it to `.htaccess`) and `docs/server/apache-vhost.conf` |
 | nginx + PHP-FPM | `docs/server/nginx.conf` |
 | FrankenPHP (classic mode) | `docs/server/Caddyfile` |
-| Laravel Herd / Valet | `docs/server/herd/ImpressCmsValetDriver.php`: copy it to Herd's `config/valet/Drivers/` folder. Level 3 by default; `ICMS_HERD_ROUTING=2` in `<trust>/.env.local` switches to level 2 |
+| Laravel Herd / Valet | `docs/server/herd/ImpressCmsValetDriver.php`: copy it to Herd's `config/valet/Drivers/` folder |
 
 Every configuration denies the paths in step 3 of the request flow. nginx and
 Caddy ignore `.htaccess` files, so on those servers these rules are the only
@@ -313,7 +319,6 @@ run with `APP_ENV=test`.
 | `APP_SECRET` | random per site; written during installation |
 | `ICMS_LEGACY_ROOT` | the web root. `index.php` passes it for web requests; `.env.local` names it for `bin/console`. The default is `htdocs/` in a checkout |
 | `ICMS_TRUST_PATH` | passed by `index.php`; refused by the bridge if it lies under the web root |
-| `ICMS_HERD_ROUTING` | `2` makes the Herd driver use routing level 2 |
 
 ### A development site
 
@@ -332,8 +337,7 @@ that tests behave the same on every machine. Each environment has its own cache
 
 Check the result from the trust path. `php bin/console about` shows the active
 environment and debug mode. `php bin/console debug:router whoami` only lists the
-route in an environment where it exists. Clean URLs such as `/whoami` also need
-routing level 2 or higher; at level 1, use `/index.php/whoami`.
+route in an environment where it exists.
 
 ## Unsupported runtimes
 
@@ -366,7 +370,6 @@ legacy scripts run once per process.
 ```bash
 php bin/test-db
 vendor/bin/phpunit
-ICMS_TEST_ROUTING=2 vendor/bin/phpunit --testsuite Http
 php bin/build-dist && vendor/bin/phpunit tests/Http/HostUpgradeTest.php
 php bin/spec-coverage
 vendor/bin/phpstan analyse
@@ -377,13 +380,13 @@ vendor/bin/phpstan analyse
 `member`. Its trust path `var/test/trust` holds one-line stubs for the
 repository's `host.php` and `vendor/`, so requests take the production path.
 
-The `Http` suite serves `htdocs/` with `php -S`:
-- at routing level 3 (`htdocs/index.php` as router), the default;
-- at level 2 with `ICMS_TEST_ROUTING=2`.
+The `Http` suite serves `htdocs/` with `php -S` and `htdocs/index.php` as router,
+so every request reaches `index.php`. `ServerProcess::notRouted()` starts a
+server without router, which runs scripts itself, for the tests of the refusal.
 
 With `ICMS_TEST_BASE_URL` it tests an already running server instead.
 
-The characterization snapshots must match at every level and on every server.
+The characterization snapshots must match on every server.
 Re-record them with `ICMS_UPDATE_SNAPSHOTS=1`. The upgrade test needs
 `htdocs/trust_dist`, and removes it as a real update does.
 

@@ -151,6 +151,47 @@ final class HostDiscoveryTest extends TestCase
         self::assertFalse(icms_host_trust_path_is_public('', $this->root));
     }
 
+    /**
+     * @scenario Script executed by the web server itself
+     */
+    public function testAScriptTheWebServerRanItselfGetsTheRoutingPageOnceTheHostIsInstalled(): void
+    {
+        copy(dirname(__DIR__, 3) . '/htdocs/routing.html', $this->root . '/routing.html');
+        $this->writeMainfile("<?php\ndefine('XOOPS_TRUST_PATH', '{$this->trust}');\n");
+        self::assertNull(icms_host_routing_page($this->root, false, 'fpm-fcgi'), 'no host yet: the installer and the upgrade run');
+
+        $this->touch($this->trust . '/host.php');
+        $this->touch($this->trust . '/vendor/autoload.php');
+        self::assertNull(icms_host_routing_page($this->root, true, 'fpm-fcgi'), 'routed through index.php');
+        self::assertNull(icms_host_routing_page($this->root, false, 'cli'), 'command-line scripts');
+        self::assertStringContainsString('<title>Web server configuration needed</title>', (string) icms_host_routing_page($this->root, false, 'fpm-fcgi'));
+
+        unlink($this->root . '/routing.html');
+        self::assertStringContainsString('index.php', (string) icms_host_routing_page($this->root, false, 'apache2handler'), 'without routing.html');
+    }
+
+    /**
+     * @scenario The host is installed only on a routing server
+     */
+    public function testHtaccessIsWrittenOnlyOnApacheAndNeverOverwritten(): void
+    {
+        file_put_contents($this->root . '/htaccess.txt', "RewriteRule \\.php$ index.php [L]\n");
+
+        self::assertSame('unsupported', icms_host_write_htaccess($this->root, 'nginx/1.26.0'));
+        self::assertFileDoesNotExist($this->root . '/.htaccess');
+
+        self::assertSame('written', icms_host_write_htaccess($this->root, 'Apache/2.4.62 (Debian)'));
+        self::assertFileEquals($this->root . '/htaccess.txt', $this->root . '/.htaccess');
+
+        file_put_contents($this->root . '/.htaccess', "# own rules\n");
+        self::assertSame('exists', icms_host_write_htaccess($this->root, 'LiteSpeed'));
+        self::assertSame("# own rules\n", file_get_contents($this->root . '/.htaccess'));
+
+        foreach (['written', 'exists', 'failed', 'unsupported'] as $status) {
+            self::assertStringContainsString('reload this page', strtolower(icms_host_routing_advice($status)), $status);
+        }
+    }
+
     private function writeMainfile(string $code): void
     {
         file_put_contents($this->root . '/mainfile.php', $code);

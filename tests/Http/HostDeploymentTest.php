@@ -9,12 +9,15 @@ use App\Tests\Support\HttpTestCase;
 use App\Tests\Support\ServerProcess;
 use App\Tests\Support\TestSite;
 use PHPUnit\Framework\Attributes\Group;
+use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpClient\HttpClient;
 
 /**
- * The web root's index.php as the host's entry point, at the routing level
- * of the test server (ICMS_TEST_ROUTING) or of an external server.
+ * The web root's index.php as the host's entry point: every request routed to
+ * it (the test server, or an external server from docs/server/), and a server
+ * that runs scripts itself (ServerProcess::notRouted()).
  */
 #[Group('spec:host-deployment')]
 final class HostDeploymentTest extends HttpTestCase
@@ -61,9 +64,6 @@ final class HostDeploymentTest extends HttpTestCase
     public function testWithoutAHostIndexPhpRunsTheScriptARewrittenRequestAskedFor(): void
     {
         self::requireLocalServer();
-        if (ServerProcess::routing() !== 3) {
-            self::markTestSkipped('At level 2 the web server runs existing scripts itself.');
-        }
         TestSite::removeTrustPathHost();
         try {
             $user = $this->request('GET', '/user.php');
@@ -79,9 +79,9 @@ final class HostDeploymentTest extends HttpTestCase
     }
 
     /**
-     * @scenario Symfony route through the fallback
+     * @scenario Symfony route through index.php
      */
-    public function testSymfonyRouteWithoutRewritingExistingScripts(): void
+    public function testSymfonyRouteThroughIndexPhp(): void
     {
         $response = $this->request('GET', '/up');
 
@@ -92,12 +92,8 @@ final class HostDeploymentTest extends HttpTestCase
     /**
      * @scenario Legacy script through the host
      */
-    public function testLegacyScriptsRunThroughTheHostAtLevel3(): void
+    public function testLegacyScriptsRunThroughTheHost(): void
     {
-        if (ServerProcess::routing() !== 3) {
-            self::markTestSkipped('Existing scripts reach the host at routing level 3 only.');
-        }
-
         $response = $this->request('GET', '/user.php');
 
         self::assertSame(200, $response->getStatusCode(), self::serverLog());
@@ -107,32 +103,46 @@ final class HostDeploymentTest extends HttpTestCase
     }
 
     /**
-     * @scenario Directly executed legacy script
+     * @scenario Script executed by the web server itself
      */
     #[Group('spec:request-ownership')]
-    public function testDirectlyExecutedScriptsShareTheIdentity(): void
+    public function testScriptsTheWebServerRunsItselfAreRefused(): void
     {
-        if (ServerProcess::routing() !== 2) {
-            self::markTestSkipped('The web server executes existing scripts itself at routing level 2 only.');
+        self::requireLocalServer();
+        $server = ServerProcess::notRouted();
+        $server->start();
+        $browser = new HttpBrowser(HttpClient::create(['timeout' => 30]));
+        $browser->followRedirects(false);
+        try {
+            $browser->request('GET', $server->baseUri() . '/user.php');
+            $user = $browser->getInternalResponse();
+            $browser->request('GET', $server->baseUri() . '/');
+            $home = $browser->getInternalResponse();
+
+            TestSite::removeTrustPathHost();
+            try {
+                $browser->request('GET', $server->baseUri() . '/user.php');
+                $withoutHost = $browser->getInternalResponse();
+            } finally {
+                TestSite::writeTrustPathHost();
+            }
+        } finally {
+            $server->stop();
         }
 
-        $login = $this->loginAsWebmaster();
-        self::assertSame(302, $login->getStatusCode(), self::serverLog());
-        self::assertFalse(self::throughHost($login), 'the web server executed user.php itself');
-
-        $whoami = $this->request('GET', '/whoami');
-        self::assertSame(200, $whoami->getStatusCode(), self::serverLog());
-        self::assertSame(TestSite::WEBMASTER_UNAME, json_decode($whoami->getContent(), true, 512, JSON_THROW_ON_ERROR)['uname']);
+        self::assertSame(503, $user->getStatusCode(), $server->log());
+        self::assertStringContainsString('every PHP request to be sent to <code>index.php</code>', $user->getContent());
+        self::assertStringNotContainsString('name="uname"', $user->getContent(), 'user.php did not run');
+        self::assertSame(200, $home->getStatusCode(), 'index.php itself always reaches the host' . $server->log());
+        self::assertTrue(self::throughHost($home));
+        self::assertSame(200, $withoutHost->getStatusCode(), 'before the host is installed, scripts still run' . $server->log());
+        self::assertStringContainsString('name="uname"', $withoutHost->getContent());
     }
-
     /**
      * @scenario Staging directory is not served
      */
     public function testStagingDirectoryIsNeverServed(): void
     {
-        if (ServerProcess::routing() !== 3 && ServerProcess::externalBaseUri() === null) {
-            self::markTestSkipped('php -S serves existing files itself at level 2; web servers deny the directory in their configuration.');
-        }
         $staging = TestSite::legacyRoot() . '/trust_dist';
         if (is_dir($staging)) {
             self::markTestSkipped('htdocs/trust_dist exists (bin/build-dist); not touching it.');

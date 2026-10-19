@@ -75,15 +75,8 @@ jobs:
       - name: Functional suite
         run: vendor/bin/phpunit --testsuite Functional
 
-      - name: Http suite (routing level 3, every request through the host)
+      - name: Http suite (every request through the host)
         run: vendor/bin/phpunit --testsuite Http
-        env:
-          ICMS_TEST_ROUTING: 3
-
-      - name: Http suite (routing level 2, scripts executed directly)
-        run: vendor/bin/phpunit --testsuite Http
-        env:
-          ICMS_TEST_ROUTING: 2
 
       - name: Upgrade from a site without the host (bin/build-dist)
         run: |
@@ -102,13 +95,12 @@ jobs:
         run: vendor/bin/phpunit --testsuite Unit,Integration,Functional --fail-on-deprecation --display-deprecations
 
   webservers:
-    name: ${{ matrix.server }}, routing level ${{ matrix.level }}
+    name: ${{ matrix.server }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         server: [apache, nginx, frankenphp]
-        level: [2, 3]
 
     services:
       mysql:
@@ -140,13 +132,12 @@ jobs:
         run: php bin/test-db
 
       - name: Start ${{ matrix.server }} with docs/server/
-        run: bash .github/scripts/webserver.sh ${{ matrix.server }} ${{ matrix.level }}
+        run: bash .github/scripts/webserver.sh ${{ matrix.server }}
 
       - name: Http suite against ${{ matrix.server }}
         run: vendor/bin/phpunit --testsuite Http
         env:
           ICMS_TEST_BASE_URL: http://127.0.0.1:8080
-          ICMS_TEST_ROUTING: ${{ matrix.level }}
 
       - name: Server logs
         if: failure()

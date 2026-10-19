@@ -15,15 +15,6 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('spec:request-ownership')]
 final class RequestOwnershipTest extends HttpTestCase
 {
-    protected function setUp(): void
-    {
-        // Routes that claim existing .php scripts need every request routed to index.php.
-        if (ServerProcess::routing() !== 3) {
-            self::markTestSkipped('Request ownership of existing scripts needs routing level 3 (ICMS_TEST_ROUTING=3).');
-        }
-        parent::setUp();
-    }
-
     /**
      * @scenario Request reaches the front controller
      */

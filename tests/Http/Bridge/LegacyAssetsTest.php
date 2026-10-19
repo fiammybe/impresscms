@@ -19,8 +19,8 @@ final class LegacyAssetsTest extends HttpTestCase
     {
         // With rewrite rules the web server serves static files itself; only the
         // php -S router sends them to the host.
-        if (ServerProcess::routing() !== 3 || ServerProcess::externalBaseUri() !== null) {
-            self::markTestSkipped('Assets reach the host only through the php -S router (ICMS_TEST_ROUTING=3).');
+        if (ServerProcess::externalBaseUri() !== null) {
+            self::markTestSkipped('Assets reach the host only through the php -S router.');
         }
         parent::setUp();
     }

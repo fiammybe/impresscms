@@ -44,6 +44,20 @@ $rootPath = rtrim(str_replace("\\", "/", $_SESSION["settings"]["ROOT_PATH"]), "/
 $trustPath = rtrim(str_replace("\\", "/", $_SESSION["settings"]["TRUST_PATH"]), "/");
 $stagingPath = $rootPath . "/" . icms_core_Filesystem::TRUST_DISTRIBUTION_DIR;
 
+// ─── Guard: the web server must send every PHP request to index.php ───────────
+// Once installed, the host refuses scripts that the web server runs itself
+// (include/common.php). This request proves the routing: index.php ran it.
+if (!icms_host_installable()) {
+	$pageHasForm = false;
+	$advice = icms_host_routing_advice(icms_host_write_htaccess($rootPath, (string) ($_SERVER["SERVER_SOFTWARE"] ?? "")));
+	ob_start();
+	echo "<p>" . VENDOR_MOVE_INTRO . "</p>";
+	echo '<div class="blokz"><p class="errorMsg">' . HOST_ROUTING_REQUIRED . "</p><p>" . $advice . "</p></div>";
+	$content = ob_get_clean();
+	include "install_tpl.php";
+	exit();
+}
+
 // ─── POST: install ────────────────────────────────────────────────────────────
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	// This request loaded its classes from the staging directory: the verified
