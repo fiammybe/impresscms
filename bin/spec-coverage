@@ -102,7 +102,10 @@ foreach ($iterator as $file) {
         if ($groups === []) {
             fwrite(STDERR, "warning: {$className}::{$method} has @scenario {$name} but no #[Group('spec:...')]\n");
         }
-        foreach ($groups as $capability) {
+        // a test of several capabilities covers each scenario where it is defined;
+        // one defined nowhere is reported under all of them
+        $defining = array_values(array_filter($groups, static fn (string $capability): bool => isset($scenarios[$capability][$name])));
+        foreach ($defining ?: $groups as $capability) {
             $covered[$capability][$name][] = "{$className}::{$method}";
         }
     }

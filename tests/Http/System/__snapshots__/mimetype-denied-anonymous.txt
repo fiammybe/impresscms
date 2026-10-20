@@ -1,0 +1,9 @@
+GET /modules/system/admin.php?fct=mimetype (anonymous)
+status: 302
+content-type: text/html; charset=UTF-8
+location: http://{HOST}/user.php
+cache-control: max-age=0, must-revalidate, no-cache, no-store, private
+pragma: no-cache
+set-cookie: ICMSSESSION=*; httponly; path=/; samesite=lax
+
+

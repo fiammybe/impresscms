@@ -60,13 +60,23 @@ final class Host implements IHost
         $this->request()->getSession()->start();
         $this->withoutPhpSessionCookie();
         if ($this->request()->attributes->get(HostRunner::LEGACY_PAGE) === true) {
-            // as when ImpressCMS started the session itself (PHP's "nocache"
-            // limiter): legacy pages with a session are never cached. Symfony's
-            // responses get their cache headers from the session listener.
-            header('Expires: Thu, 19 Nov 1981 08:52:00 GMT');
-            header('Cache-Control: no-store, no-cache, must-revalidate');
-            header('Pragma: no-cache');
+            self::sendLegacyCacheHeaders();
         }
+    }
+
+    /**
+     * The headers of PHP's "nocache" session limiter, as when ImpressCMS started
+     * the session itself: legacy pages with a session are never cached. Sent
+     * before the page's own code, which may replace them (icms_cp_header()), for
+     * legacy scripts and for the legacy pages the host renders itself
+     * (App\Admin\LegacyOutput). Symfony's responses get their cache headers from
+     * the session listener.
+     */
+    public static function sendLegacyCacheHeaders(): void
+    {
+        header('Expires: Thu, 19 Nov 1981 08:52:00 GMT');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Pragma: no-cache');
     }
 
     public function userId(): int

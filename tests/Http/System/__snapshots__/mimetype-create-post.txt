@@ -1,0 +1,8 @@
+POST op=addmimetype, new (webmaster)
+status: 302
+content-type: text/html; charset=UTF-8
+location: http://{HOST}/modules/system/admin.php?fct=mimetype
+cache-control: max-age=0, must-revalidate, no-cache, no-store, private
+pragma: no-cache
+
+

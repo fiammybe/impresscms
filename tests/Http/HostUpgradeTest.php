@@ -8,6 +8,7 @@ use App\Tests\Support\HttpTestCase;
 use App\Tests\Support\ServerProcess;
 use App\Tests\Support\TestSite;
 use Icms\Core\Password\Legacy;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Filesystem\Filesystem;
@@ -108,7 +109,8 @@ final class HostUpgradeTest extends HttpTestCase
     }
 
     /**
-     * Runs first: the host is not installed yet.
+     * Runs first (testSystemModuleUpdateInstallsTheHost depends on it): the host
+     * is not installed yet.
      *
      * @scenario The host is installed only on a routing server
      */
@@ -156,6 +158,9 @@ final class HostUpgradeTest extends HttpTestCase
      */
     #[Group('spec:host-deployment')]
     #[Group('spec:authentication')]
+    // after the refusal, whose site has no host yet (PHPUnit's "defects" order
+    // would otherwise run a test that failed last time first)
+    #[Depends('testTheUpdateDoesNotInstallTheHostOnAServerThatRunsScriptsItself')]
     public function testSystemModuleUpdateInstallsTheHost(): void
     {
         TestSite::restoreSnapshot();
