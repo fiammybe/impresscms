@@ -175,6 +175,29 @@ class Session {
 	}
 
 	/**
+	 * What ImpressCMS does once a user has logged in (formerly the end of
+	 * include/checklogin.php): the last login time, the user's theme for the
+	 * session, and the maintenance of the user's notifications.
+	 *
+	 * @param object $user an icms_member_user_Object
+	 */
+	public function loggedIn(object $user): void {
+		global $icmsConfig;
+		$member_handler = \icms::handler('icms_member');
+		$now = time();
+		$user->setVar('last_login', $now);
+		$member_handler->updateUserByField($user, 'last_login', $now);
+		$_SESSION['xoopsUserLastLogin'] = $now;
+
+		$theme = $user->getVar('theme', 'n');
+		if (in_array($theme, (array) $icmsConfig['theme_set_allowed'], true)) {
+			$_SESSION['xoopsUserTheme'] = $theme;
+		}
+
+		\icms::handler('icms_data_notification')->doLoginMaintenance($user->getVar('uid'));
+	}
+
+	/**
 	 * Database connection
 	 *
 	 * @var object

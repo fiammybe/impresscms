@@ -346,8 +346,12 @@ class Handler {
 			redirect_header(ICMS_URL . '/user.php?op=resetpass&uname=' . $uname, 5, _US_PASSEXPIRED, false);
 		} */
 
-        $pwd = $icmspass->verifyPass($pwd, $uname);
-		
+		// verify first, then load the user by its login (never by its hash)
+		$stored = $icmspass->verifyPass((string) $pwd, (string) $uname);
+		if ($stored === false) {
+			return false;
+		}
+
 		$table = new \Icms\Db\Legacy\Updater\Table('users');
 		if ($table->fieldExists('loginname')) {
 			$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('loginname', $uname));
@@ -356,11 +360,15 @@ class Handler {
 		} else {
 			$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('uname', $uname));
 		}
-		$criteria->add(new \Icms\Db\Criteria\Item('pass', $pwd));
 		$user = $this->_uHandler->getObjects($criteria, false);
 		if (!$user || count($user) != 1) {
-			$user = false;
-			return $user;
+			return false;
+		}
+
+		// a legacy, wrapped or outdated hash becomes a fresh one
+		if (\Icms\Core\Password::needsRehash($stored)) {
+			$user[0]->setVar('pass', $icmspass->encryptPass((string) $pwd));
+			$this->_uHandler->insert($user[0], true);
 		}
 		return $user[0];
 	}

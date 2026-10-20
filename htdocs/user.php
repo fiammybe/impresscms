@@ -126,7 +126,15 @@ switch ($op) {
 		break;
 
 	case 'login':
-		include_once ICMS_ROOT_PATH . '/include/checklogin.php';
+		// The host's password login (App\Security\Authenticator\Password) handles
+		// a posted form before ImpressCMS boots. A post that gets here found no
+		// such host: none installed yet, or an older one, until the system module
+		// update installs the host of this release.
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			include_once ICMS_ROOT_PATH . '/include/checklogin.php';
+			exit();
+		}
+		header('Location: ' . ICMS_URL . '/user.php');
 		exit();
 		break;
 

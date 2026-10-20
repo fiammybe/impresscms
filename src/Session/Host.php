@@ -6,6 +6,7 @@ namespace App\Session;
 
 use App\Security\Authenticator\Legacy as LegacyAuthenticator;
 use App\Security\User\Entity as User;
+use App\Runtime\HostRunner;
 use App\Security\User\Provider as Users;
 use Icms\Core\Session as LegacySession;
 use Icms\Core\Session\IHost;
@@ -57,6 +58,14 @@ final class Host implements IHost
     {
         $this->request()->getSession()->start();
         $this->withoutPhpSessionCookie();
+        if ($this->request()->attributes->get(HostRunner::LEGACY_PAGE) === true) {
+            // as when ImpressCMS started the session itself (PHP's "nocache"
+            // limiter): legacy pages with a session are never cached. Symfony's
+            // responses get their cache headers from the session listener.
+            header('Expires: Thu, 19 Nov 1981 08:52:00 GMT');
+            header('Cache-Control: no-store, no-cache, must-revalidate');
+            header('Pragma: no-cache');
+        }
     }
 
     public function userId(): int

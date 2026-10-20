@@ -51,7 +51,7 @@ The system SHALL keep the authenticated user as a security token in the session.
 - **THEN** the request is anonymous
 
 ### Requirement: Legacy login and logout go through the host
-The legacy login (`include/checklogin.php`, with every ImpressCMS authentication method) SHALL authenticate the user through the host's security layer, which SHALL regenerate the session id. A preload that sets `$_SESSION['xoopsUserId']` while the session starts SHALL log that user in the same way. The legacy logout SHALL end the authentication and invalidate the session for both applications.
+The login (`/user.php`, with every ImpressCMS authentication method) SHALL authenticate the user through the host's security layer, which SHALL regenerate the session id. A preload that sets `$_SESSION['xoopsUserId']` while the session starts SHALL log that user in the same way. The legacy logout SHALL end the authentication and invalidate the session for both applications.
 
 #### Scenario: Login regenerates the session
 - **WHEN** a visitor with a session logs in via the legacy `/user.php`

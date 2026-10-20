@@ -123,7 +123,8 @@ class Provisionning
         // Create ImpressCMS Database User
         $newuser = $member_handler->createUser();
         $newuser->setVar('uname', $uname);
-        $newuser->setVar('pass', md5(stripslashes($pwd)));
+        // the directory checks the password: no usable local hash, nothing matches it
+        $newuser->setVar('pass', '$icms-external$');
         $newuser->setVar('rank', 0);
         $newuser->setVar('level', 1);
         $newuser->setVar('timezone_offset', $this->default_TZ);
@@ -163,7 +164,8 @@ class Provisionning
     {
         $ret = false;
         $member_handler = \icms::handler('icms_member');
-        $icmsUser->setVar('pass', md5(stripslashes($pwd)));
+        // the directory checks the password: no usable local hash, nothing matches it
+        $icmsUser->setVar('pass', '$icms-external$');
         $tab_mapping = explode('|', $this->ldap_field_mapping);
         foreach ($tab_mapping as $mapping) {
             $fields = explode('=', trim($mapping));

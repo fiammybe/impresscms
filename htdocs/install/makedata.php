@@ -367,26 +367,8 @@ function make_data(&$dbm, &$cm, $adminname, $adminlogin_name, $adminpass, $admin
 		. ", (" . ++$i . ", 0, $c, 'reg_disclaimer', '_MD_AM_REGDSCLMR', '".addslashes(_INSTALL_DISCLMR)."', '_MD_AM_REGDSCLMRDSC', 'textsarea', 'text', " . $p++ . ")"
 		. ", (" . ++$i . ", 0, $c, 'priv_dpolicy', '_MD_AM_PRIVDPOLICY', 0, '_MD_AM_PRIVDPOLICYDSC', 'yesno', 'int', " . $p++ . ")"
 		. ", (" . ++$i . ", 0, $c, 'priv_policy', '_MD_AM_PRIVPOLICY', '".addslashes(_INSTALL_PRIVPOLICY)."', '_MD_AM_PRIVPOLICYDSC', 'textsarea', 'text', " . $p++ . ")"
-		. ", (" . ++$i . ", 0, $c, 'allow_annon_view_prof', '_MD_AM_ALLOW_ANONYMOUS_VIEW_PROFILE', '0', '_MD_AM_ALLOW_ANONYMOUS_VIEW_PROFILE_DESC', 'yesno', 'int', " . $p++ . ")"
-		. ", (" . ++$i . ", 0, $c, 'enc_type', '_MD_AM_ENC_TYPE', '23', '_MD_AM_ENC_TYPEDSC', 'select', 'int', " . $p++ . ")");
-	// Insert data for Config Options in selection field. (must be placed before //$i++)
-		$dbm->insert('configoption', " VALUES (" . $ci++ . ", '_MD_AM_ENC_MD5', '20', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_SHA256', '21', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_SHA384', '22', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_SHA512', '23', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_RIPEMD128', '24', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_RIPEMD160', '25', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_WHIRLPOOL', '26', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL1284', '27', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL1604', '28', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL1924', '29', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL2244', '30', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL2564', '31', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL1285', '32', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL1605', '33', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL1925', '34', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL2245', '35', $i)"
-			. ", (" . $ci++ . ", '_MD_AM_ENC_HAVAL2565', '36', $i)");
+		. ", (" . ++$i . ", 0, $c, 'allow_annon_view_prof', '_MD_AM_ALLOW_ANONYMOUS_VIEW_PROFILE', '0', '_MD_AM_ALLOW_ANONYMOUS_VIEW_PROFILE_DESC', 'yesno', 'int', " . $p++ . ")");
+	// passwords use Argon2id (Icms\Core\Password::hasher()); there is no enc_type preference
 	// ----------
 
 	// Data for Config Category 3 (Meta & Footer Preferences)

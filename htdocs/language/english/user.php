@@ -10,6 +10,7 @@ define('_US_SENDPASSWORD','Send Password');
 define('_US_LOGGEDOUT','You are now logged out');
 define('_US_THANKYOUFORVISIT','Thank you for your visit to our site!');
 define('_US_INCORRECTLOGIN','Incorrect Login!');
+define('_US_LOGINTHROTTLED', 'Too many failed login attempts. Please try again in a minute.');
 define('_US_LOGGINGU','Thank you for logging in, %s.');
 define('_US_RESETPASSWORD','Reset your password');
 define('_US_SUBRESETPASSWORD','Reset Password');

@@ -336,3 +336,4 @@ define('_TinyMCE_PRESENT_WARNING', 'TinyMCE is aanwezig op de server - Verwijder
 
 define('_TRUST_PATH_PUBLIC', 'WAARSCHUWING: Het trust path %s ligt in de web root of de document root. Het bevat de ImpressCMS-host, zijn bibliotheken en de geheime instellingen van deze site, en webservers zoals nginx of Caddy serveren het ongeacht .htaccess-bestanden.<br />Verplaats de map buiten de document root en pas XOOPS_TRUST_PATH aan in mainfile.php.');
 define('_TRUST_DIST_PENDING', 'De hostbestanden van een nieuwe versie staan klaar in %s. Werk de systeemmodule bij om ze in het trust path te installeren.');
+define('_PASSWORDS_UNWRAPPED', '%d gebruikers hebben nog een oude wachtwoordhash. Werk de systeemmodule bij (meerdere keren als nodig) of voer bin/console icms:passwords:wrap uit in het trust path.');

@@ -1,9 +1,19 @@
 POST /user.php (webmaster, session name MYSITE)
 status: 302
-content-type: text/html; charset=UTF-8
-location: 
-cache-control: max-age=0, must-revalidate, no-cache, no-store, private
-pragma: no-cache
+content-type: text/html; charset=utf-8
+location: http://{HOST}/
+cache-control: max-age=0, must-revalidate, private
 set-cookie: MYSITE=*; expires; httponly; max-age; path=/; samesite=lax
 
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://{HOST}/'" />
 
+        <title>Redirecting to http://{HOST}/</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://{HOST}/">http://{HOST}/</a>.
+    </body>
+</html>

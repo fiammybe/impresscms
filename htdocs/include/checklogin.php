@@ -31,8 +31,13 @@
 /**
  * The check login include file
  * This file is included from several others during their login validation process
- *  - user.php, site-closed.php, finish_auth.php. checklogin.php does not return
+ *  - user.php, site-closed.php. checklogin.php does not return
  *  to any of those files calling it. The outcome is a redirect with a result
+ *
+ * Only until the system module update installs the Symfony host of this
+ * release (a site that has just been uploaded over an older one): that host's
+ * App\Security\Authenticator\Password handles the login forms before
+ * ImpressCMS boots, so no login post reaches this file.
  *
  *
  * @copyright	http://www.impresscms.org/ The ImpressCMS Project
@@ -48,7 +53,7 @@ defined('ICMS_ROOT_PATH') || exit();
 
 icms_loadLanguageFile('core', 'user');
 $uname = !isset($_POST['uname']) ? '' : trim($_POST['uname']);
-$pass = !isset($_POST['pass']) ? '' : substr(trim($_POST['pass']), 0, 32);
+$pass = !isset($_POST['pass']) ? '' : trim($_POST['pass']);
 
 /* make sure redirect stays within domain and isn't open to exploit */
 if (!isset($redirect)) {

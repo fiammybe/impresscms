@@ -1,0 +1,240 @@
+{
+    "main_salt": "MainSaltForTheVectors0123456789abcdefABCDEF0123456789abcdefABCDE",
+    "password": "Correct horse battery staple, longer than 32 characters!",
+    "vectors": [
+        {
+            "scheme": "column",
+            "enc_type": 0,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "4d98d434a49b1c61275e08d72990c9ef"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 1,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "df9ec4e640aa4d44fd27576d4a0d086a2f0c792ccf25bf88c65fd755b0c5655f"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 2,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "e94419c6dd79f366485721886590d4c57958706268dc8fc742bd6b296ec1948a8bec5f8b1516fa34a92784248f4a76d9"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 3,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "c26e6b7e3f7fd79ead41e285edeee210726410021ec7ca50f61a1fc2619a917ad39d5e8a04f9cba4b02404015581e083f7ef73338e2134da0d92d594d48a364e"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 4,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "b18706668462fbbee4000576dca6fc16"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 5,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "2b33e4efd9dea3b636a6e0b0a0df0224e06b38a3"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 6,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "d2607c70bbf8c5b9608d94d227a3e14bcdc56c7ac0e0634f99b3c8bc595c224af96e25033dac671a37e03db50227113f71d36433c0921eae25828ed85a5ed365"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 7,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "3ee2cb294f8492ebd446c9ee1cfca848"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 8,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "34403c7876003b85cb8b8cdf8c9f6b37d0f0af8d"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 9,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "15bcf1a07f881a238b058437c7cba772bc05bec9ab07315a"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 10,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "70f3ecc2d10feb895c40bd148648eab06f377575ca80470d4e89c56f"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 11,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "e3c8b2229e4e277f1798f68855468d65422a79a6bacb758801e2ee3c653c370c"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 12,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "817bf93ca09e9b7292e32f2981000804"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 13,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "956d3e12988f382c3fd23589f6a0a1dcb7c7932f"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 14,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "b1513ed1d115c9575046d27987a9b72e78d40e01e3d9c1f2"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 15,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "bd6e5e468fd7a6c54c07706e3d2a7d071442855a2a4d99f23ee07f6c"
+        },
+        {
+            "scheme": "column",
+            "enc_type": 16,
+            "salt": "UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU",
+            "hash": "a3e6528f8188619115d7026468982abf57b8a8fab4a96559d85d6766706f3e57"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 20,
+            "salt": "",
+            "hash": "$20$20$4d98d434a49b1c61275e08d72990c9ef"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 21,
+            "salt": "",
+            "hash": "$21$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-1c16f18934b66950d68a8dd0945993d7aa266b57f254a9832fb1be6b5a1e007d"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 22,
+            "salt": "",
+            "hash": "$22$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-39106b24a468945114df48b1fb72ca3ca1eaaafc4999457a8f7a959f60b9287e9486d158cc0b03b5194133d1d7ddfece"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 23,
+            "salt": "",
+            "hash": "$23$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-79a6cfacba63d1e7f328360ec171bac324a5228d3522d89068a9543459df0434dddf3ee3794dfcea854acb1cf6652d5edc6a43c8a5979dba42723b22f7f50087"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 24,
+            "salt": "",
+            "hash": "$24$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-a88d1c21028845fb90984f6efd8b6969"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 25,
+            "salt": "",
+            "hash": "$25$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-159133f31c189952e37a8ebe1dbc77480d409a60"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 26,
+            "salt": "",
+            "hash": "$26$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-e99b385ffc024628747ce0b5b5e8a992fb05c063600a0192669bd1274f1d1c96739feda293bdb4548540c9a811ebcb7b7d1c0b713f59b7674ee64d3f117f6d66"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 27,
+            "salt": "",
+            "hash": "$27$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-2ea4e703f6b1394f410114be2c9545d1"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 28,
+            "salt": "",
+            "hash": "$28$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-701d74328fd8d168bb54b97c8f706855015eb391"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 29,
+            "salt": "",
+            "hash": "$29$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-dabfdc569724fbb29f79d481143ffd14db75e4930c9e3aa0"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 30,
+            "salt": "",
+            "hash": "$30$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-18598ba4881dc857f7e2ef2d0ac188601fa226a0766e4bd2451785a5"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 31,
+            "salt": "",
+            "hash": "$31$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-ca5b273bbe09cedc76b606baa4e62ce57e1a1d89c72c5dfa98fd19822de8735e"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 32,
+            "salt": "",
+            "hash": "$32$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-ae706b1e9dcb54c9212e006a3f5173a4"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 33,
+            "salt": "",
+            "hash": "$33$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-2dd799e23d3b3f5ecc3163510eef60c6b873e2a8"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 34,
+            "salt": "",
+            "hash": "$34$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-39fcc0700eccd9e8244194630b4912460eb89b72128bcf95"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 35,
+            "salt": "",
+            "hash": "$35$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-dcbcebe88033b9378011d66cbaf69535e8b8c433c2554630f0ec55b9"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 36,
+            "salt": "",
+            "hash": "$36$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-079fe52c24f861d5b1be53a5eca73a114341f893699abc08532504b65ba8ff07"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 37,
+            "salt": "",
+            "hash": "$37$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-e5659acda98db5f94235d502cf9550a71be5c8aaffdd8936edcfa6b82fb0203f"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 38,
+            "salt": "",
+            "hash": "$38$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-768bb374b9076373349b16ca3e1233c202530414a6331e40ecedd0d7c9912e941a4ae80a964f6a22"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 39,
+            "salt": "",
+            "hash": "$39$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-3438707e2c10cff43f03d58eef339978daa394feed733479bed5d67329f4d49d"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 40,
+            "salt": "",
+            "hash": "$40$5000$UserSalt0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU-583471b5fc8259d2b1900911ebefa150c08eebf08eb69eceae4fe1ce541aa91e"
+        },
+        {
+            "scheme": "stored",
+            "enc_type": 23,
+            "salt": "",
+            "hash": "$23$1$short-15a1bb5aefffec63087ca65818c82171a1b67683b5837323ca72f8488363c4555d2616fde793d3b5cadc0415993359ebd08f4eb50c0b8117bb8dfc25188d5088"
+        }
+    ]
+}

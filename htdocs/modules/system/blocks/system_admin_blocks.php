@@ -57,6 +57,13 @@ function b_system_admin_warnings_show() {
 		array_push($block['msg'], icms_core_Message::error('<a href="' . ICMS_MODULES_URL . '/system/admin.php?fct=modulesadmin&amp;op=update&amp;module=system">'
 			. sprintf(_TRUST_DIST_PENDING, htmlspecialchars(ICMS_ROOT_PATH . '/' . icms_core_Filesystem::TRUST_DISTRIBUTION_DIR, ENT_QUOTES)) . '</a>', '', FALSE));
 	}
+	// legacy password hashes that the system module update has not wrapped yet
+	$icmsPasswordsPending = (new \Icms\Core\Password\Wrapper(icms::$db, icms::$xoopsDB->prefix('users')))->pending();
+	if ($icmsPasswordsPending > 0) {
+		array_push($block['msg'], icms_core_Message::error('<a href="' . ICMS_MODULES_URL . '/system/admin.php?fct=modulesadmin&amp;op=update&amp;module=system">'
+			. sprintf(_PASSWORDS_UNWRAPPED, $icmsPasswordsPending) . '</a>', '', FALSE));
+	}
+	unset($icmsPasswordsPending);
 	$sql1 = "SELECT conf_modid FROM `" . icms::$xoopsDB->prefix('config') . "` WHERE conf_name = 'dos_skipmodules'";
 	if ($result1 = icms::$xoopsDB->query($sql1)) {
 		list($modid) = icms::$xoopsDB->FetchRow($result1);

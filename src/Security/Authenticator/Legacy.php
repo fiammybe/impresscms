@@ -14,13 +14,15 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
 /**
- * The authenticator of the legacy login (design D5 of symfony-owns-the-session).
+ * The authenticator of logins by legacy code (design D5 of
+ * symfony-owns-the-session).
  *
- * No request triggers it: ImpressCMS checks the credentials (include/checklogin.php
- * and the auth methods behind it) and logs the user in programmatically through
- * App\Session\Host, which uses this authenticator for
- * Security::login(). It is also the firewall's entry point: anonymous visitors
- * that a route denies go to the ImpressCMS login with the URL to return to.
+ * No request triggers it: legacy code that has identified a user (the
+ * autologin preload, Icms\Core\Session::login()) logs the user in
+ * programmatically through App\Session\Host, which uses this authenticator
+ * for Security::login(). It is also the firewall's entry point: anonymous
+ * visitors that a route denies go to the ImpressCMS login with the URL to
+ * return to. The login form itself is App\Security\Authenticator\Password.
  */
 final class Legacy extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {

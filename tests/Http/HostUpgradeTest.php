@@ -7,6 +7,7 @@ namespace App\Tests\Http;
 use App\Tests\Support\HttpTestCase;
 use App\Tests\Support\ServerProcess;
 use App\Tests\Support\TestSite;
+use Icms\Core\Password\Legacy;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Filesystem\Filesystem;
@@ -151,7 +152,10 @@ final class HostUpgradeTest extends HttpTestCase
      * @scenario Upgrade from a release without Composer
      * @scenario Installed host files
      * @scenario Server without environment passing
+     * @scenario Upgrade wraps the hashes
      */
+    #[Group('spec:host-deployment')]
+    #[Group('spec:authentication')]
     public function testSystemModuleUpdateInstallsTheHost(): void
     {
         TestSite::restoreSnapshot();
@@ -159,6 +163,9 @@ final class HostUpgradeTest extends HttpTestCase
         // what the 2.0.x installer left on PHP 8: only the iframe entries
         $this->setConfig('purifier_HTML_AllowedElements', ['iframe']);
         $this->setConfig('purifier_HTML_AllowedAttributes', ['iframe.src', 'iframe.width', 'iframe.height']);
+        // the member's password as ImpressCMS 2.0 stored it
+        $legacyHash = (string) Legacy::digest(TestSite::MEMBER_PASS, 's', 23, 5000, 'upgradesalt', TestSite::DB_SALT);
+        TestSite::connection()->prepare('UPDATE ' . TestSite::table('users') . ' SET pass = ? WHERE uid = 2')->execute([$legacyHash]);
 
         // Before the update: legacy runs on the staging directory's dependencies,
         // without the host (/up is not a Symfony route yet: index.php shows the home page).
@@ -188,9 +195,14 @@ final class HostUpgradeTest extends HttpTestCase
         self::assertDirectoryDoesNotExist(self::staging(), 'the staging directory is removed');
         self::assertDirectoryDoesNotExist(TestSite::legacyRoot() . '/trust_dist');
         self::assertSame(
-            '50',
+            '51',
             (string) TestSite::connection()->query('SELECT dbversion FROM ' . TestSite::table('modules') . " WHERE dirname = 'system'")->fetchColumn(),
         );
+
+        // No legacy hash is left: the member's is wrapped and still accepts the password.
+        $stored = (string) TestSite::connection()->query('SELECT pass FROM ' . TestSite::table('users') . ' WHERE uid = 2')->fetchColumn();
+        self::assertStringStartsWith(Legacy::WRAPPED, $stored);
+        self::assertStringNotContainsString(substr($legacyHash, -32), $stored);
 
         // The HTML filter allows the default elements and attributes again.
         $elements = $this->config('purifier_HTML_AllowedElements');
@@ -209,5 +221,10 @@ final class HostUpgradeTest extends HttpTestCase
         self::assertStringContainsString(TestSite::SITE_NAME, $home->getContent());
         $admin = $this->request('GET', '/admin.php');
         self::assertSame(200, $admin->getStatusCode(), 'still logged in: ' . $admin->getHeader('Location') . ' ' . json_encode($this->browser->getCookieJar()->allValues(static::url('/'))) . self::serverLog());
+
+        // The member logs in with the password of the wrapped hash.
+        $this->browser->getCookieJar()->clear();
+        self::assertSame(302, $this->loginAsMember()->getStatusCode(), self::serverLog());
+        self::assertSame(200, $this->request('GET', '/edituser.php')->getStatusCode(), 'logged in as the member');
     }
 }

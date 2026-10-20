@@ -285,11 +285,22 @@ The host owns the session and the identity (OpenSpec change
   session and sets `icms::$user` from the token; `$_SESSION['xoopsUserId']` and
   `xoopsUserGroups` are written as a mirror for modules, never read. Without a
   host (command line, isolated tests) ImpressCMS keeps its own handler.
-- **Login and logout.** `include/checklogin.php` checks the credentials and
-  calls `Icms\Core\Session::login()`, which logs in through `Security::login()`
-  with `App\Security\Authenticator\Legacy` (new session id). A preload that
-  sets `xoopsUserId` during `sessionStart`, such as the autologin preload, logs
-  the user in the same way. The legacy logout invalidates the session.
+- **Login and logout.** `App\Security\Authenticator\Password` handles the
+  legacy login forms (`POST /user.php` with `op=login`, the closed-site form with
+  `xoops_login`) with the ImpressCMS authentication method, throttling (5
+  failures a minute per login name and address) and `App\Security\User\Checker`
+  (not activated, closed site, multiple logins). Until the system module update
+  installs this host, login posts reach `include/checklogin.php`. Legacy
+  code logs in with `Icms\Core\Session::login()`, through `Security::login()`
+  with `App\Security\Authenticator\Legacy`; a preload that sets `xoopsUserId`
+  during `sessionStart` does the same. The legacy logout invalidates the session.
+- **Passwords.** Argon2id (bcrypt only without Argon2; Symfony's `auto` would
+  choose bcrypt), one hasher for both applications (`Icms\Core\Password::hasher()`,
+  `App\Security\Password\Hasher\Modern`). The legacy
+  formats live on in `Icms\Core\Password\Legacy`: system update step 51 wraps
+  each legacy hash as `$icms-legacy$<parameters>$<argon2id(legacy hash)>`, in
+  batches (`bin/console icms:passwords:wrap` does all at once), and a login
+  replaces a wrapped hash by a plain one (`migrate_from: [icms_legacy]`).
 
 | Role / attribute | Granted to |
 |---|---|

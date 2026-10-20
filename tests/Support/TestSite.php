@@ -19,6 +19,9 @@ final class TestSite
     public const DB_PREFIX = 'icms';
     public const SITE_NAME = 'ImpressCMS Test Site';
 
+    /** XOOPS_DB_SALT of the test site: the main salt of legacy password hashes */
+    public const DB_SALT = 'icms-test-salt-not-secret';
+
     /** Fixture accounts (test-only credentials, no real secrets). */
     public const WEBMASTER_UNAME = 'webmaster';
     public const WEBMASTER_PASS = 'webmaster-test-pass';

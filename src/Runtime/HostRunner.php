@@ -28,6 +28,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 final class HostRunner implements RunnerInterface
 {
+    /** Request attribute: true while the bridge runs a legacy script for the request */
+    public const LEGACY_PAGE = '_icms_legacy_page';
+
     private ?LegacyExecutionResponse $legacyMarker = null;
 
     public function __construct(
@@ -63,6 +66,8 @@ final class HostRunner implements RunnerInterface
         $resolution = $this->legacyMarker->resolution;
         $this->legacyMarker = null;
         $this->container()->get(LegacyEventForwarder::class)->install();
+        // a legacy script runs for this request (App\Session\Host sends its cache headers)
+        $this->request->attributes->set(self::LEGACY_PAGE, true);
 
         return $this->bridge()->prepare($this->request, $resolution, $this->finishLegacy(...));
     }

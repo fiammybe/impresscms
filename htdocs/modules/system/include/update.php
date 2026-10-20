@@ -407,6 +407,45 @@ function xoops_module_update_system(
 		echo $e->getMessage();
 	}
 
+	/* Begin upgrade to 3.0 (Argon2id: wrap the legacy password hashes) */
+	if (!$abortUpdate) {
+		$newDbVersion = 51;
+	}
+	try {
+		if (!$abortUpdate && $dbVersion < $newDbVersion) {
+			// the password encryption preference is gone: every password uses Argon2id
+			$icmsDatabaseUpdater->runQuery(
+				"DELETE FROM " . icms::$xoopsDB->prefix("configoption") . " WHERE conf_id IN (SELECT conf_id FROM "
+					. icms::$xoopsDB->prefix("config") . " WHERE conf_modid = 0 AND conf_name = 'enc_type')",
+				"Password encryption options removed",
+				"",
+			);
+			$icmsDatabaseUpdater->runQuery(
+				"DELETE FROM " . icms::$xoopsDB->prefix("config") . " WHERE conf_modid = 0 AND conf_name = 'enc_type'",
+				"Password encryption preference removed",
+				"",
+			);
+
+			// no legacy hash stays in the database: each becomes Argon2id of itself
+			// (Icms\Core\Password\Legacy); in batches, continued by the next run
+			$wrapper = new \Icms\Core\Password\Wrapper(icms::$db, icms::$xoopsDB->prefix("users"));
+			[$wrapped, $remaining] = $wrapper->wrap(20.0);
+			echo sprintf("Passwords: %d legacy hashes wrapped in Argon2id.", $wrapped) . "<br />";
+			if ($remaining > 0) {
+				echo '<span style="color:orange;">'
+					. sprintf("%d legacy password hashes are left. Run this update again, or run bin/console icms:passwords:wrap in the trust path.", $remaining)
+					. "</span><br />";
+			} else {
+				$icmsDatabaseUpdater->updateModuleDBVersion($newDbVersion, "system");
+				echo sprintf(_DATABASEUPDATER_UPDATE_OK, icms_conv_nr2local($newDbVersion)) . "<br />";
+			}
+			unset($wrapper, $wrapped, $remaining);
+		}
+	} catch (Throwable $e) {
+		$abortUpdate = true;
+		echo $e->getMessage();
+	}
+
 	/**
 	 * This portion of the upgrade must remain as the last section of code to execute
 	 * Place all release upgrade steps above this point

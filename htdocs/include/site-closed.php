@@ -23,6 +23,9 @@ if (isset($xoopsOption['ignore_closed_site']) && $xoopsOption['ignore_closed_sit
 		}
 	}
 } elseif (!empty($_POST['xoops_login'])) {
+	// the host's password login (App\Security\Authenticator\Password) handles
+	// this form before ImpressCMS boots; a post that gets here found no such
+	// host (none or an older one, until the system module update)
 	include_once ICMS_INCLUDE_PATH . '/checklogin.php';
 	exit();
 }

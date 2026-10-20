@@ -22,11 +22,15 @@
 
 namespace Icms\Core;
 
+use Icms\Core\Password\Legacy;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Symfony\Component\PasswordHasher\Hasher\SodiumPasswordHasher;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+
 final class Password {
 
 	private $pass;
 	private $salt;
-	private $mainSalt = XOOPS_DB_SALT;
 	private $uname;
 
 	/**
@@ -151,13 +155,54 @@ final class Password {
 	 * @return   Hash of users password.
 	 */
 	public function encryptPass(string $pass): string {
-		global $icmsConfigUser;
+		return self::hasher()->hash($pass);
+	}
 
-		$salt = self::createSalt();
-		$iterations = 5000;
-		$enc_type = (isset($icmsConfigUser['enc_type']) ? (int) $icmsConfigUser['enc_type'] : 23);
+	/**
+	 * The password algorithm: Argon2id where PHP offers it (libsodium or
+	 * PASSWORD_ARGON2ID), bcrypt otherwise. (Symfony's `auto` chooses bcrypt.)
+	 */
+	public static function algorithm(): string {
+		$sodium = SodiumPasswordHasher::isSupported() && defined('SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13');
 
-		return self::_encryptPassword($pass, $salt, $enc_type, $iterations);
+		return $sodium || defined('PASSWORD_ARGON2ID') ? 'argon2id' : 'bcrypt';
+	}
+
+	/**
+	 * The password hasher of ImpressCMS, for legacy code and the host alike
+	 * (App\Security\Password\Hasher\Modern), so that both produce the same
+	 * hashes. It verifies bcrypt and Argon2id hashes, and asks for a rehash of
+	 * those that do not use algorithm().
+	 */
+	public static function hasher(): PasswordHasherInterface {
+		static $hasher;
+
+		return $hasher ??= (new PasswordHasherFactory(['icms' => ['algorithm' => self::algorithm()]]))->getPasswordHasher('icms');
+	}
+
+	/**
+	 * Whether a value of the `pass` column should be replaced by a fresh hash of
+	 * the password: a legacy or wrapped value, or a hash with outdated parameters.
+	 */
+	public static function needsRehash(string $pass): bool {
+		return $pass === '' || $pass[0] !== '$' || Legacy::isWrapped($pass) || Legacy::isUnwrapped($pass) || self::hasher()->needsRehash($pass);
+	}
+
+	/**
+	 * Whether $plain is the password of a value of the `pass` column, in any
+	 * format: a hash of the hasher, a wrapped or a legacy value (with the
+	 * user's `salt` and `enc_type` columns for the oldest format).
+	 */
+	public static function matches(string $plain, string $pass, string $saltColumn = '', int $encTypeColumn = 1): bool {
+		if ($plain === '' || $pass === '') {
+			return false;
+		}
+		$value = Legacy::describe($pass, $saltColumn, $encTypeColumn);
+		if (Legacy::isWrapped($value) || Legacy::isUnwrapped($value)) {
+			return Legacy::verify($value, $plain, self::hasher(), (string) constant('XOOPS_DB_SALT'));
+		}
+
+		return self::hasher()->verify($pass, $plain);
 	}
 
 	/**
@@ -303,139 +348,15 @@ final class Password {
 	}
 
 	/**
-	 * This Private Function is used to Encrypt User Passwords
-	 * @copyright (c) 2007-2008 The ImpressCMS Project - www.impresscms.org
-	 * @since    1.1
-	 * @param    string  $pass       plaintext password to be encrypted
-	 * @param    string  $salt       unique user salt key used in encryption process
-	 * @param    int     $enc_type   encryption type to use (this is required & only used when passwords are expired)
-	 * @return   Hash of users password.
-	 *
-	 * To be removed in future versions, use _encryptPassword() instead
-	 */
-	private function _encryptPass($pass, $salt, $enc_type) {
-		if ($enc_type === 0) {
-			return md5($pass);
-		} else {
-			$pass = $salt . md5($pass) . $this->mainSalt;
-
-			$type = array();
-			$type['encType'] = array(
-				1 => 'sha256',
-				2 => 'sha384',
-				3 => 'sha512',
-				4 => 'ripemd128',
-				5 => 'ripemd160',
-				6 => 'whirlpool',
-				7 => 'haval128,4',
-				8 => 'haval160,4',
-				9 => 'haval192,4',
-				10 => 'haval224,4',
-				11 => 'haval256,4',
-				12 => 'haval128,5',
-				13 => 'haval160,5',
-				14 => 'haval192,5',
-				15 => 'haval224,5',
-				16 => 'haval256,5',
-			);
-
-			return hash($type['encType'][$enc_type], $pass);
-		}
-	}
-
-	/**
-	 * This Private Function is used to Encrypt User Passwords
-	 * @copyright (c) 2007-2008 The ImpressCMS Project - www.impresscms.org
-	 * @since    1.3.3
-	 * @param    string  $pass          plaintext password to be encrypted
-	 * @param    string  $salt          unique user salt key used in encryption process
-	 * @param    int     $enc_type      encryption type to use.
-	 * @param    int     $iterations    Number of times to rehash(stretch).
-	 * @return   Hash of users password.
-	 */
-	private function _encryptPassword($pass, $salt, $enc_type, $iterations) {
-		if ($enc_type == 20) {
-			return '$' . $enc_type . '$20$' . md5($pass); // this should never be used. should be removed???
-		} else {
-			$hash = '$' . $enc_type . '$' . $iterations . '$' . $salt . '-' . self::_rehash(
-				self::_rehash($salt, $iterations) .
-				self::_rehash($pass, $iterations) .
-				self::_rehash($this->mainSalt, $iterations),
-				$iterations, $enc_type);
-
-			return $hash;
-		}
-	}
-
-	/**
-	 * This Private Function rehashes (stretches) the Password Hash
-	 * @copyright (c) 2007-2008 The ImpressCMS Project - www.impresscms.org
-	 * @since    1.3.3
-	 * @param    string     $hash           hash to be re-hashed (stretched)
-	 * @param    int        $iterations     Number of times to re-hash
-	 * @param    int        $enc_type       encryption type to use
-	 * @return   Hash of users password.
-	 */
-	private function _rehash($hash, $iterations, $enc_type = 21) {
-		$type['encType'] = array(
-			21 => 'sha256',
-			22 => 'sha384',
-			23 => 'sha512',
-			24 => 'ripemd128',
-			25 => 'ripemd160',
-			26 => 'whirlpool',
-			27 => 'haval128,4',
-			28 => 'haval160,4',
-			29 => 'haval192,4',
-			30 => 'haval224,4',
-			31 => 'haval256,4',
-			32 => 'haval128,5',
-			33 => 'haval160,5',
-			34 => 'haval192,5',
-			35 => 'haval224,5',
-			36 => 'haval256,5',
-			37 => 'ripemd256',
-			38 => 'ripemd320',
-			39 => 'snefru256',
-			40 => 'gost'
-		);
-
-		for ($i = 0; $i < $iterations; ++$i) {
-			$hashed = hash($type['encType'][$enc_type], $hash . $hash);
-		}
-
-		return $hashed;
-	}
-
-	/**
 	 * This Private Function verifies if the password is correct
-	 * @copyright (c) 2007-2008 The ImpressCMS Project - www.impresscms.org
-	 * @since    1.3.3
 	 * @param    string     $pass       Password to be verified
 	 * @param    string     $uname      Username of password to be verified
 	 * @return   mixed      returns password HASH if correct, returns false if incorrect
 	 */
 	private function _verifyPassword($pass, $uname) {
-		$userSalt = self::_getUserSalt($uname); // to be deprecated in future versions
-		$userHash = self::_getUserHash($uname);
+		$userHash = (string) self::_getUserHash($uname);
+		$userSalt = (string) self::_getUserSalt($uname);
 
-		if(preg_match_all("/(\\$)(\\d+)(\\$)(\\d+)(\\$)((?:[a-z0-9_]*))(-)((?:[a-z0-9_]*))/is", $userHash, $matches)) {
-			$encType = (int) $matches[2][0];
-			$iterations = (int) $matches[4][0];
-			$userSalt = $matches[6][0];
-
-			if (self::_encryptPassword($pass, $userSalt, $encType, $iterations) === $userHash) {
-				return $userHash;
-			}
-		} else { // to be removed in future versions
-			$encType = self::_getUserEncType($uname);
-
-			if (self::_encryptPass($pass, $userSalt, $encType) === $userHash) {
-				return $userHash;
-			}
-		}
-
-		return false;
+		return self::matches($pass, $userHash, $userSalt, self::_getUserEncType($uname)) ? $userHash : false;
 	}
 }
-

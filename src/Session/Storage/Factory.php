@@ -36,8 +36,9 @@ final class Factory implements SessionStorageFactoryInterface
             'cookie_secure' => $request?->isSecure() ?? false,
             'cookie_path' => ($request?->getBasePath() ?: '') . '/',
             'use_strict_mode' => true,
-            // as when ImpressCMS started the session: pages with a session are never cached
-            'cache_limiter' => 'nocache',
+            // no cache headers from PHP or the session handler: Symfony's session
+            // listener sets them on its responses, App\Session\Host on legacy pages
+            'cache_limiter' => '0',
         ];
         if ($this->settings->lifetime() > 0) {
             $options['gc_maxlifetime'] = $this->settings->lifetime();

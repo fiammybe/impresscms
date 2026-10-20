@@ -59,7 +59,7 @@ $constants = [
     'XOOPS_DB_USER' => var_export($db['user'], true),
     'XOOPS_DB_PASS' => var_export($db['pass'], true),
     'XOOPS_DB_NAME' => var_export($db['name'], true),
-    'XOOPS_DB_SALT' => var_export('icms-test-salt-not-secret', true),
+    'XOOPS_DB_SALT' => var_export(TestSite::DB_SALT, true),
 ];
 foreach ($constants as $name => $expression) {
     $count = 0;
