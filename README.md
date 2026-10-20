@@ -4,10 +4,8 @@
 ![GitHub Release](https://img.shields.io/github/v/release/impresscms/impresscms?include_prereleases&display_name=release&logo=github&style=flat-square)
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FImpressCMS%2Fimpresscms.svg?type=shield&issueType=license&style=flat-square)](https://app.fossa.com/projects/git%2Bgithub.com%2FImpressCMS%2Fimpresscms?ref=badge_shield&issueType=license&style=flat-square)
-![Code Climate coverage](https://img.shields.io/codeclimate/coverage-letter/ImpressCMS/impresscms?logo=codeclimate&style=flat-square)
 
-
-![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/ImpressCMS/impresscms?logo=codeclimate&style=flat-square) <a title="Crowdin" target="_self" href="https://impresscms.crowdin.com/impresscms"><img src="https://badges.crowdin.net/e/f7817e813865fde0509c454ad1ee4c11/localized.svg" /></a>
+<a title="Crowdin" target="_self" href="https://impresscms.crowdin.com/impresscms"><img src="https://badges.crowdin.net/e/f7817e813865fde0509c454ad1ee4c11/localized.svg" /></a>
 
 ![Mastodon Follow](https://img.shields.io/mastodon/follow/109613696614549139?domain=https%3A%2F%2Fphpc.social&style=flat-square&logo=mastodon)
 <a href="https://www.facebook.com/ImpressCMS/">
@@ -96,7 +94,21 @@ composer install       # in the repository root
 php bin/build-dist     # creates htdocs/trust_dist/
 ```
 
-Point a web server at `htdocs/` and open the site to run the installer. To build a package for a hosting account, run `php bin/build-package`. It writes `var/dist/impresscms-<version>-<commit>.zip` from the last commit; unzip it straight into the web root.
+Point a web server at `htdocs/` and open the site to run the installer. To build a package for a hosting account, run `php bin/build-package`. It writes `var/dist/impresscms-<version>-<commit>.zip`; unzip it straight into the web root. The zip holds `htdocs/` of a committed revision, without `htdocs/tests`, plus the `trust_dist/` folder that `bin/build-dist` builds. Uncommitted changes are never included.
+
+```bash
+php bin/build-package [--ref=<git ref>] [--output=<zip>] [--composer=<command>]
+```
+
+| Option | Meaning |
+|---|---|
+| `--ref=<git ref>` | the revision to package: a branch, tag or commit. Default: `HEAD` |
+| `--output=<zip>` | the zip file to write. Default: `var/dist/impresscms-<version>-<commit>.zip` |
+| `--composer=<command>` | the Composer command that `bin/build-dist` runs, for example `--composer="php composer.phar"`. Default: `composer`, or the `COMPOSER_BINARY` environment variable |
+
+For example, `php bin/build-package --ref=origin/pre-3 --output=/tmp/impresscms.zip` packages the last commit of `pre-3`. An unknown option stops the command with an error. The `zip` PHP extension is required.
+
+`bin/build-dist` takes `--target=<dir>` (where to build; default `htdocs/trust_dist/`, replaced if it exists) and `--composer=<command>`.
 
 `composer test` runs the tests (create the test site first with `php bin/test-db`).
 
