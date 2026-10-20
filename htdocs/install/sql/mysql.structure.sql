@@ -416,6 +416,16 @@ CREATE TABLE ranks (
 # Table structure for table `session`
 #
 
+CREATE TABLE rememberme_token (
+  `series` char(88) NOT NULL,
+  `value` char(88) NOT NULL,
+  `lastUsed` datetime NOT NULL,
+  `class` varchar(100) NOT NULL default '',
+  `username` varchar(200) NOT NULL,
+  PRIMARY KEY (`series`)
+);
+# --------------------------------------------------------
+
 CREATE TABLE session (
   `sess_id` varchar(32) NOT NULL default '',
   `sess_updated` int(10) unsigned NOT NULL default '0',

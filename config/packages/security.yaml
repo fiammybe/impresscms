@@ -31,6 +31,27 @@ security:
             login_throttling:
                 max_attempts: 5
                 interval: '1 minute'
+            # remember-me-and-email-links: persistent, rotating tokens in
+            # <prefix>_rememberme_token, offered by the login form's "rememberme"
+            # when the preference allows it (App\Security\Authenticator\Password)
+            remember_me:
+                secret: '%kernel.secret%'
+                name: ICMSREMEMBERME
+                lifetime: 604800
+                remember_me_parameter: rememberme
+                token_provider:
+                    service: App\Security\RememberMe\TokenProvider
+            # login and reset links by e-mail (App\Controller\Auth\Mail): only a
+            # POST to the link logs in, once, within 15 minutes, while the
+            # password is unchanged
+            login_link:
+                check_route: icms_auth_link_check
+                check_post_only: true
+                signature_properties: [id, loginName, password]
+                lifetime: 900
+                max_uses: 1
+                success_handler: App\Security\Login\Responder
+                failure_handler: App\Security\Login\Responder
 
     # Restrict Symfony routes with #[IsGranted('ROLE_USER')], 'ROLE_WEBMASTER',
     # 'ROLE_GROUP_<id>' or 'icms_perm:<permission>' (App\Security\ModulePermissionVoter).

@@ -195,7 +195,7 @@ final class HostUpgradeTest extends HttpTestCase
         self::assertDirectoryDoesNotExist(self::staging(), 'the staging directory is removed');
         self::assertDirectoryDoesNotExist(TestSite::legacyRoot() . '/trust_dist');
         self::assertSame(
-            '51',
+            '52',
             (string) TestSite::connection()->query('SELECT dbversion FROM ' . TestSite::table('modules') . " WHERE dirname = 'system'")->fetchColumn(),
         );
 

@@ -138,10 +138,11 @@ set-cookie: ICMSSESSION=*; httponly; path=/; samesite=lax
 				No problem. Simply enter the e-mail address we have on file for your account.
 			</div>
 			<form action="lostpass.php" method="post">
-				<div><br />Your Email:  <input type="text" name="email" size="26" maxlength="60" />&nbsp;&nbsp;<input type="hidden" name="op" value="mailpasswd" /><input type="hidden" name="t" value="{MD5}" />
+				<div><br />Your Email:  <input type="email" name="email" size="26" maxlength="255" autocomplete="email" />&nbsp;&nbsp;<input type="hidden" name="t" value="{MD5}" />
 		    	<br />
 		    	<br />
-		     	<input type="submit" value="Send Password" /></div>
+		     	<button type="submit" name="op" value="mailpasswd">E-mail me a reset link</button>
+		     	<button type="submit" name="op" value="loginlink">E-mail me a login link</button></div>
 			</form>
 		</fieldset>
 	</div>

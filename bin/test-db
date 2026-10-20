@@ -80,8 +80,25 @@ file_put_contents(TestSite::mainfile(), $template);
 
 // The host "installed" in the trust path, as on a real site: one-line stubs for
 // the repository's host.php and vendor/, so requests take the production path
-// (index.php → <trust>/host.php) without a copy of vendor/.
+// (index.php → <trust>/host.php) without a copy of vendor/. A copy of the host
+// left there (by an update that found htdocs/trust_dist) would run stale code.
+foreach (['host.php', 'vendor', 'src', 'config', 'templates', 'bin', 'var', 'composer.json', 'composer.lock', '.env', '.env.local', '.htaccess'] as $entry) {
+    (new Symfony\Component\Filesystem\Filesystem())->remove(TestSite::trustPath() . '/' . $entry);
+}
 TestSite::writeTrustPathHost();
+
+// The system module update below installs the host from htdocs/trust_dist when
+// that exists (bin/build-dist): keep it out of the way meanwhile.
+$staging = TestSite::legacyRoot() . '/trust_dist';
+$stagingAside = $staging . '.test-db';
+if (is_dir($staging)) {
+    rename($staging, $stagingAside);
+}
+register_shutdown_function(static function () use ($staging, $stagingAside): void {
+    if (is_dir($stagingAside) && !is_dir($staging)) {
+        rename($stagingAside, $staging);
+    }
+});
 
 // -- Schema ----------------------------------------------------------------
 $server = TestSite::serverConnection();

@@ -58,6 +58,9 @@ services:
         arguments:
             $mainfile: '%icms.legacy.root%/mainfile.php'
 
+    # the icms:// and icms+dir:// mailer DSNs
+    App\Mail\Transport\Factory:
+        tags: ['mailer.transport_factory']
 
     # fetched by App\Runtime\HostRunner before a legacy script runs
     App\Legacy\LegacyEventForwarder:

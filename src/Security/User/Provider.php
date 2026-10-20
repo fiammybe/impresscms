@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Security\User;
 
 use App\Legacy\Dbal\Tables;
+use Icms\Core\Password;
 use Icms\Core\Password\Legacy;
 use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -83,6 +84,18 @@ final class Provider implements UserProviderInterface, PasswordUpgraderInterface
         ($this->connection)()->executeStatement(
             'UPDATE ' . $this->tables->name('users') . ' SET pass = ? WHERE uid = ?',
             [$newHashedPassword, $user->getId()],
+        );
+    }
+
+    /**
+     * Sets a new password (the shared hasher of Icms\Core\Password) and clears
+     * an expired one.
+     */
+    public function changePassword(Entity $user, #[\SensitiveParameter] string $plainPassword): void
+    {
+        ($this->connection)()->executeStatement(
+            'UPDATE ' . $this->tables->name('users') . ' SET pass = ?, pass_expired = 0 WHERE uid = ?',
+            [Password::hasher()->hash($plainPassword), $user->getId()],
         );
     }
 

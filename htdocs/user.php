@@ -77,6 +77,8 @@ switch ($op) {
 				'lang_noproblem' => _US_NOPROBLEM,
 				'lang_youremail' => _US_YOUREMAIL,
 				'lang_sendpassword' => _US_SENDPASSWORD,
+				// login links need the host (App\Controller\Auth\Mail)
+				'lang_sendloginlink' => \Icms\Core\Session::host() !== null && defined('_US_SENDLOGINLINK') ? _US_SENDLOGINLINK : '',
 				'lang_rememberme' => _US_REMEMBERME,
 				'mailpasswd_token' => icms::$security->createToken(),
 				'allow_registration' => $icmsConfigUser['allow_register'],
@@ -107,6 +109,8 @@ switch ($op) {
 				'lang_resetpassinfo' => _US_RESETPASSINFO,
 				// 'lang_youremail' => _US_YOUREMAIL,
 				'lang_sendpassword' => _US_SENDPASSWORD,
+				// login links need the host (App\Controller\Auth\Mail)
+				'lang_sendloginlink' => \Icms\Core\Session::host() !== null && defined('_US_SENDLOGINLINK') ? _US_SENDLOGINLINK : '',
 				'lang_subresetpassword' => _US_SUBRESETPASSWORD,
 				'lang_currentpass' => _US_CURRENTPASS,
 				'lang_newpass' => _US_NEWPASSWORD,

@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Session\SessionUtils;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 /**
@@ -70,7 +71,7 @@ final class Host implements IHost
 
     public function userId(): int
     {
-        $user = $this->tokenStorage->getToken()?->getUser();
+        $user = $this->token()?->getUser();
         if ($user instanceof User) {
             return $user->getId();
         }
@@ -81,12 +82,53 @@ final class Host implements IHost
         $uid = (int) ($_SESSION['xoopsUserId'] ?? 0);
         if ($uid > 0 && $this->sessionFromBeforeTheHost()) {
             $this->login($uid);
-            $user = $this->tokenStorage->getToken()?->getUser();
+            $user = $this->token()?->getUser();
 
             return $user instanceof User ? $user->getId() : 0;
         }
 
         return 0;
+    }
+
+    /**
+     * The security token. Reading it first runs the lazy firewall's
+     * authenticators (remember me), which need the request on the stack: while a
+     * legacy script runs, the kernel has already popped it.
+     */
+    private function token(): ?TokenInterface
+    {
+        return $this->withRequest(function (): ?TokenInterface {
+            $token = $this->tokenStorage->getToken();
+            // a remembered login migrates the session
+            $this->withoutPhpSessionCookie();
+
+            return $token;
+        });
+    }
+
+    /**
+     * Runs $work with the host's request on Symfony's request stack.
+     *
+     * @template T
+     *
+     * @param \Closure(): T $work
+     *
+     * @return T
+     */
+    private function withRequest(\Closure $work): mixed
+    {
+        $request = $this->request();
+        $pushed = $this->requestStack->getCurrentRequest() !== $request;
+        if ($pushed) {
+            $this->requestStack->push($request);
+        }
+        try {
+            return $work();
+        } finally {
+            if ($pushed) {
+                $this->requestStack->pop();
+            }
+        }
     }
 
     private function sessionFromBeforeTheHost(): bool
@@ -106,23 +148,18 @@ final class Host implements IHost
             return;
         }
 
-        $request = $this->request();
-        $pushed = $this->requestStack->getCurrentRequest() !== $request;
-        if ($pushed) {
-            $this->requestStack->push($request);
-        }
-        try {
+        $this->withRequest(function () use ($user): void {
             $this->security->login($user, LegacyAuthenticator::class, 'main');
             $this->withoutPhpSessionCookie();
-        } finally {
-            if ($pushed) {
-                $this->requestStack->pop();
-            }
-        }
+        });
     }
 
     public function logout(): void
     {
+        if ($this->token()?->getUser() !== null) {
+            // Symfony's logout listeners: the remember-me token and cookie go
+            $this->withRequest(fn () => $this->security->logout(false));
+        }
         $this->tokenStorage->setToken(null);
         $this->request()->getSession()->invalidate();
         $this->withoutPhpSessionCookie();

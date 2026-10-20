@@ -114,7 +114,7 @@ class Session {
 	 * The session service inside the host: the host starts the session, and its
 	 * authenticated user is icms::$user. $_SESSION['xoopsUserId'] and
 	 * $_SESSION['xoopsUserGroups'] are written for code that reads them; a
-	 * preload that sets xoopsUserId while the session starts (autologin) logs
+	 * preload that sets xoopsUserId while the session starts (as the old autologin did) logs
 	 * that user in.
 	 */
 	private static function hostedService(Session\IHost $host): self {

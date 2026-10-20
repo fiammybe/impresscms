@@ -9,6 +9,16 @@ framework:
     session:
         storage_factory_id: App\Session\Storage\Factory
         handler_id: ~
+    csrf_protection: true
+    # mail through the ImpressCMS mail preferences (App\Mail\Transport\Factory)
+    mailer:
+        dsn: 'icms://default'
+    rate_limiter:
+        # login and reset links per address and IP (App\Controller\Auth\Mail)
+        icms_mail_link:
+            policy: sliding_window
+            limit: 3
+            interval: '15 minutes'
     php_errors:
         log: true
     # the Symfony 8 default, set explicitly (deprecated to leave unset since 7.3)
@@ -18,3 +28,6 @@ framework:
 when@test:
     framework:
         test: true
+        # mails as .eml files, read by the Http tests
+        mailer:
+            dsn: 'icms+dir://default?path=%kernel.project_dir%/var/test/mail'

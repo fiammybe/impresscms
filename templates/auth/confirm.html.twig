@@ -1,0 +1,9 @@
+{# The confirmation of a login link (App\Controller\Auth\Link): opening a link
+   never logs in, only this form's POST to the same URL does. #}
+<div class="icms-auth-confirm">
+	<h1>{{ title }}</h1>
+	<p>{{ text }}</p>
+	<form method="post" action="{{ action }}">
+		<input type="submit" value="{{ button }}" />
+	</form>
+</div>

@@ -32,10 +32,11 @@
 				<{$lang_noproblem}>
 			</div>
 			<form action="lostpass.php" method="post">
-				<div><br /><{$lang_youremail}> <input type="text" name="email" size="26" maxlength="60" />&nbsp;&nbsp;<input type="hidden" name="op" value="mailpasswd" /><input type="hidden" name="t" value="<{$mailpasswd_token}>" />
+				<div><br /><{$lang_youremail}> <input type="email" name="email" size="26" maxlength="255" autocomplete="email" />&nbsp;&nbsp;<input type="hidden" name="t" value="<{$mailpasswd_token}>" />
 		    	<br />
 		    	<br />
-		     	<input type="submit" value="<{$lang_sendpassword}>" /></div>
+		     	<button type="submit" name="op" value="mailpasswd"><{$lang_sendpassword}></button>
+		     	<{if $lang_sendloginlink}><button type="submit" name="op" value="loginlink"><{$lang_sendloginlink}></button><{/if}></div>
 			</form>
 		</fieldset>
 	</div>

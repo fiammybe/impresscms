@@ -435,11 +435,43 @@ function xoops_module_update_system(
 				echo '<span style="color:orange;">'
 					. sprintf("%d legacy password hashes are left. Run this update again, or run bin/console icms:passwords:wrap in the trust path.", $remaining)
 					. "</span><br />";
+				// the next run continues here: later steps wait, so that the version stays below 51
+				$updatePaused = true;
 			} else {
 				$icmsDatabaseUpdater->updateModuleDBVersion($newDbVersion, "system");
 				echo sprintf(_DATABASEUPDATER_UPDATE_OK, icms_conv_nr2local($newDbVersion)) . "<br />";
 			}
 			unset($wrapper, $wrapped, $remaining);
+		}
+	} catch (Throwable $e) {
+		$abortUpdate = true;
+		echo $e->getMessage();
+	}
+
+	/* Begin upgrade to 3.0 (remember-me tokens of the host) */
+	if (!$abortUpdate && empty($updatePaused)) {
+		$newDbVersion = 52;
+	}
+	try {
+		if (!$abortUpdate && empty($updatePaused) && $dbVersion < $newDbVersion) {
+			// persistent remember-me tokens (App\Security\RememberMe\TokenProvider)
+			$icmsDatabaseUpdater->runQuery(
+				"CREATE TABLE IF NOT EXISTS " . icms::$xoopsDB->prefix("rememberme_token") . " ("
+					. "`series` char(88) NOT NULL, `value` char(88) NOT NULL, `lastUsed` datetime NOT NULL, "
+					. "`class` varchar(100) NOT NULL default '', `username` varchar(200) NOT NULL, PRIMARY KEY (`series`))",
+				sprintf(_DATABASEUPDATER_MSG_QUERY_SUCCESSFUL, "rememberme_token"),
+				sprintf(_DATABASEUPDATER_MSG_QUERY_FAILED, "rememberme_token"),
+			);
+			// the old remember-me (a cookie derived from the password hash) is replaced;
+			// uploading a release does not delete its files
+			foreach ([ICMS_PLUGINS_PATH . "/preloads/autologin.php", ICMS_ROOT_PATH . "/session_confirm.php"] as $obsolete) {
+				if (is_file($obsolete) && @unlink($obsolete)) {
+					echo sprintf("Removed %s.", htmlspecialchars(basename($obsolete), ENT_QUOTES)) . "<br />";
+				}
+			}
+			unset($obsolete);
+			$icmsDatabaseUpdater->updateModuleDBVersion($newDbVersion, "system");
+			echo sprintf(_DATABASEUPDATER_UPDATE_OK, icms_conv_nr2local($newDbVersion)) . "<br />";
 		}
 	} catch (Throwable $e) {
 		$abortUpdate = true;

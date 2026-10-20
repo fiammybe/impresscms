@@ -132,6 +132,11 @@ final class Entity implements UserInterface, PasswordAuthenticatedUserInterface,
         }
     }
 
+    /**
+     * Required by UserInterface until Symfony 8; nothing to erase (the entity
+     * holds no plain password).
+     */
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
     }

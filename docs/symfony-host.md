@@ -301,6 +301,26 @@ The host owns the session and the identity (OpenSpec change
   each legacy hash as `$icms-legacy$<parameters>$<argon2id(legacy hash)>`, in
   batches (`bin/console icms:passwords:wrap` does all at once), and a login
   replaces a wrapped hash by a plain one (`migrate_from: [icms_legacy]`).
+- **Remember me.** Symfony's `remember_me` with persistent tokens that rotate
+  (`App\Security\RememberMe\TokenProvider`, table `<prefix>_rememberme_token`,
+  cookie `ICMSREMEMBERME`, one week). Only with the preference `remember_me` on.
+  Logout deletes the token; a new password deletes all tokens of the user.
+- **Login and reset links.** The lost-password box posts to `/lostpass.php`
+  (`App\Controller\Auth\Mail`, 3 mails per 15 minutes per address and IP, one
+  answer for known and unknown addresses). It mails a Symfony `login_link`
+  (15 minutes, once, signed with the password hash). Opening the link shows a
+  confirmation (`App\Controller\Auth\Link`); only its POST logs in. A reset
+  link (`reset=1`) then leads to `/auth/password`
+  (`App\Controller\Auth\Password`). No password is ever mailed.
+- **Mail.** Symfony Mailer, with the DSN `icms://default`: the transport follows
+  the mail preferences (`App\Mail\Transport\Legacy`). The test environment
+  writes `.eml` files to `var/test/mail` (`icms+dir://`). Legacy mail
+  (`icms_messaging_Handler`) is unchanged.
+- **Pages inside the theme.** `App\Front\Page::render(closure)` shows a host page
+  between the theme's header and footer (`htdocs/include/host_page.php`). The
+  closure runs after `header.php`, with the language loaded; the controller
+  must not boot legacy itself, and computes what needs the session (a CSRF
+  token) before.
 
 | Role / attribute | Granted to |
 |---|---|
