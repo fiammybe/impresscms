@@ -15,8 +15,12 @@
 
 
 
-# ImpressCMS 2.0.4 Beta
+# ImpressCMS 3.0.0 Alpha 1
 ImpressCMS is a community developed Content Management System build on PHP and MySQL with a focus on speed, support for multiple languages and security
+
+> **This is ImpressCMS 3, a pre-release.** It is under development on the `pre-3` branch and is not meant for production sites yet. The stable line is ImpressCMS 2.0.x, on the `2.0.x` branch.
+>
+> ImpressCMS 3 runs inside a [Symfony](https://symfony.com/) 7.4 application, the *host*. Pages move to Symfony one at a time: Symfony routes answer directly, and every other request is executed by the existing ImpressCMS code, so your modules, themes and the `icms::` API keep working. See [docs/symfony-host.md](docs/symfony-host.md).
 
 This tool makes maintaining a website as easy as writing a word document.
 
@@ -59,22 +63,44 @@ For each type of website ImpressCMS offers different functionality with a collec
 * ...and many more
 
 
+## Requirements
+
+| | |
+|---|---|
+| **PHP** | 8.2, 8.3 or 8.4 |
+| **PHP extensions** | `gd`, `json`, `mbstring`, `mysqli`, `pcre`, `pdo` (with `pdo_mysql`), `session`, `xml`, `zlib` |
+| **Database** | MySQL or MariaDB |
+| **Web server** | Apache or LiteSpeed (with `mod_rewrite` and `AllowOverride`), nginx, FrankenPHP/Caddy, or Laravel Herd. It **must send every PHP request to `index.php`**: see [docs/server/](docs/server/) |
+| **Folders** | a *trust path* outside the web root, writable by PHP, and the writable folders the installer lists |
+
+The `sodium` extension is recommended: passwords are hashed with Argon2id, and with bcrypt where Argon2 is not available.
+
+A PHP version that is too old, or one without a required extension, gets a readable requirements page instead of an error. The minimum versions come from `composer.json`.
+
 ## Installation
 
-1. Unzip the package into your web root (for example `public_html/`).
-2. Open the site and follow the steps of the installer.
+1. Download the package, or build it ([see below](#from-a-repository-checkout)), and unzip it into your web root (for example `public_html/`).
+2. Make the web server send every PHP request to `index.php`. On Apache and LiteSpeed the installer writes `.htaccess` from `htaccess.txt` when there is none; otherwise rename `htaccess.txt` to `.htaccess` yourself. For nginx, FrankenPHP and Laravel Herd, use the examples in [docs/server/](docs/server/).
+3. Open the site in a browser (or `/install/`) and follow the steps of the installer.
 
-The installer asks for a *trust path*: a folder outside the web root for everything that must not be public. It installs the Symfony host there from the package's `trust_dist/` folder. That covers the application, its Composer libraries and the site's settings in `.env.local`.
+The installer asks for a *trust path*: a folder outside the web root for everything that must not be public. It installs the Symfony host there from the package's `trust_dist/` folder. That covers the application, its Composer libraries and the site's settings in `.env.local`. The installer refuses to continue while the web server does not send every PHP request to `index.php`, and tells you what to configure.
 
-The web server must send every PHP request to `index.php`. On Apache and LiteSpeed the installer writes `.htaccess` from `htaccess.txt` when there is none; otherwise rename it yourself. For nginx, FrankenPHP and Laravel Herd, use the examples in [docs/server/](docs/server/).
+### Upgrading
 
-**Upgrading** from 2.0.x or 2.1: upload the new files over your site, log in as webmaster and update the system module. The update installs the host into your trust path once the web server sends every PHP request to `index.php`; until then it explains what to configure.
+From ImpressCMS 2.0.x: **make a backup of the database and the files first.** Upload the new files over your site, log in as webmaster and update the system module. The update installs the host into your trust path once the web server sends every PHP request to `index.php`; until then it explains what to configure. It also wraps the stored passwords in Argon2id; every user keeps the password they have.
 
-**From a repository checkout:** run `composer install` in the repository root and `php bin/build-dist` to create `htdocs/trust_dist/`. To build a package for a hosting account, run `php bin/build-package`. It writes `var/dist/impresscms-<version>-<commit>.zip` from the last commit; unzip it straight into the web root.
+### From a repository checkout
 
-See [docs/symfony-host.md](docs/symfony-host.md) for how the host works and how to add Symfony pages.
+```bash
+composer install       # in the repository root
+php bin/build-dist     # creates htdocs/trust_dist/
+```
 
-More detailed installation instructions are available [on the ImpressCMS site](https://www.impresscms.org/modules/simplywiki/index.php?page=Installation)
+Point a web server at `htdocs/` and open the site to run the installer. To build a package for a hosting account, run `php bin/build-package`. It writes `var/dist/impresscms-<version>-<commit>.zip` from the last commit; unzip it straight into the web root.
+
+`composer test` runs the tests (create the test site first with `php bin/test-db`).
+
+More detailed installation instructions for ImpressCMS 2 are available [on the ImpressCMS site](https://www.impresscms.org/modules/simplywiki/index.php?page=Installation).
 
 ## Do you need any help?
 
@@ -88,7 +114,7 @@ Open an [issue](https://github.com/ImpressCMS/impresscms/issues/new) or send us 
 
 All active development branches are named in format `MAJOR.MINOR.x`. So if you want to fix or add something new, you should branch from most similar looking branch.
 
-E.g.: if you want to do with latest **2.0** code, you need to branch from `2.0.x` branch.
+E.g.: if you want to do with latest **2.0** code, you need to branch from `2.0.x` branch. Work on **ImpressCMS 3** goes to the `pre-3` branch.
 
 If you not sure how can be possible to work with Git or/and GitHub, try [interactive GitHub tutorial](https://skills.github.com).
 ### Translation
