@@ -94,3 +94,46 @@ function icms_imageeditor_filters(): array
 		'IMG_FILTER_SEPIA',
 	);
 }
+
+/**
+ * The filters offered by the filter plugin, with their labels and arguments.
+ * The labels are language constants defined by the plugin's language file.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function icms_imageeditor_filterDefinitions(): array
+{
+	$definitions = array(
+		array('NEGATE', 'IMG_FILTER_NEGATE', array()),
+		array('GRAYSCALE', 'IMG_FILTER_GRAYSCALE', array()),
+		array('BRIGHTNESS', 'IMG_FILTER_BRIGHTNESS', array(array('BRIGHTNESS_ARG', '0'))),
+		array('CONTRAST', 'IMG_FILTER_CONTRAST', array(array('CONTRAST_ARG', '0'))),
+		array('COLORIZE', 'IMG_FILTER_COLORIZE', array(array('COLORIZE_ARG', '0'), array('COLORIZE_ARG1', '0'), array('COLORIZE_ARG2', '0'))),
+		array('EDGEDETECT', 'IMG_FILTER_EDGEDETECT', array()),
+		array('EMBOSS', 'IMG_FILTER_EMBOSS', array()),
+		array('GAUSSIAN', 'IMG_FILTER_GAUSSIAN_BLUR', array()),
+		array('SELECTIVE', 'IMG_FILTER_SELECTIVE_BLUR', array()),
+		array('REMOVAL', 'IMG_FILTER_MEAN_REMOVAL', array()),
+		array('SMOOTH', 'IMG_FILTER_SMOOTH', array(array('SMOOTH_ARG', '2048'))),
+		array('SEPIA', 'IMG_FILTER_SEPIA', array()),
+	);
+
+	$filters = array();
+	foreach ($definitions as list($name, $value, $arguments)) {
+		$filter = array(
+			'title' => constant("_FILTER_$name"),
+			'value' => $value,
+			'descr' => constant("_FILTER_{$name}_DESC"),
+		);
+		foreach ($arguments as list($argument, $default)) {
+			$filter['args'][] = array(
+				'title' => constant("_FILTER_{$argument}_TITLE"),
+				'value' => $default,
+				'descr' => constant("_FILTER_{$argument}_DESC"),
+			);
+		}
+		$filters[] = $filter;
+	}
+
+	return $filters;
+}

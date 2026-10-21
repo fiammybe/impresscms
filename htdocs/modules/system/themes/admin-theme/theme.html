@@ -23,8 +23,8 @@
     <meta name="generator" content="ImpressCMS" />
 
 <!-- Favicon -->
-    <link rel="shortcut icon" type="image/ico" href="<{xoImgUrl icons/favicon.ico}>" />
-    <link rel="icon" type="image/png" href="<{xoImgUrl icons/icon.png}>" />
+    <link rel="shortcut icon" type="image/ico" href="<{xoImgUrl path="icons/favicon.ico"}>" />
+    <link rel="icon" type="image/png" href="<{xoImgUrl path="icons/icon.png"}>" />
 
 <!-- Sheet Css -->
     <link rel="stylesheet" type="text/css" media="all" href="<{$icms_url}>/modules/system/style<{if $icms_rtl}>_rtl<{/if}>.css" />
@@ -145,13 +145,13 @@
             <!-- Left column -->
                 <{if $icms_rtl}>
             <{if $xoBlocks.canvas_right_admin}>
-            <{includeq file="$modules_rootpath/system/themes/$theme_name/blockszone.html" blocks=$xoBlocks.canvas_right_admin
+            <{include file="$modules_rootpath/system/themes/$theme_name/blockszone.html" blocks=$xoBlocks.canvas_right_admin
                 zoneClass='icms-canvas-column' zoneId='icms-canvas-rightcolumn'
             }>
             <{/if}>
             <{else}>
             <{if $xoBlocks.canvas_left_admin}>
-            <{includeq file="$modules_rootpath/system/themes/$theme_name/blockszone.html" blocks=$xoBlocks.canvas_left_admin
+            <{include file="$modules_rootpath/system/themes/$theme_name/blockszone.html" blocks=$xoBlocks.canvas_left_admin
                 zoneClass='icms-canvas-column' zoneId='icms-canvas-leftcolumn'
             }>
                 <{/if}>
@@ -161,9 +161,9 @@
                 <!-- Top blocks -->
                 <{if $xoBlocks.page_topleft_admin or $xoBlocks.page_topcenter_admin or $xoBlocks.page_topright_admin}>
                 <div class="icms-blockszone icms-<{$theme_top_order}>pageblocks" id="icms-page-topblocks">
-                    <{includeq file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=top lcr=$theme_top_order|substr:0:1}>
-                    <{includeq file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=top lcr=$theme_top_order|substr:1:1}>
-                    <{includeq file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=top lcr=$theme_top_order|substr:2:1}>
+                    <{include file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=top lcr=$theme_top_order|substr:0:1}>
+                    <{include file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=top lcr=$theme_top_order|substr:1:1}>
+                    <{include file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=top lcr=$theme_top_order|substr:2:1}>
                 </div>
                 <{/if}>
                 <!-- Module content -->
@@ -173,22 +173,22 @@
                 <!-- Bottom blocks -->
                 <{if $xoBlocks.page_bottomleft_admin or $xoBlocks.page_bottomcenter_admin or $xoBlocks.page_bottomright_admin}>
                 <div class="icms-blockszone icms-<{$theme_bottom_order}>pageblocks" id="icms-page-bottomblocks">
-                    <{includeq file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=bottom lcr=$theme_bottom_order|substr:0:1}>
-                    <{includeq file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=bottom lcr=$theme_bottom_order|substr:1:1}>
-                    <{includeq file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=bottom lcr=$theme_bottom_order|substr:2:1}>
+                    <{include file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=bottom lcr=$theme_bottom_order|substr:0:1}>
+                    <{include file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=bottom lcr=$theme_bottom_order|substr:1:1}>
+                    <{include file="$modules_rootpath/system/themes/$theme_name/centerblocks.html" topbottom=bottom lcr=$theme_bottom_order|substr:2:1}>
                 </div>
                 <{/if}>
             </div>
             <!-- Right column -->
                 <{if $icms_rtl}>
             <{if $xoBlocks.canvas_left_admin}>
-            <{includeq file="$modules_rootpath/system/themes/$theme_name/blockszone.html" blocks=$xoBlocks.canvas_left_admin
+            <{include file="$modules_rootpath/system/themes/$theme_name/blockszone.html" blocks=$xoBlocks.canvas_left_admin
                 zoneClass='icms-canvas-column' zoneId='icms-canvas-leftcolumn'
             }>
                 <{/if}>
             <{else}>
             <{if $xoBlocks.canvas_right_admin}>
-            <{includeq file="$modules_rootpath/system/themes/$theme_name/blockszone.html" blocks=$xoBlocks.canvas_right_admin
+            <{include file="$modules_rootpath/system/themes/$theme_name/blockszone.html" blocks=$xoBlocks.canvas_right_admin
                 zoneClass='icms-canvas-column' zoneId='icms-canvas-rightcolumn'
             }>
             <{/if}>

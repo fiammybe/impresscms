@@ -502,7 +502,7 @@ function icms_module_update($dirname) {
 		if (is_array($deltpl)) {
 			$xoopsDelTpl = new icms_view_Tpl();
 			// clear cache files
-			$xoopsDelTpl->clear_cache(null, 'mod_'.$dirname);
+			$xoopsDelTpl->clearCache(null, 'mod_'.$dirname);
 			// delete template file entry in db
 			$dcount = count($deltpl);
 			for ($i = 0; $i < $dcount; $i++) {

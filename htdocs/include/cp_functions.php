@@ -353,14 +353,14 @@ function icms_cp_header() {
 	if (@is_object($xoTheme->plugins['icms_view_PageBuilder'])) {
 		$aggreg = &$xoTheme->plugins['icms_view_PageBuilder'];
 
-		$icmsAdminTpl->assign_by_ref('xoAdminBlocks', $aggreg->blocks);
+		$icmsAdminTpl->assignByRef('xoAdminBlocks', $aggreg->blocks);
 
 		// Backward compatibility code for pre 2.0.14 themes
-		$icmsAdminTpl->assign_by_ref('xoops_lblocks', $aggreg->blocks['canvas_left']);
-		$icmsAdminTpl->assign_by_ref('xoops_rblocks', $aggreg->blocks['canvas_right']);
-		$icmsAdminTpl->assign_by_ref('xoops_ccblocks', $aggreg->blocks['page_topcenter']);
-		$icmsAdminTpl->assign_by_ref('xoops_clblocks', $aggreg->blocks['page_topleft']);
-		$icmsAdminTpl->assign_by_ref('xoops_crblocks', $aggreg->blocks['page_topright']);
+		$icmsAdminTpl->assignByRef('xoops_lblocks', $aggreg->blocks['canvas_left']);
+		$icmsAdminTpl->assignByRef('xoops_rblocks', $aggreg->blocks['canvas_right']);
+		$icmsAdminTpl->assignByRef('xoops_ccblocks', $aggreg->blocks['page_topcenter']);
+		$icmsAdminTpl->assignByRef('xoops_clblocks', $aggreg->blocks['page_topleft']);
+		$icmsAdminTpl->assignByRef('xoops_crblocks', $aggreg->blocks['page_topright']);
 
 		$icmsAdminTpl->assign('xoops_showlblock', !empty($aggreg->blocks['canvas_left']));
 		$icmsAdminTpl->assign('xoops_showrblock', !empty($aggreg->blocks['canvas_right']));

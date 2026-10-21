@@ -405,8 +405,8 @@ switch ($op) {
 					$err[] = sprintf(_MD_TPLSET_INSERT_FAILED, $tplfile->getVar('tpl_file'));
 				} else {
 					$xoopsTpl = new icms_view_Tpl();
-					if ($xoopsTpl->is_cached('db:' . $tplfile->getVar('tpl_file'))) {
-						if (!$xoopsTpl->clear_cache('db:' . $tplfile->getVar('tpl_file'))) {
+					if ($xoopsTpl->isCached('db:' . $tplfile->getVar('tpl_file'))) {
+						if (!$xoopsTpl->clearCache('db:' . $tplfile->getVar('tpl_file'))) {
 						}
 					}
 					if ($tplfile->getVar('tpl_tplset') == $icmsConfig['template_set']) {
@@ -988,7 +988,7 @@ switch ($op) {
 			fwrite($fp, $html);
 			fclose($fp);
 			$xoopsTpl->assign('content', $xoopsTpl->fetch('file:' . ICMS_CACHE_PATH . '/' . $dummytpl));
-			$xoopsTpl->clear_compiled_tpl('file:' . ICMS_CACHE_PATH . '/' . $dummytpl);
+			$xoopsTpl->clearCompiledTemplate('file:' . ICMS_CACHE_PATH . '/' . $dummytpl);
 			unlink(ICMS_CACHE_PATH . '/' . $dummytpl);
 			$dummyfile = '_dummy_' . time() . '.html';
 			$fp = fopen(ICMS_CACHE_PATH . '/' . $dummyfile, 'w');
@@ -1012,7 +1012,7 @@ switch ($op) {
 			preview_window.document.clear();
 			';
 			$lines = preg_split("/(\r\n|\r|\n)( *)/", $xoopsTpl->fetch('file:' . ICMS_CACHE_PATH . '/' . $dummyfile));
-			$xoopsTpl->clear_compiled_tpl('file:' . ICMS_CACHE_PATH . '/' . $dummyfile);
+			$xoopsTpl->clearCompiledTemplate('file:' . ICMS_CACHE_PATH . '/' . $dummyfile);
 			unlink(ICMS_CACHE_PATH . '/' . $dummyfile);
 			foreach ($lines as $line) {
 				echo 'preview_window.document.writeln("' . str_replace('"', '\"', $line) . '");';

@@ -74,6 +74,7 @@ if ($xoops_notification['show']) {
 		}
 		$xoops_notification['target_page'] = "notification_update.php";
 		$xoops_notification['redirect_script'] = xoops_getenv('PHP_SELF');
+		$xoops_notification['token'] = icms::$security->createToken();
 		$xoopsTpl->assign(array('lang_activenotifications' => _NOT_ACTIVENOTIFICATIONS, 'lang_notificationoptions' => _NOT_NOTIFICATIONOPTIONS, 'lang_updateoptions' => _NOT_UPDATEOPTIONS, 'lang_updatenow' => _NOT_UPDATENOW, 'lang_category' => _NOT_CATEGORY, 'lang_event' => _NOT_EVENT, 'lang_events' => _NOT_EVENTS, 'lang_checkall' => _NOT_CHECKALL, 'lang_notificationmethodis' => _NOT_NOTIFICATIONMETHODIS, 'lang_change' => _NOT_CHANGE, 'editprofile_url' => ICMS_URL . '/edituser.php?uid=' . icms::$user->getVar('uid')));
 		switch (icms::$user->getVar('notify_method')) {
 			case XOOPS_NOTIFICATION_METHOD_DISABLE:

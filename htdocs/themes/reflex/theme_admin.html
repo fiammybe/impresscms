@@ -5,7 +5,7 @@
 <!-- Theme name -->
 	<{assign var=theme_name value=$xoTheme->folderName}>
 <!-- Custom Smarty -->
-	<{includeq file="$theme_name/theme_functions.php"}>
+	<{include file="$theme_name/theme_functions.php"}>
 <!-- Title and Meta -->
 	<title><{if $page_title !=''}><{$page_title}> : <{/if}><{$site_name}></title>
 	<meta http-equiv="content-type" content="text/html; charset=<{$charset}>" />
@@ -89,7 +89,7 @@ var helpfile = "<{$icms_url}>/help.html";
 </div>
 
 <div id="pagenav">
-	<div class="width"><{includeq file="$theme_name/adminnav.html"}></div>
+	<div class="width"><{include file="$theme_name/adminnav.html"}></div>
 </div>
 <!-- Wrapper -->
 <div id="page">

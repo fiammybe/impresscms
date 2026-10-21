@@ -154,7 +154,7 @@ class Entity {
 
 		$this->template = new \Icms\View\Tpl();
 		$this->template->currentTheme =& $this;
-		$this->template->assign_by_ref('xoTheme', $this);
+		$this->template->assignByRef('xoTheme', $this);
 
 		global $icmsConfig, $icmsConfigMetaFooter;
 		$this->template->assign(
@@ -177,13 +177,13 @@ class Entity {
 
 		// this is for backward compatibility only!
 		$this->template->assign(array(
-			'xoops_theme' => $this->template->get_template_vars('icms_theme'),
-			'xoops_imageurl' => $this->template->get_template_vars('icms_imageurl'),
-			'xoops_themecss' => $this->template->get_template_vars('icms_themecss'),
-			'xoops_requesturi' => $this->template->get_template_vars('icms_requesturi'),
-			'xoops_sitename' => $this->template->get_template_vars('icms_sitename'),
-			'xoops_slogan' => $this->template->get_template_vars('icms_slogan'),
-			'xoops_dirname' => $this->template->get_template_vars('icms_dirname'),
+			'xoops_theme' => $this->template->getTemplateVars('icms_theme'),
+			'xoops_imageurl' => $this->template->getTemplateVars('icms_imageurl'),
+			'xoops_themecss' => $this->template->getTemplateVars('icms_themecss'),
+			'xoops_requesturi' => $this->template->getTemplateVars('icms_requesturi'),
+			'xoops_sitename' => $this->template->getTemplateVars('icms_sitename'),
+			'xoops_slogan' => $this->template->getTemplateVars('icms_slogan'),
+			'xoops_dirname' => $this->template->getTemplateVars('icms_dirname'),
 		));
 		if (isset(\icms::$user) && is_object(\icms::$user)) {
 			$this->template->assign(array(
@@ -301,7 +301,7 @@ class Entity {
 			}
 			$this->contentCacheId = $this->generateCacheId($dirname . '|' . $uri);
 
-			if ($this->template->is_cached($template, $this->contentCacheId)) {
+			if ($this->template->isCached($template, $this->contentCacheId)) {
 				\icms::$logger->addExtra($template, sprintf(_REGENERATES, $this->contentCacheLifetime));
 				$this->render(null, null, $template);
 				return true;
@@ -355,15 +355,15 @@ class Entity {
 			$this->content .= ob_get_contents();
 			ob_end_clean();
 		}
-		$this->template->assign_by_ref('xoops_contents', $this->content);
-		$this->template->assign_by_ref('icms_contents', $this->content);
+		$this->template->assignByRef('xoops_contents', $this->content);
+		$this->template->assignByRef('icms_contents', $this->content);
 
 		$header = empty($xoopsOption['icms_module_header'])
-			? $this->template->get_template_vars('icms_module_header')
+			? $this->template->getTemplateVars('icms_module_header')
 			: $xoopsOption['icms_module_header'];
 		/** @todo	Remove xoops_module_header in 2.0 */
 		$xheader = empty($xoopsOption['xoops_module_header'])
-			? $this->template->get_template_vars('xoops_module_header')
+			? $this->template->getTemplateVars('xoops_module_header')
 			: $xoopsOption['xoops_module_header'];
 		if ($xheader != "") \Icms\Core\Debug::setDeprecated('icms_module_header', sprintf(_CORE_REMOVE_IN_VERSION, "2.0"));
 		$header = ($header != "") ? $header : $xheader;
@@ -376,11 +376,11 @@ class Entity {
 		}
 
 		$pagetitle = empty($xoopsOption['icms_pagetitle'])
-			? $this->template->get_template_vars('icms_pagetitle')
+			? $this->template->getTemplateVars('icms_pagetitle')
 			: $xoopsOption['icms_pagetitle'];
 		/** @todo	Remove xoops_pagetitle in 2.0 */
 		$xpagetitle = empty($xoopsOption['xoops_pagetitle'])
-			? $this->template->get_template_vars('xoops_pagetitle')
+			? $this->template->getTemplateVars('xoops_pagetitle')
 			: $xoopsOption['xoops_pagetitle'];
 		if ($xpagetitle != "") \Icms\Core\Debug::setDeprecated('icms_pagetitle', sprintf(_CORE_REMOVE_IN_VERSION, "2.0"));
 		$pagetitle = ($pagetitle != "") ? $pagetitle : $xpagetitle;
