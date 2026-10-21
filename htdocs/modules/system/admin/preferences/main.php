@@ -614,7 +614,7 @@ switch ($op) {
 						if ($icmsConfig['template_set'] != ${$config->getVar('conf_name')}) {
 							$newtplset = ${$config->getVar('conf_name')};
 							// clear all compiled and cachedfiles
-							$xoopsTpl->clear_compiled_tpl();
+							$xoopsTpl->clearCompiledTemplate();
 							// generate compiled files for the new theme
 							// block files only for now..
 							$tplfile_handler = icms::handler('icms_view_template_file');
@@ -688,7 +688,7 @@ switch ($op) {
 		// Clean cached files, may take long time
 		// Use register_shutdown_function to keep running after connection closes so that cleaning cached files can be finished
 		// Cache management should be performed on a separate page
-		register_shutdown_function(array(&$xoopsTpl, 'clear_all_cache'));
+		register_shutdown_function(array(&$xoopsTpl, 'clearAllCache'));
 
 		// If language is changed, leave the admin menu file to be regenerated upon next request,
 		// otherwise regenerate admin menu file for now

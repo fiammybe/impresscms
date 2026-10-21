@@ -77,7 +77,7 @@ class PageBuilder {
 	public function xoInit($options = array()) {
 		$this->retrieveBlocks();
 		if ($this->theme) {
-			$this->theme->template->assign_by_ref('xoBlocks', $this->blocks);
+			$this->theme->template->assignByRef('xoBlocks', $this->blocks);
 		}
 		return TRUE;
 	}
@@ -299,7 +299,7 @@ class PageBuilder {
 			. $bid
 		);
 
-		if (! $bcachetime || ! $template->is_cached($tplName, $cacheid)) {
+		if (! $bcachetime || ! $template->isCached($tplName, $cacheid)) {
 			\icms::$logger->addBlock($xobject->getVar('name'));
 			if (! ($bresult = $xobject->buildBlock())) {
 				return FALSE;

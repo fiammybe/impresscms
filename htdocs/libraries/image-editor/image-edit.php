@@ -262,6 +262,16 @@ foreach ($plugins_arr as $plugin_folder) {
 	}
 }
 
+if (defined('_FILTER_NEGATE')) {
+	$filters = icms_imageeditor_filterDefinitions();
+	$filterSelect = '<option value="">' . _FILTER_SELECT . '</option>';
+	foreach ($filters as $filter) {
+		$filterSelect .= '<option value="' . $filter['value'] . '">' . $filter['title'] . '</option>';
+	}
+	$icmsTpl->assign('filters', $filters);
+	$icmsTpl->assign('filter_select', $filterSelect);
+}
+
 $icmsTpl->assign('csrf_token', icms::$security->createToken());
 
 echo $icmsTpl->fetch(ICMS_LIBRARIES_PATH . '/image-editor/templates/image-editor.html');

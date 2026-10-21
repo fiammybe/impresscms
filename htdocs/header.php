@@ -124,14 +124,14 @@ $xoTheme->addScript(ICMS_LIBRARIES_URL . '/jquery/colorbox/jquery.colorbox-min.j
 
 if (@is_object($xoTheme->plugins['icms_view_PageBuilder'])) {
 	$aggreg = &$xoTheme->plugins['icms_view_PageBuilder'];
-	$xoopsTpl->assign_by_ref('xoBlocks', $aggreg->blocks);
+	$xoopsTpl->assignByRef('xoBlocks', $aggreg->blocks);
 
 	// Backward compatibility code for pre 2.0.14 themes
-	$xoopsTpl->assign_by_ref('xoops_lblocks', $aggreg->blocks['canvas_left']);
-	$xoopsTpl->assign_by_ref('xoops_rblocks', $aggreg->blocks['canvas_right']);
-	$xoopsTpl->assign_by_ref('xoops_ccblocks', $aggreg->blocks['page_topcenter']);
-	$xoopsTpl->assign_by_ref('xoops_clblocks', $aggreg->blocks['page_topleft']);
-	$xoopsTpl->assign_by_ref('xoops_crblocks', $aggreg->blocks['page_topright']);
+	$xoopsTpl->assignByRef('xoops_lblocks', $aggreg->blocks['canvas_left']);
+	$xoopsTpl->assignByRef('xoops_rblocks', $aggreg->blocks['canvas_right']);
+	$xoopsTpl->assignByRef('xoops_ccblocks', $aggreg->blocks['page_topcenter']);
+	$xoopsTpl->assignByRef('xoops_clblocks', $aggreg->blocks['page_topleft']);
+	$xoopsTpl->assignByRef('xoops_crblocks', $aggreg->blocks['page_topright']);
 
 	$xoopsTpl->assign('xoops_showlblock', !empty($aggreg->blocks['canvas_left']));
 	$xoopsTpl->assign('xoops_showrblock', !empty($aggreg->blocks['canvas_right']));

@@ -27,11 +27,15 @@ ImpressCMS-specific functionality (the `db` resource and the `xoAppUrl`, `xoImgU
 ## ADDED Requirements
 
 ### Requirement: Legacy tag aliases with deprecation notices
-The system SHALL accept `<{includeq}>` and `<{foreachq}>` as aliases of `include` and `foreach`, and SHALL log an `E_USER_DEPRECATED` notice naming the template and the replacement each time one is compiled.
+The system SHALL accept `<{includeq}>` and `<{foreachq}>` as aliases of `include` and `foreach`, the free-form arguments of `<{xoImgUrl}>` and `<{xoAppUrl}>`, and unquoted `<{cycle values=a,b}>`, and SHALL log an `E_USER_DEPRECATED` notice naming the template and the replacement each time one is compiled.
 
 #### Scenario: Legacy include
 - **WHEN** a template contains `<{includeq file="x.html" a=1}>`
 - **THEN** it renders as `<{include file="x.html" a=1}>` and a deprecation notice is logged
+
+#### Scenario: Legacy URL tags
+- **WHEN** a template contains `<{xoImgUrl icons/a.png}>` or `<{xoAppUrl /}>`
+- **THEN** they are compiled as `<{xoImgUrl path="icons/a.png"}>` and `<{xoAppUrl url="/"}>`
 
 ### Requirement: Legacy Tpl method aliases with deprecation notices
 `Icms\View\Tpl` SHALL keep the Smarty 2 method names used by modules (`assign_by_ref`, `clear_cache`, `clear_all_cache`, `register_function`, `register_modifier`, `get_template_vars`, `template_exists`, `is_cached`) as thin wrappers that log a deprecation notice and delegate to the Smarty 5 method.
@@ -40,8 +44,15 @@ The system SHALL accept `<{includeq}>` and `<{foreachq}>` as aliases of `include
 - **WHEN** a module calls `$xoopsTpl->get_template_vars('x')`
 - **THEN** the value of `x` is returned and a deprecation notice is logged
 
+### Requirement: Legacy template behaviour that is kept
+The engine SHALL render unassigned variables as an empty string and SHALL treat `<{ if ...}>` (a space after the delimiter) as a tag.
+
+#### Scenario: Unassigned variable
+- **WHEN** a template renders a variable that was never assigned
+- **THEN** the output is empty and no notice is raised
+
 ### Requirement: Compiled templates are rebuilt on upgrade
-The upgrade process SHALL delete all compiled templates in the compile directory.
+The upgrade process SHALL delete all compiled templates in the compile directory (the system module update does so on every run).
 
 #### Scenario: Upgrade
 - **WHEN** the site is upgraded to this version
