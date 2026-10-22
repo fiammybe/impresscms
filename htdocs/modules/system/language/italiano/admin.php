@@ -69,3 +69,7 @@ define('_MD_AM_TPLSETS_DSC', 'I templates sono insiemi di files html/css che int
 define('_MD_AM_RANK_DSC', 'I livelli utente sono immagini usate per rendere differenti i livelli fra gli utenti del vostro sito!');
 define('_MD_AM_VRSN_DSC', 'Usa questo strumento per controllare gli aggiornamenti del tuo sistema.');
 define('_MD_AM_PREF_DSC',"Preferenze sito ImpressCMS");
+
+// added in 2.0
+define('_MD_AM_PRELOADS', 'Preloads');
+define('_MD_AM_PRELOADS_DSC', 'See the installed preloads and the events they handle, and switch individual preloads off or on.');

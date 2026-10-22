@@ -52,7 +52,11 @@ class Handler
             '',
             ['php']
         ));
+        $disabled = self::disabledPreloads(self::disabledPreloadsFile());
         foreach ($preloadFilesArray as $filename) {
+            if (in_array($filename, $disabled, true)) {
+                continue;
+            }
             // exclude index.html
             if (!in_array($this->getClassName($filename), get_declared_classes())) {
                 $this->_preloadFilesArray[] = $filename;
@@ -68,6 +72,48 @@ class Handler
                 $this->addPreloadEvents($onDemandPreload['filename'], $onDemandPreload['module']);
             }
         }
+    }
+
+    /**
+     * The file that lists the preloads the site has disabled, in the trust path,
+     * or an empty string when there is no trust path.
+     *
+     * It returns ['disabled' => ['name', ...]], names without '.php'. The
+     * administration writes it (App\Preload\DisabledPreloads).
+     */
+    public static function disabledPreloadsFile(): string
+    {
+        if (!defined('ICMS_TRUST_PATH') || ICMS_TRUST_PATH === '') {
+            return '';
+        }
+
+        return ICMS_TRUST_PATH . '/var/preloads.php';
+    }
+
+    /**
+     * The preloads listed as disabled in $file. A missing, unreadable or
+     * malformed file disables nothing: preloads are loaded before anything
+     * could report an error, so this never fails.
+     *
+     * @return list<string>
+     */
+    public static function disabledPreloads(string $file): array
+    {
+        if ($file === '' || !is_file($file) || !is_readable($file)) {
+            return [];
+        }
+
+        try {
+            $store = (static fn (string $path): mixed => include $path)($file);
+        } catch (\Throwable) {
+            return [];
+        }
+
+        if (!is_array($store) || !isset($store['disabled']) || !is_array($store['disabled'])) {
+            return [];
+        }
+
+        return array_values(array_filter($store['disabled'], 'is_string'));
     }
 
     /**

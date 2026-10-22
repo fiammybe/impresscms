@@ -26,6 +26,8 @@ services:
             - '../src/Security/IcmsUser.php'
             - '../src/Security/Attribute/'
             - '../src/DependencyInjection/'
+            # created by App\Preload\Preloads once the legacy constants exist
+            - '../src/Preload/{DisabledPreloads,PreloadInfo,PreloadInventory,PreloadStoreException}.php'
             # DBAL driver parts, created by IcmsDriver, not services
             - '../src/Legacy/Dbal/{ErrorMode,IcmsDriver,SharedConnection,SharedStatement}.php'
 

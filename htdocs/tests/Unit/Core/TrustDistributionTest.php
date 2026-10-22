@@ -42,6 +42,10 @@ final class TrustDistributionTest extends TestCase
 
     protected function tearDown(): void
     {
+        // installTrustDistribution() sets a 300 second limit for the whole process;
+        // on Windows it counts wall-clock time and would stop the rest of the run
+        set_time_limit(0);
+
         if (is_dir($this->dir)) {
             @chmod($this->staging . '/src/Kernel.php', 0644);
             Filesystem::deleteRecursive($this->dir, true);

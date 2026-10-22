@@ -205,6 +205,7 @@ host:
 | `Icms\Db\Factory::setConnectionProvider(?Closure)` | take the PDO from DBAL |
 | `Icms\Event::setForwarder(?Closure)` | observe every legacy event |
 | `ICMS_MAINFILE` in the stub `htdocs/mainfile.php` | site configuration named by the server environment (tests). The installer replaces the stub |
+| `Icms\Preload\Handler::disabledPreloads()` | skips the preloads listed in `<trust>/var/preloads.php`; without the file every preload loads |
 
 ## Database
 
@@ -292,6 +293,35 @@ To take over a page:
    handling.
 3. Run the same tests against the takeover; only intended changes (the token)
    may differ.
+
+## A new admin page: preloads
+
+The preloads administration has no legacy page; it runs on Symfony under its
+own URL, `/admin/preloads` (`App\Controller\System\PreloadController`). At
+routing level 1 only `index.php/<route>` reaches the host, so the admin menu
+links to `index.php/admin/preloads`, and the controller generates its links for
+the URL the request came in on. It uses the pieces above:
+
+- `#[SystemAdminFunction('preloads')]` with the category `XOOPS_SYSTEM_PRELOADS`
+  (25) from `modules/system/admin/preloads/xoops_version.php`. That file puts the
+  function in the system menu, the dashboard and the group administration; its
+  `link` key replaces `admin.php?fct=<dir>` in the menu, and its `main.php`
+  redirects old `admin.php?fct=preloads` links to the page.
+- `AdminPageRenderer::render()` with a `file:` template
+  (`modules/system/templates/system_adm_preloads.html`), so the page works
+  without a system module update installing a `db:` template.
+- `LegacyRedirect` for the messages, and the ImpressCMS token on the toggle
+  (`POST /admin/preloads/toggle`).
+
+A disabled preload is listed in `<trust>/var/preloads.php`
+(`['disabled' => [name, ...]]`, written by `App\Preload\DisabledPreloads`).
+`Icms\Preload\Handler` reads it before the database exists and does not
+include those files, on legacy pages and Symfony routes alike. The file is not
+under `var/cache/`, so cache clears keep it, and replacing a preload file keeps
+it disabled. **Recovery:** delete `<trust>/var/preloads.php` to enable every
+preload again. The page reads a preload's events from its source with the
+tokenizer (the `event*` methods of `IcmsPreload<Name>` and its
+`icms_Event::attach()` calls), so a disabled preload never runs to be listed.
 
 ## Events
 

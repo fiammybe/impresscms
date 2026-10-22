@@ -1,0 +1,49 @@
+<div class="CPbigTitle" style="background-image: url(<{$xoops_url}>/modules/system/admin/preloads/images/preloads_big.png)"><{$smarty.const._MD_AM_PRELOADS}></div><br />
+
+<p><{$smarty.const._MD_AM_PRELOADS_INTRO}></p>
+
+<{if $icms_preloads}>
+    <table class="outer" width="100%" cellspacing="1" id="icms_preloads">
+        <tr>
+            <th><{$smarty.const._MD_AM_PRELOADS_NAME}></th>
+            <th><{$smarty.const._MD_AM_PRELOADS_EVENTS}></th>
+            <th><{$smarty.const._MD_AM_PRELOADS_STATE}></th>
+            <th><{$smarty.const._MD_AM_PRELOADS_ACTION}></th>
+        </tr>
+        <{foreach item=preload from=$icms_preloads}>
+            <tr class="<{cycle values='odd,even'}>" data-preload="<{$preload.name|escape}>" data-state="<{if $preload.enabled}>enabled<{else}>disabled<{/if}>">
+                <td>
+                    <strong><{$preload.name|escape}></strong>
+                    <{if $preload.security}>
+                        <br /><span style="color: #c00;"><{$smarty.const._MD_AM_PRELOADS_SECURITY}></span>
+                    <{/if}>
+                </td>
+                <td>
+                    <{if $preload.events}>
+                        <{foreach item=event from=$preload.events name=events}><{$event|escape}><{if !$smarty.foreach.events.last}>, <{/if}><{/foreach}>
+                    <{else}>
+                        <em><{$smarty.const._MD_AM_PRELOADS_NOEVENTS}></em>
+                    <{/if}>
+                </td>
+                <td><{if $preload.enabled}><{$smarty.const._MD_AM_PRELOADS_ENABLED}><{else}><strong><{$smarty.const._MD_AM_PRELOADS_DISABLED}></strong><{/if}></td>
+                <td>
+                    <{if $preload.toggleable}>
+                        <form method="post" action="<{$icms_preloads_toggle_url|escape}>">
+                            <input type="hidden" name="preload" value="<{$preload.name|escape}>" />
+                            <{if $preload.enabled}>
+                                <input type="hidden" name="state" value="disable" />
+                                <input type="submit" class="formButton" value="<{$smarty.const._MD_AM_PRELOADS_DISABLE}>" />
+                            <{else}>
+                                <input type="hidden" name="state" value="enable" />
+                                <input type="submit" class="formButton" value="<{$smarty.const._MD_AM_PRELOADS_ENABLE}>" />
+                            <{/if}>
+                            <{$icms_preloads_token}>
+                        </form>
+                    <{/if}>
+                </td>
+            </tr>
+        <{/foreach}>
+    </table>
+<{else}>
+    <p><{$smarty.const._MD_AM_PRELOADS_NONE}></p>
+<{/if}>

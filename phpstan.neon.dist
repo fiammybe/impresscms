@@ -14,6 +14,7 @@ parameters:
         - htdocs/modules/system/language/english/common.php
         - htdocs/modules/system/language/english/admin.php
         - htdocs/modules/system/language/english/admin/mimetype.php
+        - htdocs/modules/system/language/english/admin/preloads.php
     scanDirectories:
         - htdocs/libraries/Icms
     scanFiles:
@@ -31,6 +32,7 @@ parameters:
         - ICMS_TRUST_PATH
         - ICMS_INCLUDE_PATH
         - ICMS_LIBRARIES_PATH
+        - ICMS_PRELOAD_PATH
         - ICMS_GROUP_ADMIN
         - ICMS_GROUP_USERS
         - ICMS_GROUP_ANONYMOUS
