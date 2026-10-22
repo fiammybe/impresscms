@@ -61,3 +61,7 @@ define('_MD_AM_TPLSETS_DSC', 'Templates zijn sets van HTMLCSS bestanden die bepa
 define('_MD_AM_RANK_DSC', 'Gebruikersrangen zijn afbeeldingen die het mogelijk maken om verschillende niveaus van gebruikers te tonen op uw website');
 define('_MD_AM_VRSN_DSC', 'Gebruik dit hulpmiddel om op updates te controleren voor uw system');
 define('_MD_AM_PREF_DSC', 'ImpressCMS site voorkeuren');
+
+// added in 2.0
+define('_MD_AM_PRELOADS', 'Preloads');
+define('_MD_AM_PRELOADS_DSC', 'Bekijk de geïnstalleerde preloads en de events die ze afhandelen, en schakel afzonderlijke preloads uit of in.');

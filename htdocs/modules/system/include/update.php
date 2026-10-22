@@ -380,6 +380,17 @@ function xoops_module_update_system(
 		echo $e->getMessage();
 	}
 
+	/* Begin upgrade to version 2.1.0 (preloads administration) */
+	// The new admin function admin/preloads appears in the admin menu, which
+	// modulesadmin rewrites after this update; nothing to change in the database.
+	if (!$abortUpdate) {
+		$newDbVersion = 51;
+	}
+	if (!$abortUpdate && $dbVersion < $newDbVersion) {
+		$icmsDatabaseUpdater->updateModuleDBVersion($newDbVersion, "system");
+		echo sprintf(_DATABASEUPDATER_UPDATE_OK, icms_conv_nr2local($newDbVersion)) . "<br />";
+	}
+
 	/* Repair the HTML filter's allowed elements and attributes */
 	// In 2.0.2 and 2.0.3 icms_core_Object::getVar() read every array value as an
 	// empty array. The installer of those releases starts the system module at

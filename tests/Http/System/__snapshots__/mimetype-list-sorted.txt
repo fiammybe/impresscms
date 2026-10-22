@@ -179,6 +179,8 @@ startList = function() {
                                           <ul>
                                                   <li><a href="http://{HOST}/modules/system/admin.php?fct=autotasks" style="background-image: url(http://{HOST}/modules/system/admin/autotasks/images/autotasks_small.png);">Auto Tasks</a>
                                                       </li>
+                                                  <li><a href="http://{HOST}/index.php/admin/preloads" style="background-image: url(http://{HOST}/modules/system/admin/preloads/images/preloads_small.png);">Preloads</a>
+                                                      </li>
                                                   <li><a href="http://{HOST}/modules/system/admin.php?fct=version" style="background-image: url(http://{HOST}/modules/system/admin/version/images/version_small.png);">Version Checker</a>
                                                       </li>
                                               </ul>
@@ -238,6 +240,9 @@ startList = function() {
               </a>
 		  <a href="http://{HOST}/modules/system/admin.php?fct=version" title="Version Checker">
                   <img src="http://{HOST}/modules/system/admin/version/images/version.png" alt="Version Checker" />
+              </a>
+		  <a href="http://{HOST}/index.php/admin/preloads" title="Preloads">
+                  <img src="http://{HOST}/modules/system/admin/preloads/images/preloads.png" alt="Preloads" />
               </a>
 		  <a href="http://{HOST}/modules/system/admin.php?fct=autotasks" title="Auto Tasks">
                   <img src="http://{HOST}/modules/system/admin/autotasks/images/autotasks.png" alt="Auto Tasks" />

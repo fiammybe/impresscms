@@ -69,7 +69,7 @@ foreach ($dirlist as $file) {
 			} else {
 				$adminmenu[$modversion['group']]['subs'][] = array(
 					'title'	=> $modversion['name'],
-					'link'	=> ICMS_URL . '/modules/system/admin.php?fct=' . $file,
+					'link'	=> ICMS_URL . (isset($modversion['link']) ? '/' . $modversion['link'] : '/modules/system/admin.php?fct=' . $file),
 					'icon'	=> 'admin/' . $file . '/images/' . $file . '.png',
 					'small'	=> 'admin/' . $file . '/images/' . $file . '_small.png',
 					'id'	=> $modversion['category']

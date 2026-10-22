@@ -65,3 +65,7 @@ define('_MD_AM_TPLSETS_DSC', '模板是一套html/css文件，用来渲染模块
 define('_MD_AM_RANK_DSC', '用户等级，可谓不同用户设置不同的等级');
 define('_MD_AM_VRSN_DSC', '检查系统是否需要更新');
 define('_MD_AM_PREF_DSC',"ImpressCMS 网站参考");
+
+// added in 2.0
+define('_MD_AM_PRELOADS', 'Preloads');
+define('_MD_AM_PRELOADS_DSC', 'See the installed preloads and the events they handle, and switch individual preloads off or on.');

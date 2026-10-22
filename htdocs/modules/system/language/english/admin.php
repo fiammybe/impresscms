@@ -64,3 +64,7 @@ define('_MD_AM_TPLSETS_DSC', 'Templates are sets of html/css files that render t
 define('_MD_AM_RANK_DSC', 'User ranks are picture, used to make difference between users in different levels of your website!');
 define('_MD_AM_VRSN_DSC', 'Use this tool to check your system for updates.');
 define('_MD_AM_PREF_DSC',"ImpressCMS Site Preferences");
+
+// added in 2.0
+define('_MD_AM_PRELOADS', 'Preloads');
+define('_MD_AM_PRELOADS_DSC', 'See the installed preloads and the events they handle, and switch individual preloads off or on.');
