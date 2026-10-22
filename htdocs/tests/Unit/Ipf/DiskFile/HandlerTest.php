@@ -166,7 +166,10 @@ final class HandlerTest extends TestCase
         self::assertSame(1, $file->getVar('is_readable', 'n'));
         self::assertFalse($file->isNew());
         self::assertFalse($file->isDirty());
-        self::assertSame('text/plain', $file->mimeType());
+
+        // two bytes are too little for libmagic to tell text from binary; use a sentence
+        file_put_contents($this->root . '/note.txt', "A plain text note with a few words in it.\n");
+        self::assertSame('text/plain', $this->handler->get($this->root . '/note.txt')->mimeType());
 
         self::assertInstanceOf(ZipEntity::class, $this->handler->get($this->root . '/c.zip'));
         self::assertInstanceOf(ImageEntity::class, $this->handler->get($this->root . '/d.png'));
