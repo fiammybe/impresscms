@@ -62,3 +62,5 @@ define('XOOPS_SYSTEM_ADSENSES', 21);
 define('XOOPS_SYSTEM_RATINGS', 22);
 define('XOOPS_SYSTEM_MIMETYPES', 23);
 define('XOOPS_SYSTEM_AUTOTASKS', 24);
+// 25 is taken by the preloads admin function (change symfony-preloads-admin)
+define('ICMS_SYSTEM_CAPABILITIES', 26);

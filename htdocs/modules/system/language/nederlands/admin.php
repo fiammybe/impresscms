@@ -61,3 +61,5 @@ define('_MD_AM_TPLSETS_DSC', 'Templates zijn sets van HTMLCSS bestanden die bepa
 define('_MD_AM_RANK_DSC', 'Gebruikersrangen zijn afbeeldingen die het mogelijk maken om verschillende niveaus van gebruikers te tonen op uw website');
 define('_MD_AM_VRSN_DSC', 'Gebruik dit hulpmiddel om op updates te controleren voor uw system');
 define('_MD_AM_PREF_DSC', 'ImpressCMS site voorkeuren');
+define('_MD_AM_CAPABILITIES', 'Capabilities');
+define('_MD_AM_CAPABILITIES_DSC', 'Choose the module that provides each capability (tagging, taxonomy, ...) and the object types it is enabled for.');

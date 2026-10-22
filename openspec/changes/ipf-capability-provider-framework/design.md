@@ -124,7 +124,7 @@ sequenceDiagram
     Form->>Int: contributeToForm(form, article)
     Int->>Reg: enabledFor(news/article)
     Reg-->>Int: [tagging → AdvancedTags]
-    Int->>AT: FormContributor::buildFormSection(ref, section)
+    Int->>AT: FormContributor::formElements(type, ref, prefix)
     AT-->>Form: tag autocomplete field (capability[tagging][tags]) + token
     Admin->>News: POST op=addarticle (fields + capability[tagging][tags])
     News->>H: Controller::storeFromDefaultForm() → insert($article)
@@ -232,6 +232,9 @@ interface BaseInterface
 
     /** Remove everything the provider stores for this object. Idempotent. */
     public function clear(ObjectRef $ref): void;
+
+    /** Remove everything the provider stores for objects of this type (the consumer is uninstalled). Idempotent. */
+    public function clearType(string $objectType): void;
 
     /** The provider's own administration page, linked from the capabilities page. */
     public function adminUrl(): ?string;
@@ -414,8 +417,13 @@ Model A says the framework stores no **capability data**. It still needs two pie
 
 | Table | Columns | Meaning |
 |---|---|---|
-| `system_capabilityprovider` | `capability` (PK, varchar 64), `provider` (module dirname), `activated` (int, timestamp), `activated_by` (uid) | the active provider per capability |
-| `system_capabilityassignment` | `assignment_id` (PK), `object_type` (`news/article`), `capability`, `enabled` (0/1), `source` (`admin`/`default`) | the assignment matrix |
+| `system_capabilityprovider` | `capabilityproviderid` (PK), `capability`, `provider` (module dirname), `activated` (int, timestamp), `activated_by` (uid) | the active provider per capability (one row per capability) |
+| `system_capabilityassignment` | `capabilityassignmentid` (PK), `object_type` (`news/article`), `capability`, `enabled` (0/1), `source` (`admin`/`default`) | the assignment matrix |
+
+*Implementation notes:*
+- The keys are integers: the automatic IPF table creation (`Icms\Db\Legacy\Updater\Handler::upgradeObjectItem()`) makes the key column `auto_increment`. The registry keeps one row per capability.
+- The entities and handlers are library classes, `Icms\Capability\Config\Provider`/`ProviderHandler` and `Assignment`/`AssignmentHandler`, registered in `aliases.php` under the names `icms_getModuleHandler()` looks for (`mod_system_CapabilityproviderHandler`, …). The system module lists them in `object_items`, so its install and update create the tables. A handler of a system item would otherwise live in `modules/system/admin/<item>/class/`, and every directory under `admin/` is treated as an admin function.
+- The capabilities page renders its HTML itself, without a Smarty template, because system templates are only installed by a system module update.
 
 Both tables are read **once per request**, and only when a capability or an IPF hook needs them. Both are tiny: rows = capabilities, and object types × capabilities.
 
@@ -521,8 +529,12 @@ use Icms\Ipf\Form\Base;
 
 interface FormContributorInterface
 {
-    /** $ref is null for a new object. */
-    public function buildFormSection(Base $form, string $objectType, ?ObjectRef $ref, string $fieldPrefix): void;
+    /**
+     * The fields of the section, named under $fieldPrefix; $ref is null for a new object.
+     *
+     * @return list<\Icms\Form\Element>
+     */
+    public function formElements(string $objectType, ?ObjectRef $ref, string $fieldPrefix): array;
 }
 
 interface PersistenceContributorInterface
@@ -559,14 +571,16 @@ interface TemplateRendererInterface
 }
 ```
 
+A form contributor returns its fields instead of adding them to a legacy form, so that the same fields serve the legacy IPF form (`Integration` adds the section heading, the fields and the capability token) and the framework form (D14 adapts them to Symfony fields).
+
 `Icms\Capability\Integration` is the only class the IPF hooks call. Per call, it asks the `AssignmentMap` for the capabilities enabled for the object type. For each of them, it asks the registry for the active provider's contributor of the requested kind, and instantiates it lazily, once per request.
 
 ### D11. Where the IPF hooks go (additive, inert)
 
 | Hook | Location | Behaviour |
 |---|---|---|
-| Form | end of `Icms\Ipf\Form\Base::createElements()`, before `createPermissionControls()` | `Integration::contributeToForm($this, $target)`. For each enabled capability with a form contributor, it opens a form section (`openFormSection` equivalent, caption = capability title), calls `buildFormSection()` with the field prefix `capability[<name>]`, and adds one hidden `capability_token` field (`icms::$security->createToken(0, 'capability')`). Nothing is added when no capability is enabled. |
-| Save | `Icms\Ipf\Handler::insert()`, after the `afterSave`/`afterInsert`/`afterUpdate` events have succeeded | `Integration::afterStored($obj)`. If `$_POST['capability']` is present, `capability_token` is valid and this object reference was not processed earlier in the request, it builds a `Submission` per capability and calls `store()`. Errors are added through `$obj->setErrors()`. |
+| Form | end of `Icms\Ipf\Form\Base::createElements()`, before `createPermissionControls()` | `Integration::contributeToForm($this, $target)`. For each enabled capability with a form contributor, it opens a form section (`openFormSection` equivalent, caption = capability title), adds the fields `formElements()` returns for the field prefix `capability[<name>]`, and adds one hidden token field `capability_REQUEST` (`icms::$security->createToken(0, 'capability')`). Nothing is added when no capability is enabled. |
+| Save | `Icms\Ipf\Handler::insert()`, after the `afterSave`/`afterInsert`/`afterUpdate` events have succeeded | `Integration::afterStored($obj)`. If `$_POST['capability']` is present, the token `capability_REQUEST` is valid and this object reference was not processed earlier in the request, it builds a `Submission` per capability and calls `store()`. Errors are added through `$obj->setErrors()`. |
 | Delete | `Icms\Ipf\Handler::delete()`, after `afterDelete` succeeded | `Integration::afterDeleted($obj)`. It calls `clear($ref)` on the active provider of each enabled capability, and logs failures through the ICMS logger. |
 | Single view | `Icms\Ipf\View\Single::render()`, after the object's rows | `Integration::viewRows($obj)` adds rows. |
 | Table | `Icms\Ipf\View\Table`: filter options, criteria and row prefetch | It adds the filter selects. When a capability filter is active, it adds `new Criteria(keyName, '(' . implode(',', $ids) . ')', 'IN')`, or a criterion that matches nothing for an empty set. It prefetches view data for the page's refs. |
@@ -577,6 +591,11 @@ The save hook reads the request only when the request contains the capability's 
 - the legacy `getForm()`, which has no form-level token, is still protected for the capability part
 
 The hook does **not** run inside `insertD()`'s debug path twice. A request-level "processed refs" set prevents double processing.
+
+*Implementation notes:*
+- The form hook is in the constructor of `Icms\Ipf\Form\Base`, between `createElements()` and `createPermissionControls()` (the same place in the element order).
+- The save hook also runs where `insert()` returns early for an object that is not dirty: an edit that only changes the tags leaves the object itself unchanged.
+- The token is the hidden field `capability_REQUEST` (`Icms\Form\Elements\Hiddentoken('capability')`), validated once per request.
 
 **Why the hooks are in IPF and not only in `Icms\Event`**: `executeEvent()` is handler-local, and consumers override `afterSave()` without calling a parent. Placing the call in `insert()`/`delete()` after the handler's own events is the only spot that runs for every IPF handler without consumer cooperation.
 
@@ -707,7 +726,7 @@ class mod_advancedtags_TaggingCapability implements
     }
 
     // addTags, removeTags, getTags, findObjects, suggest, cloud: delegate to the handlers below
-    // buildFormSection, store, prefetch, viewRow, filterOptions, matchingIds, render: the UI contributions
+    // formElements, store, prefetch, viewRow, filterOptions, matchingIds, render: the UI contributions
 
     private function links(): mod_advancedtags_LinkHandler
     {
@@ -845,7 +864,7 @@ When both the old and the new provider implement it, the switch screen can offer
 - **[Custom consumer templates do not show capability output automatically]** Only the generic IPF single view and the forms are zero-change. → The `<{icms_capability}>` tag can be added through theme template overrides (`themes/<theme>/modules/<module>/…`) without touching the module. Blocks cover sidebar use. The reference modules' documentation shows both.
 - **[Save hook couples to request data]** Reading `$_POST` inside `Handler::insert()` is implicit. → It is guarded by the capability's own token, by the "processed refs" set and by the presence of `capability[...]`. The Symfony path injects the `Submission` explicitly (D14). Unit tests cover programmatic saves.
 - **[Provider errors after the object is stored]** The object is saved even if, for example, tag validation fails, because IPF has no transaction across modules. → Errors are shown through the normal IPF error path, and the edit form keeps the submitted values. This is documented in the contract: providers validate leniently and persist what is valid.
-- **[Orphaned capability data]** A consumer object deleted with SQL, or a consumer module uninstalled, leaves the provider's rows behind. → The uninstall hook calls `clear` per type through a new optional contract method `clearType(string $objectType)` (in the base contract, default no-op). The capabilities page gets a "Prune orphans" action per provider (provider-side `prune(callable $exists)`). This is listed in the tasks as part of the reference providers.
+- **[Orphaned capability data]** A consumer object deleted with SQL, or a consumer module uninstalled, leaves the provider's rows behind. → Uninstalling a consumer module calls `clearType(string $objectType)` (base contract) on the active providers for each of its object types. Rows of objects deleted with SQL remain; providers can detect them because their references resolve to nothing (`ObjectRef::resolveMany()`). A "Prune orphans" action on the capabilities page is left for a later change.
 - **[N+1 queries in lists]** Naive providers query per object. → The contracts require batch reads (spec `capability-contracts`). Tables and views call `prefetch()` with the page's refs.
 - **[Snapshot staleness]** A provider file added, removed or changed during development without a module update is not seen. → There is a "Rebuild" button, and the snapshot is rebuilt when `ICMS_DEBUG`/developer mode is on and a `capability/` directory or file has an mtime newer than the snapshot. That check only runs in debug mode.
 - **[Provider code runs at discovery]** Unlike a data-only manifest, the convention loads provider classes during compilation. → Only at install, update and rebuild, never on ordinary requests. Constructors must be argument-free and side-effect free (D5), and the compiler isolates each file so that a broken provider is reported as a module error instead of breaking the module administration.

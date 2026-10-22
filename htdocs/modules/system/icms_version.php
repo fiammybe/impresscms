@@ -134,6 +134,9 @@ $modversion["object_items"] = [
 	"customtag",
 	"mimetype",
 	"rating",
+	// the capability configuration (Icms\Capability\Config), not assignable to capabilities
+	"capabilityassignment",
+	"capabilityprovider",
 ];
 
 /**

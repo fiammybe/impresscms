@@ -15,6 +15,8 @@ return [
     'icms_auth_Object' => 'Icms\\Auth\\Entity',
     'icms_auth_Provisionning' => 'Icms\\Auth\\Provisionning',
     'icms_auth_Xoops' => 'Icms\\Auth\\Xoops',
+    'icms_capability_ObjectRef' => 'Icms\\Capability\\ObjectRef',
+    'icms_capability_Registry' => 'Icms\\Capability\\Registry',
     'icms_config_category_Handler' => 'Icms\\Config\\Category\\Handler',
     'icms_config_category_Object' => 'Icms\\Config\\Category\\Entity',
     'icms_config_Handler' => 'Icms\\Config\\Handler',
@@ -215,4 +217,9 @@ return [
     'icms_view_theme_Object' => 'Icms\\View\\Theme\\Entity',
     'icms_view_Tpl' => 'Icms\\View\\Tpl',
     'icms_view_Tree' => 'Icms\\View\\Tree',
+    // the capability configuration items of the system module, for icms_getModuleHandler('capabilityprovider', 'system')
+    'mod_system_Capabilityassignment' => 'Icms\\Capability\\Config\\Assignment',
+    'mod_system_CapabilityassignmentHandler' => 'Icms\\Capability\\Config\\AssignmentHandler',
+    'mod_system_Capabilityprovider' => 'Icms\\Capability\\Config\\Provider',
+    'mod_system_CapabilityproviderHandler' => 'Icms\\Capability\\Config\\ProviderHandler',
 ];

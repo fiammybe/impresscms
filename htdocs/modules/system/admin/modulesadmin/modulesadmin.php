@@ -43,6 +43,54 @@ if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin(
 }
 
 /**
+ * Rebuild the capability registry after a module change, and report the
+ * capability provider files of the module that were rejected
+ *
+ * @param string $dirname Directory name of the module that changed
+ * @return string Result messages, empty when there is nothing to report
+ */
+function icms_module_capabilities_rebuild($dirname) {
+	icms_loadLanguageFile('system', 'capabilities', true);
+	try {
+		$snapshot = \Icms\Capability\Registry::rebuild();
+	} catch (Throwable $e) {
+		return '<span style="color:#ff0000;">' . sprintf(_MD_AM_CAPABILITIES_REBUILD_FAIL, htmlspecialchars($e->getMessage(), ENT_QUOTES)) . '</span>';
+	}
+	$rejected = $snapshot->rejected();
+	$msgs = array();
+	foreach (isset($rejected[$dirname]) ? $rejected[$dirname] : array() as $rejection) {
+		$msgs[] = '&nbsp;&nbsp;<span style="color:#ff0000;">' . sprintf(_MD_AM_CAPABILITY_REJECTED, '<strong>' . htmlspecialchars(basename($rejection['file']), ENT_QUOTES) . '</strong>', htmlspecialchars($rejection['reason'], ENT_QUOTES)) . '</span>';
+	}
+	return implode('<br />', $msgs);
+}
+
+/**
+ * The capabilities a module is the active provider of, and the object types
+ * they are enabled for, for the uninstall confirmation
+ *
+ * @param string $dirname Directory name of the module
+ * @return string Warning, empty when the module provides no assigned capability
+ */
+function icms_module_capabilities_uninstall_warning($dirname) {
+	icms_loadLanguageFile('system', 'capabilities', true);
+	try {
+		$assignments = \Icms\Capability\Registry::instance()->activeAssignmentsOf($dirname);
+	} catch (Throwable $e) {
+		return '';
+	}
+	$items = array();
+	foreach ($assignments as $capability => $objectTypes) {
+		if (count($objectTypes) > 0) {
+			$items[] = '<li>' . htmlspecialchars(\Icms\Capability\Definitions::title($capability), ENT_QUOTES) . ': ' . htmlspecialchars(implode(', ', $objectTypes), ENT_QUOTES) . '</li>';
+		}
+	}
+	if (count($items) === 0) {
+		return '';
+	}
+	return '<div id="capability-uninstall-warning" class="errorMsg">' . _MD_AM_CAPABILITY_UNINSTALL_WARNING . '<ul>' . implode('', $items) . '</ul></div>';
+}
+
+/**
  * Logic and rendering for listing modules
  *
  * @return NULL Assigns content to the template
@@ -547,6 +595,10 @@ function xoops_module_install($dirname) {
 					}
 				}
 			}
+			$capabilityMsgs = icms_module_capabilities_rebuild($dirname);
+			if ($capabilityMsgs !== '') {
+				$msgs[] = $capabilityMsgs;
+			}
 			$ret = '<p><code>' . implode("<br />", $msgs);
 			unset($msgs, $errs);
 			$ret .= '</code><br />' . sprintf(_MD_AM_OKINS, "<strong>" . $module->getVar('name') . "</strong>") . '</p>';
@@ -672,6 +724,13 @@ function xoops_module_uninstall($dirname) {
 					$msgs[] = sprintf('&nbsp;&nbsp;' . _MD_AM_SYMLINK_DELETED, '<strong>' . $page->getVar('page_title') . '</strong>', '<strong>' . $page->getVar('page_id') . '</strong>');
 				}
 			}
+		}
+
+		// as a consumer, the module's object types lose their capability assignments and data
+		try {
+			\Icms\Capability\Registry::instance()->forgetConsumer($dirname);
+		} catch (Throwable $e) {
+			\Icms\Capability\Registry::log("Uninstalling {$dirname}: " . $e->getMessage());
 		}
 
 		if (!$module_handler->delete($module)) {
@@ -832,6 +891,10 @@ function xoops_module_uninstall($dirname) {
 				}
 			}
 
+			$capabilityMsgs = icms_module_capabilities_rebuild($dirname);
+			if ($capabilityMsgs !== '') {
+				$msgs[] = $capabilityMsgs;
+			}
 			$msgs[] = '</code><p>' . sprintf(_MD_AM_OKUNINS, "<strong>" . $module->getVar('name') . "</strong>") . '</p>';
 		}
 		$ret = '<code>' . implode('<br />', $msgs);
@@ -862,7 +925,8 @@ function xoops_module_activate($mid) {
 		$blocks[$i]->setVar('isactive', 1);
 		$icms_block_handler->insert($blocks[$i]);
 	}
-	return "<p>" . sprintf(_MD_AM_OKACT, "<strong>" . $module->getVar('name') . "</strong>") . "</p>";
+	$capabilityMsgs = icms_module_capabilities_rebuild($module->getVar('dirname'));
+	return "<p>" . sprintf(_MD_AM_OKACT, "<strong>" . $module->getVar('name') . "</strong>") . ($capabilityMsgs !== '' ? '<br />' . $capabilityMsgs : '') . "</p>";
 }
 
 /**
@@ -911,6 +975,7 @@ function xoops_module_deactivate($mid) {
 			$blocks[$i]->setVar('isactive', FALSE);
 			$icms_block_handler->insert($blocks[$i]);
 		}
+		icms_module_capabilities_rebuild($module->getVar('dirname'));
 		return "<p>" . sprintf(_MD_AM_OKDEACT, "<strong>" . $module->getVar('name') . "</strong>") . "</p>";
 	}
 }
@@ -1390,6 +1455,10 @@ function icms_module_update($dirname) {
 			}
 		}
 
+		$capabilityMsgs = icms_module_capabilities_rebuild($dirname);
+		if ($capabilityMsgs !== '') {
+			$msgs[] = $capabilityMsgs;
+		}
 		$msgs[] = '</code><p>' . sprintf(_MD_AM_OKUPD, '<strong>' . $module->getVar('name') . '</strong>') . '</p>';
 	}
 	$ret = '<code>' . implode('<br />', $msgs);

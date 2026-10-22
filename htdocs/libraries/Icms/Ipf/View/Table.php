@@ -413,7 +413,7 @@ class Table {
 			foreach ($this->_filterseloptions as $key => $value) {
 				$field = array();
 				if (is_array($value)) {
-					$field['caption'] = $key;
+					$field['caption'] = isset($value['caption']) ? $value['caption'] : $key;
 					$field['selected'] = $this->_filtersel == $key ? "selected='selected'" : '';
 				} else {
 					$field['caption'] = $this->_tempObject->vars[$key]['form_caption'];
@@ -645,6 +645,12 @@ class Table {
 
 		$this->_filtersel = $filtersel;
 
+		// filters of the capabilities enabled for this object type
+		$capabilityFilters = \Icms\Capability\Integration::instance()->tableFilters($this->_objectHandler);
+		foreach ($capabilityFilters as $key => $capabilityFilter) {
+			$this->_filterseloptions[$key] = $capabilityFilter;
+		}
+
 		$this->setCookie($this->_id . '_filtersel', $this->_filtersel);
 		$filtersArray = $this->getFiltersArray();
 
@@ -655,7 +661,16 @@ class Table {
 		// Check if the selected filter is defined and if so, create the selfilter2
 		if (!empty($this->_filterseloptions[$this->_filtersel])) {
 			// check if method associate with this filter exists in the handler
-			if (is_array($this->_filterseloptions[$this->_filtersel])) {
+			if (isset($capabilityFilters[$this->_filtersel])) {
+				$capabilityFilter = $capabilityFilters[$this->_filtersel];
+				$this->_filtersel2options = array('default' => _CO_ICMS_NONE) + $capabilityFilter['options'];
+				$this->_filtersel2 = isset($capabilityFilter['options'][$filtersel2]) ? $filtersel2 : 'default';
+				$this->_tpl->assign('icms_optionssel_filters2Array', $this->getFilters2Array());
+				$this->setCookie('filtersel2', $this->_filtersel2);
+				if ($this->_filtersel2 !== 'default') {
+					$this->_criteria->add(\Icms\Capability\Integration::instance()->tableCriteria($this->_objectHandler, $capabilityFilter['capability'], (string) $this->_filtersel2));
+				}
+			} elseif (is_array($this->_filterseloptions[$this->_filtersel])) {
 				$filter = $this->_filterseloptions[$this->_filtersel];
 				$this->_criteria->add($filter['criteria']);
 			} else {
@@ -692,6 +707,8 @@ class Table {
 		}
 
 		$this->_objects = $this->fetchObjects($debug);
+		// the capability data of this page of objects, in one go per provider
+		\Icms\Capability\Integration::instance()->prefetch($this->_objects);
 
 		/**
 		 * $params_of_the_options_sel is an array with all the parameters of the page

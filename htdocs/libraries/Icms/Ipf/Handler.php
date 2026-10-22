@@ -652,6 +652,8 @@ class Handler extends \Icms\Core\EntityHandler {
 			$obj->setErrors("An error occured during the AfterDelete event");
 			return false;
 		}
+		// the providers of enabled capabilities drop their data for this object
+		\Icms\Capability\Integration::instance()->afterDeleted($obj);
 		return true;
 	}
 
@@ -734,6 +736,8 @@ class Handler extends \Icms\Core\EntityHandler {
 			}
 			if (!$obj->isDirty()) {
 				$obj->setErrors("Not dirty"); //will usually not be outputted as errors are not displayed when the method returns true, but it can be helpful when troubleshooting code - Mith
+				// the object is stored already, but its capability fields may have changed
+				\Icms\Capability\Integration::instance()->afterStored($obj);
 				return true;
 			}
 		}
@@ -874,6 +878,8 @@ class Handler extends \Icms\Core\EntityHandler {
 				return false;
 			}
 		}
+		// the providers of enabled capabilities store the fields submitted for this object
+		\Icms\Capability\Integration::instance()->afterStored($obj);
 		return true;
 	}
 

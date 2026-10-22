@@ -165,7 +165,7 @@ class Logger {
 	/**
 	 * Log extra information
 	 * @param   string  $name       name for the entry
-	 * @param   int     $msg  text message for the entry
+	 * @param   string  $msg  text message for the entry
 	 */
 	public function addExtra($name, $msg) {
 		if ($this->activated) {

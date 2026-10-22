@@ -81,6 +81,10 @@ class Single {
 				$icms_object_array[$key]['caption'] = $this->_object->vars[$key]['form_caption'];
 			}
 		}
+		// rows of the capabilities enabled for this object type
+		foreach (\Icms\Capability\Integration::instance()->viewRows($this->_object) as $key => $row) {
+			$icms_object_array[$key] = array('value' => $row['value'], 'header' => false, 'caption' => $row['caption']);
+		}
 		$action_row = '';
 		if (in_array('edit', $this->_actions)) {
 			$action_row .= $this->_object->getEditItemLink(false, true, $this->_userSide);

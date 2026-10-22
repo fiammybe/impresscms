@@ -86,7 +86,34 @@ switch ($op) {
 
 	default:
 		icms_cp_header();
+		showCapabilityConflicts();
 		break;
+}
+
+/**
+ * Warn about capabilities whose provider needs a decision of an administrator
+ */
+function showCapabilityConflicts() {
+	try {
+		$conflicts = \Icms\Capability\Registry::instance()->conflicts();
+	} catch (Throwable $e) {
+		return;
+	}
+	if (count($conflicts) === 0) {
+		return;
+	}
+	icms_loadLanguageFile('core', 'capability');
+	$registry = \Icms\Capability\Registry::instance();
+	$items = array();
+	foreach (array_keys($conflicts) as $capability) {
+		$title = htmlspecialchars(\Icms\Capability\Definitions::title($capability), ENT_QUOTES);
+		$selected = $registry->selectionOf($capability);
+		$items[] = '<li>' . ($selected !== null
+			? sprintf(_CAPABILITY_CONFLICT_GONE, $title, htmlspecialchars($selected, ENT_QUOTES))
+			: sprintf(_CAPABILITY_CONFLICT_CHOOSE, $title)) . '</li>';
+	}
+	echo '<div id="capability-conflicts" class="errorMsg">' . _CAPABILITY_CONFLICTS . '<ul>' . implode('', $items) . '</ul>'
+		. '<a href="' . ICMS_MODULES_URL . '/system/admin.php?fct=capabilities">' . _CAPABILITY_CONFLICTS_RESOLVE . '</a></div>';
 }
 
 function showRSS()

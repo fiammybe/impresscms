@@ -62,4 +62,5 @@ define('_MD_AM_RANK_DSC', 'User ranks are picture, used to make difference betwe
 define('_MD_AM_VRSN_DSC', 'Use this tool to check your system for updates.');
 define('_MD_AM_PREF_DSC',"ImpressCMS Site Preferences");
 
-?>
+define('_MD_AM_CAPABILITIES', 'Capabilities');
+define('_MD_AM_CAPABILITIES_DSC', 'Choose the module that provides each capability (tagging, taxonomy, ...) and the object types it is enabled for.');
