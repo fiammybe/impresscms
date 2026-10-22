@@ -24,6 +24,16 @@ final class MimetypeLegacyCharacterizationTest extends MimetypeCharacterizationT
         return ServerProcess::forSite(['ICMS_TAKEOVERS_DISABLED' => 'system.mimetype']);
     }
 
+    protected function setUp(): void
+    {
+        // an external server (ICMS_TEST_BASE_URL) runs with its own environment
+        if (ServerProcess::externalBaseUri() !== null) {
+            self::markTestSkipped('An external server cannot be started with ICMS_TAKEOVERS_DISABLED.');
+        }
+
+        parent::setUp();
+    }
+
     protected static function recordsSnapshots(): bool
     {
         return !ServerProcess::forSite()->isExternal();
