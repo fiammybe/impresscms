@@ -130,6 +130,33 @@ class Handler
 	}
 
 	/**
+	 * The folders directly inside $folder, natural case-insensitive order.
+	 * Symbolic links are not followed, so a link cannot create a loop or lead
+	 * out of the root.
+	 *
+	 * @return array<string, string> the base names of the folders, keyed by path
+	 *
+	 * @throws Exception when $folder is not a folder inside the root
+	 */
+	public function getFolders(string $folder): array
+	{
+		$folder = $this->resolveFolder($folder);
+
+		$folders = [];
+		foreach (new \FilesystemIterator($folder, \FilesystemIterator::SKIP_DOTS) as $info) {
+			if ($info->isLink() || !$info->isDir() || !$this->isInside((string) $info->getRealPath())) {
+				continue;
+			}
+
+			$folders[(string) $info->getRealPath()] = $info->getFilename();
+		}
+
+		uasort($folders, strnatcasecmp(...));
+
+		return $folders;
+	}
+
+	/**
 	 * @return string the real path of an existing file inside the root
 	 *
 	 * @throws Exception

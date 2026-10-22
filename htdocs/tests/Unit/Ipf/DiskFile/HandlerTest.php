@@ -230,6 +230,27 @@ final class HandlerTest extends TestCase
         $this->handler->get($this->root . '/link.txt');
     }
 
+    /**
+     * @scenario Folder tree
+     */
+    public function testListsSubFoldersWithoutFollowingLinks(): void
+    {
+        mkdir($this->root . '/Sub10');
+        mkdir($this->root . '/sub9');
+
+        self::assertSame(
+            [$this->root . '/sub' => 'sub', $this->root . '/sub9' => 'sub9', $this->root . '/Sub10' => 'Sub10'],
+            $this->handler->getFolders($this->root),
+        );
+
+        if (@symlink($this->dir, $this->root . '/link')) {
+            self::assertArrayNotHasKey($this->root . '/link', $this->handler->getFolders($this->root));
+        }
+
+        $this->expectException(Exception::class);
+        $this->handler->getFolders($this->dir);
+    }
+
     public function testNeedsAnExistingRoot(): void
     {
         $this->expectException(Exception::class);

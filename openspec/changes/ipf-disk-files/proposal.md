@@ -9,6 +9,7 @@ This replaces the first version of this change (PR #109), which was written agai
 - Add `Icms\Ipf\DiskFile\Handler`: lists (`getList()`, `getObjects()`) and loads (`get()`) the files of a folder inside a root given to the constructor, filters them with `Icms\Db\Criteria\Item` and `Compo` on `basename`, `extension`, `size` and `mtime`, and sorts them.
 - Add `Icms\Ipf\DiskFile\Entity`, with `ImageEntity` (`getDimensions()`), `VideoEntity` and `ZipEntity` (`getEntryCount()`): the properties of one file, and `rename()`, `moveTo()`, `copyTo()` and `delete()`.
 - Add `getColumn()`, `getOperator()` and `getValue()` to `Icms\Db\Criteria\Item`, so that criteria can be evaluated without reflection. Additive.
+- Add `FolderTree`, `TreeNode` and `TreeView`: the folders and files below a folder in tree order, and the rows and variables that the IPF table template `system_persistabletable_display.html` reads, with `Handler::getFolders()` to list sub folders. `Icms\Ipf\View\Tree` itself cannot show a folder tree: it needs an `Icms\Ipf\Handler`, and it is unused and fails on PHP 8 (`Table::render()` passes `'all'` to `Criteria\Element::setLimit(int)`).
 - Every path is resolved with `realpath()` and must lie inside the root. Actions never overwrite an existing file. Failures throw `Icms\Ipf\DiskFile\Exception`; unsupported criteria throw `InvalidArgumentException`.
 
 ## Capabilities

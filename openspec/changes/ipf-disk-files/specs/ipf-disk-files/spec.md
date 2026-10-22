@@ -59,3 +59,18 @@ The system SHALL rename, move, copy and delete a file only as thin filesystem ac
 #### Scenario: Actions never overwrite
 - **WHEN** a rename, move or copy would replace an existing file
 - **THEN** an exception is thrown and the existing file keeps its content
+
+### Requirement: Folders can be shown as a tree in the IPF table template
+The system SHALL list the folders and files below a folder in tree order (in every folder its sub folders first, then its files, sorted as for a flat list), SHALL NOT follow symbolic links to folders, SHALL bound the walk by a maximum depth, and SHALL leave out folders without a matching file when criteria are given. It SHALL provide the rows and variables that the IPF table template `system_persistabletable_display.html` reads, with the names of the nodes indented by level, folders marked, and every name and path escaped for HTML, without needing an `Icms\Ipf\Handler`.
+
+#### Scenario: Folder tree
+- **WHEN** the tree below a folder is listed
+- **THEN** each folder is followed by its own sub folders and files, each node knows its level and the folder it is in, folders without matching files are left out when criteria are given, and the walk stops at the maximum depth
+
+#### Scenario: Folder tree stays inside the root
+- **WHEN** the tree is requested for a folder outside the root, or a folder contains a link to a folder
+- **THEN** the first is refused with an exception and the link is not entered
+
+#### Scenario: Rows for the tree table template
+- **WHEN** the template variables of a tree view are requested
+- **THEN** they hold the columns, one row per node with its cells, actions and escaped id, and the tree flags the template expects, and file and folder names containing HTML are escaped
