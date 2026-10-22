@@ -20,3 +20,13 @@
 # probe preload installed by tests/Http/ModuleBootTest.php
 /htdocs/plugins/preloads/zzicmstestprobe.php
 /htdocs/trust_dist/
+
+# capability fixture modules, copied in by tests/Support/CapabilitySite.php
+/htdocs/modules/news/
+/htdocs/modules/smarttags/
+/htdocs/modules/advancedtags/
+/htdocs/modules/taxonomy/
+/htdocs/modules/knowledgemanager/
+# theme override written by tests/Http/Capability/TemplateTagTest.php
+/htdocs/themes/iTheme/modules/news/
+/htdocs/modules/oldtags/

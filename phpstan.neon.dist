@@ -3,6 +3,7 @@ parameters:
     paths:
         - src
         - htdocs/libraries/Icms/Kernel
+        - htdocs/libraries/Icms/Capability
     bootstrapFiles:
         # constants ImpressCMS defines at runtime
         - phpstan-bootstrap.php

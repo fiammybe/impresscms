@@ -268,6 +268,7 @@ if ($op == 'uninstall') {
 
 	}
 	$msgs .= '<br /><span style="font-size:smaller;">' . $mod->getVar('name') . '</span><br /><br />' . _MD_AM_RUSUREUNINS;
+	$msgs .= icms_module_capabilities_uninstall_warning($module);
 	icms_cp_header();
 	icms_core_Message::confirm(array('module' => $module, 'op' => 'uninstall_ok', 'fct' => 'modulesadmin'), 'admin.php', $msgs, _YES);
 	icms_cp_footer();

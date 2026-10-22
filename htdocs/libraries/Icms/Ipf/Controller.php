@@ -243,7 +243,12 @@ class Controller {
 				redirect_header(\icms::$urls['previouspage'], 3, _CO_ICMS_SAVE_ERROR . $icmsObj->getHtmlErrors());
 			} else {
 				$redirect_page = $redirect_page ? $redirect_page : icms_get_page_before_form();
-				redirect_header($redirect_page, 2, $redirect_msg);
+				// the object is stored; the capability providers may have rejected some of their fields
+				$capabilityErrors = \Icms\Capability\Integration::instance()->errorsFor($icmsObj);
+				if (count($capabilityErrors) > 0) {
+					$redirect_msg .= '<br />' . implode('<br />', array_map(static fn ($error) => htmlspecialchars($error, ENT_QUOTES), $capabilityErrors));
+				}
+				redirect_header($redirect_page, count($capabilityErrors) > 0 ? 5 : 2, $redirect_msg);
 			}
 		}
 	}

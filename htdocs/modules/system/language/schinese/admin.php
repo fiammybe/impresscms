@@ -65,3 +65,5 @@ define('_MD_AM_TPLSETS_DSC', '模板是一套html/css文件，用来渲染模块
 define('_MD_AM_RANK_DSC', '用户等级，可谓不同用户设置不同的等级');
 define('_MD_AM_VRSN_DSC', '检查系统是否需要更新');
 define('_MD_AM_PREF_DSC',"ImpressCMS 网站参考");
+define('_MD_AM_CAPABILITIES', 'Capabilities');
+define('_MD_AM_CAPABILITIES_DSC', 'Choose the module that provides each capability (tagging, taxonomy, ...) and the object types it is enabled for.');

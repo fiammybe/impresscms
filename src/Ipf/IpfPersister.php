@@ -39,7 +39,15 @@ final class IpfPersister
         }
 
         $handler = $entity->handler;
-        if (!$handler->insert($entity)) {
+        // the providers of enabled capabilities store the bound capability group, not $_POST (design D14)
+        $integration = \Icms\Capability\Integration::instance();
+        $integration->withSubmission(self::capabilityValues($form));
+        try {
+            $stored = $handler->insert($entity);
+        } finally {
+            $integration->withSubmission(null);
+        }
+        if (!$stored) {
             return array_values(array_map('strval', $entity->getErrors())) ?: ['The handler did not store the item.'];
         }
 
@@ -55,6 +63,24 @@ final class IpfPersister
         }
 
         return [];
+    }
+
+    /**
+     * The values of the capability group of the form (CapabilityFormExtension),
+     * by capability; empty when the form has none.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private static function capabilityValues(FormInterface $form): array
+    {
+        $field = \Icms\Capability\Integration::FIELD;
+        if (!$form->has($field) || !$form->get($field)->isSubmitted()) {
+            return [];
+        }
+
+        $values = $form->get($field)->getData();
+
+        return is_array($values) ? array_filter($values, 'is_array') : [];
     }
 
     /**

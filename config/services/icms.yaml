@@ -81,3 +81,27 @@ services:
         arguments:
             $runtime: '@App\Legacy\LegacyRuntime'
     App\Legacy\ModuleHandlerLocator: '@icms.module_handlers'
+
+    # -- Capabilities (change ipf-capability-provider-framework, design D14) ----
+    # The registry legacy code uses, and the active provider of each core
+    # contract; created when first fetched, after booting legacy to the module
+    # stage (App\Capability\RegistryFactory is an autowired App service). Class
+    # `object` as above: compiling the container must not load Icms\ classes.
+    icms.capabilities:
+        class: object
+        public: true
+        factory: ['@App\Capability\RegistryFactory', 'registry']
+    icms.capability.tagging:
+        class: object
+        public: true
+        factory: ['@App\Capability\RegistryFactory', 'capability']
+        arguments: ['tagging']
+    icms.capability.taxonomy:
+        class: object
+        public: true
+        factory: ['@App\Capability\RegistryFactory', 'capability']
+        arguments: ['taxonomy']
+
+    Icms\Capability\Registry: '@icms.capabilities'
+    Icms\Capability\Contract\Tagging\CapabilityInterface: '@icms.capability.tagging'
+    Icms\Capability\Contract\Taxonomy\CapabilityInterface: '@icms.capability.taxonomy'

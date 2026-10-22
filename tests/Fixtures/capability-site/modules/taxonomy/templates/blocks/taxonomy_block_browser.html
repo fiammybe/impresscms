@@ -1,0 +1,5 @@
+<ul class="taxonomy-browser">
+    <{foreach item=term from=$block.terms}>
+        <li><a href="<{$xoops_url}>/modules/taxonomy/browse.php?term_id=<{$term.id}>"><{$term.label}></a></li>
+    <{/foreach}>
+</ul>

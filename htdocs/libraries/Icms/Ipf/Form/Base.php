@@ -53,6 +53,8 @@ class Base extends \Icms\Form\Theme {
 
 		$this->setExtra('enctype="multipart/form-data"');
 		$this->createElements();
+		// fields of the capabilities enabled for this object type; adds nothing otherwise
+		\Icms\Capability\Integration::instance()->contributeToForm($this, $this->targetObject);
 		//if ($captcha) $this->addCaptcha();
 		$this->createPermissionControls();
 	}
