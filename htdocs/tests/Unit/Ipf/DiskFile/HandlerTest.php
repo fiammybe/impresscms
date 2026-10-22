@@ -128,21 +128,24 @@ final class HandlerTest extends TestCase
      * @scenario Unsupported criteria
      */
     #[DataProvider('unsupportedCriteria')]
-    public function testRefusesCriteriaItCannotEvaluate(Item $criteria): void
+    public function testRefusesCriteriaItCannotEvaluate(string $column, string $operator): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->handler->getObjects($this->root, $criteria);
+        $this->handler->getObjects($this->root, new Item($column, '1', $operator));
     }
 
     /**
-     * @return array<string, array{0: Item}>
+     * Plain values only: data providers run before the library environment is
+     * loaded (LibraryEnvironmentExtension), so they cannot touch Icms classes.
+     *
+     * @return array<string, array{0: string, 1: string}>
      */
     public static function unsupportedCriteria(): array
     {
         return [
-            'field' => [new Item('mime_type', 'image/png')],
-            'operator' => [new Item('size', '1', 'BETWEEN')],
+            'field' => ['mime_type', '='],
+            'operator' => ['size', 'BETWEEN'],
         ];
     }
 
