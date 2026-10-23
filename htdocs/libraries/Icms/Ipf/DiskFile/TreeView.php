@@ -16,7 +16,7 @@ namespace Icms\Ipf\DiskFile;
 defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
 
 /**
- * Adapts a {@see FolderTree} to the template of the IPF table views,
+ * Adapts a {@see TreeSource} (a {@see FolderTree} for the disk) to the template of the IPF table views,
  * `system_persistabletable_display.html`, without the IPF table classes:
  * `Icms\Ipf\View\Table` needs an `Icms\Ipf\Handler` (item name, page, table
  * fields, links to the edit and delete pages), which a folder does not have.
@@ -48,7 +48,7 @@ final class TreeView
 	 * @param array<string, string> $columns column key => caption (HTML); the first key is the tree column
 	 */
 	public function __construct(
-		private readonly FolderTree $tree,
+		private readonly TreeSource $tree,
 		private readonly string $folder,
 		array $columns = ['basename' => 'Name', 'size' => 'Size', 'mtime' => 'Modified'],
 		private readonly string $id = 'icms_folder_tree',

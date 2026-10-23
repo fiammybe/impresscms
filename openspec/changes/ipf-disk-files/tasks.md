@@ -10,7 +10,7 @@
 
 ## 3. Folder tree
 
-- [x] 3.1 `Handler::getFolders()`, `FolderTree`, `TreeNode`
+- [x] 3.1 `Handler::getFolders()`, `FolderTree`, `TreeNode`, `TreeSource` (what a `TreeView` reads its nodes from)
 - [x] 3.2 `TreeView`: template variables for `system_persistabletable_display.html`
 - [x] 3.3 `TreeTest`
 - [ ] 3.4 Show the tree in a page with the real template (needs the database templates)

@@ -10,11 +10,14 @@ declare(strict_types=1);
 
 namespace Icms\Tests\Unit\Ipf\DiskFile;
 
+use Icms\Db\Criteria\Element;
 use Icms\Db\Criteria\Item;
+use Icms\Ipf\DiskFile\Entity;
 use Icms\Ipf\DiskFile\Exception;
 use Icms\Ipf\DiskFile\FolderTree;
 use Icms\Ipf\DiskFile\Handler;
 use Icms\Ipf\DiskFile\TreeNode;
+use Icms\Ipf\DiskFile\TreeSource;
 use Icms\Ipf\DiskFile\TreeView;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -209,14 +212,41 @@ final class TreeTest extends TestCase
         $rows = $this->view()->templateVariables()['icms_persistable_objects'];
 
         self::assertSame('--&nbsp;a&amp;b&#039;c.txt', $rows[8]['columns'][0]['value']);
+    }
 
-        if (@file_put_contents($this->root . '/c/<i>.txt', 'x') === false) {
-            self::markTestSkipped('This file system does not allow "<" in file names.');
-        }
+    /**
+     * Names with markup cannot be created on every file system (Windows refuses
+     * "<", ">" and the double quote), so the source is a fixed list.
+     *
+     * @scenario Rows for the tree table template
+     */
+    public function testEscapesMarkupInNamesAndIds(): void
+    {
+        $file = new Entity($this->handler);
+        $file->assignVar('path', '/r/<i>"x"&.txt');
+        $file->assignVar('basename', '<i>"x"&.txt');
+        $file->assignVar('size', 3);
+        $file->assignVar('mtime', 0);
 
-        $rows = $this->view()->templateVariables()['icms_persistable_objects'];
-        self::assertSame('--&nbsp;&lt;i&gt;.txt', $rows[10]['columns'][0]['value']);
-        self::assertSame($this->root . '/c/&lt;i&gt;.txt', self::slash($rows[10]['id']), 'the id ends up inside an attribute');
+        $source = new class ([new TreeNode('/r/<b>', '<b>', null, 0, null), new TreeNode('/r/<i>"x"&.txt', '<i>"x"&.txt', '/r/<b>', 1, $file)]) implements TreeSource {
+            /** @param list<TreeNode> $nodes */
+            public function __construct(private readonly array $nodes)
+            {
+            }
+
+            public function nodes(string $folder, ?Element $criteria = null, string $sort = 'basename', string $order = 'ASC'): array
+            {
+                return $this->nodes;
+            }
+        };
+
+        $rows = (new TreeView($source, '/r'))->templateVariables()['icms_persistable_objects'];
+
+        self::assertSame('<strong>&lt;b&gt;/</strong>', $rows[0]['columns'][0]['value']);
+        self::assertSame('/r/&lt;b&gt;', $rows[0]['id']);
+        self::assertSame('--&nbsp;&lt;i&gt;&quot;x&quot;&amp;.txt', $rows[1]['columns'][0]['value']);
+        self::assertSame('/r/&lt;i&gt;&quot;x&quot;&amp;.txt', $rows[1]['id']);
+        self::assertSame('3', $rows[1]['columns'][1]['value']);
         self::assertStringNotContainsString('<i>', (string) json_encode($rows));
     }
 

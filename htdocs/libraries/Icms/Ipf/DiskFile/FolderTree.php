@@ -27,7 +27,7 @@ defined("ICMS_ROOT_PATH") or die("ImpressCMS root path not defined");
  * With criteria, a folder that holds no matching file at any depth is left out.
  * The criteria's start and limit do not apply: a tree shows everything it has.
  */
-final class FolderTree
+final class FolderTree implements TreeSource
 {
 	public function __construct(
 		private readonly Handler $handler,
