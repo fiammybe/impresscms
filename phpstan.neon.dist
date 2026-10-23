@@ -4,12 +4,11 @@ parameters:
         - src
         - htdocs/libraries/Icms/Kernel
     bootstrapFiles:
-        # constants ImpressCMS defines at runtime
+        # constants ImpressCMS defines at runtime, and the English global.php language constants
         - phpstan-bootstrap.php
         # the Icms library and its legacy names (not in composer.json, see host.php)
         - htdocs/libraries/Autoloader.php
         # language constants (the English files; every language defines the same)
-        - htdocs/language/english/global.php
         - htdocs/language/english/core.php
         - htdocs/modules/system/language/english/common.php
         - htdocs/modules/system/language/english/admin.php

@@ -9,6 +9,9 @@ define('ICMS_LIBRARIES_PATH', ICMS_ROOT_PATH . '/libraries');
 define('ICMS_GROUP_ADMIN', 1);
 define('ICMS_GROUP_USERS', 2);
 define('ICMS_GROUP_ANONYMOUS', 3);
-define('_INTL_LOCALE', 'en_US');
 define('ICMS_URL', 'http://localhost');
 define('_GLOBAL_LEFT', 'left');
+
+// global.php reads $icmsConfig from the scope it is included in
+$icmsConfig = ['sitename' => 'ImpressCMS'];
+require __DIR__ . '/htdocs/language/english/global.php';
