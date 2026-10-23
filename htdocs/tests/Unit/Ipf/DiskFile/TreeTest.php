@@ -29,6 +29,8 @@ final class TreeTest extends TestCase
     protected function setUp(): void
     {
         $this->dir = str_replace('\\', '/', sys_get_temp_dir()) . '/icms-difftree-' . bin2hex(random_bytes(4));
+        mkdir($this->dir);
+        $this->dir = self::slash((string) realpath($this->dir));
         $this->root = $this->dir . '/root';
 
         foreach (['b', 'a/deep/deeper', 'a/empty', 'c'] as $folder) {
@@ -74,10 +76,10 @@ final class TreeTest extends TestCase
 
         $byName = array_column(array_map(static fn (TreeNode $n): array => [$n->name, $n], $nodes), 1, 0);
         self::assertNull($byName['a']->parentPath);
-        self::assertSame($this->root . '/a', $byName['deep']->parentPath);
-        self::assertSame($this->root . '/a/deep/deeper', $byName['three.txt']->parentPath);
+        self::assertSame($this->root . '/a', self::slash((string) $byName['deep']->parentPath));
+        self::assertSame($this->root . '/a/deep/deeper', self::slash((string) $byName['three.txt']->parentPath));
         self::assertTrue($byName['a']->isFolder());
-        self::assertSame($this->root . '/a/deep/two.log', $byName['two.log']->file?->path());
+        self::assertSame($this->root . '/a/deep/two.log', self::slash((string) $byName['two.log']->file?->path()));
     }
 
     /**
@@ -168,11 +170,11 @@ final class TreeTest extends TestCase
 
         $rows = $vars['icms_persistable_objects'];
         self::assertCount(11, $rows);
-        self::assertSame($this->root . '/a', $rows[0]['id']);
+        self::assertSame($this->root . '/a', self::slash($rows[0]['id']));
         self::assertSame(['odd' => 'even', 'even' => 'odd'][$rows[0]['class']], $rows[1]['class'], 'rows alternate');
 
         $top = $rows[10];
-        self::assertSame($this->root . '/top.txt', $top['id']);
+        self::assertSame($this->root . '/top.txt', self::slash($top['id']));
         self::assertSame(
             [
                 ['keyname' => 'basename', 'value' => 'top.txt', 'class' => 'head', 'width' => '', 'align' => 'left'],
@@ -214,7 +216,7 @@ final class TreeTest extends TestCase
 
         $rows = $this->view()->templateVariables()['icms_persistable_objects'];
         self::assertSame('--&nbsp;&lt;i&gt;.txt', $rows[10]['columns'][0]['value']);
-        self::assertSame($this->root . '/c/&lt;i&gt;.txt', $rows[10]['id'], 'the id ends up inside an attribute');
+        self::assertSame($this->root . '/c/&lt;i&gt;.txt', self::slash($rows[10]['id']), 'the id ends up inside an attribute');
         self::assertStringNotContainsString('<i>', (string) json_encode($rows));
     }
 
@@ -271,5 +273,13 @@ final class TreeTest extends TestCase
         $path = $this->root . '/' . $name;
         file_put_contents($path, $content);
         touch($path, $mtime);
+    }
+
+    /**
+     * realpath() gives back the separators of the operating system; the tests build their paths with "/".
+     */
+    private static function slash(string $path): string
+    {
+        return str_replace('\\', '/', $path);
     }
 }

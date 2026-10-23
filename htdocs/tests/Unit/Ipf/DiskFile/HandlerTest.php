@@ -32,6 +32,8 @@ final class HandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->dir = str_replace('\\', '/', sys_get_temp_dir()) . '/icms-diskfile-' . bin2hex(random_bytes(4));
+        mkdir($this->dir);
+        $this->dir = self::slash((string) realpath($this->dir));
         $this->root = $this->dir . '/root';
         mkdir($this->root . '/sub', 0777, true);
 
@@ -71,7 +73,7 @@ final class HandlerTest extends TestCase
             array_values($list),
             'natural, case-insensitive order; sub folders are skipped',
         );
-        self::assertSame($this->root . '/b.txt', array_search('b.txt', $list, true));
+        self::assertSame($this->root . '/b.txt', self::slash((string) array_search('b.txt', $list, true)));
     }
 
     public function testSortsByAnyFieldInBothDirections(): void
@@ -157,8 +159,8 @@ final class HandlerTest extends TestCase
         $file = $this->handler->get($this->root . '/b.txt');
 
         self::assertSame(Entity::class, $file::class);
-        self::assertSame($this->root . '/b.txt', $file->path());
-        self::assertSame($this->root, $file->getVar('dirname', 'n'));
+        self::assertSame($this->root . '/b.txt', self::slash($file->path()));
+        self::assertSame($this->root, self::slash($file->getVar('dirname', 'n')));
         self::assertSame('b.txt', $file->getVar('basename', 'n'));
         self::assertSame('txt', $file->getVar('extension', 'n'));
         self::assertSame(2, $file->getVar('size', 'n'));
@@ -244,9 +246,10 @@ final class HandlerTest extends TestCase
         mkdir($this->root . '/Sub10');
         mkdir($this->root . '/sub9');
 
+        $folders = $this->handler->getFolders($this->root);
         self::assertSame(
             [$this->root . '/sub' => 'sub', $this->root . '/sub9' => 'sub9', $this->root . '/Sub10' => 'Sub10'],
-            $this->handler->getFolders($this->root),
+            array_combine(array_map(self::slash(...), array_keys($folders)), $folders),
         );
 
         if (@symlink($this->dir, $this->root . '/link')) {
@@ -277,5 +280,13 @@ final class HandlerTest extends TestCase
         $path = $this->root . '/' . $name;
         file_put_contents($path, $content);
         touch($path, $mtime);
+    }
+
+    /**
+     * realpath() gives back the separators of the operating system; the tests build their paths with "/".
+     */
+    private static function slash(string $path): string
+    {
+        return str_replace('\\', '/', $path);
     }
 }

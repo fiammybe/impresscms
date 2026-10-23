@@ -26,6 +26,8 @@ final class EntityTest extends TestCase
     protected function setUp(): void
     {
         $this->dir = str_replace('\\', '/', sys_get_temp_dir()) . '/icms-diskfile-' . bin2hex(random_bytes(4));
+        mkdir($this->dir);
+        $this->dir = self::slash((string) realpath($this->dir));
         $this->root = $this->dir . '/root';
         mkdir($this->root . '/in', 0777, true);
         mkdir($this->dir . '/elsewhere');
@@ -58,7 +60,7 @@ final class EntityTest extends TestCase
 
         self::assertFileDoesNotExist($this->root . '/one.txt');
         self::assertFileExists($this->root . '/uno.md');
-        self::assertSame($this->root . '/uno.md', $file->path());
+        self::assertSame($this->root . '/uno.md', self::slash($file->path()));
         self::assertSame('md', $file->getVar('extension', 'n'));
     }
 
@@ -119,8 +121,8 @@ final class EntityTest extends TestCase
         $file->moveTo($this->root . '/in');
 
         self::assertFileDoesNotExist($this->root . '/one.txt');
-        self::assertSame($this->root . '/in/one.txt', $file->path());
-        self::assertSame($this->root . '/in', $file->getVar('dirname', 'n'));
+        self::assertSame($this->root . '/in/one.txt', self::slash($file->path()));
+        self::assertSame($this->root . '/in', self::slash($file->getVar('dirname', 'n')));
     }
 
     /**
@@ -132,10 +134,10 @@ final class EntityTest extends TestCase
 
         $copy = $file->copyTo($this->root . '/in');
 
-        self::assertSame($this->root . '/in/one.txt', $copy->path());
+        self::assertSame($this->root . '/in/one.txt', self::slash($copy->path()));
         self::assertFileExists($this->root . '/one.txt');
         self::assertSame('1', file_get_contents($copy->path()));
-        self::assertSame($this->root . '/one.txt', $file->path(), 'the original object is unchanged');
+        self::assertSame($this->root . '/one.txt', self::slash($file->path()), 'the original object is unchanged');
     }
 
     /**
@@ -199,5 +201,13 @@ final class EntityTest extends TestCase
         // Not an Icms\Ipf\Entity: it has no table, so no store(), and delete() takes no $force.
         self::assertNotInstanceOf(\Icms\Ipf\Entity::class, $this->handler->get($this->root . '/one.txt'));
         self::assertFalse(method_exists($this->handler->get($this->root . '/one.txt'), 'store'));
+    }
+
+    /**
+     * realpath() gives back the separators of the operating system; the tests build their paths with "/".
+     */
+    private static function slash(string $path): string
+    {
+        return str_replace('\\', '/', $path);
     }
 }
