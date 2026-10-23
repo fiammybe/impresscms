@@ -13,7 +13,7 @@
 - [x] 3.1 `Handler::getFolders()`, `FolderTree`, `TreeNode`, `TreeSource` (what a `TreeView` reads its nodes from)
 - [x] 3.2 `TreeView`: template variables for `system_persistabletable_display.html`
 - [x] 3.3 `TreeTest`
-- [ ] 3.4 Show the tree in a page with the real template (needs the database templates)
+- [x] 3.4 Show the tree with the real template: rendered by hand on an installed site (admin theme, `db:system_persistabletable_display.html`) with a throwaway admin page; no page is added to the CMS
 
 ## 4. Verify
 
