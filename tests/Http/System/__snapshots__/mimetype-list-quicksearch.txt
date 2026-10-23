@@ -146,6 +146,8 @@ startList = function() {
                                       </li>
                 		                                        <li><a href="#">Media</a>
                                           <ul>
+                                                  <li><a href="http://{HOST}/modules/system/admin.php?fct=assets" style="background-image: url(http://{HOST}/modules/system/admin/assets/images/assets_small.png);">Asset manager</a>
+                                                      </li>
                                                   <li><a href="http://{HOST}/modules/system/admin.php?fct=images" style="background-image: url(http://{HOST}/modules/system/admin/images/images/images_small.png);">Image Manager</a>
                                                       </li>
                                                   <li><a href="http://{HOST}/modules/system/admin.php?fct=mimetype" style="background-image: url(http://{HOST}/modules/system/admin/mimetype/images/mimetype_small.png);">Mime Types</a>
@@ -253,6 +255,9 @@ startList = function() {
               </a>
 		  <a href="http://{HOST}/modules/system/admin.php?fct=images" title="Image Manager">
                   <img src="http://{HOST}/modules/system/admin/images/images/images.png" alt="Image Manager" />
+              </a>
+		  <a href="http://{HOST}/modules/system/admin.php?fct=assets" title="Asset manager">
+                  <img src="http://{HOST}/modules/system/admin/assets/images/assets.png" alt="Asset manager" />
               </a>
 		  <a href="http://{HOST}/modules/system/admin.php?fct=tplsets" title="Templates">
                   <img src="http://{HOST}/modules/system/admin/tplsets/images/tplsets.png" alt="Templates" />

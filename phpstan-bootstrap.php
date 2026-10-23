@@ -12,3 +12,6 @@ define('ICMS_GROUP_ANONYMOUS', 3);
 define('_INTL_LOCALE', 'en_US');
 define('ICMS_URL', 'http://localhost');
 define('_GLOBAL_LEFT', 'left');
+define('ICMS_MODULES_URL', ICMS_URL . '/modules');
+define('ICMS_UPLOAD_PATH', ICMS_ROOT_PATH . '/uploads');
+define('ICMS_IMAGES_SET_URL', ICMS_URL . '/images');

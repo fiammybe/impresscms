@@ -14,6 +14,7 @@ parameters:
         - htdocs/modules/system/language/english/common.php
         - htdocs/modules/system/language/english/admin.php
         - htdocs/modules/system/language/english/admin/mimetype.php
+        - htdocs/modules/system/language/english/admin/assets.php
     scanDirectories:
         - htdocs/libraries/Icms
     scanFiles:

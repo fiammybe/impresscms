@@ -364,6 +364,7 @@ $modversion["templates"] = [
 	["file" => "system_adm_modulemenu.html", "description" => ""],
 	["file" => "system_rating_form.html", "description" => ""],
 	["file" => "system_adm_mimetype.html", "description" => ""],
+	["file" => "system_adm_assets.html", "description" => ""],
 	["file" => "system_adm_userrank.html", "description" => ""],
 	[
 		"file" => "system_adm_version.html",

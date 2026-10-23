@@ -69,3 +69,5 @@ define('_MD_AM_TPLSETS_DSC', 'I templates sono insiemi di files html/css che int
 define('_MD_AM_RANK_DSC', 'I livelli utente sono immagini usate per rendere differenti i livelli fra gli utenti del vostro sito!');
 define('_MD_AM_VRSN_DSC', 'Usa questo strumento per controllare gli aggiornamenti del tuo sistema.');
 define('_MD_AM_PREF_DSC',"Preferenze sito ImpressCMS");
+define('_MD_AM_ASSETS', 'Gestione file');
+define('_MD_AM_ASSETS_DSC', 'Sfoglia i file della cartella upload del tuo sito ed elimina quelli che non ti servono più.');
