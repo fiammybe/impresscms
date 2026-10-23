@@ -104,6 +104,30 @@ class Item extends Element
 	}
 
 	/**
+	 * @return string the column the condition applies to
+	 */
+	public function getColumn(): string
+	{
+		return $this->_column;
+	}
+
+	/**
+	 * @return string the comparison operator, as given
+	 */
+	public function getOperator(): string
+	{
+		return $this->_operator;
+	}
+
+	/**
+	 * @return string the value compared against, as the constructor stored it
+	 */
+	public function getValue(): string
+	{
+		return $this->_value;
+	}
+
+	/**
 	 * Make a sql condition string
 	 *
 	 * @return string
