@@ -293,6 +293,22 @@ To take over a page:
 3. Run the same tests against the takeover; only intended changes (the token)
    may differ.
 
+### A page without a legacy version: the asset manager
+
+`modules/system/admin.php?fct=assets` (`App\Controller\System\AssetsController`)
+has no legacy page to take over, so it has no takeover key and no
+characterization snapshots. It uses the same pieces (`#[SystemAdminFunction]`,
+`AdminPageRenderer`, `LegacyRedirect`, `Icms\Core\Message::confirm()`) and shows
+the folders and files of `uploads/` with `Icms\Ipf\DiskFile`. It has its own
+right, the system admin category `ICMS_SYSTEM_ASSETS`; webmasters have it,
+others after a `system_admin` permission is granted. Deleting a file needs the
+confirmation and a token, never deletes `index.html`, `blank.gif` or a file
+whose name starts with a dot, and the confirmation warns when the database
+still refers to the file (`App\Admin\UploadReferences`: avatars, smilies, image
+manager and rank images; content and third-party tables are not searched).
+`admin/assets/main.php` only tells the visitor that the page needs the
+framework application. The tests are `tests/Http/System/AssetsTest`.
+
 ## Events
 
 Legacy events are dispatched to Symfony listeners as

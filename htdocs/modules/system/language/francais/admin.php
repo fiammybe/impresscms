@@ -61,5 +61,7 @@ define('_MD_AM_TPLSETS_DSC', 'Templates are sets of html/css files that render t
 define('_MD_AM_RANK_DSC', 'User ranks are picture, used to make difference between users in different levels of your website!');
 define('_MD_AM_VRSN_DSC', 'Use this tool to check your system for updates.');
 define('_MD_AM_PREF_DSC',"ImpressCMS Site Preferences");
+define('_MD_AM_ASSETS', 'Gestionnaire de fichiers');
+define('_MD_AM_ASSETS_DSC', "Parcourez les fichiers du dossier d'upload de votre site et supprimez ceux dont vous n'avez plus besoin.");
 
 ?>

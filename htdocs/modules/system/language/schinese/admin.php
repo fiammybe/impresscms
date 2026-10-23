@@ -65,3 +65,5 @@ define('_MD_AM_TPLSETS_DSC', '模板是一套html/css文件，用来渲染模块
 define('_MD_AM_RANK_DSC', '用户等级，可谓不同用户设置不同的等级');
 define('_MD_AM_VRSN_DSC', '检查系统是否需要更新');
 define('_MD_AM_PREF_DSC',"ImpressCMS 网站参考");
+define('_MD_AM_ASSETS', '文件管理');
+define('_MD_AM_ASSETS_DSC', '浏览网站上传文件夹中的文件，并删除不再需要的文件。');
