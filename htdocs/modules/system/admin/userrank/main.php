@@ -57,13 +57,13 @@ function edituserrank($showmenu = FALSE, $rank_id = 0, $clone = FALSE) {
 	$userrankObj = $icms_userrank_handler->get($rank_id);
 
 	if (!$clone && !$userrankObj->isNew()) {
-		$sform = $userrankObj->getForm(_CO_ICMS_USERRANKS_EDIT, "adduserrank");
+		$sform = $userrankObj->getSecureForm(_CO_ICMS_USERRANKS_EDIT, "adduserrank");
 		$sform->assign($icmsAdminTpl);
 		$icmsAdminTpl->assign("icms_userrank_title", _CO_ICMS_USERRANKS_EDIT_INFO);
 		$icmsAdminTpl->display('db:system_adm_userrank.html');
 	} else {
 		$userrankObj->setVar("rank_id", 0);
-		$sform = $userrankObj->getForm(_CO_ICMS_USERRANKS_CREATE, "adduserrank");
+		$sform = $userrankObj->getSecureForm(_CO_ICMS_USERRANKS_CREATE, "adduserrank");
 		$sform->assign($icmsAdminTpl);
 		$icmsAdminTpl->assign("icms_userrank_title", _CO_ICMS_USERRANKS_CREATE_INFO);
 		$icmsAdminTpl->display('db:system_adm_userrank.html');
@@ -116,6 +116,10 @@ switch ($op) {
 		break;
 
 	case "adduserrank":
+		if (!icms::$security->check()) {
+			redirect_header('admin.php?fct=userrank', 3, implode('<br />', icms::$security->getErrors()));
+		}
+
 		global $icms_userrank_handler;
 		$controller = new icms_ipf_Controller($icms_userrank_handler);
 		$controller->storeFromDefaultForm(_CO_ICMS_USERRANKS_CREATED, _CO_ICMS_USERRANKS_MODIFIED);

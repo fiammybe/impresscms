@@ -367,6 +367,8 @@ class icms_core_Session {
 		} else {
 			session_name('ICMSSESSION');
 		}
+
+		@ini_set('session.cookie_samesite', 'Lax');
 		session_start();
 
 		self::removeExpiredCustomSession('xoopsUserId');
