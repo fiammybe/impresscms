@@ -728,18 +728,20 @@ class icms_ipf_view_Table {
 
 		// retreive the current url and the query string
 		$current_url = icms::$urls['full_phpself'];
-		$query_string = icms::$urls['querystring'];
+		// the query string arrives HTML-encoded (&amp;): decode it before splitting, or the
+		// parameters after the first sort come back as 'amp;fct=...' and are lost
+		$query_string = html_entity_decode(icms::$urls['querystring'], ENT_QUOTES);
 		if ($query_string) {
 			$query_string = str_replace('?', '', $query_string);
 		}
 		$query_stringArray = explode('&', $query_string);
 		$new_query_stringArray = array();
 		foreach ($query_stringArray as $query_string) {
-			if (strpos($query_string, 'sortsel') == FALSE && strpos($query_string, 'ordersel') == FALSE) {
+			if ($query_string !== '' && strpos($query_string, 'sortsel') === FALSE && strpos($query_string, 'ordersel') === FALSE) {
 				$new_query_stringArray[] = $query_string;
 			}
 		}
-		$new_query_string = implode('&', $new_query_stringArray);
+		$new_query_string = htmlspecialchars(implode('&', $new_query_stringArray), ENT_QUOTES);
 
 		$orderArray = array();
 		$orderArray['ASC']['image'] = 'desc.png';
