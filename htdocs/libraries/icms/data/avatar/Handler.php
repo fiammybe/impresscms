@@ -321,9 +321,9 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 	static public function getListFromDir($avatar_dir="") {
 		$avatars = array();
 		if ($avatar_dir != "") {
-			$avatars = icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/" . $avatar_dir . "/", $avatar_dir . "/", array('gif', 'jpg', 'png'));
+			$avatars = icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/" . $avatar_dir . "/", $avatar_dir . "/", icms_image_Formats::addExtensions(array('gif', 'jpg', 'png')));
 		} else {
-			$avatars = icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/", '', array('gif', 'jpg', 'png'));
+			$avatars = icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/", '', icms_image_Formats::addExtensions(array('gif', 'jpg', 'png')));
 		}
 		return $avatars;
 	}
@@ -339,7 +339,7 @@ class icms_data_avatar_Handler extends icms_core_ObjectHandler {
 		$dirlist = icms_core_Filesystem::getDirList(ICMS_ROOT_PATH . "/images/avatar/");
 		if (count($dirlist) > 0) {
 			foreach ($dirlist as $dir) {
-				$avatars[$dir] =& icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/" . $dir . "/", $dir . "/", array('gif', 'jpg', 'png'));
+				$avatars[$dir] =& icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/avatar/" . $dir . "/", $dir . "/", icms_image_Formats::addExtensions(array('gif', 'jpg', 'png')));
 			}
 		} else {
 			return false;
