@@ -67,6 +67,7 @@ class icms_db_criteria_Item extends icms_db_criteria_Element {
 	private $_column;
 	private $_operator;
 	private $_value;
+	private $_bind = false;
 
 	/**
 	 * Constructor
@@ -84,6 +85,27 @@ class icms_db_criteria_Item extends icms_db_criteria_Element {
 	}
 
 	/**
+	 * Render the value as a "?" placeholder and expose it through getParams()
+	 *
+	 * @param bool $bind
+	 */
+	public function setBind($bind = true) {
+		$this->_bind = (bool) $bind;
+	}
+
+	private function isBound() {
+		return $this->_bind
+			&& !in_array(strtoupper($this->_operator), array('IS NULL', 'IS NOT NULL', 'IN', 'NOT IN'));
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getParams() {
+		return $this->isBound() ? array((string) $this->_value) : array();
+	}
+
+	/**
 	 * Make a sql condition string
 	 *
 	 * @return  string
@@ -95,6 +117,8 @@ class icms_db_criteria_Item extends icms_db_criteria_Element {
 		}
 		if (in_array( strtoupper($this->_operator), array('IS NULL', 'IS NOT NULL'))) {
 			$clause .= ' ' . $this->_operator;
+		} elseif ($this->isBound()) {
+			$clause .= " {$this->_operator} ?";
 		} else {
 			if ('' === ( $value = trim($this->_value) )) {
 				return '';

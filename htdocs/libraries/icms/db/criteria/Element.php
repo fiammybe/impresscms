@@ -101,6 +101,15 @@ abstract class icms_db_criteria_Element {
 	 */
 	abstract public function render();
 
+	/**
+	 * Values to bind, in order, to the "?" placeholders produced by render()
+	 *
+	 * @return array
+	 */
+	public function getParams() {
+		return array();
+	}
+
 	/**#@+
 	 * Accessor
 	 */
