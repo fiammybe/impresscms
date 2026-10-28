@@ -85,15 +85,15 @@ class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms
 		return 0; // will use auto_increment
 	}
 
-	public function query($sql, $limit = 0, $start = 0) {
+	public function query($sql, $limit = 0, $start = 0, $params = array()) {
 		if (! $this->allowWebChanges && strtolower(substr(trim($sql), 0, 6)) != 'select') {
 			trigger_error(_CORE_DB_NOTALLOWEDINGET, E_USER_WARNING);
 			return FALSE;
 		}
-		return $this->queryF($sql, $limit, $start);
+		return $this->queryF($sql, $limit, $start, $params);
 	}
 
-	public function queryF($sql, $limit = 0, $start = 0) {
+	public function queryF($sql, $limit = 0, $start = 0, $params = array()) {
 		$result = FALSE;
 		/* Use Protector's db layer protection against possible SQLi
 		 * This needs to be done for legacy queries, since PDO only offers
@@ -109,7 +109,14 @@ class icms_db_legacy_PdoDatabase extends icms_db_legacy_Database implements icms
 			$sql .= ' LIMIT ' . $start . (int) $limit;
 		}
 		try {
-			$result = $this->pdo->query($sql);
+			if (!empty($params)) {
+				$result = $this->pdo->prepare($sql);
+				if ($result && !$result->execute(array_values($params))) {
+					$result = FALSE;
+				}
+			} else {
+				$result = $this->pdo->query($sql);
+			}
 			if ($result) { // added by claudia, ImpressCMS.org
 				$this->rowCount = $result->rowCount();
 			} else { // added by claudia, ImpressCMS.org

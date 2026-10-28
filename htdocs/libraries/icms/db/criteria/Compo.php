@@ -120,6 +120,19 @@ class icms_db_criteria_Compo extends icms_db_criteria_Element {
 	}
 
 	/**
+	 * Bound parameters of all elements, in render order
+	 *
+	 * @return array
+	 */
+	public function getParams() {
+		$params = array();
+		foreach ($this->criteriaElements as $element) {
+			$params = array_merge($params, $element->getParams());
+		}
+		return $params;
+	}
+
+	/**
 	 * Make the criteria into a SQL "WHERE" clause
 	 *
 	 * @return	string
