@@ -195,6 +195,8 @@ class icms_file_MediaUploadHandler {
 	 * @param   int     $maxHeight
 	 */
 	public function __construct($uploadDir, $allowedMimeTypes, $maxFileSize = 0, $maxWidth = null, $maxHeight = null) {
+		// WebP and AVIF are only checked when this PHP build recognises them
+		$this->imageExtensions = icms_image_Formats::addImageTypes($this->imageExtensions);
 		$this->extensionToMime = icms_Utils::mimetypes() ;
 		if (!is_array($this->extensionToMime)) {
 			$this->extensionToMime = array();

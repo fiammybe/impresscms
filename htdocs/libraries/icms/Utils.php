@@ -100,6 +100,8 @@ class icms_Utils {
 		     "jpg"		=> "image/jpeg",
 		     "jpe"		=> "image/jpeg",
 		     "png"		=> "image/png",
+		     "webp"		=> "image/webp",
+		     "avif"		=> "image/avif",
 		     "tiff"		=> "image/tiff",
 		     "tif"		=> "image/tif",
 		     "wbmp"		=> "image/vnd.wap.wbmp",

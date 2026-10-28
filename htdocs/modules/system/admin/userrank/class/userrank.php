@@ -105,7 +105,7 @@ class SystemUserrankHandler extends icms_ipf_Handler {
 		global $icmsConfigUser;
 		parent::__construct($db, "userrank", "rank_id", "rank_title", "", "system");
 		$this->table = $this->db->prefix("ranks");
-		$this->enableUpload(array("image/gif", "image/jpeg", "image/pjpeg", "image/x-png", "image/png"), $icmsConfigUser["rank_maxsize"], $icmsConfigUser["rank_width"], $icmsConfigUser["rank_height"]);
+		$this->enableUpload(icms_image_Formats::addMimeTypes(array("image/gif", "image/jpeg", "image/pjpeg", "image/x-png", "image/png")), $icmsConfigUser["rank_maxsize"], $icmsConfigUser["rank_width"], $icmsConfigUser["rank_height"]);
 	}
 
 	/**

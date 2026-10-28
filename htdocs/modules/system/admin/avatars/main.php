@@ -209,7 +209,7 @@ if (!is_object(icms::$user) || !is_object($icmsModule) || !icms::$user->isAdmin(
 		if (!icms::$security->check()) {
 			redirect_header('admin.php?fct=avatars', 3, implode('<br />', icms::$security->getErrors()));
 		}
-		$uploader = new icms_file_MediaUploadHandler(ICMS_UPLOAD_PATH, array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png'), $icmsConfigUser['avatar_maxsize'], $icmsConfigUser['avatar_width'], $icmsConfigUser['avatar_height']);
+		$uploader = new icms_file_MediaUploadHandler(ICMS_UPLOAD_PATH, icms_image_Formats::addMimeTypes(array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png')), $icmsConfigUser['avatar_maxsize'], $icmsConfigUser['avatar_width'], $icmsConfigUser['avatar_height']);
 		$uploader->setPrefix('savt');
 		$err = array();
 		if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
