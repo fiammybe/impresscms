@@ -71,7 +71,7 @@ function editblock($bid = 0, $clone = FALSE) {
 
 	if (!$blockObj->isNew() && $blockObj->getVar('edit_func') != '') $blockObj->showFieldOnForm('options');
 	if (!$clone && !$blockObj->isNew()) {
-		$sform = $blockObj->getForm(_AM_SYSTEM_BLOCKSADMIN_EDIT, 'addblock');
+		$sform = $blockObj->getSecureForm(_AM_SYSTEM_BLOCKSADMIN_EDIT, 'addblock');
 		$sform->assign($icmsAdminTpl);
 	} else {
 		if ($clone) {
@@ -85,7 +85,7 @@ function editblock($bid = 0, $clone = FALSE) {
 		} else {
 			$blockObj->setVar('block_type', 'C');
 		}
-		$sform = $blockObj->getForm(_AM_SYSTEM_BLOCKSADMIN_CREATE, 'addblock');
+		$sform = $blockObj->getSecureForm(_AM_SYSTEM_BLOCKSADMIN_CREATE, 'addblock');
 		$sform->assign($icmsAdminTpl);
 	}
 
@@ -137,6 +137,10 @@ if (isset($_GET['sortsel'])) {
 if (in_array($clean_op, $valid_op, TRUE)) {
 	switch($clean_op) {
 		case 'visible' :
+			if (!icms::$security->check(false)) {
+				redirect_header('admin.php?fct=blocksadmin', 3, implode('<br />', icms::$security->getErrors()));
+			}
+
 			global $icms_block_handler;
 			$icms_block_handler->changeVisible($clean_bid);
 			$rtn = '/modules/system/admin.php?fct=blocksadmin';
@@ -151,6 +155,10 @@ if (in_array($clean_op, $valid_op, TRUE)) {
 			break;
 
 		case "up" :
+			if (!icms::$security->check(false)) {
+				redirect_header('admin.php?fct=blocksadmin', 3, implode('<br />', icms::$security->getErrors()));
+			}
+
 			global $icms_block_handler;
 			$icms_block_handler->upWeight($clean_bid);
 			$rtn = '/modules/system/admin.php?fct=blocksadmin';
@@ -165,6 +173,10 @@ if (in_array($clean_op, $valid_op, TRUE)) {
 			break;
 
 		case "down" :
+			if (!icms::$security->check(false)) {
+				redirect_header('admin.php?fct=blocksadmin', 3, implode('<br />', icms::$security->getErrors()));
+			}
+
 			global $icms_block_handler;
 			$icms_block_handler->downWeight($clean_bid);
 			$rtn = '/modules/system/admin.php?fct=blocksadmin';
@@ -190,6 +202,10 @@ if (in_array($clean_op, $valid_op, TRUE)) {
 			break;
 
 		case "addblock" :
+			if (!icms::$security->check()) {
+				redirect_header('admin.php?fct=blocksadmin', 3, implode('<br />', icms::$security->getErrors()));
+			}
+
 			global $icms_block_handler;
 			$controller = new icms_ipf_Controller($icms_block_handler);
 			$controller->storeFromDefaultForm(_AM_SYSTEM_BLOCKSADMIN_CREATED, _AM_SYSTEM_BLOCKSADMIN_MODIFIED);
@@ -203,6 +219,10 @@ if (in_array($clean_op, $valid_op, TRUE)) {
 			break;
 
 		case "change_blocks" :
+			if (!icms::$security->check()) {
+				redirect_header('admin.php?fct=blocksadmin', 3, implode('<br />', icms::$security->getErrors()));
+			}
+
 			global $icms_block_handler;
 			foreach ($_POST['SystemBlocksadmin_objects'] as $k => $v) {
 				$changed = FALSE;
