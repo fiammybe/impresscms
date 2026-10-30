@@ -1,0 +1,11 @@
+Ciao {X_UNAME},
+
+Un nuovo utente {USERNAME} (nome di login: {USERLOGINNAME}) (indirizzo e-mail: {USEREMAIL}) ha appena registrato un account su {X_SITENAME}.
+Cliccando sul link qui sotto si attiverà l'account di questo utente:
+
+{USERACTLINK}
+
+-----------
+{X_SITENAME} ({X_SITEURL})
+webmaster
+{X_ADMINMAIL}

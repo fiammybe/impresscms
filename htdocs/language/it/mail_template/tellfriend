@@ -1,0 +1,11 @@
+Ciao {FRIEND_NAME},
+
+Il tuo amico {YOUR_NAME} è piaciuto il nostro sito e ha voluto mostrarlo.
+
+Nome Del Sito: {SITENAME}
+Url Del Sito:  {SITEURL}
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}

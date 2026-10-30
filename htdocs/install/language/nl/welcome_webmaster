@@ -1,0 +1,14 @@
+Welkom op uw nieuwe ImpressCMS aangedreven website. Als u dat nog niet gedaan heeft, verwijder dan de [b]install[/b] map van de server en zorg ervoor dat [b]mainfile.php[/b] niet beschrijfbaar is (chmod 444).
+
+Om te beginnen met het beheren van uw nieuwe ImpressCMS aangedreven website kunt u klikken op de [b]Administratie[/b] Menu link links van deze pagina.
+
+U kunt beginnen met het bewerken van uw website [b]Voorkeuren[/b]: In het beheerpaneel, beweeg over de [b]Systeem[/b] dropdown en selecteer [b]Voorkeuren.[/b]
+
+Daarna kan u beginnen met het toevoegen van [b]Modules[/b] en [b]Thema's[/b].
+Veel van de beschikbare modules en thema's voor ImpressCMS zijn beschikbaar op de [url=https://www.impresscms.org/modules/downloads]Addons[/url] sectie van de [url=https://www.impresscms.org]project website[/url].
+
+U kan ook beginnen met [b]Blocks[/b] te gebruiken. U kunt beginnen met het verwijderen van dit blok. U kunt dit doen door te navigeren naar Systeembeheerder > Blokken, en het selecteren van "Webmasters" in de [b]Groepen[/b] selecteer vak. Dan kan u de blokken zien die beschikbaar zijn voor de Webmeestersgroep, waaronder dit blok!
+
+Voor meer informatie over het werken met ImpressCMS, gebruik de onderstaande links.
+<ul><li>[url=https://www.impresscms.org/modules/simplywiki/index.php?page=English#Using_ImpressCMS]Using ImpressCMS[/url]</li><li>[url=https://www.impresscms.org/modules/simplywiki/index.php?page=English#Customizing_ImpressCMS]Customizing ImpressCMS[/url]</li><li>[url=https://www.impresscms.org/modules/simplywiki/index.php?page=English#Developing_for_ImpressCMS]Developing for ImpressCMS[/url]</li></ul>
+We nodigen u van harte uit om deel te nemen aan [url=https://www.impresscms.org/modules/iforum/]The ImpressCMS Community[/url] - Waar u een bijdrage kunt leveren, krijg hulp, help anderen, etc...

@@ -1,0 +1,194 @@
+<?php
+// $Id: user.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: user.php 12229 2013-07-19 08:08:05Z fiammy $
+//%%%%%%		File Name user.php 		%%%%%
+define('_US_NOTREGISTERED','Noch nicht registriert? <a href=register.php>Hier</a> klicken.');
+define('_US_LOSTPASSWORD','Passwort vergessen?');
+define('_US_NOPROBLEM','Kein Problem. Einfach die bei der Registrierung verwendete E-Mail Adresse eingeben.');
+define('_US_YOUREMAIL','Eigene E-Mail Adresse: ');
+define('_US_SENDPASSWORD','Passwort versenden');
+define('_US_LOGGEDOUT','Abmeldung erfolgreich');
+define('_US_THANKYOUFORVISIT','Danke für den Besuch auf unserer Seite!');
+define('_US_INCORRECTLOGIN','Ungültige Anmeldung!');
+define('_US_LOGGINGU','Danke für die Anmeldung, %s.');
+define('_US_RESETPASSWORD','Passwort zurücksetzen');
+define('_US_SUBRESETPASSWORD','Passwort zurücksetzen');
+define('_US_RESETPASSTITLE','Das Passwort ist abgelaufen!');
+define('_US_RESETPASSINFO','Bitte das folgende Formular ausfüllen um das Passwort zurückzusetzen. Wenn E-Mail Adresse, Benutzername und aktuelles Passwort mit den gespeicherten Daten übereinstimmen wird das Passwort umgehend geändert und eine erneute Anmeldung ist möglich!');
+define('_US_PASSEXPIRED','Das Passwort ist abgelaufen.<br />Es erfolgt eine Umleitung auf ein Formular zum zurücksetzen des Passworts.');
+define('_US_SORRYUNAMENOTMATCHEMAIL','Der eingegebene Login Name ist nicht mit der angegebenen E-Mail-Adresse vorhanden!');
+define('_US_PWDRESET','Das Passwort wurde erfolgreich zurückgesetzt!');
+define('_US_SORRYINCORRECTPASS','Das aktuelle Passwort wurde falsch eingegeben!');
+
+// 2001-11-17 ADD
+define('_US_NOACTTPADM','Der gewählte Benutzer wurde deaktiviert oder noch nicht aktiviert.<br />Bitte den Administrator kontaktieren um weitere Informationen zu erhalten.');
+define('_US_ACTKEYNOT','Aktivierungsschlüssel nicht korrekt!');
+define('_US_ACONTACT','Das ausgewählte Profil ist bereits aktiviert worden!');
+define('_US_ACTLOGIN','Das Profil wurde aktiviert. Bitte mit dem bei der Registrierung gewählten Passwort anmelden.');
+define('_US_NOPERMISS','Entschuldigung, es fehlen die erforderlichen Rechte für diese Aktion!');
+define('_US_SURETODEL','Soll das Profil wirklich gelöscht werden?');
+define('_US_REMOVEINFO','Alle hinterlegten Daten zu diesem Profil werden aus der Datenbank gelöscht.');
+define('_US_BEENDELED','Das Profil wurde vollständig gelöscht.');
+define('_US_REMEMBERME', 'Anmeldung merken');
+
+//%%%%%%		File Name register.php 		%%%%%
+define('_US_USERREG','Benutzer Registrierung');
+define('_US_EMAIL','E-Mail');
+define('_US_ALLOWVIEWEMAIL','Erlaube anderen Benutzern diese E-Mail Adresse zu sehen');
+define('_US_WEBSITE','Webseite');
+define('_US_TIMEZONE','Zeitzone (GMT+1:00 für Deutschland)');
+define('_US_AVATAR','Profilbild');
+define('_US_VERIFYPASS','Passwort überprüfen');
+define('_US_SUBMIT','Absenden');
+define('_US_LOGINNAME','Benutzername');
+define('_US_FINISH','Fertigstellen');
+define('_US_REGISTERNG','Der neue Benutzer konnte nicht registriert werden.');
+define('_US_MAILOK','Gelegentlich E-Mails von Administratoren und Moderatoren erhalten?');
+define('_US_DISCLAIMER','Haftungsausschluss');
+define('_US_IAGREE','Ich habe den Haftungsausschluss gelesen und stimme ihm zu.');
+define('_US_UNEEDAGREE', 'Um die Registrierung abzuschließen ist die Zustimmung zum Haftungsausschluss erforderlich.');
+define('_US_NOREGISTER','Derzeit sind neue Registrierungen leider nicht möglich');
+
+// %s is username. This is a subject for email
+define('_US_USERKEYFOR','Aktivierungsschlüssel für %s');
+
+define('_US_YOURREGISTERED','Eine E-Mail mit dem Aktivierungsschlüssel wurde an die angegebene Adresse versandt. Bitte den Hinweisen in der E-Mail folgen um das Profil freizuschalten.');
+define('_US_YOURREGMAILNG','Die Registrierung war erfolgreich. Leider konnten wir aufgrund eines internen Fehlers die E-Mail zur Aktivierung des Profils nicht versenden. Wir bitten die Unannehmlichkeiten zu entschuldigen und ersuchen um Kontaktaufnahme mit den Administratoren um das Problem zu klären.');
+define('_US_YOURREGISTERED2','Die Registrierung war erfolgreich und das Profil wird demnächst von einem Administrator freigeschaltet. Es wird eine E-Mail versandt sobald dies geschehen ist. Wir bitten solange um Geduld.');
+
+// %s is your site name
+define('_US_NEWUSERREGAT','Neue Benutzer Registrierung auf %s');
+// %s is a username
+define('_US_HASJUSTREG','%s hat sich soeben neu registriert!');
+
+define('_US_INVALIDMAIL','FEHLER: Ungültige E-Mail Adresse!');
+define('_US_INVALIDNICKNAME','FEHLER: Ungültiger Login Name, bitte versuchen Sie einen anderen Login Name.');
+define('_US_NICKNAMETOOLONG','Der Benutzername ist zu lang. Er muss kürzer als %s Zeichen sein.');
+define('_US_NICKNAMETOOSHORT','Der Benutzername ist zu kurz. Er muss mehr als %s Zeichen haben.');
+define('_US_NAMERESERVED','FEHLER: Dieser Benutzername ist bereits reserviert!');
+define('_US_NICKNAMENOSPACES','Der Benutzername darf keine Leerzeichen enthalten!');
+define('_US_LOGINNAMETAKEN','FEHLER: Dieser Benutzername ist bereits vergeben!');
+define('_US_NICKNAMETAKEN','FEHLER: Dieses Pseudonym ist bereits vergeben!');
+define('_US_EMAILTAKEN','FEHLER: Diese E-Mail Adresse ist bereits registriert.');
+define('_US_ENTERPWD','FEHLER: Es muss ein Passwort angegeben werden.');
+define('_US_SORRYNOTFOUND','Keine entsprechenden Benutzerinformationen gefunden!');
+
+define('_US_USERINVITE', 'Zur Mitgliedschaft einladen');
+define('_US_INVITENONE','FEHLER: Eine Registrierung ist nur nach einer Einladung möglich.');
+define('_US_INVITEINVALID','FEHLER: Code der Einladung ungültig.');
+define('_US_INVITEEXPIRED','FEHLER: Code der Einladung wurde bereits verwendet oder ist abgelaufen.');
+
+define('_US_INVITEBYMEMBER','Nur ein vorhandenes Mitglied kann neue Mitglieder einladen. Bitte fordern Sie eine Einladung-E-Mail eines registrierten Mitglieds an.');
+define('_US_INVITEMAILERR','Aufgrund eines internen Fehlers konnte die E-Mail mit dem Link zur Registrierung nicht versandt werden. Wir bedauern die entstandenen Unannehmlichkeiten und bitten um einen erneuten Versuch. Sollte das Problem weiterhin bestehen, ersuchen wir um Kontaktaufnahme mit dem Administrator um das Problem zu lösen.<br />');
+define('_US_INVITEDBERR','Ihre Registrierungsanfrage konnte aufgrund eines internen Fehlers nicht bearbeitet werden. Wir entschuldigen uns für die Unannehmlichkeiten, bitte versuchen Sie es noch einmal, und wenn das Problem weiterhin besteht, senden Sie dem Webmaster eine E-Mail, in der er über die Situation informiert <br />');
+define('_US_INVITESENT','Eine E-Mail mit dem Registrierung-Link wurde an das von Ihnen angegebene E-Mail-Adresse gesendet. Bitte folgen Sie den Anweisungen in der E-Mail, um Ihr Konto zu registrieren. Dies kann einige Minuten dauern, also haben Sie Geduld.');
+
+// %s (%s) is your site name (site URL)
+define('_US_INVITEREGLINK','Registration invitation from %s (%s)');
+
+// %s (%s) is your site name (site URL)
+define('_US_NEWPWDREQ','New Password Request at %s (%s)');
+define('_US_YOURACCOUNT', 'Your account at %s (%s)');
+
+define('_US_MAILPWDNG','E-Mail_Passwort: Eintrag des Benutzers konnte nicht aktualisiert werden. Bitte den Administrator kontaktieren');
+define('_US_RESETPWDNG','Passwort_zurücksetzen: Eintrag des Benutzers konnte nicht aktualisiert werden. Bitte den Administrator kontaktieren');
+
+// %s (%s) is your site name (site URL)
+define('_US_RESETPWDREQ','Reset Password Request at %s (%s)');
+define('_US_MAILRESETPWDNG','Passwort_zurücksetzen: Eintrag des Benutzers konnte nicht aktualisiert werden. Bitte den Administrator kontaktieren');
+define('_US_NEWPASSWORD','Neues Passwort');
+define('_US_YOURUSERNAME','Benutzername');
+define('_US_CURRENTPASS','Das aktuelle Passwort');
+define('_US_BADPWD','Unsicheres Passwort, es darf den Benutzernamen nicht enthalten.');
+
+// %s is a username
+define('_US_PWDMAILED','Passwort für %s gemailt.');
+define('_US_CONFMAIL','Bestätigungsmail für %s gemailt.');
+define('_US_ACTVMAILNG', 'Fehler beim Senden der Benachrichtigung E-Mail an %s');
+define('_US_ACTVMAILOK', 'Eine Mitteilung, wurde per E-Mail gesendet an %s.');
+
+//%%%%%%		File Name userinfo.php 		%%%%%
+define('_US_SELECTNG','Kein Benutzer ausgewählt! Bitte zurück gehen und noch einmal versuchen.');
+define('_US_PM','Private Nachricht');
+define('_US_ICQ','ICQ');
+define('_US_AIM','AIM');
+define('_US_YIM','YIM');
+define('_US_MSNM','MSNM');
+define('_US_LOCATION','Wohnort');
+define('_US_OCCUPATION','Beruf');
+define('_US_INTEREST','Interessen');
+define('_US_SIGNATURE','Signatur');
+define('_US_EXTRAINFO','Zusätzliche Informationen');
+define('_US_EDITPROFILE','Profil bearbeiten');
+define('_US_LOGOUT','Abmelden');
+define('_US_INBOX','Posteingang');
+define('_US_MEMBERSINCE','Registriert seit');
+define('_US_RANK','Rang');
+define('_US_POSTS','Kommentare und Beiträge');
+define('_US_LASTLOGIN','Letzte Anmeldung');
+define('_US_ALLABOUT','Alles über %s');
+define('_US_STATISTICS','Statistiken');
+define('_US_MYINFO','Über mich');
+define('_US_BASICINFO','Allgemeine Informationen');
+define('_US_MOREABOUT','Mehr über mich');
+define('_US_SHOWALL','Alles anzeigen');
+
+//%%%%%%		File Name edituser.php 		%%%%%
+define('_US_PROFILE','Profil');
+define('_US_REALNAME','Name');
+define('_US_SHOWSIG','Signatur immer anhängen');
+define('_US_CDISPLAYMODE','Kommentaransicht');
+define('_US_CSORTORDER','Reihenfolge der Kommentare');
+define('_US_PASSWORD','Passwort');
+define('_US_TYPEPASSTWICE','(Neues Passwort zweimal eingeben um es zu ändern)');
+define('_US_SAVECHANGES','Änderungen übernehmen');
+define('_US_NOEDITRIGHT',"Entschuldigung, zum Ändern der Information über diesen Benutzer sind die entsprechenden Rechte erforderlich.");
+define('_US_PASSNOTSAME','Die beiden Passwörter unterscheiden sich. Sie müssen identisch sein.');
+define('_US_PWDTOOSHORT','Die Mindestlänge des Passworts beträgt <b>%s</b> Zeichen.');
+define('_US_PROFUPDATED','Das Profil wurde aktualisiert!');
+define('_US_USECOOKIE','Soll der Benutzername für ein Jahr in einem Cookie gespeichert werden?');
+define('_US_NO','Nein');
+define('_US_DELACCOUNT','Profil löschen');
+define('_US_MYAVATAR', 'Eigenes Profilbild');
+define('_US_UPLOADMYAVATAR', 'Profilbild hochladen');
+define('_US_MAXPIXEL','Erlaubte Pixel');
+define('_US_MAXIMGSZ','Erlaubte Größe des Bildes in Byte');
+define('_US_SELFILE','Datei auswählen');
+define('_US_OLDDELETED','Das alte Profilbild wird gelöscht!');
+define('_US_CHOOSEAVT', 'Ein Profilbild aus der Liste auswählen');
+define('_US_SELECT_THEME', 'voreingestelltes Theme');
+define('_US_SELECT_LANG', 'voreingestellte Sprache');
+
+define('_US_PRESSLOGIN', 'Zur Anmeldung auf die Schaltfläche unten klicken');
+
+define('_US_ADMINNO', 'Benutzer aus der Webmastergruppe können nicht entfernt werden');
+define('_US_GROUPS', 'Gruppen der Benutzers');
+
+define('_US_YOURREGISTRATION', 'Registrierung auf %s');
+define('_US_WELCOMEMSGFAILED', 'Es ist ein Fehler beim Senden der Willkommens-E-Mail aufgetreten.');
+define('_US_NEWUSERNOTIFYADMINFAIL', 'Die Benachrichtigung an den Administrator bezüglicher einer neuen Registrierung konnte nicht versandt werden.');
+define('_US_REGFORM_NOJAVASCRIPT', 'Die Anmeldung ist nur mit aktiviertem JavaScript möglich.');
+define('_US_REGFORM_WARNING', 'Die Registrierung auf der Seite ist nur mit einem sicheren Passwort möglich. Es sollte eine Kombination aus Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen verwendet werden. Das Passwort sollte so komplex wie möglich, aber trotzdem leicht zu merken sein.');
+define('_US_CHANGE_PASSWORD', 'Passwort ändern?');
+define('_US_POSTSNOTENOUGH','Die Verwendung eines eigenen Profilbildes ist erst ab <b>%s</b> Beiträgen möglich.');
+define('_US_UNCHOOSEAVT', 'Bis genügend Beiträge erstellt worden sind kann ein Profilbild aus nachstehender Liste verwendet werden.');
+
+define('_US_ALREADY_LOGED_IN', 'Die Anmeldung ist bereits erfolgt. Als angemeldeter Benutzer ist eine Registrierung als neuer Benutzer nicht möglich.');
+define('_US_SERVER_PROBLEM_OCCURRED','Beim Überprüfen der Spammer liste, ist ein Problem aufgetreten!');
+define('_US_INVALIDIP','ERROR: This IP address is not allowed to register');
+
+######################## Added in 1.2 ###################################
+define('_US_LOGIN_NAME', "Benutzername");
+define('_US_OLD_PASSWORD', "Altes Passwort");
+define('_US_NICKNAME','Pseudonym');
+define('_US_MULTLOGIN', 'Es war nicht möglich, sich auf der Website anzumelden!<br />
+        <p align="left" style="color:red;">
+        Mögliche Ursachen:<br />
+         - Sie sind bereits eingeloggt.<br />
+         - Jemand anderes hat sich mit Ihrem Benutzernamen und Passwort auf der Website eingeloggt.<br />
+         - Sie haben die Seite verlassen oder das Browser-Fenster geschlossen, ohne auf den Logout-Button zu klicken.<br />
+        </p>
+        Warte einige Minuten und versuche es später erneut. Wenn die Probleme weiterhin bestehen, kontaktieren Sie den Administrator.');
+
+######################## Added in 1.3 ###################################
+define('_US_NOTIFICATIONS', "Benachrichtigung");

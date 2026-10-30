@@ -1,0 +1,46 @@
+<?php
+// $Id: comment.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: comment.php 12229 2013-07-19 08:08:05Z fiammy $
+define('_CM_TITLE','タイトル');
+define('_CM_MESSAGE','メッセージ');
+define('_CM_DOSMILEY','アイコン使用');
+define('_CM_DOHTML','HTMLタグ使用可能');
+define('_CM_DOAUTOWRAP','自動ラップ');
+define('_CM_DOXCODE','iCMSコード使用');
+define('_CM_REFRESH','更新');
+define('_CM_PENDING','中止');
+define('_CM_HIDDEN','隠す');
+define('_CM_ACTIVE','アクティブ');
+define('_CM_STATUS','状態');
+define('_CM_POSTCOMMENT','コメント投稿');
+define('_CM_REPLIES','返信');
+define('_CM_PARENT','親');
+define('_CM_TOP','トップ');
+define('_CM_ONLINE','オンライン!');
+define('_CM_POSTED','送信日'); // Posted date
+define('_CM_UPDATED', '更新日');
+define('_CM_THREAD','スレッド');
+define('_CM_POSTER','送信者');
+define('_CM_JOINED','登録済');
+define('_CM_POSTS','投稿数');
+define('_CM_FROM','From');
+define('_CM_COMDELETED', 'コメントは削除されました.');
+define('_CM_COMDELETENG', 'コメント削除できません.');
+define('_CM_DELETESELECT' , 'これに関連するすべてのコメントを削除しますか?');
+define('_CM_DELETEONE' , 'いいえ、このコメントだけ');
+define('_CM_DELETEALL', 'はい、全部');
+define('_CM_THANKSPOST', '投稿ありがとうございます!');
+define('_CM_NOTICE', "コメントの権利は投稿者にあります。私たちは投稿されたコメントに責任を持つことはできません。");
+define('_CM_COMRULES','コメントのルール');
+define('_CM_COMAPPROVEALL','コメントはすべて承認される');
+define('_CM_COMAPPROVEUSER','登録ユーザのコメントはすべて承認される');
+define('_CM_COMAPPROVEADMIN','すべてのコメントは管理者によって承認される');
+define('_CM_COMANONPOST','だれでも自由にコメントできるようにしますか?');
+define('_CM_COMNOCOM','コメント機能を使わない');
+define('_CM_RE','Re');
+############# added since 1.2 #############
+define('_CM_COULDNOTCHANGEPIDTOID', '親IDが <b>%s</b> から <b>%s</b> のコメントを変更することは出来ませんでした. (ID: %s)');
+define('_CM_COULDNOTCHANGEROOTID', 'ルートIDが <b>%s</b> から <b>%s</b>のコメントを変更することは出来ませんでした..');
+define('_CM_COULDNOTCHANGEPAID', '親IDが <b>%s</b> から <b>%s</b>のコメントを変更することは出来ませんでした.');
+define('_CM_COULDNOTUPDATEPOSTS', 'ユーザの投稿を更新することは出来ません.');
+?>

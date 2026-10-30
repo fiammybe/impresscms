@@ -1,0 +1,12 @@
+Sveiki {X_UNAME},
+
+Jūsų naujas paskyra na {SITENAME} buvo atvertas administratoriai.
+
+Jūs galite prisijungti i šios URL įvykdant įvesti pašto, kurį jūs praredėte prisijungimui.
+
+{SITEURL}/user.php
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}

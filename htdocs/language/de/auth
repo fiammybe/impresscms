@@ -1,0 +1,13 @@
+<?php
+// $Id: auth.php 8548 2009-04-11 10:34:21Z icmsunderdog $
+//%%%%%%		File Name auth.php 		%%%%%
+
+define('_AUTH_MSG_AUTH_METHOD',"%s wird als Authentifizierungsmethode genutzt");
+define('_AUTH_LDAP_EXTENSION_NOT_LOAD','Die PHP LDAP Erweiterung ist nicht geladen (Bitte die PHP Konfigurationsdatei php.ini überprüfen)');
+define('_AUTH_LDAP_SERVER_NOT_FOUND',"Konnte nicht zum Server verbinden");
+define('_AUTH_LDAP_USER_NOT_FOUND',"Mitglied %s konnte auf dem Verzeichnisserver (%s) in %s nicht gefunden werden");
+define('_AUTH_LDAP_CANT_READ_ENTRY',"Eintrag %s konnte nicht gelesen werden");
+define('_AUTH_LDAP_XOOPS_USER_NOTFOUND',"Sorry no corresponding user information has been found in the ImpressCMS database for connection: %s <br />" .
+		"Please verify your user datas or set on the automatic provisionning");
+define('_AUTH_LDAP_START_TLS_FAILED',"Es konnte keine TLS Verbindung geöffnet werden");
+?>

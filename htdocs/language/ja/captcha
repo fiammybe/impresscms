@@ -1,0 +1,14 @@
+<?php
+define("ICMS_CAPTCHA_CAPTION", "認証コード");
+define("ICMS_CAPTCHA_INVALID_CODE", "無効な認証コードです！");
+define("ICMS_CAPTCHA_TOOMANYATTEMPTS", "認証有効回数を超えました。");
+define("ICMS_CAPTCHA_MAXATTEMPTS", "最高トライは: %d回です。");
+
+// For image mode
+define("ICMS_CAPTCHA_RULE_CASESENSITIVE", "認証コード");
+define("ICMS_CAPTCHA_RULE_CASEINSENSITIVE", "認証コード");
+define("ICMS_CAPTCHA_REFRESH", "よく読めない場合は画像をクリックし、再描画させてください。");
+
+// For text mode
+define("ICMS_CAPTCHA_RULE_TEXT", "式から結果を入力してください。");
+?>

@@ -1,0 +1,11 @@
+Hallo {FRIEND_NAME},
+
+Je vriend {YOUR_NAME} vond onze site leuk en wilde het aan je tonen.
+
+Site naam: {SITENAME}
+Site URL:  {SITEURL}
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}

@@ -1,0 +1,13 @@
+<?php
+// $Id: auth.php 8548 2009-04-11 10:34:21Z icmsunderdog $
+//%%%%%%		File Name auth.php 		%%%%%
+
+define('_AUTH_MSG_AUTH_METHOD',"%s 権限取得方法");
+define('_AUTH_LDAP_EXTENSION_NOT_LOAD','PHPのLDAP拡張は未ロード (PHPのインストール状態をphp.iniでご確認を)');
+define('_AUTH_LDAP_SERVER_NOT_FOUND',"サーバーに接続できません");
+define('_AUTH_LDAP_USER_NOT_FOUND',"%s さんは、ディレクトリサーバ (%s) （%s内）には登録されていません");
+define('_AUTH_LDAP_CANT_READ_ENTRY',"エントリ %s を読むことができません。");
+define('_AUTH_LDAP_XOOPS_USER_NOTFOUND',"Sorry no corresponding user information has been found in the ImpressCMS database for connection: %s <br />" .
+		"Please verify your user datas or set on the automatic provisionning");
+define('_AUTH_LDAP_START_TLS_FAILED',"TLS接続を開始できませんでした");
+?>

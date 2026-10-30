@@ -1,0 +1,90 @@
+<?php
+// $Id: notification.php 12229 2013-07-19 08:08:05Z fiammy $
+// $Id: notification.php 12229 2013-07-19 08:08:05Z fiammy $
+
+// RMV-NOTIFY
+
+// Text for various templates...
+
+define ('_NOT_NOTIFICATIONOPTIONS', 'Optionen');
+define ('_NOT_UPDATENOW', 'Jetzt aktualisieren');
+define ('_NOT_UPDATEOPTIONS', 'Benachrichtigungsoptionen aktualisieren');
+
+define ('_NOT_CLEAR', 'Löschen');
+define ('_NOT_CHECKALL', 'alle Auswählen');
+define ('_NOT_MODULE', 'Modul');
+define ('_NOT_CATEGORY', 'Kategorie');
+define ('_NOT_ITEMID', 'ID');
+define ('_NOT_ITEMNAME', 'Name');
+define ('_NOT_EVENT', 'Ereignis');
+define ('_NOT_EVENTS', 'Ereignisse');
+define ('_NOT_ACTIVENOTIFICATIONS', 'Benachrichtigungen und Lesezeichen');
+define ('_NOT_NAMENOTAVAILABLE', 'Name nicht verfügbar');
+// RMV-NEW : TODO: remove NAMENOTAVAILBLE above
+define ('_NOT_ITEMNAMENOTAVAILABLE', 'Objektname nicht verfügbar');
+define ('_NOT_ITEMTYPENOTAVAILABLE', 'Objekttyp nicht verfügbar');
+define ('_NOT_ITEMURLNOTAVAILABLE', 'Objekt-URL nicht verfügbar');
+define ('_NOT_DELETINGNOTIFICATIONS', 'Benachrichtigungen löschen');
+define ('_NOT_DELETESUCCESS', 'Benachrichtigung(en) erfolgreich gelöscht.');
+define ('_NOT_UPDATEOK', 'Benachrichtigungsoptionen aktualisiert');
+define ('_NOT_NOTIFICATIONMETHODIS', 'Benachrichtigungsmethode ist');
+define ('_NOT_EMAIL', 'E-Mail');
+define ('_NOT_PM', 'Private Nachricht');
+define ('_NOT_DISABLE', 'Deaktiviert');
+define ('_NOT_CHANGE', 'Ändern');
+
+define ('_NOT_NOACCESS', 'Es fehlen die erforderlichen Rechte um auf diese Seite zuzugreifen.');
+
+// Text for module config options
+
+define ('_NOT_NOTIFICATION', 'Benachrichtigung');
+
+define ('_NOT_CONFIG_ENABLED', 'Benachrichtigung aktivieren');
+define ('_NOT_CONFIG_ENABLEDDSC', 'Dieses Modul ermöglicht es Benutzern über verschiedene Ereignisse benachrichtigt zu werden. "Ja" auswählen um diese Funktion zu aktivieren.');
+
+define ('_NOT_CONFIG_EVENTS', 'Benachrichtigungen aktivieren');
+define ('_NOT_CONFIG_EVENTSDSC', 'Die von Benutzern verwendbaren Benachrichtigungen auswählen.');
+
+define ('_NOT_CONFIG_ENABLE', 'Benachrichtigung aktivieren');
+define ('_NOT_CONFIG_ENABLEDSC', 'Dieses Modul ermöglicht es Benutzern über verschiedene Ereignisse benachrichtigt zu werden. Bitte auswählen, ob den Benutzern die Optionen für Benachrichtigungen in einem Block (Block Stil), innerhalb des Moduls (Inline Stil), oder auf beide Arten angezeigt werden sollen. Für den Block Stil muss der Block für die Benachrichtigungsoptionen in diesem Modul aktiviert sein.');
+define ('_NOT_CONFIG_DISABLE', 'Benachrichtigung deaktivieren');
+define ('_NOT_CONFIG_ENABLEBLOCK', 'Nur den Block Stil aktivieren');
+define ('_NOT_CONFIG_ENABLEINLINE', 'Nur den Inline Stil aktivieren');
+define ('_NOT_CONFIG_ENABLEBOTH', 'Benachrichtigung aktivieren (Beide Arten)');
+
+// For notification about comment events
+
+define ('_NOT_COMMENT_NOTIFY', 'Kommentar hinzugefügt');
+define ('_NOT_COMMENT_NOTIFYCAP', 'Benachrichtigung erhalten wenn ein neuer Kommentar hierzu erstellt wurde.');
+define ('_NOT_COMMENT_NOTIFYDSC', 'Es wird eine Benachrichtigung versandt wenn hierzu ein neuer Kommentar verfasst (oder freigegeben) wurde.');
+define ('_NOT_COMMENT_NOTIFYSBJ', '[{X_SITENAME}] {X_MODULE} Automatische Benachrichtigung: Kommentar zu {X_ITEM_TYPE} veröffentlicht');
+
+define ('_NOT_COMMENTSUBMIT_NOTIFY', 'Kommentar eingesandt');
+define ('_NOT_COMMENTSUBMIT_NOTIFYCAP', 'Benachrichtigung erhalten wenn hierzu ein neuer Kommentar  (der noch auf Freigabe wartet) verfasst wurde.');
+define ('_NOT_COMMENTSUBMIT_NOTIFYDSC', 'Es wird eine Benachrichtigung versandt wenn hierzu ein neuer Kommentar  (der noch auf Freigabe wartet) verfasst wurde.');
+define ('_NOT_COMMENTSUBMIT_NOTIFYSBJ', '[{X_SITENAME}] {X_MODULE} Automatische Benachrichtigung: Kommentar für {X_ITEM_TYPE} wurde eingesandt.');
+
+// For notification bookmark feature
+// (Not really notification, but easy to do with this module)
+
+define ('_NOT_BOOKMARK_NOTIFY', 'Lesezeichen');
+define ('_NOT_BOOKMARK_NOTIFYCAP', 'Lesezeichen setzen (ohne Benachrichtigung).');
+define ('_NOT_BOOKMARK_NOTIFYDSC', 'Dieses Objekt beobachten ohne Benachrichtigungen zu erhalten.');
+
+// For user profile
+// FIXME: These should be reworded a little...
+
+define ('_NOT_NOTIFYMETHOD', 'Art der Benachrichtigung: Wie soll über Aktualisierungen benachrichtigt werden, wenn z. B. ein Forum beobachtet wird?');
+define ('_NOT_METHOD_EMAIL', 'E-Mail (Adresse aus dem Profil benutzen)');
+define ('_NOT_METHOD_PM', 'Private Nachricht');
+define ('_NOT_METHOD_DISABLE', 'Vorübergehend deaktivieren');
+
+define ('_NOT_NOTIFYMODE', 'Voreingestellte Methode zur Benachrichtigung');
+define ('_NOT_MODE_SENDALWAYS', 'Über alle gewählten Aktualisierungen benachrichtigen');
+define ('_NOT_MODE_SENDONCE', 'Nur einmalig benachrichtigen');
+define ('_NOT_MODE_SENDONCEPERLOGIN', 'Bis zur nächsten Anmeldung einmalig benachrichtigen');
+
+define ('_NOT_NOTHINGTODELETE', 'Es gibt nichts zu löschen.');
+
+// Added in 1.3.1
+define("_NOT_RUSUREDEL", "Sollen diese Benachrichtigungen wirklich gelöscht werden?");

@@ -1,0 +1,11 @@
+こんにちは、 {X_UNAME}、
+
+新しいユーザー {USERNAME} (ログイン名: {USERLOGINNAME}) (E-mail address: {USEREMAIL}) が {X_SITENAME} にアカウントを登録しました。
+下のリンクをクリックすると、このユーザーのアカウントが有効になります:
+
+{USERACTLINK}
+
+-----------
+{X_SITENAME} ({X_SITEURL})
+ウェブマスター
+{X_ADMINMAIL}

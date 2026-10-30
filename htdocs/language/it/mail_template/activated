@@ -1,0 +1,12 @@
+Ciao {X_UNAME},
+
+Il tuo nuovo account su {SITENAME} è stato attivato dall'amministratore.
+
+È ora possibile effettuare il login dal seguente URL con la password fornita al momento della registrazione.
+
+{SITEURL}/user.php
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}

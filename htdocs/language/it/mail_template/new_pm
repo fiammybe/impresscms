@@ -1,0 +1,21 @@
+Ciao {X_UNAME},
+
+"{X_FROMUNAME}" ti ha appena inviato un Messaggio Privato :
+
+OGGETTO : {X_SUBJECT}
+
+{X_MESSAGE}
+
+-----------
+Fare clic sul seguente link per visualizzare, rispondere o eliminare questo messaggio :
+{X_ITEM_URL}
+
+-----------
+
+Hai ricevuto questa notifica perché hai selezionato il metodo di notifica via email.
+
+Non rispondere a questo messaggio.
+
+-----------
+{X_SITENAME} ({X_SITEURL})
+{X_ADMINMAIL}

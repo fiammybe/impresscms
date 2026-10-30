@@ -1,0 +1,63 @@
+<?php
+/**
+ * Core constants
+ *
+ * This file has all core errors and warning constants.
+ *
+ * @copyright	The ImpressCMS Project http://www.impresscms.org/
+ * @license		http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public License (GPL)
+ * @package		languages
+ * @since		1.2
+ * @author	    Sina Asghari (aka stranger) <pesian_stranger@users.sourceforge.net>
+ * @version		$Id
+ */
+
+define('_CORE_MEMORYUSAGE', 'Speichernutzung (PHP memory)');
+define('_CORE_BYTES', 'Byte');
+define('_CORE_KILOBYTES', 'Kilobyte');
+define('_CORE_MEGABYTES', 'Megabyte');
+define('_CORE_GIGABYTES', 'Gigabyte');
+define('_CORE_KILOBYTES_SHORTEN', 'kB');
+define('_CORE_MEGABYTES_SHORTEN', 'MB');
+define('_CORE_GIGABYTES_SHORTEN', 'GB');
+define('_CORE_MODULEHANDLER_NOTAVAILABLE', 'Handler existiert nicht<br />Modul: %s<br />Name: %s');
+define('_CORE_COREHANDLER_NOTAVAILABLE', 'Klasse <b>%s</b> nicht vorhanden<br />Handler Name: %s');
+define('_CORE_NOMODULE', 'Es ist kein Modul geladen');
+define('_CORE_PAGENOTDISPLAYED', 'Diese Seite kann aufgrund eines internen Fehlers nicht angezeigt werden.<br/><br/>Bitte folgende Information an den Administrator der Webseite senden um das Problem zu lösen:<br /><br />FEHLER: %s<br />');
+define('_CORE_TOKEN', 'XOOPS_TOKEN');
+define('_CORE_TOKENVALID', 'Token-Validierung');
+define('_CORE_TOKENNOVALID', 'Keine gültige Token-Validierung in der Session oder Anfrage gefunden');
+define('_CORE_TOKENINVALID', 'Keine gültige Token-Validierung in der Session oder Anfrage gefunden');
+define('_CORE_TOKENISVALID', 'Gültiges Token gefunden');
+define('_CORE_TOKENEXPIRED', 'Token-Validierung abgelaufen');
+define('_CORE_CLASSNOTINSTANIATED', 'Diese Klasse kann nicht instanziiert werden!');
+define('_CORE_DB_NOTRACE', 'Die notrace:mysql Erweiterung ist nicht geladen');
+define('_CORE_DB_NOTALLOWEDINGET', 'Während einer GET-Anfrage sind Aktualisierungen der Datenbank nicht erlaubt');
+define('_CORE_DB_NOTRACEDB', 'notrace:Konnte nicht zur Datenbank verbinden');
+define('_CORE_DB_INVALIDEMAIL', 'E-Mail Adresse ungültig');
+define('_CORE_PASSLEVEL1','Zu kurz');
+define('_CORE_PASSLEVEL2','Schwach');
+define('_CORE_PASSLEVEL3','Gut');
+define('_CORE_PASSLEVEL4','Streng');
+define('_CORE_UNAMEPASS_IDENTIC','Benutzername und Kennwort sind identisch.');
+
+/* Added in 1.3 */
+
+define('_CORE_CHECKSUM_FILES_ADDED',' Dateien wurden hinzugefügt');
+define('_CORE_CHECKSUM_FILES_REMOVED',' Dateien wurden entfernt');
+define('_CORE_CHECKSUM_ALTERED_REMOVED',' Dateien wurden verändert oder gelöscht');
+define('_CORE_CHECKSUM_CHECKFILE','Prüfung anhand der Datei');
+define('_CORE_CHECKSUM_PERMISSIONS_ALTERED',' Dateien wurden verändert oder gelöscht');
+define('_CORE_CHECKSUM_CHECKFILE_UNREADABLE', 'Die Datei, welche die die Prüfsummen enthält, ist nicht verfügbar oder kann nicht gelesen werden. Die Überprüfung konnte nicht abgeschlossen werden');
+define('_CORE_CHECKSUM_ADDING','Füge hinzu');
+define('_CORE_CHECKSUM_CHECKSUM','Prüfsumme');
+define('_CORE_CHECKSUM_PERMISSIONS',' Berechtigungen');
+
+define('_CORE_DEPRECATED', 'Veraltet');
+define('_CORE_DEPRECATED_REPLACEMENT', 'stattdessen %s nutzen');
+define('_CORE_DEPRECATED_CALLSTACK', '<br />Call Stack: <br />');
+define('_CORE_DEPRECATED_MSG', '%s in %s, Linie %u <br />');
+define('_CORE_DEPRECATED_CALLEDBY', 'Aufgerufen durch: ');
+define('_CORE_REMOVE_IN_VERSION', 'Dies wird in Version %s entfernt');
+define('_CORE_DEBUG', 'Fehlersuche');
+define('_CORE_DEVELOPER_DASHBOARD', 'Entwickler-Übersicht');

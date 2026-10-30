@@ -1,0 +1,10 @@
+Ciao {X_UNAME},
+
+La tua password per {SITENAME} è stata ripristinata con successo.
+
+Se non hai chiesto questo, contatta un amministratore che li informi di questa richiesta.
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}

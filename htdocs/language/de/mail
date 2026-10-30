@@ -1,0 +1,8 @@
+<?php
+define("_MAIL_MSGBODY", "Der Inhalt der Nachricht fehlt.");
+define("_MAIL_FAILOPTPL", "Vorlagendatei konnte nicht geöffnet werden.");
+define("_MAIL_SENDMAILNG", "An %s konnte keine E-Mail versandt werden.");
+define("_MAIL_MAILGOOD", "E-Mail wurde an %s versandt.");
+define("_MAIL_SENDPMNG", "An %s konnte keine private Nachricht versandt werden.");
+define("_MAIL_PMGOOD", "Private Nachricht an %s wurde versandt.");
+?>

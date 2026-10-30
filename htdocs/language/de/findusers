@@ -1,0 +1,65 @@
+<?php
+// formselectuser.php
+
+define("_MA_USER_MORE", "Benutzer suchen");
+define("_MA_USER_REMOVE", "Nicht ausgewählte Benutzer entfernen");
+
+//%%%%%%	File Name findusers.php 	%%%%%
+define("_MA_USER_ADD_SELECTED", "Ausgewählte Benutzer hinzufügen");
+
+define("_MA_USER_GROUP", "Gruppe");
+define("_MA_USER_LEVEL", "Level");
+define("_MA_USER_LEVEL_ACTIVE", "Aktiv");
+define("_MA_USER_LEVEL_INACTIVE", "Inaktiv");
+define("_MA_USER_LEVEL_DISABLED", "Ausgeschaltet");
+define("_MA_USER_RANK", "Rang");
+
+define("_MA_USER_FINDUS","Benutzer finden");
+define("_MA_USER_REALNAME","Name");
+define("_MA_USER_REGDATE","Datum der Registrierung");
+define("_MA_USER_EMAIL","E-Mail");
+define("_MA_USER_PREVIOUS","Zurück");
+define("_MA_USER_NEXT","Weiter");
+define("_MA_USER_USERSFOUND","%s Benutzer wurde gefunden");
+
+define("_MA_USER_ACTUS", "Aktive Benutzer: %s");
+define("_MA_USER_INACTUS", "Inaktive Benutzer: %s");
+define("_MA_USER_NOFOUND","Keine Benutzer gefunden");
+define("_MA_USER_UNAME","Benutzername");
+define("_MA_USER_ICQ","ICQ Nummer");
+define("_MA_USER_AIM","AIM Benutzerkennung");
+define("_MA_USER_YIM","YIM Messenger");
+define("_MA_USER_MSNM","MSNM Messenger");
+define("_MA_USER_LOCATION","Wohnort enthält");
+define("_MA_USER_OCCUPATION","Beruf enthält");
+define("_MA_USER_INTEREST","Interesse enthält");
+define("_MA_USER_URLC","URL enthält");
+define("_MA_USER_SORT","Sortiert nach");
+define("_MA_USER_ORDER","Reihenfolge");
+define("_MA_USER_LASTLOGIN","Letzte Anmeldung");
+define("_MA_USER_POSTS","Anzahl der Beiträge");
+define("_MA_USER_ASC","Aufsteigende Reihenfolge");
+define("_MA_USER_DESC","Absteigende Reihenfolge");
+define("_MA_USER_LIMIT","Anzahl der Benutzer pro Seite");
+define("_MA_USER_RESULTS", "Ergebnis der Suche");
+define("_MA_USER_SHOWMAILOK", "Art der anzuzeigenden Benutzer");
+define("_MA_USER_MAILOK","Nur Benutzer die E-Mails zugestimmt haben");
+define("_MA_USER_MAILNG","Nur Benutzer die E-Mails nicht zugestimmt haben");
+define("_MA_USER_BOTH", "Alle");
+
+define("_MA_USER_RANGE_LAST_LOGIN","Anmeldung in den letzten <span style=\"color:#ff0000;\">X</span> Tagen");
+define("_MA_USER_RANGE_USER_REGDATE","Registrierung in den letzten <span style='color:#ff0000;'>X</span> Tagen");
+define("_MA_USER_RANGE_POSTS","Beiträge");
+
+define("_MA_USER_HASAVATAR", "Nutzt ein Profilbild");
+define("_MA_USER_MODE_SIMPLE", "Einfacher Modus");
+define("_MA_USER_MODE_ADVANCED", "Erweiterter Modus");
+define("_MA_USER_MODE_QUERY", "Art der Abfrage");
+define("_MA_USER_QUERY", "Abfrage");
+
+define("_MA_USER_SEARCHAGAIN", "Neue Suche");
+define("_MA_USER_NOUSERSELECTED", "Kein Benutzer ausgewählt");
+define("_MA_USER_USERADDED", "Benutzer wurden hinzugefügt");
+
+define("_MA_USER_SENDMAIL","E-Mail versenden");
+?>

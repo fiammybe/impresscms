@@ -1,0 +1,10 @@
+Hallo {X_UNAME},
+
+Uw wachtwoord voor {SITENAME} is met succes gereset.
+
+Als u hier niet om heeft gevraagd, informer een beheerder over dit verzoek.
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}

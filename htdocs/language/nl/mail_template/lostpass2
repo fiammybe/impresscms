@@ -1,0 +1,15 @@
+Hallo {X_UNAME},
+
+Iemand vanop {IP} heeft zojuist een nieuw wachtwoord aangevraagd.
+Hier zijn uw inloggegevens op {SITENAME}.
+
+Gebruikersnaam: {X_USERLOGINNAME}
+Nieuw wachtwoord: {NEWPWD}
+
+Je kunt het wijzigen nadat je op {SITEURL}/user.php bent ingelogd.
+Als u hier niet om hebt gevraagd, maakt u zich geen zorgen. U ziet deze boodschap en niet "zij”. Als dit een fout was, dan spijt het ons ten zeerste maar log alstublieft in met uw nieuwe wachtwoord.
+
+-----------
+{SITENAME} ({SITEURL}) 
+webmaster
+{ADMINMAIL}

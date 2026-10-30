@@ -1,0 +1,12 @@
+Welkom {UNAME},
+
+Uw account is succesvol geactiveerd op {X_SITENAME}. Als lid van onze site profiteert u van alle functies die voorbehouden zijn aan geregistreerde leden!
+
+Nogmaals, welkom op onze site. Bezoek ons vaak!
+
+Als je je niet op onze site hebt geregistreerd, neem dan contact met ons op via het volgende adres {X_ADMINMAIL} en we zullen de situatie oplossen.
+
+-----------
+Vriendelijke groeten,
+{X_SITENAME}
+{X_SITEURL}
