@@ -207,6 +207,10 @@ function redirect_header($url, $time = 3, $message = '', $addredirect = true, $a
 	$xoopsThemeFactory->defaultTheme = $theme;
 	$icmsTheme = $xoTheme =& $xoopsThemeFactory->createInstance(array("plugins" => array()));
 	$xoopsTpl = $icmsTpl =& $xoTheme->template;
+	$GLOBALS['icmsTheme'] =& $icmsTheme;
+	$GLOBALS['xoTheme'] =& $xoTheme;
+	$GLOBALS['xoopsTpl'] =& $xoopsTpl;
+	$GLOBALS['icmsTpl'] =& $icmsTpl;
 
     if($icmsConfig['debug_mode'] == 2 && is_object(icms::$user) &&  icms::$user->isAdmin())
 	{

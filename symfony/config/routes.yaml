@@ -1,0 +1,7 @@
+migration_status:
+    path: /__migration/status
+    controller: App\Controller\MigrationStatusController
+
+symfony_health:
+    path: /__symfony/health
+    controller: App\Controller\MigrationStatusController

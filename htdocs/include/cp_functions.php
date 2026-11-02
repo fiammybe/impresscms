@@ -104,6 +104,9 @@ function icms_cp_header() {
 		'plugins' => array('icms_view_PageBuilder'),
 		'folderName' => $icmsConfig['theme_admin_set']));
 	$icmsAdminTpl = $xoTheme->template;
+	$GLOBALS['icmsTheme'] =& $icmsTheme;
+	$GLOBALS['xoTheme'] =& $xoTheme;
+	$GLOBALS['icmsAdminTpl'] =& $icmsAdminTpl;
 
 	// ################# Preload Trigger startOutputInit ##############
 	icms::$preload->triggerEvent('adminHeader');
