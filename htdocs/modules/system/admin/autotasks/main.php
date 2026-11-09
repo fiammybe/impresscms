@@ -29,13 +29,13 @@ function editautotasks($showmenu = FALSE, $autotasksid = 0, $clone = FALSE) {
 
 	if (!$clone && !$autotasksObj->isNew()) {
 
-		$sform = $autotasksObj->getForm(_CO_ICMS_AUTOTASKS_EDIT, 'addautotasks');
+		$sform = $autotasksObj->getSecureForm(_CO_ICMS_AUTOTASKS_EDIT, 'addautotasks');
 		$sform->assign($icmsAdminTpl);
 		$icmsAdminTpl->display('db:system_adm_autotasks.html');
 	} else {
 		$autotasksObj->setVar('sat_id', 0);
 
-		$sform = $autotasksObj->getForm(_CO_ICMS_AUTOTASKS_CREATE, 'addautotasks');
+		$sform = $autotasksObj->getSecureForm(_CO_ICMS_AUTOTASKS_CREATE, 'addautotasks');
 		$sform->assign($icmsAdminTpl);
 		$icmsAdminTpl->display('db:system_adm_autotasks.html');
 	}
@@ -68,6 +68,10 @@ switch ($op) {
 		break;
 
 	case "addautotasks":
+		if (!icms::$security->check()) {
+			redirect_header('admin.php?fct=autotasks', 3, implode('<br />', icms::$security->getErrors()));
+		}
+
 		global $icms_autotasks_handler;
 		$controller = new icms_ipf_Controller($icms_autotasks_handler);
 		$controller->storeFromDefaultForm(_CO_ICMS_AUTOTASKS_CREATED, _CO_ICMS_AUTOTASKS_MODIFIED, ICMS_URL . '/modules/system/admin.php?fct=autotasks');

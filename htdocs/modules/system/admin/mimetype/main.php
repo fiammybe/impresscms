@@ -27,7 +27,7 @@ function editmimetype($showmenu = FALSE, $mimetypeid = 0) {
 	$mimetypeObj = $icms_mimetype_handler->get($mimetypeid);
 
 	if (!$mimetypeObj->isNew()) {
-		$sform = $mimetypeObj->getForm(_CO_ICMS_MIMETYPE_EDIT, 'addmimetype');
+		$sform = $mimetypeObj->getSecureForm(_CO_ICMS_MIMETYPE_EDIT, 'addmimetype');
 		$sform->assign($icmsAdminTpl);
 
 		$icmsAdminTpl->assign('icms_mimetype_title', _CO_ICMS_MIMETYPE_EDIT_INFO);
@@ -36,7 +36,7 @@ function editmimetype($showmenu = FALSE, $mimetypeid = 0) {
 		$mimetypeObj->setVar('mimetypeid', 0);
 		$mimetypeObj->setVar('extension', '');
 
-		$sform = $mimetypeObj->getForm(_CO_ICMS_MIMETYPE_CREATE, 'addmimetype');
+		$sform = $mimetypeObj->getSecureForm(_CO_ICMS_MIMETYPE_CREATE, 'addmimetype');
 		$sform->assign($icmsAdminTpl);
 
 		$icmsAdminTpl->assign('icms_mimetype_title', _CO_ICMS_MIMETYPE_CREATE_INFO);
@@ -83,6 +83,10 @@ switch ($op) {
 		break;
 
 	case "addmimetype":
+		if (!icms::$security->check()) {
+			redirect_header('admin.php?fct=mimetype', 3, implode('<br />', icms::$security->getErrors()));
+		}
+
 		global $icms_mimetype_handler;
 		$controller = new icms_ipf_Controller($icms_mimetype_handler);
 		$controller->storeFromDefaultForm(_CO_ICMS_MIMETYPE_CREATED, _CO_ICMS_MIMETYPE_MODIFIED);

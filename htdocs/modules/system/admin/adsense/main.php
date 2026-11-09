@@ -27,14 +27,14 @@ function editadsense($showmenu = FALSE, $adsenseid = 0, $clone = FALSE) {
 	$adsenseObj = $icms_adsense_handler->get($adsenseid);
 
 	if (!$clone && !$adsenseObj->isNew()) {
-		$sform = $adsenseObj->getForm(_CO_ICMS_ADSENSES_EDIT, 'addadsense');
+		$sform = $adsenseObj->getSecureForm(_CO_ICMS_ADSENSES_EDIT, 'addadsense');
 		$sform->assign($icmsAdminTpl);
 		$icmsAdminTpl->assign('icms_adsense_title', _CO_ICMS_ADSENSES_EDIT_INFO);
 		$icmsAdminTpl->display('db:system_adm_adsense.html');
 	} else {
 		$adsenseObj->setVar('adsenseid', 0);
 		$adsenseObj->setVar('tag', '');
-		$sform = $adsenseObj->getForm(_CO_ICMS_ADSENSES_CREATE, 'addadsense');
+		$sform = $adsenseObj->getSecureForm(_CO_ICMS_ADSENSES_CREATE, 'addadsense');
 		$sform->assign($icmsAdminTpl);
 		$icmsAdminTpl->assign('icms_adsense_title', _CO_ICMS_ADSENSES_CREATE_INFO);
 		$icmsAdminTpl->display('db:system_adm_adsense.html');
@@ -85,6 +85,10 @@ switch ($op) {
 		break;
 
 	case "addadsense":
+		if (!icms::$security->check()) {
+			redirect_header('admin.php?fct=adsense', 3, implode('<br />', icms::$security->getErrors()));
+		}
+
 		global $icms_adsense_handler;
 		$controller = new icms_ipf_Controller($icms_adsense_handler);
 		$controller->storeFromDefaultForm(_CO_ICMS_ADSENSES_CREATED, _CO_ICMS_ADSENSES_MODIFIED);

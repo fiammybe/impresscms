@@ -48,7 +48,7 @@ function editcustomtag($customtagid = 0, $clone = FALSE) {
 	}
 
 	if (!$clone && !$customtagObj->isNew()) {
-		$sform = $customtagObj->getForm(_CO_ICMS_CUSTOMTAG_EDIT, "addcustomtag");
+		$sform = $customtagObj->getSecureForm(_CO_ICMS_CUSTOMTAG_EDIT, "addcustomtag");
 		$sform->assign($icmsAdminTpl);
 		$icmsAdminTpl->assign("icms_custom_tag_title", _CO_ICMS_CUSTOMTAG_EDIT_INFO);
 		$icmsAdminTpl->display("db:system_adm_customtag.html");
@@ -56,7 +56,7 @@ function editcustomtag($customtagid = 0, $clone = FALSE) {
 		$customtagObj->setVar("customtagid", 0);
 		$customtagObj->setVar("tag", "");
 
-		$sform = $customtagObj->getForm(_CO_ICMS_CUSTOMTAG_CREATE, "addcustomtag");
+		$sform = $customtagObj->getSecureForm(_CO_ICMS_CUSTOMTAG_CREATE, "addcustomtag");
 		$sform->assign($icmsAdminTpl);
 
 		$icmsAdminTpl->assign("icms_custom_tag_title", _CO_ICMS_CUSTOMTAG_CREATE_INFO);
@@ -113,6 +113,10 @@ if (in_array($clean_op, $valid_op, TRUE)) {
 			break;
 
 		case "addcustomtag":
+			if (!icms::$security->check()) {
+				redirect_header('admin.php?fct=customtag', 3, implode('<br />', icms::$security->getErrors()));
+			}
+
 			global $icms_customtag_handler;
 			$controller = new icms_ipf_Controller($icms_customtag_handler);
 			$controller->storeFromDefaultForm(_CO_ICMS_CUSTOMTAG_CREATED, _CO_ICMS_CUSTOMTAG_MODIFIED);

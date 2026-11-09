@@ -28,11 +28,11 @@ function editblockposition($id = 0) {
 	$blockObj = $icms_blockposition_handler->get($id);
 
 	if (!$blockObj->isNew()) {
-		$sform = $blockObj->getForm(_AM_SYSTEM_BLOCKSPADMIN_EDIT, 'addblockposition');
+		$sform = $blockObj->getSecureForm(_AM_SYSTEM_BLOCKSPADMIN_EDIT, 'addblockposition');
 		$sform->assign($icmsAdminTpl);
 
 	} else {
-		$sform = $blockObj->getForm(_AM_SYSTEM_BLOCKSPADMIN_CREATE, 'addblockposition');
+		$sform = $blockObj->getSecureForm(_AM_SYSTEM_BLOCKSPADMIN_CREATE, 'addblockposition');
 		$sform->assign($icmsAdminTpl);
 
 	}
@@ -66,6 +66,10 @@ if (in_array($clean_op, $valid_op, TRUE)) {
 			break;
 
 		case "addblockposition":
+			if (!icms::$security->check()) {
+				redirect_header('admin.php?fct=blockspadmin', 3, implode('<br />', icms::$security->getErrors()));
+			}
+
 			global $icms_blockposition_handler;
 			$controller = new icms_ipf_Controller($icms_blockposition_handler);
 			$controller->storeFromDefaultForm(_AM_SYSTEM_BLOCKSPADMIN_CREATED, _AM_SYSTEM_BLOCKSPADMIN_MODIFIED);

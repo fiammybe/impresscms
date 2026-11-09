@@ -52,6 +52,9 @@ class icms_core_Security {
 
 	public $errors = array();
 
+	/** @var array<string, string> */
+	private $linkTokens = array();
+
 	/**
 	 * Initialize the icms::$security service
 	 */
@@ -106,6 +109,24 @@ class icms_core_Security {
 		$token_data = array('id' => $token_id, 'expire' => time() + (int) ($timeout));
 		array_push($_SESSION[$name . '_SESSION'], $token_data);
 		return md5($token_id.$_SERVER['HTTP_USER_AGENT'].XOOPS_DB_PREFIX);
+	}
+
+	/**
+	 * Get a query string parameter carrying a token, for links that change state
+	 *
+	 * The token is created once per request so every link on a page can share it.
+	 * Validate it with check(false), so using one link does not invalidate the others.
+	 *
+	 * @param string $name session name
+	 *
+	 * @return string name=value pair, ready to append to a query string
+	 */
+	public function getTokenQueryParameter($name = _CORE_TOKEN) {
+		if (!isset($this->linkTokens[$name])) {
+			$this->linkTokens[$name] = $this->createToken(0, $name);
+		}
+
+		return "{$name}_REQUEST={$this->linkTokens[$name]}";
 	}
 
 	/**
@@ -181,24 +202,92 @@ class icms_core_Security {
 		}
 	}
 	/**
-	 * Check the user agent's HTTP REFERER against ICMS_URL
+	 * Check that the user agent's HTTP REFERER has the same origin (scheme, host and port) as ICMS_URL
 	 *
 	 * @param int $docheck 0 to not check the referer (used with XML-RPC), 1 to actively check it
 	 *
 	 * @return bool
 	 **/
 	public function checkReferer($docheck = 1) {
-		$ref = xoops_getenv('HTTP_REFERER');
 		if ($docheck == 0) {
 			return true;
 		}
-		if ($ref == '') {
+
+		$ref = (string) xoops_getenv('HTTP_REFERER');
+		if ($ref === '') {
 			return false;
 		}
-		if (strpos($ref, ICMS_URL) !== 0 ) {
+
+		$refererOrigin = $this->getOrigin($ref);
+		if ($refererOrigin === null) {
 			return false;
 		}
-		return true;
+
+		return $refererOrigin === $this->getOrigin(ICMS_URL);
+	}
+
+	/**
+	 * Check that a redirect target stays on this site: a relative URL, or an http(s) URL on the host of ICMS_URL
+	 *
+	 * Browsers ignore tabs and newlines in URLs and treat backslashes as slashes, so
+	 * the check runs on a normalized copy to catch targets like "/\evil.com".
+	 *
+	 * @param string $url
+	 *
+	 * @return bool
+	 */
+	public static function isLocalUrl($url) {
+		$normalizedUrl = str_replace('\\', '/', preg_replace('/[\x00-\x20]/', '', (string) $url));
+		if (substr($normalizedUrl, 0, 2) === '//') {
+			$normalizedUrl = "http:{$normalizedUrl}";
+		}
+
+		$parts = parse_url($normalizedUrl);
+		if ($parts === false) {
+			return false;
+		}
+
+		if (!isset($parts['scheme'])) {
+			return true;
+		}
+
+		if (!in_array(strtolower($parts['scheme']), array('http', 'https'), true)) {
+			return false;
+		}
+
+		if (!isset($parts['host'])) {
+			return false;
+		}
+
+		return strtolower($parts['host']) === strtolower((string) parse_url(ICMS_URL, PHP_URL_HOST));
+	}
+
+	/**
+	 * Normalize a URL to its scheme://host:port origin
+	 *
+	 * @param string $url
+	 *
+	 * @return string|null null when the URL has no scheme or host
+	 */
+	private function getOrigin($url) {
+		$parts = parse_url($url);
+		if ($parts === false) {
+			return null;
+		}
+
+		if (!isset($parts['scheme'])) {
+			return null;
+		}
+
+		if (!isset($parts['host'])) {
+			return null;
+		}
+
+		$scheme = strtolower($parts['scheme']);
+		$host = strtolower($parts['host']);
+		$port = isset($parts['port']) ? $parts['port'] : ($scheme === 'https' ? 443 : 80);
+
+		return "{$scheme}://{$host}:{$port}";
 	}
 
 	/**

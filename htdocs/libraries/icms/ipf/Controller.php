@@ -346,6 +346,11 @@ class icms_ipf_Controller {
 
 		$confirm = ( isset($_POST['confirm']) ) ? $_POST['confirm'] : 0;
 		if ($confirm) {
+			if (!icms::$security->check()) {
+				redirect_header(icms::$urls['previouspage'], 3, implode('<br />', icms::$security->getErrors()));
+				exit();
+			}
+
 			if (!$this->handler->delete($icmsObj)) {
 				redirect_header($_POST['redirect_page'], 3, _CO_ICMS_DELETE_ERROR . $icmsObj->getHtmlErrors());
 				exit;
@@ -397,6 +402,11 @@ class icms_ipf_Controller {
 
 		$confirm = ( isset($_POST['confirm']) ) ? $_POST['confirm'] : 0;
 		if ($confirm) {
+			if (!icms::$security->check()) {
+				redirect_header(icms::$urls['previouspage'], 3, implode('<br />', icms::$security->getErrors()));
+				exit();
+			}
+
 			if (!$this->handler->delete($icmsObj)) {
 				redirect_header($_POST['redirect_page'], 3, _CO_ICMS_DELETE_ERROR . $icmsObj->getHtmlErrors());
 				exit;
