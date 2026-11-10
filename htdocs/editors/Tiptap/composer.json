@@ -1,0 +1,13 @@
+{
+    "name": "impresscms/editor-tiptap",
+    "description": "Tiptap editor integration for ImpressCMS",
+    "license": "GPL-2.0-or-later",
+    "type": "project",
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ueberdosis/tiptap-php": "1.4.0"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
