@@ -57,9 +57,14 @@ class icms_data_urllink_Object extends icms_ipf_Object {
 	 * @return string html
 	 */
 	public function render() {
-		$ret  = "<a href='" . $this->getVar("url") . "' target='" . $this->getVar("target") . "' ";
-		$ret .= "title='" . $this->getVar("description") . "'>";
-		$ret .= $this->getVar("caption") . "</a>";
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
+			'url' => $this->getVar("url"),
+			'target' => $this->getVar("target"),
+			'title' => $this->getVar("description"),
+			'caption' => $this->getVar("caption")
+		));
+		$ret = trim($tpl->fetch('db:icms_data_urllink_link.html'));
 		return $ret;
 	}
 }

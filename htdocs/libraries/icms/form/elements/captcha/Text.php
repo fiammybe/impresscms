@@ -78,7 +78,7 @@ class icms_form_elements_captcha_Text {
 			. "' value='' />";
 		$rule = constant("ICMS_CAPTCHA_RULE_TEXT");
 		if (!empty($rule)) {
-			$form .= "&nbsp;&nbsp;<small>{$rule}</small>";
+			$form .= $this->renderHint($rule);
 		}
 
 		$this->setCode();
@@ -101,7 +101,20 @@ class icms_form_elements_captcha_Text {
 			$this->code = $val_a + $val_b;
 		}
 
-		return "<span style='font-style: normal; font-weight: bold; font-size: 100%; font-color: #333; border: 1px solid #333; padding: 1px 5px;'>{$expression}</span>";
+		$tpl = new icms_view_Tpl();
+		$tpl->assign('expression', $expression);
+		return trim($tpl->fetch('db:icms_form_elements_captcha_expression.html'));
 	}
 
+	/**
+	 * Renders the hint text next to the captcha field
+	 *
+	 * @param	string	$rule
+	 * @return	string
+	 */
+	private function renderHint($rule) {
+		$tpl = new icms_view_Tpl();
+		$tpl->assign('rule', $rule);
+		return $tpl->fetch('db:icms_form_elements_captcha_hint.html');
+	}
 }

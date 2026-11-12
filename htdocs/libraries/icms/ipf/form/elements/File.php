@@ -36,16 +36,18 @@ class icms_ipf_form_elements_File extends icms_form_elements_File {
 	 * @return	string	$ret  the constructed HTML
 	 */
 	public function render() {
-		$ret = '';
-		if ($this->_object->getVar($this->_key) != '') {
-			$ret .=	"<div>" . _CO_ICMS_CURRENT_FILE
-				. "<a href='" . $this->_object->getUploadDir() . $this->_object->getVar($this->_key)
-				. "' target='_blank' >". $this->_object->getVar($this->_key) . "</a></div>" ;
-		}
-
-		$ret .= "<div><input type='hidden' name='MAX_FILE_SIZE' value='" . $this->getMaxFileSize() . "' />
-		        <input type='file' name='" . $this->getName() . "' id='" . $this->getName() . "'" . $this->getExtra() . " />
-		        <input type='hidden' name='icms_upload_file[]' id='icms_upload_file[]' value='" . $this->getName() . "' /></div>";
+		$tpl = new icms_view_Tpl();
+		$current = $this->_object->getVar($this->_key);
+		$tpl->assign(array(
+			'has_file' => ($current != ''),
+			'current_file_label' => _CO_ICMS_CURRENT_FILE,
+			'file_url' => $this->_object->getUploadDir() . $current,
+			'file_name' => $current,
+			'max_file_size' => $this->getMaxFileSize(),
+			'ele_name' => $this->getName(),
+			'ele_extra' => $this->getExtra()
+		));
+		$ret = $tpl->fetch('db:icms_ipf_form_elements_file_display.html');
 
 		return $ret;
 	}
