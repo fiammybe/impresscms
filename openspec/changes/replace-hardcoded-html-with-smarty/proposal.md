@@ -25,14 +25,13 @@ Initial hotspot ranking (lines containing HTML tags, indicative only — the inv
 
 | Priority | File | ~HTML lines |
 |---|---|---|
-| High | `core/Logger_render.php` | 59 |
 | High | `form/elements/Dhtmltextarea.php` | 31 |
 | High | `view/PageNav.php` | 27 |
 | High | `ipf/Controller.php` | 23 |
 | High | `member/user/Handler.php` | 22 |
 | Medium | `view/theme/Object.php`, `core/Message.php`, `core/Filesystem.php`, `form/Base.php`, `ipf/form/Base.php`, `form/Theme.php`, `data/page/Handler.php`, `data/comment/Renderer.php`, `view/PageBuilder.php`, `ipf/form/elements/Page.php`, `form/Table.php`, `form/elements/Groupperm.php` | 11–20 each |
 | Low | remaining `form/elements/**`, `ipf/form/elements/**`, `view/Tree.php`, `ipf/Tree.php`, `view/block/*`, `file/MediaUploadHandler.php`, etc. | 1–10 each |
-| Keep (candidate) | `core/DataFilter.php` (HTML *filtering/sanitising*, not rendering), `core/Textsanitizer.php`, `core/Debug.php`, `core/StopSpammer.php` | n/a |
+| Keep | `core/Logger.php`, `core/Logger_render.php` (out of scope, dev-only), `core/DataFilter.php` (HTML *filtering/sanitising*, not rendering), `core/Textsanitizer.php`, `core/Debug.php`, `core/StopSpammer.php` | n/a |
 
 ## Impact
 - Affected spec: `library-templating` (new capability).
@@ -43,3 +42,4 @@ Initial hotspot ranking (lines containing HTML tags, indicative only — the inv
   stay the same; only the internal construction changes. Template names become a new public
   extension point and must be documented.
 - Requires template installation/update during module (system) update — see `tasks.md` §6.
+- Templates are written for Smarty 2.6.31 (bundled with ImpressCMS 2.0.4) and stored in `htdocs/modules/system/templates/`.

@@ -1,7 +1,7 @@
 ## 0. Inventory
 - [ ] 0.1 Write `bin/find-hardcoded-html.php` (token-based, per design Decision 1)
 - [ ] 0.2 Generate `inventory.md` (file, method, tag count, classification, rationale)
-- [ ] 0.3 Review inventory with maintainers; settle Keep/Asset decisions and the Open Questions in design.md
+- [ ] 0.3 Review inventory with maintainers; settle Keep/Asset decisions
 - [ ] 0.4 Capture golden HTML outputs for all Migrate classes (parity baseline)
 
 ## 1. Forms (`form/**`, `ipf/form/**`)
@@ -19,7 +19,7 @@
 - [ ] 3.1 `ipf/Controller`, `ipf/Object`, `ipf/Highlighter`, `ipf/view/Table`
 
 ## 4. Core / data / member
-- [ ] 4.1 `core/Message`, `core/Filesystem`, `core/Logger` + `Logger_render` (decide scope), `core/StopSpammer`
+- [ ] 4.1 `core/Message`, `core/Filesystem`, `core/StopSpammer`
 - [ ] 4.2 `member/user/Handler`, `data/page/Handler`, `data/comment/Renderer`, `module/Object`, `module/Handler`
 - [ ] 4.3 `file/MediaUploadHandler`, `messaging/*`
 
@@ -29,7 +29,7 @@
 - [ ] 5.3 Document in contributor guide
 
 ## 6. Templates, upgrade & docs
-- [ ] 6.1 Register new templates in `modules/system/xoops_version.php` (`$modversion['templates']`)
+- [ ] 6.1 Place templates in `htdocs/modules/system/templates/` (Smarty 2.6.31 syntax) and register new templates in `modules/system/xoops_version.php` (`$modversion['templates']`)
 - [ ] 6.2 Upgrade script so existing installs get the templates
 - [ ] 6.3 Document template names/variables as extension points; update `docs/changelog.md`
 - [ ] 6.4 Run parity tests and manual smoke test (admin forms, pagination, messages, debug panel)

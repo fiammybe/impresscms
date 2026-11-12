@@ -7,8 +7,7 @@ $this->tpl->assign('ele_name', $this->getName());
 $element_html_template = $this->customTemplate ?: 'icms_form_elements_text_display.html';
 return $this->tpl->fetch('db:' . $element_html_template);
 ```
-Templates live in `htdocs/modules/system/templates/` and are loaded as `db:` templates;
-`Passwordtray` also supports `file:` templates under `ICMS_ROOT_PATH/templates/`.
+Templates live in `htdocs/modules/system/templates/` and are loaded as `db:` templates (Smarty 2.6.31).
 
 ## Goals / Non-Goals
 - Goals: find all hardcoded HTML; move presentational markup to Smarty; keep output
@@ -39,7 +38,6 @@ first (use `token_get_all`, only inspect `T_CONSTANT_ENCAPSED_STRING`, `T_ENCAPS
 - Name: `icms_<package>_<class>_<variant>.html` (extends existing `icms_form_elements_*_display.html`),
   e.g. `icms_view_pagenav.html`, `icms_core_message_error.html`, `icms_core_logger_render.html`.
 - Location: `htdocs/modules/system/templates/` (db: templates, theme-overridable via template sets).
-  Templates needed before the DB is available use `file:` under `htdocs/libraries/icms/templates/` (new dir, created on demand).
 - Every class gets a `protected $customTemplate`-style override where it does not already exist.
 - Escaping: assigned values are **pre-escaped by default in PHP only when they already were**;
   new templates use `|escape` for plain-text values and leave known-safe HTML (e.g. rendered
@@ -55,15 +53,18 @@ after; tests compare normalised output. Where whitespace differences exist but D
 ## Risks / Trade-offs
 - Performance: Smarty fetch per element in large forms → mitigate with shared Tpl instance and compiled templates.
 - Templates stored in DB: need an update path (system module update + template set sync) → tasks §6.
-- Bootstrapping: `Logger`, `Message`, error pages may run before Smarty is ready → classified Keep/`file:`.
+- Bootstrapping: error pages that may run before Smarty is ready → classified Keep.
 - Third-party code relying on exact whitespace → covered by parity tests; document in changelog.
 
 ## Migration plan
 Phased by priority so each phase is independently shippable: 0 inventory → 1 forms →
-2 view (PageNav, Tree, Theme, PageBuilder) → 3 ipf → 4 core (Message, Logger, Filesystem…) →
+2 view (PageNav, Tree, Theme, PageBuilder) → 3 ipf → 4 core (Message, Filesystem…) →
 5 guard/lint → 6 docs & changelog. Roll back = revert the phase's commit; PHP signatures unchanged.
 
+## Resolved Decisions
+- **Template location**: all new templates go in `htdocs/modules/system/templates/`, next to the existing `icms_form_elements_*` templates. No library-owned template directory is created.
+- **Smarty version**: Smarty 2.6.31 as bundled with ImpressCMS 2.0.4 (`htdocs/libraries/smarty`). Templates use Smarty 2 syntax only (`{$var}`, `{if}`, `{foreach from=... item=...}`, `|escape`); no Smarty 3+ features.
+- **Logger/debug output out of scope**: `core/Logger.php` and `core/Logger_render.php` are not migrated (dev-only output); they are listed as Keep in the inventory.
+
 ## Open Questions
-- Should new templates live in `system` module templates (current practice) or a library-owned directory?
-- Minimum PHP/Smarty version to assume (Smarty 2 syntax is used today: `{$var}`, `{if}`, `{foreach}` w/ `from/item`)?
-- Are `Logger_render`/debug panels in scope or deferred (dev-only output)?
+- None.
