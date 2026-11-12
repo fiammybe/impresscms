@@ -114,68 +114,65 @@ class icms_form_elements_Groupperm extends icms_form_Element {
 	 */
 	function render() {
 		$ele_name = $this->getName();
-		$ret = '<table class="outer"><tr><td class="odd"><table><tr>';
-		$cols = 1;
+		$columns = array();
 		foreach ($this->_optionTree[0]['children'] as $topitem) {
-			if ($cols > 4) {
-				$ret .= '</tr><tr>';
-				$cols = 1;
-			}
-			$tree = '<td valign="top">';
-			$prefix = '';
-			$this->_renderOptionTree($tree, $this->_optionTree[$topitem], $prefix);
-			$ret .= $tree . '</td>';
-			$cols++;
+			$nodes = array();
+			$this->_collectOptionTree($nodes, $this->_optionTree[$topitem], '');
+			$columns[] = $nodes;
 		}
-		$ret .= '</tr></table></td><td class="even" valign="top">';
+		$rows = array_chunk($columns, 4);
+		$option_ids = array();
 		foreach (array_keys($this->_optionTree) as $id) {
 			if (!empty ($id)) {
-				$option_ids[] = "'" . $ele_name . '[groups][' . $this->_groupId . '][' . $id . ']' . "'";
+				$option_ids[] = $ele_name . '[groups][' . $this->_groupId . '][' . $id . ']';
 			}
 		}
-		$checkallbtn_id = $ele_name . '[checkallbtn][' . $this->_groupId . ']';
-		$option_ids_str = implode(', ', $option_ids);
-		$ret .= _ALL . " <input id=\"" . $checkallbtn_id . "\" type=\"checkbox\" value=\"\" onclick=\"var optionids = new Array(" . $option_ids_str . "); xoopsCheckAllElements(optionids, '" . $checkallbtn_id . "');\" />";
-		$ret .= '</td></tr></table>';
-		return $ret;
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
+			'rows' => $rows,
+			'option_ids' => $option_ids,
+			'checkall_id' => $ele_name . '[checkallbtn][' . $this->_groupId . ']',
+			'all_label' => _ALL
+		));
+		return $tpl->fetch('db:icms_form_elements_groupperm_display.html');
 	}
 
 	/**
-	 * Renders checkbox options for an item tree
+	 * Collects the (flattened) checkbox data for an item tree, for use by the template
 	 *
-	 * @param string $tree
+	 * @param array $nodes
 	 * @param array $option
 	 * @param string $prefix
 	 * @param array $parentIds
 	 * @access private
 	 */
-	function _renderOptionTree(& $tree, $option, $prefix, $parentIds = array ()) {
+	function _collectOptionTree(& $nodes, $option, $prefix, $parentIds = array ()) {
 		$ele_name = $this->getName();
-		$tree .= $prefix . "<input type=\"checkbox\" name=\"" . $ele_name . "[groups][" . $this->_groupId . "][" . $option['id'] . "]\" id=\"" . $ele_name . "[groups][" . $this->_groupId . "][" . $option['id'] . "]\" onclick=\"";
-		// If there are parent elements, add javascript that will
-		// make them selecteded when this element is checked to make
-		// sure permissions to parent items are added as well.
+		$base = $ele_name . '[groups][' . $this->_groupId . '][';
+		$parents = array();
 		foreach ($parentIds as $pid) {
-			$parent_ele = $ele_name . '[groups][' . $this->_groupId . '][' . $pid . ']';
-			$tree .= "var ele = xoopsGetElementById('" . $parent_ele . "'); if(ele.checked != true) {ele.checked = this.checked;}";
+			$parents[] = $base . $pid . ']';
 		}
-		// If there are child elements, add javascript that will
-		// make them unchecked when this element is unchecked to make
-		// sure permissions to child items are not added when there
-		// is no permission to this item.
+		$children = array();
 		foreach ($option['allchild'] as $cid) {
-			$child_ele = $ele_name . '[groups][' . $this->_groupId . '][' . $cid . ']';
-			$tree .= "var ele = xoopsGetElementById('" . $child_ele . "'); if(this.checked != true) {ele.checked = false;}";
+			$children[] = $base . $cid . ']';
 		}
-		$tree .= '" value="1"';
-		if (in_array($option['id'], $this->_value)) {
-			$tree .= ' checked="checked"';
-		}
-		$tree .= " />" . $option['name'] . "<input type=\"hidden\" name=\"" . $ele_name . "[parents][" . $option['id'] . "]\" value=\"" . implode(':', $parentIds) . "\" /><input type=\"hidden\" name=\"" . $ele_name . "[itemname][" . $option['id'] . "]\" value=\"" . htmlspecialchars($option['name']) . "\" /><br />\n";
+		$nodes[] = array(
+			'prefix' => $prefix,
+			'id' => $base . $option['id'] . ']',
+			'parents' => $parents,
+			'children' => $children,
+			'checked' => in_array($option['id'], $this->_value),
+			'name' => $option['name'],
+			'name_escaped' => htmlspecialchars($option['name']),
+			'parents_field' => $ele_name . '[parents][' . $option['id'] . ']',
+			'parents_value' => implode(':', $parentIds),
+			'itemname_field' => $ele_name . '[itemname][' . $option['id'] . ']'
+		);
 		if (isset ($option['children'])) {
 			foreach ($option['children'] as $child) {
 				array_push($parentIds, $option['id']);
-				$this->_renderOptionTree($tree, $this->_optionTree[$child], $prefix . '&nbsp;-', $parentIds);
+				$this->_collectOptionTree($nodes, $this->_optionTree[$child], $prefix . '&nbsp;-', $parentIds);
 			}
 		}
 	}

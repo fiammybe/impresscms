@@ -69,9 +69,9 @@ class icms_data_comment_Renderer {
 		$this->_doIconCheck = $do_iconcheck;
 		$this->_memberHandler = icms::handler('icms_member');
 		$this->_statusText = array(
-			XOOPS_COMMENT_PENDING => '<span style="text-decoration: none; font-weight: bold; color: #00ff00;">' . _CM_PENDING . '</span>',
-			XOOPS_COMMENT_ACTIVE => '<span style="text-decoration: none; font-weight: bold; color: #ff0000;">' . _CM_ACTIVE . '</span>',
-			XOOPS_COMMENT_HIDDEN => '<span style="text-decoration: none; font-weight: bold; color: #0000ff;">' . _CM_HIDDEN . '</span>'
+			XOOPS_COMMENT_PENDING => $this->_renderTemplate('icms_data_comment_status.html', array('status' => 'pending', 'label' => _CM_PENDING)),
+			XOOPS_COMMENT_ACTIVE => $this->_renderTemplate('icms_data_comment_status.html', array('status' => 'active', 'label' => _CM_ACTIVE)),
+			XOOPS_COMMENT_HIDDEN => $this->_renderTemplate('icms_data_comment_status.html', array('status' => 'hidden', 'label' => _CM_HIDDEN))
 			);
 	}
 
@@ -118,7 +118,7 @@ class icms_data_comment_Renderer {
 			}
 			$poster = $this->_getPosterArray($this->_comments[$i]->getVar('com_uid'));
 			if (FALSE != $admin_view) {
-				$text = $this->_comments[$i]->getVar('com_text') . '<div style="text-align:right; margin-top: 2px; margin-bottom: 0px; margin-right: 2px;">' . _CM_STATUS . ': ' . $this->_statusText[$this->_comments[$i]->getVar('com_status')] . '<br />IP: <span style="font-weight: bold;">' . $this->_comments[$i]->getVar('com_ip') . '</span></div>';
+				$text = $this->_comments[$i]->getVar('com_text') . $this->_renderAdminFooter($this->_comments[$i], true);
 			} else {
 				// hide comments that are not active
 				if (XOOPS_COMMENT_ACTIVE != $this->_comments[$i]->getVar('com_status')) {
@@ -159,9 +159,7 @@ class icms_data_comment_Renderer {
 		}
 		if (FALSE != $admin_view) {
 			// admins can see all
-			$text = $tree[$comment_id]['obj']->getVar('com_text') . '<div style="text-align:right; margin-top: 2px; margin-bottom: 0px; margin-right: 2px;">'
-				. _CM_STATUS . ': ' . $this->_statusText[$tree[$comment_id]['obj']->getVar('com_status')]
-				. '<br />IP: <span style="font-weight: bold;">' . $tree[$comment_id]['obj']->getVar('com_ip') . '</span></div>';
+			$text = $tree[$comment_id]['obj']->getVar('com_text') . $this->_renderAdminFooter($tree[$comment_id]['obj'], true);
 		} else {
 			// hide comments that are not active
 			if (XOOPS_COMMENT_ACTIVE != $tree[$comment_id]['obj']->getVar('com_status')) {
@@ -261,9 +259,7 @@ class icms_data_comment_Renderer {
 			$title = $tree[$comment_id]['obj']->getVar('com_title');
 		}
 		if (FALSE != $admin_view) {
-			$text = $tree[$comment_id]['obj']->getVar('com_text') . '<div style="text-align:right; margin-top: 2px; margin-bottom: 0px; margin-right: 2px;">'
-				. _CM_STATUS . ': ' . $this->_statusText[$tree[$comment_id]['obj']->getVar('com_status')]
-				. '<br />IP: <span style="font-weight: bold;">' . $tree[$comment_id]['obj']->getVar('com_ip') . '</span></div>';
+			$text = $tree[$comment_id]['obj']->getVar('com_text') . $this->_renderAdminFooter($tree[$comment_id]['obj'], true);
 		} else {
 			// skip this comment if it is not active and continue on processing its child comments instead
 			if (XOOPS_COMMENT_ACTIVE != $tree[$comment_id]['obj']->getVar('com_status')) {
@@ -313,7 +309,7 @@ class icms_data_comment_Renderer {
 			} else {
 				$title = $thread[$key]['obj']->getVar('com_title');
 			}
-			$text = (FALSE != $admin_view) ? $thread[$key]['obj']->getVar('com_text') . '<div style="text-align:right; margin-top: 2px; margin-right: 2px;">' . _CM_STATUS . ': ' . $this->_statusText[$thread[$key]['obj']->getVar('com_status')] . '<br />IP: <span style="font-weight: bold;">' . $thread[$key]['obj']->getVar('com_ip') . '</span></div>' : $thread[$key]['obj']->getVar('com_text');
+			$text = (FALSE != $admin_view) ? $thread[$key]['obj']->getVar('com_text') . $this->_renderAdminFooter($thread[$key]['obj'], false) : $thread[$key]['obj']->getVar('com_text');
 			$replies[] = array(
 				'id' => $key,
 				'prefix' => $prefix,
@@ -358,7 +354,10 @@ class icms_data_comment_Renderer {
 		if ($poster['id'] > 0) {
 			$com_poster =& $this->_memberHandler->getUser($poster_id);
 			if (is_object($com_poster)) {
-				$poster['uname'] = '<a href="' . ICMS_URL . '/userinfo.php?uid=' . $poster['id'] . '">' . $com_poster->getVar('uname') . '</a>';
+				$poster['uname'] = $this->_renderTemplate('icms_data_comment_posterlink.html', array(
+					'url' => ICMS_URL . '/userinfo.php?uid=' . $poster['id'],
+					'uname' => $com_poster->getVar('uname')
+				));
 				return $poster;
 			}
 		}
@@ -378,7 +377,10 @@ class icms_data_comment_Renderer {
 		if ($poster['id'] > 0) {
 			$com_poster =& $this->_memberHandler->getUser($poster['id']);
 			if (is_object($com_poster)) {
-				$poster['uname'] = '<a href="' . ICMS_URL . '/userinfo.php?uid=' . $poster['id'] . '">' . $com_poster->getVar('uname') . '</a>';
+				$poster['uname'] = $this->_renderTemplate('icms_data_comment_posterlink.html', array(
+					'url' => ICMS_URL . '/userinfo.php?uid=' . $poster['id'],
+					'uname' => $com_poster->getVar('uname')
+				));
 				$poster_rank = $com_poster->rank();
 				$poster['rank_image'] = $poster_rank['image'];
 				$poster['rank_title'] = $poster_rank['title'];
@@ -421,5 +423,38 @@ class icms_data_comment_Renderer {
 			}
 		}
 		return '<img src="' . ICMS_URL . '/images/icons/' . $GLOBALS["icmsConfig"]["language"] . '/no_posticon.gif" alt="" />';
+	}
+
+	/**
+	 * Renders the admin footer (status and IP address) of a comment
+	 *
+	 * @param	object	$comment
+	 * @param	bool	$bottom_margin	Whether the footer has a bottom margin of 0 (flat, thread and nest views)
+	 * @return	string
+	 */
+	private function _renderAdminFooter($comment, $bottom_margin = true) {
+		return $this->_renderTemplate('icms_data_comment_adminfooter.html', array(
+			'bottom_margin' => (bool) $bottom_margin,
+			'status_label' => _CM_STATUS,
+			'status' => $this->_statusText[$comment->getVar('com_status')],
+			'ip' => $comment->getVar('com_ip')
+		));
+	}
+
+	/**
+	 * Renders a template
+	 *
+	 * @param	string	$template
+	 * @param	array	$vars
+	 * @return	string
+	 */
+	private function _renderTemplate($template, array $vars) {
+		static $tpl = null;
+		if ($tpl === null) {
+			$tpl = new icms_view_Tpl();
+		}
+		$tpl->clear_all_assign();
+		$tpl->assign($vars);
+		return trim($tpl->fetch('db:' . $template));
 	}
 }

@@ -1,0 +1,3 @@
+<select name="<{$name}>"<{if $id != ''}> id="<{$id}>"<{/if}><{if $onchange != ''}> onchange='<{$onchange}>'<{/if}>>
+<{foreach from=$options item=option}><option value="<{$option.value}>"<{if $option.selected}> selected="selected"<{/if}>><{$option.label}></option>
+<{/foreach}></select>

@@ -1,0 +1,5 @@
+<{$title}>
+<form name='<{$name}>' id='<{$name}>' action='<{$action}>' method='<{$method}>'<{$extra}>>
+<table border='0' width='100%'>
+<{foreach from=$elements item=ele}><{if isset($ele.raw)}><{$ele.raw}><{else}><tr valign='top' align='<{$align}>'><td><{$ele.caption}><{if $ele.description}><br /><br /><span style="font-weight: normal;"><{$ele.description}></span><{/if}></td><td><{$ele.html}></td></tr><{/if}><{/foreach}></table>
+<{$hidden}></form>

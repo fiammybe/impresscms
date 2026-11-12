@@ -208,8 +208,9 @@ class icms_module_Object extends icms_core_Object {
 	 */
 	public function mainLink() {
 		if ($this->getVar('hasmain') == 1) {
-			$ret = '<a href="' . ICMS_URL . '/modules/' . $this->getVar('dirname') . '/">' . $this->getVar('name') . '</a>';
-			return $ret;
+			$tpl = new icms_view_Tpl();
+			$tpl->assign(array('url' => ICMS_URL . '/modules/' . $this->getVar('dirname') . '/', 'name' => $this->getVar('name')));
+			return trim($tpl->fetch('db:icms_module_mainlink.html'));
 		}
 		return false;
 	}
@@ -360,21 +361,11 @@ class icms_module_Object extends icms_core_Object {
 	 * @param string $title The Error Message title
 	 * @param bool $render Whether to echo (render) or return the HTML string
 	 *
-	 * @todo Make this work with templates ;)
 	 */
 	function setMessage($msg, $title = '', $render = false) {
-		$ret = '<div class="moduleMsg">';
-		if ($title != '') {
-			$ret .= '<h4>' . $title . '</h4>';
-		}
-		if (is_array($msg)) {
-			foreach ($msg as $m) {
-				$ret .= $m . '<br />';
-			}
-		} else {
-			$ret .= $msg;
-		}
-		$ret .= '</div>';
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array('title' => $title, 'messages' => is_array($msg) ? $msg : array(), 'message' => is_array($msg) ? '' : $msg, 'is_list' => is_array($msg)));
+		$ret = $tpl->fetch('db:icms_module_message.html');
 		if ($render) {
 			echo $ret;
 		} else {

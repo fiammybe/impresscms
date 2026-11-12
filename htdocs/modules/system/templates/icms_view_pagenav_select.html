@@ -1,0 +1,1 @@
+<form name="pagenavform"><select name="pagenavselect" onchange="location=this.options[this.options.selectedIndex].value;"><{foreach from=$options item=option}><option value="<{$option.value}>"<{if $option.selected}> selected="selected"<{/if}>><{$option.label}></option><{/foreach}></select><{if $showbutton}>&nbsp;<input type="submit" value="<{$go_label}>" /><{/if}></form>

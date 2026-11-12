@@ -129,13 +129,15 @@ class icms_form_elements_Textarea extends icms_form_Element {
 	 * @return string HTML
 	 */
 	public function render(){
-		return "<textarea name='" . $this->getName()
-			. "' id='" . $this->getName() . '_tarea'
-			. "' rows='" . $this->getRows()
-			. "' cols='" . $this->getCols()
-			. "'" . $this->getExtra() . ">"
-			. $this->getValue()
-			. "</textarea>";
+		$tpl = new icms_view_Tpl();
+		$tpl->assign('ele_name', $this->getName());
+		$tpl->assign('ele_id', $this->getName() . '_tarea');
+		$tpl->assign('ele_rows', $this->getRows());
+		$tpl->assign('ele_cols', $this->getCols());
+		$tpl->assign('ele_extra', $this->getExtra());
+		$tpl->assign('ele_value', $this->getValue());
+		$element_html_template = $this->customTemplate ? $this->customTemplate : 'icms_form_elements_textarea_display.html';
+		return $tpl->fetch('db:' . $element_html_template);
 	}
 }
 

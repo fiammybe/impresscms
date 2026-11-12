@@ -71,7 +71,7 @@ class icms_form_elements_captcha_Image {
 		if ($icmsConfigCaptcha['captcha_maxattempt']) {
 			$rule .=  " | ". sprintf(constant("ICMS_CAPTCHA_MAXATTEMPTS"), $icmsConfigCaptcha['captcha_maxattempt']);
 		}
-		$form .= "&nbsp;&nbsp;<small>{$rule}</small>";
+		$form .= $this->renderHint($rule);
 
 		return $form;
 	}
@@ -86,5 +86,17 @@ class icms_form_elements_captcha_Image {
 		$ret = "<img id='captcha' src='" . ICMS_URL . "/libraries/icms/form/elements/captcha/img.php' onclick=\"this.src='" . ICMS_URL . "/libraries/icms/form/elements/captcha/img.php?refresh='+Math.random()"
 					."\" style='cursor: pointer;margin-left: auto;margin-right: auto;text-align:center;' alt='" . htmlspecialchars($rule, ENT_QUOTES) . "' />";
 		return $ret;
+	}
+
+	/**
+	 * Renders the hint text next to the captcha field
+	 *
+	 * @param	string	$rule
+	 * @return	string
+	 */
+	private function renderHint($rule) {
+		$tpl = new icms_view_Tpl();
+		$tpl->assign('rule', $rule);
+		return $tpl->fetch('db:icms_form_elements_captcha_hint.html');
 	}
 }

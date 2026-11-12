@@ -413,9 +413,6 @@ abstract class icms_form_Base {
 	 */
 	public function renderValidationJS( $withtags = true ) {
 		$js = "";
-		if ( $withtags ) {
-			$js .= "\n<!-- Start Form Validation JavaScript //-->\n<script type='text/javascript'>\n<!--//\n";
-		}
 		$formname = $this->getName();
 		$js .= "function xoopsFormValidate_{$formname}() { myform = window.document.{$formname}; ";
 		$elements = $this->getElements( true );
@@ -426,9 +423,37 @@ abstract class icms_form_Base {
 		}
 		$js .= "return true;\n}\n";
 		if ( $withtags ) {
-			$js .= "//--></script>\n<!-- End Form Vaidation JavaScript //-->\n";
+			return $this->renderTemplate('icms_form_validation_script.html', array('js' => $js));
 		}
 		return $js;
+	}
+
+	/**
+	 * Renders a Smarty template (db: template of the system module)
+	 *
+	 * @param	string	$template	Template file name
+	 * @param	array	$vars		Variables to assign
+	 * @return	string
+	 */
+	protected function renderTemplate($template, array $vars) {
+		static $tpl = null;
+		if ($tpl === null) {
+			$tpl = new icms_view_Tpl();
+		}
+		$tpl->clear_all_assign();
+		$tpl->assign($vars);
+		return $tpl->fetch('db:' . $template);
+	}
+
+	/**
+	 * Renders a separator row for table based forms
+	 *
+	 * @param	string	$extra	HTML to be displayed in the row (empty for a non-breaking space)
+	 * @param	string	$class	CSS class name for the td tag
+	 * @return	string
+	 */
+	protected function renderBreakRow($extra = '', $class = '') {
+		return $this->renderTemplate('icms_form_break_row.html', array('extra' => $extra, 'class' => $class));
 	}
 
 	/**
