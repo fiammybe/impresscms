@@ -151,30 +151,32 @@ class icms_form_Groupperm extends icms_form_Base {
 		$tray->addElement(new icms_form_elements_Button('', 'submit', _SUBMIT, 'submit'));
 		$tray->addElement(new icms_form_elements_Button('', 'reset', _CANCEL, 'reset'));
 		$this->addElement($tray);
-		$ret = '<h4>' . $this->getTitle() . '</h4>' . $this->_permDesc . '<br />';
-		$ret .= "<form name='" . $this->getName()
-			. "' id='" . $this->getName()
-			. "' action='" . $this->getAction()
-			. "' method='" . $this->getMethod()
-			. "'" . $this->getExtra()
-			. ">\n<table width='100%' class='outer' cellspacing='1' valign='top'>\n";
-		$elements = $this->getElements();
+		$rows = array();
 		$hidden = '';
-		foreach (array_keys($elements) as $i) {
-			if (!is_object($elements[$i])) {
-				$ret .= $elements[$i];
-			}
-			elseif (!$elements[$i]->isHidden()) {
-				$ret .= "<tr valign='top' align='" . _GLOBAL_LEFT . "'><td class='head'>" . $elements[$i]->getCaption();
-				if ($elements[$i]->getDescription() != '') {
-					$ret .= '<br /><br /><span style="font-weight: normal;">' . $elements[$i]->getDescription() . '</span>';
-				}
-				$ret .= "</td>\n<td class='even'>\n" . $elements[$i]->render() . "\n</td></tr>\n";
+		foreach ($this->getElements() as $ele) {
+			if (!is_object($ele)) {
+				$rows[] = array('raw' => $ele);
+			} elseif (!$ele->isHidden()) {
+				$rows[] = array(
+					'caption' => $ele->getCaption(),
+					'description' => $ele->getDescription(),
+					'html' => $ele->render()
+				);
 			} else {
-				$hidden .= $elements[$i]->render();
+				$hidden .= $ele->render();
 			}
 		}
-		$ret .= "</table>$hidden</form>";
+		$ret = $this->renderTemplate('icms_form_groupperm.html', array(
+			'title' => $this->getTitle(),
+			'description' => $this->_permDesc,
+			'name' => $this->getName(),
+			'action' => $this->getAction(),
+			'method' => $this->getMethod(),
+			'extra' => $this->getExtra(),
+			'align' => _GLOBAL_LEFT,
+			'elements' => $rows,
+			'hidden' => $hidden
+		));
 		$ret .= $this->renderValidationJS(true);
 		return $ret;
 	}

@@ -1,0 +1,7 @@
+<form name='<{$name}>_dorga' id='<{$name}>' action='<{$action}>' method='<{$method}>' onsubmit='return xoopsFormValidate_<{$name}>(this);'<{$extra}>>
+<table width='100%' class='outer' cellspacing='1'>
+<tr><th colspan='2'><{$title}></th></tr>
+<{foreach from=$elements item=ele}><{if $ele.type == 'raw'}><{$ele.raw}><{elseif $ele.type == 'section'}><tr><th colspan="2"><{$ele.html}></th></tr><{elseif $ele.type == 'section_end'}><tr><td class="even" colspan="2">&nbsp;</td></tr><{else}><tr id='<{$ele.name}>_row' valign='top' align='<{$align}>'><td class='head'><{$ele.caption}><{if $ele.description != ''}><br /><br /><span style="font-weight: normal;"><{$ele.description}></span><{/if}></td><td class='<{$ele.class}>'><{$ele.html}></td></tr>
+<{/if}><{/foreach}></table>
+<{$hidden}>
+</form>

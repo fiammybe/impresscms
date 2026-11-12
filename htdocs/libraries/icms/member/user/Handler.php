@@ -414,29 +414,25 @@ class icms_member_user_Handler extends icms_core_ObjectHandler {
 			}
 
 			if (is_object($user)) {
-				$author = $isAuthor ? " rel='author'" : "";
 				$fullname = '';
-				$linkeduser = '';
-
-				$username = $user->getVar('uname');
 				$fullname2 = $user->getVar('name');
 				if (($name) && !empty($fullname2)) $fullname = $user->getVar('name');
-				if (!empty($fullname)) $linkeduser = $fullname . "[";
-                $linkeduser .= '<a href="' . ICMS_URL . '/userinfo.php?uid=' . $uid . '"' . $author . '>';
-				$linkeduser .= icms_core_DataFilter::htmlSpecialChars($username) . "</a>";
-				if (!empty($fullname)) $linkeduser .= "]";
-
-				if ($withContact) {
-					$linkeduser .= '<a href="mailto:' . $user->getVar('email') . '">';
-					$linkeduser .= '<img style="vertical-align: middle;" src="' . ICMS_IMAGES_URL
-						. '/icons/' . $icmsConfig["language"] . '/email.gif' . '" alt="'
-						. _US_SEND_MAIL . '" title="' . _US_SEND_MAIL . '"/></a>';
-					$js = "javascript:openWithSelfMain('" . ICMS_URL . '/pmlite.php?send2=1&to_userid='
-						. $uid . "', 'pmlite', 450, 370);";
-					$linkeduser .= '<a href="' . $js . '"><img style="vertical-align: middle;" src="'
-						. ICMS_IMAGES_URL . '/icons/' . $icmsConfig["language"] . '/pm.gif'
-						. '" alt="' . _US_SEND_PM . '" title="' . _US_SEND_PM . '"/></a>';
-				}
+				$tpl = new icms_view_Tpl();
+				$tpl->assign(array(
+					'fullname' => $fullname,
+					'uid' => $uid,
+					'rel_author' => (bool) $isAuthor,
+					'username' => icms_core_DataFilter::htmlSpecialChars($user->getVar('uname')),
+					'with_contact' => (bool) $withContact,
+					'email' => $user->getVar('email'),
+					'userinfo_url' => ICMS_URL . '/userinfo.php?uid=' . $uid,
+					'email_icon' => ICMS_IMAGES_URL . '/icons/' . $icmsConfig["language"] . '/email.gif',
+					'pm_icon' => ICMS_IMAGES_URL . '/icons/' . $icmsConfig["language"] . '/pm.gif',
+					'pm_js' => "javascript:openWithSelfMain('" . ICMS_URL . '/pmlite.php?send2=1&to_userid=' . $uid . "', 'pmlite', 450, 370);",
+					'send_mail' => _US_SEND_MAIL,
+					'send_pm' => _US_SEND_PM
+				));
+				$linkeduser = $tpl->fetch('db:icms_member_userlink.html');
 
 				return $linkeduser;
 			}

@@ -4,7 +4,7 @@
  * Finds hardcoded HTML markup in PHP string literals / inline HTML of the ICMS library.
  *
  * Usage:
- *   php bin/find-hardcoded-html.php [--format=text|markdown|baseline] [--check=baseline-file] [path]
+ *   php bin/find-hardcoded-html.php [--format=text|markdown|baseline] [--check=baseline-file] [path ...]
  *
  * --format=baseline   prints "relative/file.php<TAB>count" lines (count of strings with markup)
  * --check=FILE        exits 1 when a file has more markup strings than recorded in FILE
@@ -14,14 +14,14 @@
 $root = dirname(__DIR__);
 $format = 'text';
 $check = null;
-$path = $root . '/htdocs/libraries/icms';
+$paths = array();
 foreach (array_slice($argv, 1) as $arg) {
 	if (strpos($arg, '--format=') === 0) {
 		$format = substr($arg, 9);
 	} elseif (strpos($arg, '--check=') === 0) {
 		$check = substr($arg, 8);
 	} else {
-		$path = realpath($arg) ?: $arg;
+		$paths[] = realpath($arg) ?: $arg;
 	}
 }
 
@@ -57,10 +57,15 @@ function currentFunction(array $tokens, $i) {
 	return ($class ? $class . '::' : '') . ($name ?: '(top)');
 }
 
+if (!$paths) {
+	$paths[] = $root . '/htdocs/libraries/icms';
+}
 $files = array();
-if (is_file($path)) {
-	$files[] = $path;
-} else {
+foreach ($paths as $path) {
+	if (is_file($path)) {
+		$files[] = $path;
+		continue;
+	}
 	$it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS));
 	foreach ($it as $f) {
 		if ($f->isFile() && substr($f->getFilename(), -4) === '.php') {

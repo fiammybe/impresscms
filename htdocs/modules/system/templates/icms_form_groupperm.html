@@ -1,0 +1,7 @@
+<h4><{$title}></h4><{$description}><br /><form name='<{$name}>' id='<{$name}>' action='<{$action}>' method='<{$method}>'<{$extra}>>
+<table width='100%' class='outer' cellspacing='1' valign='top'>
+<{foreach from=$elements item=ele}><{if isset($ele.raw)}><{$ele.raw}><{else}><tr valign='top' align='<{$align}>'><td class='head'><{$ele.caption}><{if $ele.description != ''}><br /><br /><span style="font-weight: normal;"><{$ele.description}></span><{/if}></td>
+<td class='even'>
+<{$ele.html}>
+</td></tr>
+<{/if}><{/foreach}></table><{$hidden}></form>
