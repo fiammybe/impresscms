@@ -193,11 +193,11 @@ class icms_ipf_Tree {
 	private function _makeSelBoxOptions($fieldName, $selected, $key, & $ret, $prefix_orig, $prefix_curr = '') {
 		if ($key > 0) {
 			$value = $this->_tree[$key]['obj']->getVar($this->_myId);
-			$ret .= '<option value="' . $value . '"';
-			if ($value == $selected) {
-				$ret .= ' selected="selected"';
-			}
-			$ret .= '>' . $prefix_curr . $this->_tree[$key]['obj']->getVar($fieldName) . '</option>';
+			$ret[] = array(
+				'value' => $value,
+				'label' => $prefix_curr . $this->_tree[$key]['obj']->getVar($fieldName),
+				'selected' => ($value == $selected)
+			);
 			$prefix_curr .= $prefix_orig;
 		}
 		if (isset ($this->_tree[$key]['child']) && !empty ($this->_tree[$key]['child'])) {
@@ -220,12 +220,14 @@ class icms_ipf_Tree {
 	 * @return  string  HTML select box
 	 **/
 	public function makeSelBox($name, $fieldName, $prefix = '-', $selected = '', $addEmptyOption = false, $key = 0) {
-		$ret = '<select name="' . $name . '" id="' . $name . '">';
+		$options = array();
 		if (false != $addEmptyOption) {
-			$ret .= '<option value="0"></option>';
+			$options[] = array('value' => 0, 'label' => '', 'selected' => false);
 		}
-		$this->_makeSelBoxOptions($fieldName, $selected, $key, $ret, $prefix);
-		return $ret . '</select>';
+		$this->_makeSelBoxOptions($fieldName, $selected, $key, $options, $prefix);
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array('name' => $name, 'id' => $name, 'onchange' => '', 'options' => $options));
+		return $tpl->fetch('db:icms_view_tree_selbox.html');
 	}
 
 }

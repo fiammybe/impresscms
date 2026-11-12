@@ -219,38 +219,27 @@ class icms_view_Tree {
 		if ($sel_name == "") {
 			$sel_name = $this->id;
 		}
-		echo "<select name = '" . $sel_name . "'";
-		if ($onchange != "") {
-			echo " onchange='" . $onchange . "'";
-		}
-		echo ">\n";
+		$options = array();
 		$sql = "SELECT " . $this->id . ", " . $title . " FROM " . $this->table . " WHERE " . $this->pid . "='0'";
 		if ($order != "") {
 			$sql .= " ORDER BY $order";
 		}
 		$result = $this->db->query($sql);
 		if ($none) {
-			echo "<option value='0'>----</option>\n";
+			$options[] = array('value' => 0, 'label' => '----', 'selected' => false);
 		}
 		while (list($catid, $name) = $this->db->fetchRow($result)) {
-			$sel = "";
-			if ($catid == $preset_id) {
-				$sel = " selected='selected'";
-			}
-			echo "<option value='$catid'$sel>$name</option>\n";
-			$sel = "";
+			$options[] = array('value' => $catid, 'label' => $name, 'selected' => ($catid == $preset_id));
 			$arr = $this->getChildTreeArray($catid, $order);
 			foreach ($arr as $option) {
 				$option['prefix'] = str_replace(".", "--", $option['prefix']);
 				$catpath = $option['prefix'] . "&nbsp;" . icms_core_DataFilter::htmlSpecialChars($option[$title]);
-				if ($option[$this->id] == $preset_id) {
-					$sel = " selected='selected'";
-				}
-				echo "<option value='" . $option[$this->id] . "'$sel>$catpath</option>\n";
-				$sel = "";
+				$options[] = array('value' => $option[$this->id], 'label' => $catpath, 'selected' => ($option[$this->id] == $preset_id));
 			}
 		}
-		echo "</select>\n";
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array('name' => $sel_name, 'id' => '', 'onchange' => $onchange, 'options' => $options));
+		echo $tpl->fetch('db:icms_view_tree_selbox.html');
 	}
 
 	/**
@@ -272,7 +261,9 @@ class icms_view_Tree {
 		}
 		list($parentid, $name) = $this->db->fetchRow($result);
 		$name = icms_core_DataFilter::htmlSpecialChars($name);
-		$path = '<a href="' . $funcURL . '&amp;' . $this->id . '=' . $sel_id . '">' . $name . '</a>' . $path . "";
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array('url' => $funcURL . '&amp;' . $this->id . '=' . $sel_id, 'label' => $name));
+		$path = trim($tpl->fetch('db:icms_view_tree_pathlink.html')) . $path;
 		if ($parentid == 0) {
 			return $path;
 		}
