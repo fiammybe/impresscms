@@ -63,7 +63,7 @@ Phased by priority so each phase is independently shippable: 0 inventory → 1 f
 
 ## Resolved Decisions
 - **Template location**: all new templates go in `htdocs/modules/system/templates/`, next to the existing `icms_form_elements_*` templates. No library-owned template directory is created.
-- **Smarty version**: Smarty 2.6.31 as bundled with ImpressCMS 2.0.4 (`htdocs/libraries/smarty`). Templates use Smarty 2 syntax only (`{$var}`, `{if}`, `{foreach from=... item=...}`, `|escape`); no Smarty 3+ features.
+- **Smarty version**: Smarty 2.6.31 as bundled with ImpressCMS 2.0.4 (`htdocs/libraries/smarty`). Templates use Smarty 2 syntax only, with the ImpressCMS delimiters `<{` and `}>` (`<{$var}>`, `<{if}>`, `<{foreach from=... item=...}>`, `|escape`); no Smarty 3+ features.
 - **Logger/debug output out of scope**: `core/Logger.php` and `core/Logger_render.php` are not migrated (dev-only output); they are listed as Keep in the inventory.
 
 ## Open Questions
