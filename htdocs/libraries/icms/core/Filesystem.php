@@ -445,7 +445,7 @@ class icms_core_Filesystem {
 /* These will not be in the final release, but are only placeholders while the refactoring
  * is being completed
  */
-	static public function getImgList($dirname, $prefix = '', $extension = array('gif', 'jpg', 'png')) {
+	static public function getImgList($dirname, $prefix = '', $extension = array('gif', 'jpg', 'png', 'webp', 'avif')) {
 		return self::getFileList($dirname, $prefix, $extension);
 	}
 

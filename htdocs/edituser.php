@@ -496,7 +496,7 @@ switch ($op) {
 			redirect_header('index.php', 3, _US_NOEDITRIGHT);
 		}
 		if ($icmsConfigUser['avatar_allow_upload'] == 1 && icms::$user->getVar('posts') >= $icmsConfigUser['avatar_minposts']) {
-			$uploader = new icms_file_MediaUploadHandler(ICMS_UPLOAD_PATH, array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png'), $icmsConfigUser['avatar_maxsize'], $icmsConfigUser['avatar_width'], $icmsConfigUser['avatar_height']);
+			$uploader = new icms_file_MediaUploadHandler(ICMS_UPLOAD_PATH, icms_image_Formats::addMimeTypes(array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png')), $icmsConfigUser['avatar_maxsize'], $icmsConfigUser['avatar_width'], $icmsConfigUser['avatar_height']);
 			if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
 				$uploader->setPrefix('cavt');
 				if ($uploader->upload()) {

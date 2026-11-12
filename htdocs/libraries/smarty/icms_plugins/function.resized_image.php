@@ -170,16 +170,33 @@ function smarty_function_resized_image($params, &$smarty) {
 	$resized['path'] = substr($resized['path'], 0, strrpos($resized['path'], ".")) . "-" . $resized['width'] . "x" . $resized['height'] . substr($resized['path'], strrpos($resized['path'], ".")); // build path + file name
 	$resized['url'] = substr($resized['url'], 0, strrpos($resized['url'], ".")) . "-" . $resized['width'] . "x" . $resized['height'] . substr($resized['url'], strrpos($resized['url'], ".")); // build file URL
 
+	// Original file URL, used when the image can not be resized on this server
+	$original['url'] = (strpos($original['path'], ICMS_ROOT_PATH) === 0)
+		? ICMS_URL . substr($original['path'], strlen(ICMS_ROOT_PATH))
+		: $file;
+
 	// If file does not exist
 	// or it's outdated, create:
 	if (!file_exists($resized['path']) or (filemtime($original['path']) > filemtime($resized['path']))) {
-		if (!is_dir($resized['dir'])) { // If dir does not exist, create
-			mkdir($resized['dir'], 0755, true);
+		// Formats like WebP and AVIF are only resized if GD supports them, otherwise the original is used
+		$format = icms_image_Formats::processableExtension($original['path']);
+		$created = false;
+		if ($format !== null) {
+			try {
+				if (!is_dir($resized['dir'])) { // If dir does not exist, create
+					mkdir($resized['dir'], 0755, true);
+				}
+				// Resize image using WideImage library
+				$resized_img = WideImage::load($original['path']);
+				$resized_img->resize($resized['width'], $resized['height'], $fit)->saveToFile($resized['path']);
+				$created = file_exists($resized['path']);
+			} catch (Exception $e) {
+				$created = false;
+			}
 		}
-		// Resize image using WideImage library
-		$resized_img = WideImage::load($original['path'], 'jpg');
-
-		$resized_img->resize($resized['width'], $resized['height'], $fit)->saveToFile($resized['path']);
+		if (!$created) {
+			$resized['url'] = $original['url'];
+		}
 	}
 
 	if ($return == 'url') {

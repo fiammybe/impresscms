@@ -660,7 +660,7 @@ function imanager_addfile() {
 		$updir = $categ_path;
 	}
 	// TODO: make the list of accepted image filetypes configurable
-	$uploader = new icms_file_MediaUploadHandler($updir, array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png', 'image/bmp'), $imagecategory->getVar('imgcat_maxsize'), $imagecategory->getVar('imgcat_maxwidth'), $imagecategory->getVar('imgcat_maxheight'));
+	$uploader = new icms_file_MediaUploadHandler($updir, icms_image_Formats::addMimeTypes(array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png', 'image/bmp')), $imagecategory->getVar('imgcat_maxsize'), $imagecategory->getVar('imgcat_maxwidth'), $imagecategory->getVar('imgcat_maxheight'));
 	$uploader->setPrefix('img');
 	$err = array();
 	$ucount = count($_POST['xoops_upload_file']);

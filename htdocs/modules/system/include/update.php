@@ -44,7 +44,7 @@ icms_loadLanguageFile('core', 'databaseupdater');
 if (is_object(icms::$module)) {
 	define('SYSTEM_DB_VERSION', icms::$module->getDBVersion());
 } else {
-	define('SYSTEM_DB_VERSION', 49);
+	define('SYSTEM_DB_VERSION', 50);
 }
 
 /**
@@ -259,6 +259,49 @@ function xoops_module_update_system(&$module, $oldversion = null, $dbVersion = n
 				: 0;
 
 			$icmsDatabaseUpdater->insertConfig(ICMS_CONF, 'keepalive_enable', '_MD_AM_KEEPALIVE', '0','_MD_AM_KEEPALIVEDSC', 'yesno', 'int', $keepaliveOrder);
+
+			/* Finish up this portion of the db update */
+			if (!$abortUpdate) {
+				$icmsDatabaseUpdater->updateModuleDBVersion($newDbVersion, 'system');
+				echo sprintf(_DATABASEUPDATER_UPDATE_OK, icms_conv_nr2local($newDbVersion)) . '<br />';
+			}
+		}
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+	}
+
+	/* Begin upgrade to version 2.0.4 - modern image formats */
+	if (!$abortUpdate) $newDbVersion = 50;
+	try {
+		if ($dbVersion < $newDbVersion) {
+			// add the WebP and AVIF mimetypes and let the administrator and webmaster groups use them
+			$mimetypeTable = icms::$xoopsDB->prefix('system_mimetype');
+			$permissionTable = icms::$xoopsDB->prefix('group_permission');
+			foreach (array('webp' => array('image/webp', 'WebP Image'), 'avif' => array('image/avif', 'AVIF Image')) as $extension => $mimetype) {
+				$result = icms::$xoopsDB->query("SELECT mimetypeid FROM `" . $mimetypeTable . "` WHERE extension = " . icms::$xoopsDB->quoteString($extension));
+				$row = $result ? icms::$xoopsDB->fetchRow($result) : false;
+				if ($row) {
+					continue;
+				}
+				$icmsDatabaseUpdater->runQuery(
+					"INSERT INTO `" . $mimetypeTable . "` (extension, types, name, dirname) VALUES ("
+						. icms::$xoopsDB->quoteString($extension) . ", " . icms::$xoopsDB->quoteString($mimetype[0]) . ", "
+						. icms::$xoopsDB->quoteString($mimetype[1]) . ", 'system')",
+					sprintf(_DATABASEUPDATER_MSG_QUERY_SUCCESSFUL, $extension),
+					sprintf(_DATABASEUPDATER_MSG_QUERY_FAILED, $extension)
+				);
+				$mimetypeId = (int) icms::$xoopsDB->getInsertId();
+				if ($mimetypeId > 0) {
+					$icmsDatabaseUpdater->runQuery(
+						"INSERT INTO `" . $permissionTable . "` (gperm_groupid, gperm_itemid, gperm_modid, gperm_name) VALUES "
+							. "(" . XOOPS_GROUP_ADMIN . ", " . $mimetypeId . ", 1, 'use_extension'), (" . XOOPS_GROUP_USERS . ", " . $mimetypeId . ", 1, 'use_extension')",
+						sprintf(_DATABASEUPDATER_MSG_QUERY_SUCCESSFUL, $extension),
+						sprintf(_DATABASEUPDATER_MSG_QUERY_FAILED, $extension)
+					);
+				}
+			}
+			unset($mimetypeTable, $permissionTable, $extension, $mimetype, $result, $row, $mimetypeId);
 
 			/* Finish up this portion of the db update */
 			if (!$abortUpdate) {

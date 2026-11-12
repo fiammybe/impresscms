@@ -64,7 +64,7 @@ if (isset(icms::$module->config['com_rule'])) {
 
 $cform->addElement(new icms_form_elements_Text(_CM_TITLE, 'com_title', 50, 255, $com_title), true);
 $icons_radio = new icms_form_elements_Radio(_MESSAGEICON, 'com_icon', $com_icon);
-$subject_icons = icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/subject/", '', array('gif', 'jpg', 'png'));
+$subject_icons = icms_core_Filesystem::getFileList(ICMS_ROOT_PATH . "/images/subject/", '', icms_image_Formats::addExtensions(array('gif', 'jpg', 'png')));
 foreach ($subject_icons as $iconfile) {
 	$icons_radio->addOption($iconfile, '<img src="' . ICMS_URL . '/images/subject/' . $iconfile . '" alt="" />');
 }
