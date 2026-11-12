@@ -62,19 +62,21 @@ class icms_form_Simple extends icms_form_Base {
 	 * @return	string
 	 */
 	public function render() {
-		$ret = $this->getTitle() . "\n<form name='" . $this->getName()
-			. "' id='" . $this->getName()
-			. "' action='" . $this->getAction()
-			. "' method='" . $this->getMethod() . "'" . $this->getExtra()
-			. ">\n";
+		$elements = array();
 		foreach ($this->getElements() as $ele) {
-			if (!$ele->isHidden()) {
-				$ret .= "<strong>" . $ele->getCaption() . "</strong><br />" . $ele->render() . "<br />\n";
-			} else {
-				$ret .= $ele->render() . "\n";
-			}
+			$elements[] = array(
+				'hidden' => $ele->isHidden(),
+				'caption' => $ele->getCaption(),
+				'html' => $ele->render()
+			);
 		}
-		$ret .= "</form>\n";
-		return $ret;
+		return $this->renderTemplate('icms_form_simple.html', array(
+			'title' => $this->getTitle(),
+			'name' => $this->getName(),
+			'action' => $this->getAction(),
+			'method' => $this->getMethod(),
+			'extra' => $this->getExtra(),
+			'elements' => $elements
+		));
 	}
 }
