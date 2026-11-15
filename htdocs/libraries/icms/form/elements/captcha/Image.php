@@ -62,41 +62,20 @@ class icms_form_elements_captcha_Image {
 	 */
 	public function render() {
 		global $icmsConfigCaptcha;
-		$form = "<input type='text' name='" . $this->config["name"]
-			. "' id='" . $this->config["name"]
-			. "' size='" . $icmsConfigCaptcha['captcha_num_chars']
-			. "' maxlength='" . $icmsConfigCaptcha['captcha_num_chars']
-			. "' value='' /> &nbsp; ". $this->loadImage();
-		$rule = htmlspecialchars(ICMS_CAPTCHA_REFRESH, ENT_QUOTES);
-		if ($icmsConfigCaptcha['captcha_maxattempt']) {
-			$rule .=  " | ". sprintf(constant("ICMS_CAPTCHA_MAXATTEMPTS"), $icmsConfigCaptcha['captcha_maxattempt']);
-		}
-		$form .= $this->renderHint($rule);
-
-		return $form;
-	}
-
-	/**
-	 * Loads the Captcha Image
-	 * @return  string String that contains the Captcha image
-	 */
-	public function loadImage() {
-		global $icmsConfigCaptcha;
 		$rule = $icmsConfigCaptcha['captcha_casesensitive'] ? constant("ICMS_CAPTCHA_RULE_CASESENSITIVE") : constant("ICMS_CAPTCHA_RULE_CASEINSENSITIVE");
-		$ret = "<img id='captcha' src='" . ICMS_URL . "/libraries/icms/form/elements/captcha/img.php' onclick=\"this.src='" . ICMS_URL . "/libraries/icms/form/elements/captcha/img.php?refresh='+Math.random()"
-					."\" style='cursor: pointer;margin-left: auto;margin-right: auto;text-align:center;' alt='" . htmlspecialchars($rule, ENT_QUOTES) . "' />";
-		return $ret;
-	}
+		$hint = htmlspecialchars(ICMS_CAPTCHA_REFRESH, ENT_QUOTES);
+		if ($icmsConfigCaptcha['captcha_maxattempt']) {
+			$hint .= " | " . sprintf(constant("ICMS_CAPTCHA_MAXATTEMPTS"), $icmsConfigCaptcha['captcha_maxattempt']);
+		}
 
-	/**
-	 * Renders the hint text next to the captcha field
-	 *
-	 * @param	string	$rule
-	 * @return	string
-	 */
-	private function renderHint($rule) {
 		$tpl = new icms_view_Tpl();
-		$tpl->assign('rule', $rule);
-		return $tpl->fetch('db:icms_form_elements_captcha_hint.html');
+		$tpl->assign(array(
+			'name' => $this->config["name"],
+			'size' => $icmsConfigCaptcha['captcha_num_chars'],
+			'image_url' => ICMS_URL . '/libraries/icms/form/elements/captcha/img.php',
+			'alt' => htmlspecialchars($rule, ENT_QUOTES),
+			'hint' => $hint
+		));
+		return $tpl->fetch('db:icms_form_elements_captcha_image_display.html');
 	}
 }
