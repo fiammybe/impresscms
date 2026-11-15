@@ -1,1 +1,1 @@
-<a href="<{$url}>"><{$label}></a>
+<{$lead}><{foreach from=$crumbs item=crumb name=path}><a href="<{$crumb.url}>"><{$crumb.label}></a><{if !$smarty.foreach.path.last}><{$separator}><{/if}><{/foreach}><{$tail}>

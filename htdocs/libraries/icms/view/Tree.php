@@ -254,21 +254,37 @@ class icms_view_Tree {
 	public function getNicePathFromId($sel_id, $title, $funcURL, $path = '', $separator = _BRDCRMB_SEP) {
 		$path = !empty($path) ? $separator . $path : $path;
 		$sel_id = (int) $sel_id;
-		$sql = 'SELECT ' . $this->pid . ', ' . $title . ' FROM ' . $this->table . ' WHERE ' . $this->id . '="' . $sel_id . '"';
-		$result = $this->db->query($sql);
-		if ($this->db->getRowsNum($result) == 0) {
+		$crumbs = array();
+		$orphaned = false;
+		while ($sel_id > 0) {
+			$sql = 'SELECT ' . $this->pid . ', ' . $title . ' FROM ' . $this->table . ' WHERE ' . $this->id . '="' . $sel_id . '"';
+			$result = $this->db->query($sql);
+			if ($this->db->getRowsNum($result) == 0) {
+				$orphaned = !empty($crumbs);
+				break;
+			}
+			list($parentid, $name) = $this->db->fetchRow($result);
+			array_unshift($crumbs, array(
+				'url' => $funcURL . '&amp;' . $this->id . '=' . $sel_id,
+				'label' => icms_core_DataFilter::htmlSpecialChars($name)
+			));
+			if ($parentid == 0) {
+				break;
+			}
+			$sel_id = (int) $parentid;
+		}
+		if (empty($crumbs)) {
 			return $path;
 		}
-		list($parentid, $name) = $this->db->fetchRow($result);
-		$name = icms_core_DataFilter::htmlSpecialChars($name);
+
 		$tpl = new icms_view_Tpl();
-		$tpl->assign(array('url' => $funcURL . '&amp;' . $this->id . '=' . $sel_id, 'label' => $name));
-		$path = trim($tpl->fetch('db:icms_view_tree_pathlink.html')) . $path;
-		if ($parentid == 0) {
-			return $path;
-		}
-		$path = $this->getNicePathFromId($parentid, $title, $funcURL, $path, $separator);
-		return $path;
+		$tpl->assign(array(
+			'crumbs' => $crumbs,
+			'separator' => $separator,
+			'lead' => $orphaned ? $separator : '',
+			'tail' => $path
+		));
+		return $tpl->fetch('db:icms_view_tree_pathlink.html');
 	}
 
 	/**
