@@ -59,15 +59,7 @@ class icms_form_Theme extends icms_form_Base {
 	 * @param	string	$class	CSS class name for <td> tag
 	 */
 	public function insertBreak($extra = '', $class= '') {
-		$class = ($class != '') ? " class='$class'" : '';
-		//Fix for $extra tag not showing
-		if ($extra) {
-			$extra = "<tr><td colspan='2' $class>$extra</td></tr>";
-			$this->addElement($extra);
-		} else {
-			$extra = "<tr><td colspan='2' $class>&nbsp;</td></tr>";
-			$this->addElement($extra);
-		}
+		$this->_elements[] = array('break' => true, 'extra' => $extra, 'class' => $class);
 	}
 
 	/**
@@ -76,41 +68,40 @@ class icms_form_Theme extends icms_form_Base {
 	 * @return	string
 	 */
 	public function render() {
-		$ele_name = $this->getName();
-		$ret = "<form id='" . $ele_name
-				. "' name='" . $ele_name
-				. "' action='" . $this->getAction()
-				. "' method='" . $this->getMethod()
-				. "' onsubmit='return xoopsFormValidate_" . $ele_name . "();'" . $this->getExtra() . ">
-			<div class='xo-theme-form'>
-			<table width='100%' class='outer' cellspacing='1'>
-			<tr><th colspan='2'>" . $this->getTitle() . "</th></tr>
-		";
+		$elements = array();
 		$hidden = '';
-		$class ='even';
-		foreach ( $this->getElements() as $ele ) {
-			if (!is_object($ele)) {
-				$ret .= $ele;
-			} elseif ( !$ele->isHidden() ) {
-				$ret .= "<tr valign='top' align='" . _GLOBAL_LEFT . "'><td class='head'>";
-				if (($caption = $ele->getCaption()) != '') {
-					$ret .=
-				        "<div class='xoops-form-element-caption" . ($ele->isRequired() ? "-required" : "" ) . "'>"
-						. "<span class='caption-text'>{$caption}</span>"
-						. "<span class='caption-marker'>*</span>"
-						. "</div>";
-				}
-				if (($desc = $ele->getDescription()) != '') {
-					$ret .= "<div class='xoops-form-element-help'>{$desc}</div>";
-				}
-				$ret .= "</td><td class='$class'>" . $ele->render() . "</td></tr>\n";
+		$class = 'even';
+		foreach ($this->getElements() as $ele) {
+			if (is_array($ele)) {
+				$elements[] = $ele;
+			} elseif (!is_object($ele)) {
+				$elements[] = array('raw' => $ele);
+			} elseif (!$ele->isHidden()) {
+				$elements[] = array(
+					'caption' => $ele->getCaption(),
+					'required' => $ele->isRequired(),
+					'description' => $ele->getDescription(),
+					'html' => $ele->render(),
+					'class' => $class
+				);
 			} else {
 				$hidden .= $ele->render();
 			}
 		}
-		$ret .= "</table>\n$hidden\n</div>\n</form>\n";
-		$ret .= $this->renderValidationJS(true);
-		return $ret;
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
+			'title' => $this->getTitle(),
+			'name' => $this->getName(),
+			'action' => $this->getAction(),
+			'method' => $this->getMethod(),
+			'extra' => $this->getExtra(),
+			'align' => _GLOBAL_LEFT,
+			'elements' => $elements,
+			'hidden' => $hidden,
+			'validation_js' => $this->renderValidationJS(false)
+		));
+
+		$template = $this->customTemplate ? $this->customTemplate : 'icms_form_theme.html';
+		return $tpl->fetch('db:' . $template);
 	}
 }
-

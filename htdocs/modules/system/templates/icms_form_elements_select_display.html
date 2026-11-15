@@ -1,0 +1,3 @@
+<select size='<{$ele_size}>' <{$ele_extra}> name='<{$ele_name}>' id='<{$ele_id}>'<{if $ele_multiple}> multiple='multiple'<{/if}>>
+<{foreach from=$ele_options item=option}><option value='<{$option.value}>'<{if $option.selected}> selected='selected'<{/if}>><{$option.label}></option>
+<{/foreach}></select>

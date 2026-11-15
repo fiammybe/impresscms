@@ -94,6 +94,12 @@ abstract class icms_form_Base {
 	protected $_elements = array();
 
 	/**
+	 * Template that replaces the default template of the form
+	 * @var string
+	 */
+	public $customTemplate = '';
+
+	/**
 	 * extra information for the <form> tag
 	 * @var array
 	 */
@@ -413,9 +419,6 @@ abstract class icms_form_Base {
 	 */
 	public function renderValidationJS( $withtags = true ) {
 		$js = "";
-		if ( $withtags ) {
-			$js .= "\n<!-- Start Form Validation JavaScript //-->\n<script type='text/javascript'>\n<!--//\n";
-		}
 		$formname = $this->getName();
 		$js .= "function xoopsFormValidate_{$formname}() { myform = window.document.{$formname}; ";
 		$elements = $this->getElements( true );
@@ -426,9 +429,23 @@ abstract class icms_form_Base {
 		}
 		$js .= "return true;\n}\n";
 		if ( $withtags ) {
-			$js .= "//--></script>\n<!-- End Form Vaidation JavaScript //-->\n";
+			$tpl = new icms_view_Tpl();
+			$tpl->assign('js', $js);
+			return $tpl->fetch('db:icms_form_validation_script.html');
 		}
 		return $js;
+	}
+
+	/**
+	 * Renders a separator row that was added with insertBreak() (used by assign())
+	 *
+	 * @param	array	$break	Break data: extra (HTML for the row) and class (CSS class of the td tag)
+	 * @return	string
+	 */
+	protected function fetchBreakRow(array $break) {
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array('extra' => $break['extra'], 'class' => $break['class']));
+		return $tpl->fetch('db:icms_form_break_row.html');
 	}
 
 	/**
@@ -444,6 +461,10 @@ abstract class icms_form_Base {
 			++$i;
 			if (is_string( $ele )) {
 				$elements[$i]['body']	= $ele;
+				continue;
+			}
+			if (is_array( $ele )) {
+				$elements[$i]['body']	= $this->fetchBreakRow($ele);
 				continue;
 			}
 			$ele_name = $ele->getName();

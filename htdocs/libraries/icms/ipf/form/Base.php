@@ -498,36 +498,48 @@ class icms_ipf_form_Base extends icms_form_Theme {
 	 */
 	public function render() {
 		$this->createButtons($this->_form_name, $this->_form_caption, $this->_submit_button_caption);
-		$required =& $this->getRequired();
-		$ret = "
-			<form name='".$this->getName()."_dorga' id='".$this->getName()."' action='".$this->getAction()."' method='".$this->getMethod()."' onsubmit='return xoopsFormValidate_".$this->getName()."(this);'".$this->getExtra().">
-			<table width='100%' class='outer' cellspacing='1'>
-			<tr><th colspan='2'>".$this->getTitle()."</th></tr>
-		";
+		$elements = array();
 		$hidden = '';
 		$class = 'even';
 		foreach ($this->getElements() as $ele) {
-			if (!is_object($ele)) {
-				$ret .= $ele;
+			if (is_array($ele)) {
+				$elements[] = array('type' => 'break', 'extra' => $ele['extra'], 'class' => $ele['class']);
+			} elseif (!is_object($ele)) {
+				$elements[] = array('type' => 'raw', 'raw' => $ele);
 			} elseif (!$ele->isHidden()) {
 				if (get_class($ele) == 'icms_ipf_form_elements_Section' && !$ele->isClosingSection()) {
-					$ret .= '<tr><th colspan="2">' . $ele->render() . '</th></tr>';
+					$elements[] = array('type' => 'section', 'html' => $ele->render());
 				} elseif (get_class($ele) == 'icms_ipf_form_elements_Section' && $ele->isClosingSection()) {
-					$ret .= '<tr><td class="even" colspan="2">&nbsp;</td></tr>';
+					$elements[] = array('type' => 'section_end');
 				} else {
-					$ret .= "<tr id='" . $ele->getName() . "_row' valign='top' align='"._GLOBAL_LEFT."'><td class='head'>".$ele->getCaption();
-					if ($ele->getDescription() != '') {
-						$ret .= '<br /><br /><span style="font-weight: normal;">'.$ele->getDescription().'</span>';
-					}
-					$ret .= "</td><td class='$class'>".$ele->render()."</td></tr>\n";
+					$elements[] = array(
+						'type' => 'element',
+						'name' => $ele->getName(),
+						'caption' => $ele->getCaption(),
+						'description' => $ele->getDescription(),
+						'html' => $ele->render(),
+						'class' => $class
+					);
 				}
 			} else {
 				$hidden .= $ele->render();
 			}
 		}
-		$ret .= "</table>\n$hidden\n</form>\n";
-		$ret .= $this->renderValidationJS(TRUE);
-		return $ret;
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
+			'title' => $this->getTitle(),
+			'name' => $this->getName(),
+			'action' => $this->getAction(),
+			'method' => $this->getMethod(),
+			'extra' => $this->getExtra(),
+			'align' => _GLOBAL_LEFT,
+			'elements' => $elements,
+			'hidden' => $hidden,
+			'validation_js' => $this->renderValidationJS(FALSE)
+		));
+
+		$template = $this->customTemplate ? $this->customTemplate : 'icms_ipf_form_base.html';
+		return $tpl->fetch('db:' . $template);
 	}
 
 	/**
@@ -575,9 +587,6 @@ class icms_ipf_form_Base extends icms_form_Theme {
 	 */
 	public function renderValidationJS($withtags = TRUE) {
 		$js = "";
-		if ($withtags) {
-			$js .= "\n<!-- Start Form Validation JavaScript //-->\n<script type='text/javascript'>\n<!--//\n";
-		}
 		$formname = $this->getName();
 		$js .= "function xoopsFormValidate_{$formname}(myform) {";
 		// First, output code to check required elements
@@ -651,7 +660,9 @@ class icms_ipf_form_Base extends icms_form_Theme {
 		}
 		$js .= "return true;\n}\n";
 		if ($withtags) {
-			$js .= "//--></script>\n<!-- End Form Vaidation JavaScript //-->\n";
+			$tpl = new icms_view_Tpl();
+			$tpl->assign('js', $js);
+			return $tpl->fetch('db:icms_form_validation_script.html');
 		}
 		return $js;
 	}

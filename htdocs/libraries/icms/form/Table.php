@@ -58,15 +58,7 @@ class icms_form_Table extends icms_form_Base {
 	 * @param	string	$class	CSS class name for <td> tag
 	 */
 	public function insertBreak($extra = '', $class= '') {
-		$class = ($class != '') ? " class='$class'" : '';
-		//Fix for $extra tag not showing
-		if ($extra) {
-			$extra = "<tr><td colspan='2' $class>$extra</td></tr>";
-			$this->addElement($extra);
-		} else {
-			$extra = "<tr><td colspan='2' $class>&nbsp;</td></tr>";
-			$this->addElement($extra);
-		}
+		$this->_elements[] = array('break' => true, 'extra' => $extra, 'class' => $class);
 	}
 
 	/**
@@ -75,24 +67,36 @@ class icms_form_Table extends icms_form_Base {
 	 * @return	string  $ret  the constructed HTML
 	 */
 	public function render() {
-		$ret = $this->getTitle() . "\n<form name='" . $this->getName()
-			. "' id='" . $this->getName()
-			. "' action='" . $this->getAction()
-			. "' method='" . $this->getMethod() . "'" . $this->getExtra()
-			. ">\n<table border='0' width='100%'>\n";
+		$elements = array();
 		$hidden = '';
 		foreach ($this->getElements() as $ele) {
-			if (!$ele->isHidden()) {
-				$ret .= "<tr valign='top' align='" . _GLOBAL_LEFT . "'><td>" . $ele->getCaption();
-				if ($ele_desc = $ele->getDescription()) {
-					$ret .= '<br /><br /><span style="font-weight: normal;">' . $ele_desc . '</span>';
-				}
-				$ret .= "</td><td>" . $ele->render() . "</td></tr>";
+			if (is_array($ele)) {
+				$elements[] = $ele;
+			} elseif (!is_object($ele)) {
+				$elements[] = array('raw' => $ele);
+			} elseif (!$ele->isHidden()) {
+				$elements[] = array(
+					'caption' => $ele->getCaption(),
+					'description' => $ele->getDescription(),
+					'html' => $ele->render()
+				);
 			} else {
 				$hidden .= $ele->render() . "\n";
 			}
 		}
-		$ret .= "</table>\n$hidden</form>\n";
-		return $ret;
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
+			'title' => $this->getTitle(),
+			'name' => $this->getName(),
+			'action' => $this->getAction(),
+			'method' => $this->getMethod(),
+			'extra' => $this->getExtra(),
+			'align' => _GLOBAL_LEFT,
+			'elements' => $elements,
+			'hidden' => $hidden
+		));
+
+		$template = $this->customTemplate ? $this->customTemplate : 'icms_form_table.html';
+		return $tpl->fetch('db:' . $template);
 	}
 }

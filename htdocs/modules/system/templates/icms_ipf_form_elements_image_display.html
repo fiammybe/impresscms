@@ -1,0 +1,3 @@
+<{foreach from=$items item=item name=i}><{if !$smarty.foreach.i.first}><{$delimiter}><{/if}><{if $item.type == 'image_external'}><img src='<{$item.url}>' alt='' /><br/><br/><{elseif $item.type == 'image_local'}><a rel='lightbox' title='<{$item.url}>' href='<{$item.url}>' ><img class='acp_object_imageurl' src='<{$item.url}>' alt='<{$item.url}>' height='150' /></a><br/><br/><{elseif $item.type == 'url_help'}><div style="padding-top: 8px; font-size: 80%;"><{$item.text}></div>&nbsp;<{elseif $item.type == 'url_label'}><br /><{$item.text}><{elseif $item.type == 'break'}><br /><br /><{else}><{if $item.caption != ''}><{$item.caption}>&nbsp;<{/if}><{$item.html}><{/if}>
+
+<{/foreach}>

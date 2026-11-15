@@ -1,0 +1,5 @@
+<{$title}>
+<form name='<{$name}>' id='<{$name}>' action='<{$action}>' method='<{$method}>'<{$extra}>>
+<{foreach from=$elements item=ele}><{if $ele.hidden}><{$ele.html}>
+<{else}><strong><{$ele.caption}></strong><br /><{$ele.html}><br />
+<{/if}><{/foreach}></form>
