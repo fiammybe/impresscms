@@ -42,8 +42,11 @@ first (use `token_get_all`, only inspect `T_CONSTANT_ENCAPSED_STRING`, `T_ENCAPS
 - Escaping: assigned values are **pre-escaped by default in PHP only when they already were**;
   new templates use `|escape` for plain-text values and leave known-safe HTML (e.g. rendered
   child elements) un-escaped, with a comment in the template. No behaviour change for existing output.
-- One `icms_view_Tpl` instance per render call is acceptable; prefer reusing a shared instance
-  for hot paths (`PageNav`, `Tree`, form elements rendered in loops) to avoid compile overhead.
+- **Render once, after preparing the data** (as `icms_form_elements_Button::render()` does): a component
+  collects everything in PHP arrays, then creates one `icms_view_Tpl`, does one `assign()` and one
+  `fetch('db:...')` in its `render()`. Nested fragments are included from the template with
+  `<{include file='db:...' var=$x}>` instead of being rendered in PHP first, and there is no shared
+  `renderTemplate()` helper. Output that repeats per request (status labels, poster links) is memoized.
   Caching stays off unless the caller already enables it.
 
 ## Decision 4: Parity verification
