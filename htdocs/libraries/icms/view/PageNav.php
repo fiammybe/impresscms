@@ -69,6 +69,11 @@ class icms_view_PageNav {
 	public $url;
 
 	/**
+	 * @public string $customTemplate  Template that replaces the default one for this navigation
+	 */
+	public $customTemplate = '';
+
+	/**
 	 * Constructor
 	 *
 	 * @param   int	 $total_items	Total number of items
@@ -88,19 +93,16 @@ class icms_view_PageNav {
 	}
 
 	/**
-	 * Renders a template with the given variables
+	 * Renders the prepared pagination data with its template
 	 *
-	 * @param string $template Template name (db: template in the system module)
-	 * @param array $vars Variables to assign
-	 * @return string
+	 * @param	array	$data	Template name ('template') and template variables ('vars')
+	 * @return	string
 	 */
-	private function renderTemplate($template, array $vars) {
-		static $tpl = null;
-		if ($tpl === null) {
-			$tpl = new icms_view_Tpl();
-		}
-		$tpl->clear_all_assign();
-		$tpl->assign($vars);
+	private function render(array $data) {
+		$tpl = new icms_view_Tpl();
+		$tpl->assign($data['vars']);
+
+		$template = $this->customTemplate ? $this->customTemplate : $data['template'];
 		return $tpl->fetch('db:' . $template);
 	}
 
@@ -111,23 +113,65 @@ class icms_view_PageNav {
 	 * @return  string
 	 */
 	public function renderNav($offset = 4) {
+		$data = $this->getNavData($offset);
+		if ($data === null) {
+			return '';
+		}
+		return $this->render($data);
+	}
+
+	/**
+	 * Create a navigational dropdown list
+	 *
+	 * @param   boolean	 $showbutton Show the "Go" button?
+	 * @return  string
+	 */
+	public function renderSelect($showbutton = false) {
+		if ($this->total < $this->perpage) {
+			return;
+		}
+		if (ceil($this->total / $this->perpage) <= 1) {
+			return '';
+		}
+		return $this->render($this->getSelectData($showbutton));
+	}
+
+	/**
+	 * Create navigation with images
+	 *
+	 * @param   integer	 $offset
+	 * @return  string
+	 */
+	public function renderImageNav($offset = 4) {
+		if ($this->total < $this->perpage) {
+			return;
+		}
+		if (ceil($this->total / $this->perpage) <= 1) {
+			return '';
+		}
+		return $this->render($this->getImageNavData($offset));
+	}
+
+	/**
+	 * Prepares the data for the text navigation
+	 *
+	 * @param   integer $offset
+	 * @return  array|null	Template name and template variables, null when there is only one page
+	 */
+	private function getNavData($offset) {
 		global $icmsConfigPersona, $xoTheme;
 
 		$style = (isset($icmsConfigPersona['pagstyle']) && file_exists(ICMS_LIBRARIES_PATH . '/paginationstyles/paginationstyles.php'))?$icmsConfigPersona['pagstyle']:'default';
+		$stylesheet_url = '';
 		if (isset($xoTheme)){
 			$xoTheme->addStylesheet(ICMS_LIBRARIES_URL . '/paginationstyles/css/' . $icmsConfigPersona['pagstyle'] . '.css', array("media" => "all"));
 		} else {
-			echo $this->renderTemplate('icms_view_pagenav_stylesheet.html', array(
-				'stylesheet_url' => ICMS_LIBRARIES_URL . '/paginationstyles/css/' . $icmsConfigPersona['pagstyle'] . '.css'
-			));
+			$stylesheet_url = ICMS_LIBRARIES_URL . '/paginationstyles/css/' . $icmsConfigPersona['pagstyle'] . '.css';
 		}
 		if ($this->total <= $this->perpage) {
-			return '';
+			return null;
 		}
 		$total_pages = ceil($this->total / $this->perpage);
-		if ($total_pages <= 1) {
-			return $this->renderTemplate('icms_view_pagenav_text.html', array('style' => $style, 'items' => array()));
-		}
 
 		$rtl = (defined('_ADM_USE_RTL') && _ADM_USE_RTL);
 		$items = array();
@@ -168,23 +212,20 @@ class icms_view_PageNav {
 			'arrow' => $rtl ? ' &#9668;' : ' &#9658;',
 			'label' => _NEXT
 		);
-		return $this->renderTemplate('icms_view_pagenav_text.html', array('style' => $style, 'items' => $items));
+		return array(
+			'template' => 'icms_view_pagenav_text.html',
+			'vars' => array('style' => $style, 'stylesheet_url' => $stylesheet_url, 'items' => $items)
+		);
 	}
 
 	/**
-	 * Create a navigational dropdown list
+	 * Prepares the data for the navigational dropdown list
 	 *
 	 * @param   boolean	 $showbutton Show the "Go" button?
-	 * @return  string
+	 * @return  array	Template name and template variables
 	 */
-	public function renderSelect($showbutton = false) {
-		if ($this->total < $this->perpage) {
-			return;
-		}
+	private function getSelectData($showbutton) {
 		$total_pages = ceil($this->total / $this->perpage);
-		if ($total_pages <= 1) {
-			return '';
-		}
 		$options = array();
 		$counter = 1;
 		$current_page = (int) (floor(($this->current + $this->perpage) / $this->perpage));
@@ -196,27 +237,24 @@ class icms_view_PageNav {
 			);
 			$counter++;
 		}
-		return $this->renderTemplate('icms_view_pagenav_select.html', array(
-			'options' => $options,
-			'showbutton' => (bool) $showbutton,
-			'go_label' => _GO
-		));
+		return array(
+			'template' => 'icms_view_pagenav_select.html',
+			'vars' => array(
+				'options' => $options,
+				'showbutton' => (bool) $showbutton,
+				'go_label' => _GO
+			)
+		);
 	}
 
 	/**
-	 * Create navigation with images
+	 * Prepares the data for the navigation with images
 	 *
 	 * @param   integer	 $offset
-	 * @return  string
+	 * @return  array	Template name and template variables
 	 */
-	public function renderImageNav($offset = 4) {
-		if ($this->total < $this->perpage) {
-			return;
-		}
+	private function getImageNavData($offset) {
 		$total_pages = ceil($this->total / $this->perpage);
-		if ($total_pages <= 1) {
-			return '';
-		}
 		$items = array();
 		$prev = $this->current - $this->perpage;
 		$items[] = array('type' => ($prev >= 0) ? 'prev' : 'prev_disabled', 'url' => $this->url . $prev);
@@ -242,9 +280,12 @@ class icms_view_PageNav {
 		}
 		$next = $this->current + $this->perpage;
 		$items[] = array('type' => ($this->total > $next) ? 'next' : 'next_disabled', 'url' => $this->url . $next);
-		return $this->renderTemplate('icms_view_pagenav_image.html', array(
-			'items' => $items,
-			'blank_img' => ICMS_URL . '/images/blank.gif'
-		));
+		return array(
+			'template' => 'icms_view_pagenav_image.html',
+			'vars' => array(
+				'items' => $items,
+				'blank_img' => ICMS_URL . '/images/blank.gif'
+			)
+		);
 	}
 }
