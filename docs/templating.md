@@ -29,8 +29,8 @@ Files that must keep markup (sanitisers, bootstrap/error output) are listed in t
 | `icms_view_pagenav_select.html` | `renderSelect` | `options[]` (`value`, `label`, `selected`), `showbutton`, `go_label` |
 | `icms_view_pagenav_image.html` | `renderImageNav` | `items[]`, `blank_img` |
 | `icms_view_pagenav_stylesheet.html` | included by `icms_view_pagenav_text.html` (no theme) | `stylesheet_url` |
-| `icms_form_table.html`, `icms_form_theme.html`, `icms_form_simple.html`, `icms_ipf_form_base.html`, `icms_form_groupperm.html` | form renderers | `title`, `name`, `action`, `method`, `extra`, `align`, `elements[]`, `hidden` |
-| `icms_form_break_row.html` | `insertBreak()` | `extra`, `class` |
+| `icms_form_table.html`, `icms_form_theme.html`, `icms_form_simple.html`, `icms_ipf_form_base.html`, `icms_form_groupperm.html` | form renderers (one render per form, `$customTemplate` overrides the template) | `title`, `name`, `action`, `method`, `extra`, `align`, `elements[]` (raw rows and `insertBreak()` rows included), `hidden`, `validation_js` |
+| `icms_form_break_row.html` | included by the form templates for rows added with `insertBreak()` | `extra`, `class` |
 | `icms_form_validation_script.html` | `renderValidationJS(true)` | `js` |
 | `icms_form_elements_{select,textarea,groupperm}_display.html` | form elements | see templates |
 | `icms_form_elements_captcha_{hint,expression}.html` | captcha | `rule` / `expression` |
