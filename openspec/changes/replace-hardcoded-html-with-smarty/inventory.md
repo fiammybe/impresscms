@@ -13,9 +13,9 @@ Remaining counts are enforced by `bin/hardcoded-html-baseline.txt` (CI: `.github
 | `form/Table.php`, `form/Theme.php`, `form/Simple.php`, `form/Base.php` (validation JS wrapper, break row) | `icms_form_{table,theme,simple,break_row,validation_script}.html` |
 | `form/Groupperm.php`, `form/elements/Groupperm.php` | `icms_form_groupperm.html`, `icms_form_elements_groupperm_display.html` |
 | `form/elements/Select.php`, `Textarea.php` | `icms_form_elements_{select,textarea}_display.html` |
-| `form/elements/captcha/{Image,Text}.php` | `icms_form_elements_captcha_{hint,expression}.html` |
+| `form/elements/captcha/{Image,Text}.php` | `icms_form_elements_captcha_{image,text}_display.html` |
 | `ipf/form/Base.php`, `ipf/form/elements/{Page,File}.php` | `icms_ipf_form_base.html`, `icms_ipf_form_elements_{page,file}_display.html` |
-| `ipf/form/elements/Image.php` | `icms_ipf_form_elements_image_{external,local,urlhelp,delete}.html` |
+| `ipf/form/elements/Image.php` | `icms_ipf_form_elements_image_{display,delete}.html` |
 | `ipf/Controller.php` (link helpers) | `icms_ipf_controller_{link,imagelink}.html` |
 | `ipf/Tree.php`, `view/Tree.php` | `icms_view_tree_{selbox,pathlink}.html` |
 | `view/PageBuilder.php` (block edit buttons) | `icms_view_pagebuilder_blockedit.html` |

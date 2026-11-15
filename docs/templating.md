@@ -33,10 +33,10 @@ Files that must keep markup (sanitisers, bootstrap/error output) are listed in t
 | `icms_form_break_row.html` | included by the form templates for rows added with `insertBreak()` | `extra`, `class` |
 | `icms_form_validation_script.html` | `renderValidationJS(true)` | `js` |
 | `icms_form_elements_{select,textarea,groupperm}_display.html` | form elements | see templates |
-| `icms_form_elements_captcha_{hint,expression}.html` | captcha | `rule` / `expression` |
+| `icms_form_elements_captcha_{image,text}_display.html` | captcha elements (one render each) | `name`, `size`, `image_url`, `alt`, `hint` / `expression`, `name`, `size`, `hint` |
 | `icms_ipf_controller_{link,imagelink}.html` | `icms_ipf_Controller` | `url`, `label` / `image_url`, `title` |
-| `icms_ipf_form_elements_{page,file}_display.html`, `icms_ipf_form_elements_image_*.html` | IPF elements | see templates |
-| `icms_view_tree_{selbox,pathlink}.html` | tree classes | `name`, `id`, `onchange`, `options[]` / `url`, `label` |
+| `icms_ipf_form_elements_{page,file}_display.html`, `icms_ipf_form_elements_image_{display,delete}.html` | IPF elements (the image element renders `items[]` once) | see templates |
+| `icms_view_tree_{selbox,pathlink}.html` | tree classes | `name`, `id`, `onchange`, `options[]` / `crumbs[]` (`url`, `label`), `separator`, `lead`, `tail` |
 | `icms_view_pagebuilder_blockedit.html` | `icms_view_PageBuilder::buildBlock` | `bid`, `rtn`, `is_custom`, `admin_url`, `images_url`, `lang_*` |
 | `icms_data_page_seloptions.html` | `icms_data_page_Handler::getPageSelOptions` | `top_*`, `all_*`, `groups[]` |
 | `icms_data_comment_{status,adminfooter,posterlink}.html` | `icms_data_comment_Renderer` | see templates |

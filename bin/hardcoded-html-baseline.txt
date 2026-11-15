@@ -19,7 +19,6 @@ htdocs/libraries/icms/form/elements/captcha/Object.php	1
 htdocs/libraries/icms/form/elements/select/Image.php	6
 htdocs/libraries/icms/form/elements/select/User.php	5
 htdocs/libraries/icms/ipf/Highlighter.php	1
-htdocs/libraries/icms/ipf/form/elements/Image.php	2
 htdocs/libraries/icms/ipf/form/elements/Passwordtray.php	1
 htdocs/libraries/icms/ipf/form/elements/Richfile.php	10
 htdocs/libraries/icms/ipf/form/elements/Signature.php	1
