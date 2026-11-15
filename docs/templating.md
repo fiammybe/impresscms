@@ -25,10 +25,10 @@ Files that must keep markup (sanitisers, bootstrap/error output) are listed in t
 ## Template reference (new in this change)
 | Template | Used by | Variables |
 |---|---|---|
-| `icms_view_pagenav_text.html` | `icms_view_PageNav::renderNav` | `style`, `items[]` (`type`: prev, prev_disabled, current, page, ellipsis, next, next_disabled; `url`, `label`, `arrow`) |
+| `icms_view_pagenav_text.html` | `icms_view_PageNav::renderNav` | `style`, `stylesheet_url` (empty when a theme is present), `items[]` (`type`: prev, prev_disabled, current, page, ellipsis, next, next_disabled; `url`, `label`, `arrow`) |
 | `icms_view_pagenav_select.html` | `renderSelect` | `options[]` (`value`, `label`, `selected`), `showbutton`, `go_label` |
 | `icms_view_pagenav_image.html` | `renderImageNav` | `items[]`, `blank_img` |
-| `icms_view_pagenav_stylesheet.html` | `renderNav` (no theme) | `stylesheet_url` |
+| `icms_view_pagenav_stylesheet.html` | included by `icms_view_pagenav_text.html` (no theme) | `stylesheet_url` |
 | `icms_form_table.html`, `icms_form_theme.html`, `icms_form_simple.html`, `icms_ipf_form_base.html`, `icms_form_groupperm.html` | form renderers | `title`, `name`, `action`, `method`, `extra`, `align`, `elements[]`, `hidden` |
 | `icms_form_break_row.html` | `insertBreak()` | `extra`, `class` |
 | `icms_form_validation_script.html` | `renderValidationJS(true)` | `js` |
