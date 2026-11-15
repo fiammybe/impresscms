@@ -54,7 +54,17 @@ class icms_data_comment_Renderer {
 	private $_useIcons = TRUE;
 	private $_doIconCheck = FALSE;
 	private $_memberHandler;
-	private $_statusText;
+	/**
+	 * Status labels that were already rendered, by comment status
+	 * @var array
+	 */
+	private $_statusHtml = array();
+
+	/**
+	 * Poster links that were already rendered, by user id
+	 * @var array
+	 */
+	private $_posterLinks = array();
 
 	/**
 	 * Constructor
@@ -68,11 +78,6 @@ class icms_data_comment_Renderer {
 		$this->_useIcons = $use_icons;
 		$this->_doIconCheck = $do_iconcheck;
 		$this->_memberHandler = icms::handler('icms_member');
-		$this->_statusText = array(
-			XOOPS_COMMENT_PENDING => $this->_renderTemplate('icms_data_comment_status.html', array('status' => 'pending', 'label' => _CM_PENDING)),
-			XOOPS_COMMENT_ACTIVE => $this->_renderTemplate('icms_data_comment_status.html', array('status' => 'active', 'label' => _CM_ACTIVE)),
-			XOOPS_COMMENT_HIDDEN => $this->_renderTemplate('icms_data_comment_status.html', array('status' => 'hidden', 'label' => _CM_HIDDEN))
-			);
 	}
 
 	/**
@@ -212,7 +217,7 @@ class icms_data_comment_Renderer {
 			} else {
 				$title = $thread[$key]['obj']->getVar('com_title');
 			}
-			$title = (FALSE != $admin_view) ? $title . ' ' . $this->_statusText[$thread[$key]['obj']->getVar('com_status')] : $title;
+			$title = (FALSE != $admin_view) ? $title . ' ' . $this->_getStatusHtml($thread[$key]['obj']->getVar('com_status')) : $title;
 			$replies[] = array(
 				'id' => $key,
 				'prefix' => $current_prefix,
@@ -220,7 +225,7 @@ class icms_data_comment_Renderer {
 				'simple_title' => $simple_title,
 				'title' => $title,
 				'root_id' => $thread[$key]['obj']->getVar('com_rootid'),
-				'status' => $this->_statusText[$thread[$key]['obj']->getVar('com_status')],
+				'status' => $this->_getStatusHtml($thread[$key]['obj']->getVar('com_status')),
 				'poster' => $this->_getPosterName($thread[$key]['obj']->getVar('com_uid'))
 			);
 			$current_prefix .= $prefix;
@@ -354,10 +359,7 @@ class icms_data_comment_Renderer {
 		if ($poster['id'] > 0) {
 			$com_poster =& $this->_memberHandler->getUser($poster_id);
 			if (is_object($com_poster)) {
-				$poster['uname'] = $this->_renderTemplate('icms_data_comment_posterlink.html', array(
-					'url' => ICMS_URL . '/userinfo.php?uid=' . $poster['id'],
-					'uname' => $com_poster->getVar('uname')
-				));
+				$poster['uname'] = $this->_getPosterLink($poster['id'], $com_poster->getVar('uname'));
 				return $poster;
 			}
 		}
@@ -377,10 +379,7 @@ class icms_data_comment_Renderer {
 		if ($poster['id'] > 0) {
 			$com_poster =& $this->_memberHandler->getUser($poster['id']);
 			if (is_object($com_poster)) {
-				$poster['uname'] = $this->_renderTemplate('icms_data_comment_posterlink.html', array(
-					'url' => ICMS_URL . '/userinfo.php?uid=' . $poster['id'],
-					'uname' => $com_poster->getVar('uname')
-				));
+				$poster['uname'] = $this->_getPosterLink($poster['id'], $com_poster->getVar('uname'));
 				$poster_rank = $com_poster->rank();
 				$poster['rank_image'] = $poster_rank['image'];
 				$poster['rank_title'] = $poster_rank['title'];
@@ -426,6 +425,52 @@ class icms_data_comment_Renderer {
 	}
 
 	/**
+	 * Gets the template data of a comment status
+	 *
+	 * @param	int		$com_status
+	 * @return	array	status (identifier used by the templates) and label
+	 */
+	private function _getStatusData($com_status) {
+		$statuses = array(
+			XOOPS_COMMENT_PENDING => array('status' => 'pending', 'label' => _CM_PENDING),
+			XOOPS_COMMENT_ACTIVE => array('status' => 'active', 'label' => _CM_ACTIVE),
+			XOOPS_COMMENT_HIDDEN => array('status' => 'hidden', 'label' => _CM_HIDDEN)
+		);
+		return isset($statuses[$com_status]) ? $statuses[$com_status] : array('status' => 'hidden', 'label' => '');
+	}
+
+	/**
+	 * Renders the status label of a comment (once for every status)
+	 *
+	 * @param	int		$com_status
+	 * @return	string
+	 */
+	private function _getStatusHtml($com_status) {
+		if (!isset($this->_statusHtml[$com_status])) {
+			$tpl = new icms_view_Tpl();
+			$tpl->assign($this->_getStatusData($com_status));
+			$this->_statusHtml[$com_status] = trim($tpl->fetch('db:icms_data_comment_status.html'));
+		}
+		return $this->_statusHtml[$com_status];
+	}
+
+	/**
+	 * Renders the link to the profile of a poster (once for every user)
+	 *
+	 * @param	int		$uid
+	 * @param	string	$uname
+	 * @return	string
+	 */
+	private function _getPosterLink($uid, $uname) {
+		if (!isset($this->_posterLinks[$uid])) {
+			$tpl = new icms_view_Tpl();
+			$tpl->assign(array('url' => ICMS_URL . '/userinfo.php?uid=' . $uid, 'uname' => $uname));
+			$this->_posterLinks[$uid] = trim($tpl->fetch('db:icms_data_comment_posterlink.html'));
+		}
+		return $this->_posterLinks[$uid];
+	}
+
+	/**
 	 * Renders the admin footer (status and IP address) of a comment
 	 *
 	 * @param	object	$comment
@@ -433,28 +478,13 @@ class icms_data_comment_Renderer {
 	 * @return	string
 	 */
 	private function _renderAdminFooter($comment, $bottom_margin = true) {
-		return $this->_renderTemplate('icms_data_comment_adminfooter.html', array(
+		$tpl = new icms_view_Tpl();
+		$tpl->assign($this->_getStatusData($comment->getVar('com_status')));
+		$tpl->assign(array(
 			'bottom_margin' => (bool) $bottom_margin,
 			'status_label' => _CM_STATUS,
-			'status' => $this->_statusText[$comment->getVar('com_status')],
 			'ip' => $comment->getVar('com_ip')
 		));
-	}
-
-	/**
-	 * Renders a template
-	 *
-	 * @param	string	$template
-	 * @param	array	$vars
-	 * @return	string
-	 */
-	private function _renderTemplate($template, array $vars) {
-		static $tpl = null;
-		if ($tpl === null) {
-			$tpl = new icms_view_Tpl();
-		}
-		$tpl->clear_all_assign();
-		$tpl->assign($vars);
-		return trim($tpl->fetch('db:' . $template));
+		return trim($tpl->fetch('db:icms_data_comment_adminfooter.html'));
 	}
 }
