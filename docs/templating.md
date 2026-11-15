@@ -39,5 +39,5 @@ Files that must keep markup (sanitisers, bootstrap/error output) are listed in t
 | `icms_view_tree_{selbox,pathlink}.html` | tree classes | `name`, `id`, `onchange`, `options[]` / `crumbs[]` (`url`, `label`), `separator`, `lead`, `tail` |
 | `icms_view_pagebuilder_blockedit.html` | `icms_view_PageBuilder::buildBlock` | `bid`, `rtn`, `is_custom`, `admin_url`, `images_url`, `lang_*` |
 | `icms_data_page_seloptions.html` | `icms_data_page_Handler::getPageSelOptions` | `top_*`, `all_*`, `groups[]` |
-| `icms_data_comment_{status,adminfooter,posterlink}.html` | `icms_data_comment_Renderer` | see templates |
+| `icms_data_comment_{status,adminfooter,posterlink}.html` | `icms_data_comment_Renderer` (status label and poster link are rendered once per status and user; the admin footer includes the status template) | `status`, `label`, `bottom_margin`, `status_label`, `ip` / `url`, `uname` |
 | `icms_data_{file,urllink}_link.html`, `icms_member_userlink.html`, `icms_module_{message,mainlink}.html` | object `render()`/link helpers | see templates |
