@@ -502,7 +502,9 @@ class icms_ipf_form_Base extends icms_form_Theme {
 		$hidden = '';
 		$class = 'even';
 		foreach ($this->getElements() as $ele) {
-			if (!is_object($ele)) {
+			if (is_array($ele)) {
+				$elements[] = array('type' => 'break', 'extra' => $ele['extra'], 'class' => $ele['class']);
+			} elseif (!is_object($ele)) {
 				$elements[] = array('type' => 'raw', 'raw' => $ele);
 			} elseif (!$ele->isHidden()) {
 				if (get_class($ele) == 'icms_ipf_form_elements_Section' && !$ele->isClosingSection()) {
@@ -523,7 +525,8 @@ class icms_ipf_form_Base extends icms_form_Theme {
 				$hidden .= $ele->render();
 			}
 		}
-		$ret = $this->renderTemplate('icms_ipf_form_base.html', array(
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
 			'title' => $this->getTitle(),
 			'name' => $this->getName(),
 			'action' => $this->getAction(),
@@ -531,10 +534,12 @@ class icms_ipf_form_Base extends icms_form_Theme {
 			'extra' => $this->getExtra(),
 			'align' => _GLOBAL_LEFT,
 			'elements' => $elements,
-			'hidden' => $hidden
+			'hidden' => $hidden,
+			'validation_js' => $this->renderValidationJS(FALSE)
 		));
-		$ret .= $this->renderValidationJS(TRUE);
-		return $ret;
+
+		$template = $this->customTemplate ? $this->customTemplate : 'icms_ipf_form_base.html';
+		return $tpl->fetch('db:' . $template);
 	}
 
 	/**
@@ -655,7 +660,9 @@ class icms_ipf_form_Base extends icms_form_Theme {
 		}
 		$js .= "return true;\n}\n";
 		if ($withtags) {
-			return $this->renderTemplate('icms_form_validation_script.html', array('js' => $js));
+			$tpl = new icms_view_Tpl();
+			$tpl->assign('js', $js);
+			return $tpl->fetch('db:icms_form_validation_script.html');
 		}
 		return $js;
 	}

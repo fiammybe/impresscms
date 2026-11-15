@@ -94,6 +94,12 @@ abstract class icms_form_Base {
 	protected $_elements = array();
 
 	/**
+	 * Template that replaces the default template of the form
+	 * @var string
+	 */
+	public $customTemplate = '';
+
+	/**
 	 * extra information for the <form> tag
 	 * @var array
 	 */
@@ -423,37 +429,23 @@ abstract class icms_form_Base {
 		}
 		$js .= "return true;\n}\n";
 		if ( $withtags ) {
-			return $this->renderTemplate('icms_form_validation_script.html', array('js' => $js));
+			$tpl = new icms_view_Tpl();
+			$tpl->assign('js', $js);
+			return $tpl->fetch('db:icms_form_validation_script.html');
 		}
 		return $js;
 	}
 
 	/**
-	 * Renders a Smarty template (db: template of the system module)
+	 * Renders a separator row that was added with insertBreak() (used by assign())
 	 *
-	 * @param	string	$template	Template file name
-	 * @param	array	$vars		Variables to assign
+	 * @param	array	$break	Break data: extra (HTML for the row) and class (CSS class of the td tag)
 	 * @return	string
 	 */
-	protected function renderTemplate($template, array $vars) {
-		static $tpl = null;
-		if ($tpl === null) {
-			$tpl = new icms_view_Tpl();
-		}
-		$tpl->clear_all_assign();
-		$tpl->assign($vars);
-		return $tpl->fetch('db:' . $template);
-	}
-
-	/**
-	 * Renders a separator row for table based forms
-	 *
-	 * @param	string	$extra	HTML to be displayed in the row (empty for a non-breaking space)
-	 * @param	string	$class	CSS class name for the td tag
-	 * @return	string
-	 */
-	protected function renderBreakRow($extra = '', $class = '') {
-		return $this->renderTemplate('icms_form_break_row.html', array('extra' => $extra, 'class' => $class));
+	protected function fetchBreakRow(array $break) {
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array('extra' => $break['extra'], 'class' => $break['class']));
+		return $tpl->fetch('db:icms_form_break_row.html');
 	}
 
 	/**
@@ -469,6 +461,10 @@ abstract class icms_form_Base {
 			++$i;
 			if (is_string( $ele )) {
 				$elements[$i]['body']	= $ele;
+				continue;
+			}
+			if (is_array( $ele )) {
+				$elements[$i]['body']	= $this->fetchBreakRow($ele);
 				continue;
 			}
 			$ele_name = $ele->getName();

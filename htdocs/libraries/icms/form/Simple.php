@@ -70,7 +70,8 @@ class icms_form_Simple extends icms_form_Base {
 				'html' => $ele->render()
 			);
 		}
-		return $this->renderTemplate('icms_form_simple.html', array(
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
 			'title' => $this->getTitle(),
 			'name' => $this->getName(),
 			'action' => $this->getAction(),
@@ -78,5 +79,8 @@ class icms_form_Simple extends icms_form_Base {
 			'extra' => $this->getExtra(),
 			'elements' => $elements
 		));
+
+		$template = $this->customTemplate ? $this->customTemplate : 'icms_form_simple.html';
+		return $tpl->fetch('db:' . $template);
 	}
 }

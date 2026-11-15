@@ -59,8 +59,7 @@ class icms_form_Theme extends icms_form_Base {
 	 * @param	string	$class	CSS class name for <td> tag
 	 */
 	public function insertBreak($extra = '', $class= '') {
-		$row = $this->renderBreakRow($extra, $class);
-		$this->addElement($row);
+		$this->_elements[] = array('break' => true, 'extra' => $extra, 'class' => $class);
 	}
 
 	/**
@@ -73,7 +72,9 @@ class icms_form_Theme extends icms_form_Base {
 		$hidden = '';
 		$class = 'even';
 		foreach ($this->getElements() as $ele) {
-			if (!is_object($ele)) {
+			if (is_array($ele)) {
+				$elements[] = $ele;
+			} elseif (!is_object($ele)) {
 				$elements[] = array('raw' => $ele);
 			} elseif (!$ele->isHidden()) {
 				$elements[] = array(
@@ -87,7 +88,8 @@ class icms_form_Theme extends icms_form_Base {
 				$hidden .= $ele->render();
 			}
 		}
-		$ret = $this->renderTemplate('icms_form_theme.html', array(
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
 			'title' => $this->getTitle(),
 			'name' => $this->getName(),
 			'action' => $this->getAction(),
@@ -95,8 +97,11 @@ class icms_form_Theme extends icms_form_Base {
 			'extra' => $this->getExtra(),
 			'align' => _GLOBAL_LEFT,
 			'elements' => $elements,
-			'hidden' => $hidden
+			'hidden' => $hidden,
+			'validation_js' => $this->renderValidationJS(false)
 		));
-		return $ret . $this->renderValidationJS(true);
+
+		$template = $this->customTemplate ? $this->customTemplate : 'icms_form_theme.html';
+		return $tpl->fetch('db:' . $template);
 	}
 }

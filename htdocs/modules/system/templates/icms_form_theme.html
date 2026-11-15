@@ -2,8 +2,9 @@
 <div class='xo-theme-form'>
 <table width='100%' class='outer' cellspacing='1'>
 <tr><th colspan='2'><{$title}></th></tr>
-<{foreach from=$elements item=ele}><{if isset($ele.raw)}><{$ele.raw}><{else}><tr valign='top' align='<{$align}>'><td class='head'><{if $ele.caption != ''}><div class='xoops-form-element-caption<{if $ele.required}>-required<{/if}>'><span class='caption-text'><{$ele.caption}></span><span class='caption-marker'>*</span></div><{/if}><{if $ele.description != ''}><div class='xoops-form-element-help'><{$ele.description}></div><{/if}></td><td class='<{$ele.class}>'><{$ele.html}></td></tr>
+<{foreach from=$elements item=ele}><{if isset($ele.raw)}><{$ele.raw}><{elseif isset($ele.break)}><{include file='db:icms_form_break_row.html' extra=$ele.extra class=$ele.class}><{else}><tr valign='top' align='<{$align}>'><td class='head'><{if $ele.caption != ''}><div class='xoops-form-element-caption<{if $ele.required}>-required<{/if}>'><span class='caption-text'><{$ele.caption}></span><span class='caption-marker'>*</span></div><{/if}><{if $ele.description != ''}><div class='xoops-form-element-help'><{$ele.description}></div><{/if}></td><td class='<{$ele.class}>'><{$ele.html}></td></tr>
 <{/if}><{/foreach}></table>
 <{$hidden}>
 </div>
 </form>
+<{if $validation_js}><{include file='db:icms_form_validation_script.html' js=$validation_js}><{/if}>

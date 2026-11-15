@@ -58,8 +58,7 @@ class icms_form_Table extends icms_form_Base {
 	 * @param	string	$class	CSS class name for <td> tag
 	 */
 	public function insertBreak($extra = '', $class= '') {
-		$row = $this->renderBreakRow($extra, $class);
-		$this->addElement($row);
+		$this->_elements[] = array('break' => true, 'extra' => $extra, 'class' => $class);
 	}
 
 	/**
@@ -71,7 +70,9 @@ class icms_form_Table extends icms_form_Base {
 		$elements = array();
 		$hidden = '';
 		foreach ($this->getElements() as $ele) {
-			if (!is_object($ele)) {
+			if (is_array($ele)) {
+				$elements[] = $ele;
+			} elseif (!is_object($ele)) {
 				$elements[] = array('raw' => $ele);
 			} elseif (!$ele->isHidden()) {
 				$elements[] = array(
@@ -83,7 +84,8 @@ class icms_form_Table extends icms_form_Base {
 				$hidden .= $ele->render() . "\n";
 			}
 		}
-		return $this->renderTemplate('icms_form_table.html', array(
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
 			'title' => $this->getTitle(),
 			'name' => $this->getName(),
 			'action' => $this->getAction(),
@@ -93,5 +95,8 @@ class icms_form_Table extends icms_form_Base {
 			'elements' => $elements,
 			'hidden' => $hidden
 		));
+
+		$template = $this->customTemplate ? $this->customTemplate : 'icms_form_table.html';
+		return $tpl->fetch('db:' . $template);
 	}
 }

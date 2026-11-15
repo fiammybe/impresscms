@@ -166,7 +166,8 @@ class icms_form_Groupperm extends icms_form_Base {
 				$hidden .= $ele->render();
 			}
 		}
-		$ret = $this->renderTemplate('icms_form_groupperm.html', array(
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
 			'title' => $this->getTitle(),
 			'description' => $this->_permDesc,
 			'name' => $this->getName(),
@@ -175,10 +176,12 @@ class icms_form_Groupperm extends icms_form_Base {
 			'extra' => $this->getExtra(),
 			'align' => _GLOBAL_LEFT,
 			'elements' => $rows,
-			'hidden' => $hidden
+			'hidden' => $hidden,
+			'validation_js' => $this->renderValidationJS(false)
 		));
-		$ret .= $this->renderValidationJS(true);
-		return $ret;
+
+		$template = $this->customTemplate ? $this->customTemplate : 'icms_form_groupperm.html';
+		return $tpl->fetch('db:' . $template);
 	}
 
 	/**
