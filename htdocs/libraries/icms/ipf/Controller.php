@@ -634,7 +634,9 @@ return $this->renderImageLink($ret, "viewmag.png", _CO_ICMS_ADMIN_VIEW);
 	 * @return	string
 	 */
 	protected function renderLink($url, $label) {
-		return $this->renderTemplate('icms_ipf_controller_link.html', array('url' => $url, 'label' => $label));
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array('url' => $url, 'label' => $label));
+		return $tpl->fetch('db:icms_ipf_controller_link.html');
 	}
 
 	/**
@@ -646,27 +648,12 @@ return $this->renderImageLink($ret, "viewmag.png", _CO_ICMS_ADMIN_VIEW);
 	 * @return	string
 	 */
 	protected function renderImageLink($url, $image, $title) {
-		return $this->renderTemplate('icms_ipf_controller_imagelink.html', array(
+		$tpl = new icms_view_Tpl();
+		$tpl->assign(array(
 			'url' => $url,
 			'image_url' => ICMS_IMAGES_SET_URL . '/actions/' . $image,
 			'title' => $title
 		));
-	}
-
-	/**
-	 * Renders a Smarty template (db: template of the system module)
-	 *
-	 * @param	string	$template
-	 * @param	array	$vars
-	 * @return	string
-	 */
-	protected function renderTemplate($template, array $vars) {
-		static $tpl = null;
-		if ($tpl === null) {
-			$tpl = new icms_view_Tpl();
-		}
-		$tpl->clear_all_assign();
-		$tpl->assign($vars);
-		return $tpl->fetch('db:' . $template);
+		return $tpl->fetch('db:icms_ipf_controller_imagelink.html');
 	}
 }
