@@ -32,6 +32,11 @@ services:
             - '../src/Ipf/Store/{ListResult,StoredText}.php'
             - '../src/Ipf/Table/{ColumnConfig,TableConfig,TableView}.php'
             - '../src/Ipf/Api/{ApiResource,ApiItem}.php'
+            - '../src/Ipf/Attribute/'
+            # a DBAL column type, registered in doctrine.yaml
+            - '../src/Ipf/Store/Dbal/'
+            # the ORM example entity, mapped in the test environment only
+            - '../src/Ipf/Example/'
             # DBAL driver parts, created by IcmsDriver, not services
             - '../src/Legacy/Dbal/{ErrorMode,IcmsDriver,SharedConnection,SharedStatement}.php'
 
