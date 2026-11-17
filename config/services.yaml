@@ -26,12 +26,18 @@ services:
             - '../src/Security/IcmsUser.php'
             - '../src/Security/Attribute/'
             - '../src/DependencyInjection/'
+            # descriptions, queries and views of IPF objects: value objects
+            - '../src/Ipf/Metadata/{EntityDefinition,FieldDefinition,UnknownObjectException}.php'
             # DBAL driver parts, created by IcmsDriver, not services
             - '../src/Legacy/Dbal/{ErrorMode,IcmsDriver,SharedConnection,SharedStatement}.php'
 
     App\Controller\:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
+
+    # the IPF definition layer: public, because module pages that are still
+    # legacy scripts fetch these from the container
+    App\Ipf\Metadata\DefinitionRegistry: { public: true }
 
     App\LegacyBridge\LegacyScriptResolver:
         arguments:
