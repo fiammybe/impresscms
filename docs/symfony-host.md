@@ -63,7 +63,7 @@ also resolves the legacy `icms_*` names.
    Unclaimed requests reach `App\Controller\LegacyBridgeController`, a
    catch-all route with priority -1000. Paths that a Symfony route serves with
    other methods answer 405 there. Reserved prefixes
-   (`icms.legacy.reserved_prefixes`, none by default) always answer 404 and
+   (`icms.legacy.reserved_prefixes`, by default `api`) always answer 404 and
    never reach legacy. `bin/console icms:routes:ownership '<url>' [-m POST]`
    shows who owns a URL.
 3. The bridge resolves the path under the web root. The following are 404:
@@ -292,6 +292,152 @@ To take over a page:
    handling.
 3. Run the same tests against the takeover; only intended changes (the token)
    may differ.
+
+## IPF definition layer
+
+An IPF object is defined once, in its class (`quickInitVar()`, `initVar()`,
+`setControl()`), and that definition drives everything else. On the host it
+is read into one description, `App\Ipf\Metadata\EntityDefinition`: fields
+with their type, caption, control and flags, the key, identifier and summary
+fields, and the handler's permissions. Existing objects need no change, and
+nothing has to be configured a second time.
+
+```php
+$definition = $definitions->get('system', 'mimetype');   // App\Ipf\Metadata\DefinitionRegistry
+$definition->field('extension')->caption;                 // the object's own caption
+```
+
+The description is read-only and kept for the request. It serves lists and
+the API. Forms (`App\Ipf\Form\IpfFormFactory`) keep reading the object
+itself, because an object may change its variables per instance
+(`hideFieldFromForm()`, `setControl()`).
+
+| IPF | On the host |
+|---|---|
+| `Entity::$vars`, controls | `EntityDefinition`, `FieldDefinition` |
+| `Form\Base`, `cleanVars()` | Symfony Form and Validator: `IpfFormFactory` |
+| `Controller::storeFromDefaultForm()` | `IpfPersister` |
+| `View\Table` request handling | `ListQuery`, `ListQueryResolver` |
+| `View\Table` criteria | `IpfRepository` → the object's own handler |
+| `View\Table` output | `TableFactory` + a `TableRendererInterface` |
+| `toArray()`, ad-hoc AJAX scripts | Serializer: `IpfApiController` |
+
+### Lists
+
+```php
+$table = $tables->create($handler)             // App\Ipf\Table\TableFactory
+    ->addIntroButton('add', 'post.php?op=mod', _CO_BLOG_POST_CREATE);
+
+$html = $renderer->render($table, $request);   // LegacyTableRenderer or TwigTableRenderer
+```
+
+Without further calls a list shows the short stored fields other than the
+key, and its quick search covers the text boxes. `clearColumns()`,
+`addColumn()`, `setQuickSearch()`, `setActions()` and `setDefaultSort()`
+change that; the options are those of `Icms\Ipf\View\Table`.
+
+- `LegacyTableRenderer` renders with `Icms\Ipf\View\Table`: the same HTML,
+  cookies and Smarty template, so themes that override
+  `system_persistabletable_display.html` keep working. Use it for pages that
+  must look as they did.
+- `TwigTableRenderer` renders `templates/ipf/table.html.twig` from the list
+  pipeline. Sorting, paging and the quick search are GET links with the
+  parameter names of the legacy table (`<item>_sortsel`, `<item>_ordersel`,
+  `start<key>`, `quicksearch_<id>`); it keeps no cookies.
+
+Both read the same `TableConfig`. Sort, filter and search fields are checked
+against the description: a field that is not stored in the object's table is
+rejected (`InvalidListQueryException`) before any query runs. Objects are
+fetched through their handler (`getObjects()`, `getCount()`), so a list holds
+what the legacy table holds.
+
+Legacy module pages get these services from the container: the registry, the
+resolver, the repository, the factory and both renderers are public.
+
+### API
+
+`GET /api/ipf/{module}/{item}` lists an object and
+`GET /api/ipf/{module}/{item}/{id}` returns one, as JSON. A module opts in per
+object, with one entry in its manifest (`icms_version.php`):
+
+```php
+$modversion['object_api']['post'] = [
+    'read' => 'icms_perm:module_read',  // security attribute, required
+    'search' => ['title', 'summary'],   // fields `q` looks in; default: the identifier
+    'fields' => ['title', 'summary'],   // fields returned; default: every stored field
+];
+```
+
+Nothing else is needed: no controller, no route, no serialisation code. An
+object without an entry answers 404, as an unknown module does. `read` is any
+attribute the host's voters know (`icms_perm:<permission>`,
+`icms_system_admin:<fct>`, `ROLE_WEBMASTER`, ...). A visitor who is not logged
+in gets 401, a user without the right 403.
+
+| Parameter | Meaning |
+|---|---|
+| `q` | search text, looked for in the `search` fields |
+| `filter[<field>]` | exact value of a stored field |
+| `sort`, `order` | a stored field, `asc` or `desc`; default: the identifier, ascending |
+| `page`, `limit` | from 1; 15 per page by default, 100 at most |
+
+An option that names an unknown field, or a page or limit below 1, answers 400.
+
+```json
+{"items": [{"id": 124, "title": "124", "url": "...", "fields": {"extension": "icmsa", "dirname": ["system"]}}],
+ "total": 1, "page": 1, "limit": 15}
+```
+
+Values are typed and unformatted: numbers as numbers, lists as lists, text
+as stored. They are **not** sanitised for HTML: a consumer escapes what it
+shows. Use `fields` to keep a column out of the API. The API only reads;
+other methods answer 405.
+
+The description of an object is built from a blank object, so the object's
+class must be loadable on its own. The admin objects of the system module
+other than mimetype use language constants that only their admin page loads;
+they need that fixed before they can be listed or exposed.
+
+### ORM-mapped objects
+
+A new module may declare an object as a plain Doctrine ORM class instead of
+an IPF entity, for instance to use associations. Marked with `#[IpfObject]`,
+it yields the same description, and gets lists and the Twig table:
+
+```php
+#[ORM\Entity]
+#[ORM\Table(name: 'blog_post')]   // without the table prefix: the site's is added
+#[IpfObject(module: 'blog', item: 'post', identifier: 'title')]
+class Post
+{
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column]
+    private ?int $post_id = null;
+
+    #[ORM\Column(length: 255)]
+    private string $title = '';
+}
+```
+
+Field names, types, lengths and the key come from the mapping; a column that
+is not nullable is required; captions come from language constants by the IPF
+convention (`_CO_<MODULE>_<ITEM>_<FIELD>`, or `captionPrefix`). The column
+type `icms_simple_array` stores a list the way IPF does (`a|b|c`).
+`App\Ipf\Example\Mimetype` is a working example, mapped for the tests only.
+
+Limits, for now:
+
+- **Read-only.** Lists and `find()` work; forms, saving and the legacy table
+  renderer need an IPF handler.
+- **One store per object.** A table is written either by its IPF handler or
+  by the ORM, never by both: the ORM would not see the handler's changes.
+- **No schema tool.** Never run `doctrine:schema:update` or a schema diff
+  against the ImpressCMS database: ImpressCMS' own tables are not mapped, and
+  the tool would alter or drop them.
+- **No mapping is configured outside the tests.** A module that ships ORM
+  classes needs its directory added under `doctrine.orm.mappings`.
+- **No warm-up.** The ORM's cache warmers and validator auto-mapping are
+  switched off (`App\DependencyInjection\DoctrineWarmupPass`): they would open
+  the database while the container is built.
 
 ## Events
 

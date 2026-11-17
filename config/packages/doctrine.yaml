@@ -13,3 +13,25 @@ doctrine:
         # the connection is shared with legacy code, which issues DDL during
         # module install/update: never wrap those in a DBAL transaction
         logging: false
+        types:
+            # lists stored as "a|b|c", as IPF stores XOBJ_DTYPE_SIMPLE_ARRAY
+            icms_simple_array: App\Ipf\Store\Dbal\PipeArrayType
+
+# The ORM serves module objects declared as ORM-mapped classes with
+# #[App\Ipf\Attribute\IpfObject] (docs/symfony-host.md, "IPF definition
+# layer"). ImpressCMS' own tables stay with their handlers: never run the
+# schema tool against this database. Only the example entity is mapped, and
+# only for the tests.
+when@test:
+    doctrine:
+        orm:
+            enable_lazy_ghost_objects: true
+            auto_mapping: false
+            controller_resolver:
+                auto_mapping: false
+            mappings:
+                IpfExample:
+                    type: attribute
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Ipf/Example'
+                    prefix: 'App\Ipf\Example'

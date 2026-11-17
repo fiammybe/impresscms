@@ -1,0 +1,63 @@
+{#
+    A list of IPF objects (App\Ipf\Table\TwigTableRenderer).
+    Cells and actions are HTML from the object itself, as in the legacy table.
+#}
+<div class="icms-ipf-table" id="{{ table.id }}">
+    {% if table.introButtons or table.quickSearch %}
+        <div class="icms-ipf-table-intro">
+            {% for button in table.introButtons %}
+                <a class="formButton" id="{{ button.name }}" href="{{ button.location|raw }}">{{ button.caption }}</a>
+            {% endfor %}
+            {% if table.quickSearch %}
+                <form method="get" action="{{ table.formAction }}" role="search">
+                    <input type="search" name="{{ table.quickSearch.name }}" value="{{ table.quickSearch.value }}" aria-label="{{ table.quickSearch.caption }}">
+                    <button type="submit">{{ constant('_SEARCH') }}</button>
+                </form>
+            {% endif %}
+        </div>
+    {% endif %}
+    <table class="outer">
+        <thead>
+            <tr>
+                {% for column in table.columns %}
+                    <th scope="col" data-field="{{ column.field }}"
+                        {%- if column.width %} width="{{ column.width }}"{% endif %}
+                        {%- if column.align %} align="{{ column.align }}"{% endif %}
+                        {%- if column.sorted %} aria-sort="{{ column.sorted == 'ASC' ? 'ascending' : 'descending' }}"{% endif %}>
+                        {% if column.sortUrl %}
+                            <a href="{{ column.sortUrl }}">{{ column.caption }}</a>
+                        {% else %}
+                            {{ column.caption }}
+                        {% endif %}
+                    </th>
+                {% endfor %}
+                {% if table.hasActions %}
+                    <th scope="col"></th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table.rows %}
+                <tr class="{{ cycle(['odd', 'even'], loop.index0) }}" data-id="{{ row.id }}">
+                    {% for cell in row.cells %}
+                        <td>{{ cell|raw }}</td>
+                    {% endfor %}
+                    {% if table.hasActions %}
+                        <td>{{ row.actions|join(' ')|raw }}</td>
+                    {% endif %}
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="{{ table.columns|length + (table.hasActions ? 1 : 0) }}">&ndash;</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if table.pages > 1 %}
+        <nav class="icms-ipf-table-pages">
+            {% if table.previousUrl %}<a rel="prev" href="{{ table.previousUrl }}">&laquo;</a>{% endif %}
+            <span>{{ table.page }} / {{ table.pages }}</span>
+            {% if table.nextUrl %}<a rel="next" href="{{ table.nextUrl }}">&raquo;</a>{% endif %}
+        </nav>
+    {% endif %}
+</div>

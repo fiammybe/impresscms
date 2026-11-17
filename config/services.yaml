@@ -26,12 +26,32 @@ services:
             - '../src/Security/IcmsUser.php'
             - '../src/Security/Attribute/'
             - '../src/DependencyInjection/'
+            # descriptions, queries and views of IPF objects: value objects
+            - '../src/Ipf/Metadata/{EntityDefinition,FieldDefinition,UnknownObjectException}.php'
+            - '../src/Ipf/Query/{ListQuery,InvalidListQueryException}.php'
+            - '../src/Ipf/Store/{ListResult,StoredText}.php'
+            - '../src/Ipf/Table/{ColumnConfig,TableConfig,TableView}.php'
+            - '../src/Ipf/Api/{ApiResource,ApiItem}.php'
+            - '../src/Ipf/Attribute/'
+            # a DBAL column type, registered in doctrine.yaml
+            - '../src/Ipf/Store/Dbal/'
+            # the ORM example entity, mapped in the test environment only
+            - '../src/Ipf/Example/'
             # DBAL driver parts, created by IcmsDriver, not services
             - '../src/Legacy/Dbal/{ErrorMode,IcmsDriver,SharedConnection,SharedStatement}.php'
 
     App\Controller\:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
+
+    # the IPF definition layer: public, because module pages that are still
+    # legacy scripts fetch these from the container
+    App\Ipf\Metadata\DefinitionRegistry: { public: true }
+    App\Ipf\Query\ListQueryResolver: { public: true }
+    App\Ipf\IpfRepository: { public: true }
+    App\Ipf\Table\TableFactory: { public: true }
+    App\Ipf\Table\LegacyTableRenderer: { public: true }
+    App\Ipf\Table\TwigTableRenderer: { public: true }
 
     App\LegacyBridge\LegacyScriptResolver:
         arguments:

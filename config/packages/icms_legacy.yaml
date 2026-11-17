@@ -7,8 +7,9 @@ parameters:
     # executed for legacy-owned paths that do not exist
     icms.legacy.front_controller: 'index.php'
     # path prefixes that belong to Symfony and never fall through to legacy,
-    # for example ['admin-next']; none by default
-    icms.legacy.reserved_prefixes: []
+    # for example ['admin-next']. `api` holds the IPF API
+    # (App\Controller\Ipf\IpfApiController)
+    icms.legacy.reserved_prefixes: ['api']
     # directories never served or executed (relative to the legacy root, or
     # absolute): the same as in docs/server/ and htdocs/htaccess.txt, and the
     # trust path, which the web root's index.php passes as ICMS_TRUST_PATH, if
@@ -55,4 +56,4 @@ parameters:
 
 when@test:
     parameters:
-        icms.legacy.reserved_prefixes: ['admin-next']
+        icms.legacy.reserved_prefixes: ['admin-next', 'api']

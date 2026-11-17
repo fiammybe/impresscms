@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\DependencyInjection\DoctrineWarmupPass;
 use App\DependencyInjection\LegacyEventListenersPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
@@ -22,5 +23,7 @@ final class Kernel extends BaseKernel
     {
         // after RegisterListenersPass (TYPE_BEFORE_REMOVING, priority 0)
         $container->addCompilerPass(new LegacyEventListenersPass(), PassConfig::TYPE_BEFORE_REMOVING, -100);
+        // before the cache warmers are collected (AddCacheWarmerPass, TYPE_BEFORE_OPTIMIZATION, priority 0)
+        $container->addCompilerPass(new DoctrineWarmupPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 100);
     }
 }
