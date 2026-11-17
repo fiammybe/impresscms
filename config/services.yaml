@@ -28,6 +28,8 @@ services:
             - '../src/DependencyInjection/'
             # descriptions, queries and views of IPF objects: value objects
             - '../src/Ipf/Metadata/{EntityDefinition,FieldDefinition,UnknownObjectException}.php'
+            - '../src/Ipf/Query/{ListQuery,InvalidListQueryException}.php'
+            - '../src/Ipf/Store/{ListResult,StoredText}.php'
             # DBAL driver parts, created by IcmsDriver, not services
             - '../src/Legacy/Dbal/{ErrorMode,IcmsDriver,SharedConnection,SharedStatement}.php'
 
@@ -38,6 +40,8 @@ services:
     # the IPF definition layer: public, because module pages that are still
     # legacy scripts fetch these from the container
     App\Ipf\Metadata\DefinitionRegistry: { public: true }
+    App\Ipf\Query\ListQueryResolver: { public: true }
+    App\Ipf\IpfRepository: { public: true }
 
     App\LegacyBridge\LegacyScriptResolver:
         arguments:
