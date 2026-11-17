@@ -31,6 +31,7 @@ services:
             - '../src/Ipf/Query/{ListQuery,InvalidListQueryException}.php'
             - '../src/Ipf/Store/{ListResult,StoredText}.php'
             - '../src/Ipf/Table/{ColumnConfig,TableConfig,TableView}.php'
+            - '../src/Ipf/Api/{ApiResource,ApiItem}.php'
             # DBAL driver parts, created by IcmsDriver, not services
             - '../src/Legacy/Dbal/{ErrorMode,IcmsDriver,SharedConnection,SharedStatement}.php'
 

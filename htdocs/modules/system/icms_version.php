@@ -136,6 +136,17 @@ $modversion["object_items"] = [
 	"rating",
 ];
 
+/*
+ * IPF objects served by the API (/api/ipf/system/<item>): the right that
+ * reading requires and the fields a search looks in
+ */
+$modversion["object_api"] = [
+	"mimetype" => [
+		"read" => "icms_system_admin:mimetype",
+		"search" => ["name", "extension", "types"],
+	],
+];
+
 /**
  * Install and update informations
  */
