@@ -9,6 +9,8 @@ use App\Admin\Attribute\SystemAdminFunction;
 use App\Admin\LegacyRedirect;
 use App\Ipf\Form\IpfFormFactory;
 use App\Ipf\IpfPersister;
+use App\Ipf\Table\LegacyTableRenderer;
+use App\Ipf\Table\TableFactory;
 use App\Legacy\Attribute\IcmsModuleHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +42,8 @@ final class MimetypeController
         private readonly LegacyRedirect $redirect,
         private readonly IpfFormFactory $forms,
         private readonly IpfPersister $persister,
+        private readonly TableFactory $tables,
+        private readonly LegacyTableRenderer $tableRenderer,
     ) {
     }
 
@@ -62,21 +66,26 @@ final class MimetypeController
             'mod' => $this->edit($mimetypes, (int) $request->request->get('mimetypeid', (int) $request->query->get('mimetypeid', 0))),
             'addmimetype' => $this->save($mimetypes, $request),
             'del' => $this->delete($mimetypes, $request),
-            default => $this->list($mimetypes),
+            default => $this->list($mimetypes, $request),
         };
     }
 
-    private function list(object $mimetypes): Response
+    /**
+     * The list comes from the object's description (App\Ipf\Table\TableFactory)
+     * and is shown by the legacy table, so the page looks as it did.
+     */
+    private function list(object $mimetypes, Request $request): Response
     {
-        return $this->renderer->render(self::TEMPLATE, static function (object $template) use ($mimetypes): void {
-            $table = new \Icms\Ipf\View\Table($mimetypes);
-            $table->addColumn(new \Icms\Ipf\View\Column('name', _GLOBAL_LEFT, 150));
-            $table->addColumn(new \Icms\Ipf\View\Column('extension', _GLOBAL_LEFT, 150));
-            $table->addColumn(new \Icms\Ipf\View\Column('types', _GLOBAL_LEFT));
-            $table->addIntroButton('addmimetype', 'admin.php?fct=mimetype&amp;op=mod', _CO_ICMS_MIMETYPE_CREATE);
-            $table->addQuickSearch(['name', 'extension', 'types']);
+        return $this->renderer->render(self::TEMPLATE, function (object $template) use ($mimetypes, $request): void {
+            $table = $this->tables->create($mimetypes)
+                ->clearColumns()
+                ->addColumn('name', width: 150)
+                ->addColumn('extension', width: 150)
+                ->addColumn('types')
+                ->addIntroButton('addmimetype', 'admin.php?fct=mimetype&amp;op=mod', _CO_ICMS_MIMETYPE_CREATE)
+                ->setQuickSearch(['name', 'extension', 'types']);
 
-            $template->assign('icms_mimetype_table', $table->fetch());
+            $template->assign('icms_mimetype_table', $this->tableRenderer->render($table, $request));
             $template->assign('icms_mimetype_explain', true);
             $template->assign('icms_mimetype_title', _CO_ICMS_MIMETYPES_DSC);
         });
