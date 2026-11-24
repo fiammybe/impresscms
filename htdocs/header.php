@@ -60,6 +60,10 @@ $xoopsThemeFactory->defaultTheme = $icmsConfig['theme_set'];
  */
 $icmsTheme = $xoTheme = &$xoopsThemeFactory->createInstance(array('contentTemplate' => @$xoopsOption['template_main']));
 $xoopsTpl = $icmsTpl = &$xoTheme->template;
+$GLOBALS['icmsTheme'] =& $icmsTheme;
+$GLOBALS['xoTheme'] =& $xoTheme;
+$GLOBALS['xoopsTpl'] =& $xoopsTpl;
+$GLOBALS['icmsTpl'] =& $icmsTpl;
 
 if (isset($icmsConfigMetaFooter['google_meta']) && $icmsConfigMetaFooter['google_meta'] != '') {
 	$xoTheme->addMeta('meta', 'verify-v1', $icmsConfigMetaFooter['google_meta']);
