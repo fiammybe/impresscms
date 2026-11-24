@@ -132,130 +132,21 @@ class Base extends \Icms\Form\Theme {
 	 * adds an element for each key based on the datatype
 	 */
 	private function createElements() {
-		$controls = $this->targetObject->controls;
 		$vars = $this->targetObject->vars;
-		foreach ($vars as $key=>$var) {
-			// If $displayOnForm is FALSE OR this is the primary key, it doesn't
-			// need to be displayed, then we only create an hidden field
-			if ($key == $this->targetObject->handler->keyName || !$var['displayOnForm']) {
-				$elementToAdd = new \Icms\Form\Elements\Hidden($key, $var['value']);
-				$this->addElement($elementToAdd, $key, $var, FALSE);
-				unset($elementToAdd);
-				// If not, the we need to create the proper form control for this fields
-			} else {
-				// If this field has a specific control, we will use it
-
-				if ($key == 'parentid') {
-					/**
-					 * Why this ?
-					 */
-				}
-				if (isset($controls[$key])) {
-					/* If the control has name, it's because it's an object already present in the script
-					 * for example, "user"
-					 * If the field does not have a name, than we will use a "select" (ie icms_form_elements_Select)
-					 */
-					if (!isset($controls[$key]['name']) || !$controls[$key]['name']) {
-						$controls[$key]['name'] = 'select';
-					}
-
-					$form_select = $this->getControl($controls[$key]['name'], $key);
-
-					// Adding on the form, the control for this field
-					$this->addElement($form_select, $key, $var);
-					unset($form_select);
-
-					// If this field don't have a specific control, we will use the standard one, depending on its data type
-				} else {
-					switch ($var['data_type']) {
-						case XOBJ_DTYPE_TXTBOX:
-							$form_text = $this->getControl("text", $key);
-							$this->addElement($form_text, $key, $var);
-							unset($form_text);
-							break;
-
-						case XOBJ_DTYPE_INT:
-							$this->targetObject->setControl($key, array('name' => 'text', 'size' => '5'));
-							$form_text = $this->getControl("text", $key);
-							$this->addElement($form_text, $key, $var);
-							unset($form_text);
-							break;
-
-						case XOBJ_DTYPE_FLOAT:
-							$this->targetObject->setControl($key, array('name' => 'text', 'size' => '5'));
-							$form_text = $this->getControl("text", $key);
-							$this->addElement($form_text, $key, $var);
-							unset($form_text);
-							break;
-
-						case XOBJ_DTYPE_LTIME:
-							$form_datetime = $this->getControl('datetime', $key);
-							$this->addElement($form_datetime, $key, $var);
-							unset($form_datetime);
-							break;
-
-						case XOBJ_DTYPE_STIME:
-							$form_date = $this->getControl('date', $key);
-							$this->addElement($form_date, $key, $var);
-							unset($form_date);
-							break;
-
-						case XOBJ_DTYPE_TIME_ONLY:
-							$form_time = $this->getControl('time', $key);
-							$this->addElement($form_time, $key, $var);
-							unset($form_time);
-							break;
-
-						case XOBJ_DTYPE_CURRENCY:
-							$this->targetObject->setControl($key, array('name' => 'text', 'size' => '15'));
-							$form_currency = $this->getControl("text", $key);
-							$this->addElement($form_currency, $key, $var);
-							unset($form_currency);
-							break;
-
-						case XOBJ_DTYPE_URLLINK:
-							$form_urllink = $this->getControl("urllink", $key);
-							$this->addElement($form_urllink, $key, $var);
-							unset($form_urllink);
-							break;
-
-						case XOBJ_DTYPE_FILE:
-							$form_file = $this->getControl("richfile", $key);
-							$this->addElement($form_file, $key, $var);
-							unset($form_file);
-							break;
-
-						case XOBJ_DTYPE_TXTAREA:
-							$form_text_area = $this->getControl('textarea', $key);
-							$this->addElement($form_text_area, $key, $var);
-							unset($form_text_area);
-							break;
-
-						case XOBJ_DTYPE_ARRAY:
-							// TODO : To come...
-							break;
-
-						case XOBJ_DTYPE_SOURCE:
-							$form_source_editor = $this->getControl('source', $key);
-							$this->addElement($form_source_editor, $key, $var);
-							unset($form_source_editor);
-							break;
-
-						case XOBJ_DTYPE_FORM_SECTION:
-							$section_control = $this->getControl('section', $key);
-							$this->addElement($section_control, $key, $var);
-							unset($section_control);
-							break;
-
-						case XOBJ_DTYPE_FORM_SECTION_CLOSE:
-							$this->targetObject->setControl($key, array("close" => TRUE));
-							$section_control = $this->getControl('section', $key);
-							$this->addElement($section_control, $key, $var);
-							unset($section_control);
-							break;
-					}
-				}
+		foreach ($this->definitionBuilder()->plan() as $key => $step) {
+			$var = $vars[$key];
+			if ($step['step'] === DefinitionBuilder::STEP_HIDDEN) {
+				// the primary key and variables not displayed on the form are hidden values
+				$this->addElement(new \Icms\Form\Elements\Hidden($key, $var['value']), $key, $var, FALSE);
+				continue;
 			}
+			if ($step['step'] !== DefinitionBuilder::STEP_CONTROL) {
+				continue;
+			}
+			if ($step['set_control'] !== null) {
+				$this->targetObject->setControl($key, $step['set_control']);
+			}
+			$this->addElement($this->getControl($step['control'], $key), $key, $var);
 		}
 		// Add a hidden field to store the URL of the page before this form
 		$this->addElement(new \Icms\Form\Elements\Hidden('icms_page_before_form', icms_get_page_before_form()));
@@ -265,30 +156,21 @@ class Base extends \Icms\Form\Theme {
 	 * Creates Permission Controls
 	 */
 	private function createPermissionControls() {
-		$icmsModuleConfig = $this->targetObject->handler->getModuleConfig();
-
-		$permissions = $this->targetObject->handler->getPermissions();
-
-		if ($permissions) {
-			$member_handler = \icms::handler('icms_member');
-			$group_list = $member_handler->getGroupList();
-			asort($group_list);
-			foreach($permissions as $permission) {
-				$groups_value = FALSE;
-				if ($this->targetObject->isNew()) {
-					if (isset($icmsModuleConfig['def_perm_' . $permission['perm_name']])) {
-						$groups_value = $icmsModuleConfig['def_perm_' . $permission['perm_name']];
-					}
-				} else {
-					$groups_value = $this->targetObject->getGroupPerm($permission['perm_name']);
-				}
-				$groups_select = new \Icms\Form\Elements\Select($permission['caption'], $permission['perm_name'], $groups_value, 4, TRUE);
-				$groups_select->setDescription($permission['description']);
-				$groups_select->addOptionArray($group_list);
-				$this->addElement($groups_select);
-				unset($groups_select);
-			}
+		foreach ($this->definitionBuilder()->permissions() as $permission) {
+			$groups_select = new \Icms\Form\Elements\Select($permission->label, $permission->name, $permission->selected ?: FALSE, $permission->size, TRUE);
+			$groups_select->setDescription($permission->description);
+			$groups_select->addOptionArray($permission->labels());
+			$this->addElement($groups_select);
+			unset($groups_select);
 		}
+	}
+
+	/**
+	 * The rules of this form: which variables are hidden, which control each
+	 * gets and the permission selections (shared with the Symfony form bridge)
+	 */
+	public function definitionBuilder(): DefinitionBuilder {
+		return new DefinitionBuilder($this->targetObject);
 	}
 
 	/**

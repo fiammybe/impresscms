@@ -317,7 +317,7 @@ if (myform.dirname.value == "") { window.alert("Please enter Select Modules allo
 return true;
 }
 //--></script>
-<!-- End Form Vaidation JavaScript //-->
+<!-- End Form Validation JavaScript //-->
 
 <form id="addmimetype" action="" method="post" onsubmit="return xoopsFormValidate_addmimetype(this);" enctype="multipart/form-data">
   <table style="width: 100%" class="outer" cellspacing="1">

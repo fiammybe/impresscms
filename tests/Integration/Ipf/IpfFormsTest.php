@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Ipf;
 
+use App\Ipf\Form\ControlMap;
 use App\Ipf\Form\IpfFormFactory;
 use App\Ipf\Form\UnsupportedIpfControlException;
 use App\Ipf\IpfPersister;
 use App\Legacy\LegacyRuntime;
 use App\Tests\Support\LegacyWebTestCase;
 use App\Tests\Support\TestSite;
+use Icms\Form\Definition\ChoiceField;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DomCrawler\Crawler;
@@ -138,6 +140,47 @@ final class IpfFormsTest extends LegacyWebTestCase
         $errors = self::persister()->save(self::submit(self::mimetypes()->get(self::ALPHA), ['extension' => '']));
         self::assertSame([sprintf(_XOBJ_ERR_REQUIRED, _CO_ICMS_MIMETYPE_EXTENSION)], $errors);
         self::assertSame(['extension' => 'icmsa'], self::row(self::ALPHA, ['extension']), 'an invalid submission is not stored');
+    }
+
+    /**
+     * @scenario One definition for both forms
+     */
+    public function testBothFormsUseOneDefinition(): void
+    {
+        $mimetype = self::mimetypes()->get(self::ALPHA);
+        $legacyForm = $mimetype->getForm('caption', 'addmimetype');
+        $definitions = $legacyForm->definitionBuilder()->fields();
+        foreach ($legacyForm->definitionBuilder()->permissions() as $permission) {
+            $definitions[$permission->name] = $permission;
+        }
+
+        // the legacy form's elements describe themselves as the builder does
+        $elements = [];
+        foreach ($legacyForm->getDefinition()->fields() as $name => $field) {
+            $elements[$name] = $field;
+        }
+        $form = self::forms()->create($mimetype);
+        self::assertSame(array_keys($definitions), array_keys($form->all()));
+
+        foreach ($definitions as $name => $definition) {
+            self::assertArrayHasKey($name, $elements, $name);
+            self::assertSame($definition->type, $elements[$name]->type, $name);
+            self::assertSame($definition->label, $elements[$name]->label, $name);
+            self::assertSame($definition->required, $elements[$name]->required, $name);
+            if ($definition->hidden) {
+                continue;
+            }
+            $config = $form->get($name)->getConfig();
+            self::assertSame(ControlMap::caption($name, ['form_caption' => $definition->label]), $config->getOption('label'), $name);
+            self::assertSame($definition->required, $config->getOption('required'), $name);
+            self::assertSame($definition->disabled, $config->getOption('disabled'), $name);
+            if ($definition instanceof ChoiceField) {
+                self::assertInstanceOf(ChoiceField::class, $elements[$name], $name);
+                self::assertSame($definition->labels(), $elements[$name]->labels(), $name);
+                self::assertSame($definition->multiple, $config->getOption('multiple'), $name);
+                self::assertSame(array_keys($definition->labels()), $config->getOption('choices'), $name);
+            }
+        }
     }
 
     /**

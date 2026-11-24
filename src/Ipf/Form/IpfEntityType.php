@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Ipf\Form;
 
+use Icms\Form\Definition\Field;
+use Icms\Ipf\Form\DefinitionBuilder;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -16,6 +18,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * plus one group selection per permission of the entity's handler
  * (createPermissionControls()).
  *
+ * - the fields are those of Icms\Ipf\Form\DefinitionBuilder, which the
+ *   legacy form creates its elements from
  * - the key field and variables not shown on the form are hidden values; the
  *   key is not mapped, the entity is loaded by it
  * - other variables get the field ControlMap chooses, labelled with
@@ -55,24 +59,23 @@ final class IpfEntityType extends AbstractType
     }
 
     /**
-     * The entity's fields, in the order of its variables.
+     * The entity's fields, in the order of its variables: the fields of
+     * Icms\Ipf\Form\DefinitionBuilder, the rules the legacy IPF form uses.
+     * Hidden values are HiddenType (the key is not mapped: the entity is
+     * loaded by it); sections are layout and have no field; anything else
+     * goes through ControlMap, which rejects what it does not support.
      *
      * @return array<string, array{class-string, array<string, mixed>}>
      */
     public static function fields(object $entity): array
     {
         $fields = [];
-        foreach ($entity->vars as $key => $var) {
-            $key = (string) $key;
-            if ($key === $entity->handler->keyName || !$var['displayOnForm']) {
-                $fields[$key] = [HiddenType::class, ['mapped' => $key !== $entity->handler->keyName]];
-                continue;
+        foreach ((new DefinitionBuilder($entity))->fields() as $key => $field) {
+            if ($field->hidden) {
+                $fields[$key] = [HiddenType::class, ['mapped' => $key !== (string) $entity->handler->keyName]];
+            } elseif ($field->type !== Field::TYPE_SECTION && $field->type !== Field::TYPE_SECTION_CLOSE) {
+                $fields[$key] = ControlMap::fromDefinition($field);
             }
-            // XOBJ_DTYPE_ARRAY without a control has no element in the legacy form either
-            if ((int) $var['data_type'] === XOBJ_DTYPE_ARRAY && !isset($entity->controls[$key])) {
-                continue;
-            }
-            $fields[$key] = ControlMap::field($entity, $key, $var, $entity->controls[$key] ?? null);
         }
 
         return $fields;
@@ -80,39 +83,25 @@ final class IpfEntityType extends AbstractType
 
     /**
      * The group selections for the handler's permissions, with the groups that
-     * hold each permission now (for a new entity: the module's default).
+     * hold each permission now (for a new entity: the module's default)
      *
      * @return array<string, array<string, mixed>>
      */
     public static function permissionFields(object $entity): array
     {
-        $permissions = $entity->handler->getPermissions();
-        if (!$permissions) {
-            return [];
-        }
-
-        $groups = \icms::handler('icms_member')->getGroupList();
-        asort($groups);
-        $moduleConfig = $entity->isNew() ? $entity->handler->getModuleConfig() : [];
-
         $fields = [];
-        foreach ($permissions as $permission) {
-            $name = (string) $permission['perm_name'];
-            $selected = $entity->isNew()
-                ? ($moduleConfig['def_perm_' . $name] ?? false)
-                : $entity->getGroupPerm($name);
-            $caption = ControlMap::caption($name, ['form_caption' => $permission['caption']]);
-
-            $fields[$name] = [
-                'label' => $caption,
-                'help' => ((string) ($permission['description'] ?? '')) ?: null,
-                'choices' => array_keys($groups),
-                'choice_label' => static fn (int|string $id): string => (string) $groups[$id],
+        foreach ((new DefinitionBuilder($entity))->permissions() as $permission) {
+            [, $options] = ControlMap::fromDefinition($permission);
+            $fields[$permission->name] = [
+                'label' => $options['label'],
+                'help' => $options['help'],
+                'choices' => $options['choices'],
+                'choice_label' => $options['choice_label'],
                 'multiple' => true,
                 'required' => false,
                 'mapped' => false,
-                'data' => array_values(array_map('intval', (array) ($selected ?: []))),
-                'invalid_message' => $caption . ': the selected choice is invalid.',
+                'data' => array_values(array_map('intval', $permission->selected)),
+                'invalid_message' => $options['invalid_message'],
             ];
         }
 

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Ipf\Form;
 
+use Icms\Form\Definition\ChoiceField;
+use Icms\Form\Definition\Field;
+use Icms\Ipf\Form\DefinitionBuilder;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -12,71 +15,76 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Maps an IPF variable to a Symfony form field (design D7), following the
- * choices Icms\Ipf\Form\Base::createElements() makes for the legacy form:
+ * Translates a field definition (Icms\Form\Definition, built for IPF
+ * entities by Icms\Ipf\Form\DefinitionBuilder, the rules of the legacy IPF
+ * form) into a Symfony form field (design D7):
  *
- * | IPF                                    | field                 | constraints        |
- * |----------------------------------------|-----------------------|--------------------|
- * | XOBJ_DTYPE_TXTBOX, control `text`      | TextType              | Length(maxlength)  |
- * | XOBJ_DTYPE_TXTAREA, control `textarea` | TextareaType          | –                  |
- * | XOBJ_DTYPE_INT                         | IntegerType           | an integer         |
- * | control `select`, `selectmulti`        | ChoiceType (multiple) | one of the choices |
- * | required variable                      | –                     | NotBlank           |
+ * | definition                                 | field                 | constraints        |
+ * |--------------------------------------------|-----------------------|--------------------|
+ * | text                                       | TextType              | Length(maxlength)  |
+ * | text with constraint integer               | IntegerType           | an integer         |
+ * | textarea                                   | TextareaType          | –                  |
+ * | select (ChoiceField), multiple or not      | ChoiceType (multiple) | one of the choices |
+ * | required                                   | –                     | NotBlank           |
  *
  * Messages name the field by its caption, in the words of the legacy
- * validation (_XOBJ_ERR_REQUIRED, _XOBJ_ERR_SHORTERTHAN). Any other control or
- * data type raises UnsupportedIpfControlException.
+ * validation (_XOBJ_ERR_REQUIRED, _XOBJ_ERR_SHORTERTHAN). Any other field
+ * (legacy controls, numbers, compound fields) raises
+ * UnsupportedIpfControlException: never a silent skip.
  */
 final class ControlMap
 {
     /**
-     * The field type and options for a variable shown on the form.
-     *
-     * @param array<string, mixed>      $var     the variable definition (Entity::$vars[$key])
-     * @param array<string, mixed>|null $control the variable's control, if any
+     * The field type and options for a definition
      *
      * @return array{class-string, array<string, mixed>}
      */
-    public static function field(object $entity, string $key, array $var, ?array $control): array
+    public static function fromDefinition(Field $field): array
     {
-        $caption = self::caption($key, $var);
-        $dataType = (int) $var['data_type'];
+        $caption = self::caption($field->name, ['form_caption' => $field->label]);
 
-        if ($control !== null) {
-            $name = (string) (($control['name'] ?? '') ?: 'select');
-            [$type, $options] = match ($name) {
-                // the legacy form gives integers a text control
-                'text' => $dataType === XOBJ_DTYPE_INT ? self::integer($caption) : self::text($var, $caption),
-                'textarea' => [TextareaType::class, []],
-                'select' => self::choice($entity, $control, $caption, false),
-                'selectmulti' => self::choice($entity, $control, $caption, true),
-                default => throw new UnsupportedIpfControlException($key, $name),
-            };
-        } else {
-            [$type, $options] = match ($dataType) {
-                XOBJ_DTYPE_TXTBOX => self::text($var, $caption),
-                XOBJ_DTYPE_TXTAREA => [TextareaType::class, []],
-                XOBJ_DTYPE_INT => self::integer($caption),
-                default => throw new UnsupportedIpfControlException($key, self::dataTypeName($dataType)),
-            };
-        }
+        [$type, $options] = match (true) {
+            $field->type === 'text' && !empty($field->constraints['integer']) => self::integer($caption),
+            $field->type === 'text' && empty($field->constraints['number']) => self::text($field, $caption),
+            $field->type === 'textarea' => [TextareaType::class, []],
+            $field->type === 'select' && $field instanceof ChoiceField => self::choice($field, $caption),
+            default => throw new UnsupportedIpfControlException($field->name, self::controlName($field)),
+        };
 
         $constraints = $options['constraints'] ?? [];
-        if ($var['required']) {
+        if ($field->required) {
             $constraints[] = new NotBlank(message: self::message(_XOBJ_ERR_REQUIRED, $caption));
         }
 
         return [$type, [
             'label' => $caption,
-            'help' => ((string) ($var['form_dsc'] ?? '')) ?: null,
-            'required' => (bool) $var['required'],
-            'disabled' => !empty($var['readonly']),
+            'help' => $field->description !== '' ? $field->description : null,
+            'required' => $field->required,
+            'disabled' => $field->disabled,
         ] + ['constraints' => $constraints] + $options];
     }
 
     /**
+     * The field type and options for a variable shown on the form
+     *
+     * @param array<string, mixed>      $var     the variable definition (Entity::$vars[$key])
+     * @param array<string, mixed>|null $control the variable's control, if any (as on the entity)
+     *
+     * @return array{class-string, array<string, mixed>}
+     */
+    public static function field(object $entity, string $key, array $var, ?array $control): array
+    {
+        $definition = (new DefinitionBuilder($entity))->fields()[$key] ?? null;
+        if ($definition === null) {
+            throw new UnsupportedIpfControlException($key, (string) ($control['name'] ?? ''));
+        }
+
+        return self::fromDefinition($definition);
+    }
+
+    /**
      * The options of a select control, in the order the legacy select list
-     * shows them (Icms\Ipf\Form\Elements\Select).
+     * shows them (Icms\Ipf\Form\DefinitionBuilder::options())
      *
      * @param array<string, mixed> $control
      *
@@ -84,28 +92,7 @@ final class ControlMap
      */
     public static function options(object $entity, array $control): array
     {
-        if (isset($control['options'])) {
-            return (array) $control['options'];
-        }
-        if (isset($control['object'])) {
-            $options = method_exists($control['object'], $control['method']) ? $control['object']->{$control['method']}() : [];
-
-            return is_array($options) ? $options : [];
-        }
-
-        if (isset($control['itemHandler'])) {
-            $handler = isset($control['module'])
-                ? icms_getModuleHandler($control['itemHandler'], $control['module'])
-                : \icms::handler($control['itemHandler']);
-        } else {
-            $handler = $entity->handler;
-        }
-        if (!isset($control['method']) || !method_exists($handler, $control['method'])) {
-            return [];
-        }
-        $options = call_user_func_array([$handler, $control['method']], $control['params'] ?? []);
-
-        return is_array($options) ? $options : [];
+        return (new DefinitionBuilder($entity))->options($control);
     }
 
     /**
@@ -130,15 +117,14 @@ final class ControlMap
     }
 
     /**
-     * @param array<string, mixed> $var
-     *
      * @return array{class-string, array<string, mixed>}
      */
-    private static function text(array $var, string $caption): array
+    private static function text(Field $field, string $caption): array
     {
         $constraints = [];
-        if (isset($var['maxlength']) && (int) $var['maxlength'] > 0) {
-            $constraints[] = new Length(max: (int) $var['maxlength'], maxMessage: self::message(_XOBJ_ERR_SHORTERTHAN, $caption, (int) $var['maxlength']));
+        $maxlength = (int) ($field->constraints['maxlength'] ?? 0);
+        if ($maxlength > 0) {
+            $constraints[] = new Length(max: $maxlength, maxMessage: self::message(_XOBJ_ERR_SHORTERTHAN, $caption, $maxlength));
         }
 
         // legacy trims when it validates, but stores what was posted
@@ -154,22 +140,35 @@ final class ControlMap
     }
 
     /**
-     * @param array<string, mixed> $control
-     *
      * @return array{class-string, array<string, mixed>}
      */
-    private static function choice(object $entity, array $control, string $caption, bool $multiple): array
+    private static function choice(ChoiceField $field, string $caption): array
     {
-        $labels = self::options($entity, $control);
+        // keys that look like integers are integers, as in the legacy option arrays
+        $labels = $field->labels();
 
         return [ChoiceType::class, [
             'choices' => array_keys($labels),
             'choice_label' => static fn (int|string $value): string => (string) $labels[$value],
-            'multiple' => $multiple,
+            'multiple' => $field->multiple,
             'expanded' => false,
             // ChoiceType rejects values outside the choices with this message
             'invalid_message' => $caption . ': the selected choice is invalid.',
         ]];
+    }
+
+    /**
+     * The control a definition stands for, for the exception
+     */
+    private static function controlName(Field $field): string
+    {
+        if ($field->isLegacy()) {
+            $control = (string) $field->attribute('control', '');
+
+            return $control !== '' ? $control : self::dataTypeName((int) $field->attribute('data_type', 0));
+        }
+
+        return $field->type;
     }
 
     private static function dataTypeName(int $type): string

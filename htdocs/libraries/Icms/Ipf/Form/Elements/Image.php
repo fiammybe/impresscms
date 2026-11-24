@@ -98,12 +98,12 @@ class Image extends \Icms\Form\Elements\Tray {
 		if ($this->_delete !== null) {
 			$children['delete'] = $this->_delete->getDefinition();
 		}
-		return new \Icms\Form\Definition\CompoundField(...$this->definitionBase('image') + [
+		return new \Icms\Form\Definition\CompoundField(...array_merge($this->definitionBase('image'), [
 			'name' => $this->_key,
 			'children' => $children,
 			'value' => $this->_image['url'],
 			'attributes' => ['image_type' => $this->_image['type'], 'image_url' => $this->_image['url'], 'delimiter' => $this->getDelimeter()],
-		]);
+		]));
 	}
 
 	protected function definitionTemplate(): ?string {
