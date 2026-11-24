@@ -7,6 +7,7 @@ namespace App\Tests\Http\System;
 use App\Testing\HostMarker;
 use App\Tests\Http\Characterization\SnapshotNormalizer;
 use App\Tests\Support\HttpTestCase;
+use App\Tests\Support\ServerProcess;
 use App\Tests\Support\TestSite;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -17,10 +18,13 @@ use Symfony\Component\BrowserKit\Response;
  *
  * The snapshots in __snapshots__/ were recorded from the legacy page
  * (MimetypeLegacyCharacterizationTest, takeover switched off). This class
- * runs the same corpus against the site as configured, where the framework
- * application serves the page (design L35): every response must equal the
- * legacy snapshot, the forms after removing the security token that only the
- * framework page adds.
+ * runs the same corpus against the site where the framework application
+ * serves the page (design L35) with the legacy renderer
+ * (ICMS_SYSTEM_MIMETYPE_RENDERER=legacy, the rollback of the Blade pages):
+ * the resource controller, FormRequest, policy and repository run, and every
+ * response must equal the legacy snapshot, the forms after removing the
+ * security token that only the framework page adds. The Blade pages are
+ * MimetypeBladeTest's.
  *
  * Saves and deletes submit the forms the page itself rendered, with their
  * token when there is one. Their effect on the database is asserted directly.
@@ -34,6 +38,11 @@ class MimetypeCharacterizationTest extends HttpTestCase
     use MimetypePage;
 
     protected const SNAPSHOT_DIR = __DIR__ . '/__snapshots__';
+
+    protected static function createServer(): ServerProcess
+    {
+        return ServerProcess::forSite(['ICMS_SYSTEM_MIMETYPE_RENDERER' => 'legacy']);
+    }
 
     protected function setUp(): void
     {

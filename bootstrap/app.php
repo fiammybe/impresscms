@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use App\Auth\LoginRedirect;
+use App\Console\Commands\DefinitionsCheckCommand;
+use App\Console\Commands\DefinitionsCompileCommand;
 use App\Console\Commands\RoutesOwnershipCommand;
 use App\Http\HostKernel;
+use App\Http\Middleware\RequiresActiveModule;
 use App\Http\Middleware\RequiresLegacy;
 use App\Http\Middleware\RequiresLegacyToken;
 use App\Http\Middleware\StartIcmsSession;
@@ -35,7 +38,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
             require dirname(__DIR__) . '/routes/web.php';
         },
     )
-    ->withCommands([RoutesOwnershipCommand::class])
+    ->withCommands([RoutesOwnershipCommand::class, DefinitionsCompileCommand::class, DefinitionsCheckCommand::class])
     ->withMiddleware(static function (Middleware $middleware): void {
         // A route that takes over a legacy URL must see the input legacy saw.
         $middleware->remove([TrimStrings::class, ConvertEmptyStringsToNull::class]);
@@ -43,6 +46,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
             'icms.legacy' => RequiresLegacy::class,
             'icms.token' => RequiresLegacyToken::class,
             'icms.admin' => SystemAdminFunction::class,
+            'icms.module' => RequiresActiveModule::class,
         ]);
         // instead of `web`: ImpressCMS' session, no cookie encryption, no Laravel CSRF (designs L10, L12)
         $middleware->group('icms', [

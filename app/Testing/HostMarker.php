@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Testing;
 
+use App\Http\Controllers\LegacyScriptController;
 use Illuminate\Foundation\Http\Events\RequestHandled;
 
 /**
@@ -21,6 +22,8 @@ final class HostMarker
     public function handle(RequestHandled $event): void
     {
         $event->response->headers->set(self::HEADER, '1');
-        $event->response->headers->set(self::ROUTE_HEADER, (string) $event->request->route()?->getName());
+        // a takeover behind a legacy script route names itself
+        $route = $event->request->attributes->get(LegacyScriptController::TAKEOVER_ATTRIBUTE) ?? $event->request->route()?->getName();
+        $event->response->headers->set(self::ROUTE_HEADER, (string) $route);
     }
 }

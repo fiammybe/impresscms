@@ -11,6 +11,12 @@ return [
         'disabled' => array_values(array_filter(array_map('trim', explode(',', (string) env('ICMS_TAKEOVERS_DISABLED', ''))))),
     ],
 
+    'modules' => [
+        // modules whose Laravel side is switched off, for example ICMS_MODULES_LARAVEL_DISABLED=system:
+        // their takeovers fall through to legacy and their routes answer 404
+        'laravel_disabled' => array_values(array_filter(array_map('trim', explode(',', (string) env('ICMS_MODULES_LARAVEL_DISABLED', ''))))),
+    ],
+
     'legacy' => [
         // the web root: passed by its index.php as ICMS_LEGACY_ROOT, named in
         // .env.local for artisan; htdocs/ in a development checkout

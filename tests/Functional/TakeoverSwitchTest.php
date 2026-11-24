@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use App\Http\Controllers\LegacyScriptController;
+use App\Http\Controllers\Test\ProbeTakeoverController;
 use App\LegacyBridge\LegacyExecutionResponse;
+use App\Routing\RouteOwnership;
+use App\Takeover\Takeover;
+use App\Takeover\TakeoverRegistry;
 use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -49,7 +54,7 @@ final class TakeoverSwitchTest extends TestCase
         config(['icms.takeovers.disabled' => ['test.users']]);
 
         self::assertSame(0, Artisan::call('icms:routes:ownership', ['url' => self::URL]));
-        self::assertStringContainsString('takeover test.users disabled (route test.takeover.system_users)', Artisan::output());
+        self::assertStringContainsString('takeover test.users disabled', Artisan::output());
     }
 
     /**
@@ -57,28 +62,36 @@ final class TakeoverSwitchTest extends TestCase
      */
     public function testInputParameterMatchesTheBodyOrElseTheQuery(): void
     {
-        Route::post('/_test/input.php', static fn (): string => 'host: input')
-            ->whereInput(['fct' => 'mimetype']);
+        $this->takeover(new Takeover('test.input', '/_test/input.php', ['POST'], ProbeTakeoverController::class, input: ['fct' => 'mimetype']));
 
-        self::assertSame('host: input', $this->post('/_test/input.php', ['fct' => 'mimetype'])->getContent());
-        self::assertSame('host: input', $this->post('/_test/input.php?fct=mimetype')->getContent());
-        self::assertSame('host: input', $this->post('/_test/input.php?fct=other', ['fct' => 'mimetype'])->getContent());
+        self::assertSame('host: probe', $this->post('/_test/input.php', ['fct' => 'mimetype'])->getContent());
+        self::assertSame('host: probe', $this->post('/_test/input.php?fct=mimetype')->getContent());
+        self::assertSame('host: probe', $this->post('/_test/input.php?fct=other', ['fct' => 'mimetype'])->getContent());
         self::assertInstanceOf(LegacyExecutionResponse::class, $this->post('/_test/input.php?fct=mimetype', ['fct' => 'other'])->baseResponse);
         self::assertInstanceOf(LegacyExecutionResponse::class, $this->post('/_test/input.php')->baseResponse);
     }
 
     /**
-     * Laravel's RouteCollection would keep only the last route of a method
-     * and URI (VariantRouteCollection).
+     * Several takeovers of one URL are one route; the registry picks the variant.
      */
     public function testTakeoversOfTheSameUrlAreAllKept(): void
     {
-        Route::get('/modules/system/admin.php', static fn (): string => 'host: probe')
-            ->whereQuery(['fct' => 'probe']);
+        $this->takeover(new Takeover('test.probe', '/modules/system/admin.php', ['GET'], ProbeTakeoverController::class, query: ['fct' => 'probe']));
 
         self::assertSame('host: probe', $this->get('/modules/system/admin.php?fct=probe')->getContent());
         self::assertSame('host: system users', $this->get(self::URL)->getContent());
         self::assertInstanceOf(LegacyExecutionResponse::class, $this->get('/modules/system/admin.php?fct=preferences')->baseResponse);
+    }
+
+    /**
+     * A takeover added after boot needs its path routed, as routes/web.php does.
+     */
+    private function takeover(Takeover $takeover): void
+    {
+        $this->app->make(TakeoverRegistry::class)->add($takeover);
+        Route::match($takeover->methods, $takeover->path, LegacyScriptController::class)
+            ->name(RouteOwnership::SCRIPT_ROUTE_PREFIX . $takeover->path);
+        $this->app->make('router')->getRoutes()->refreshNameLookups();
     }
 
     public function testDisabledKeysAreTrimmed(): void
