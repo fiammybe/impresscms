@@ -72,7 +72,9 @@ final class LegacyOperationsController
 
     private static function input(Request $request, string $name): string
     {
-        $value = $request->request->has($name) ? $request->request->get($name) : $request->query->get($name, '');
+        // all(): get() refuses arrays, which are ignored here as legacy (int) casts them
+        $body = $request->request->all();
+        $value = array_key_exists($name, $body) ? $body[$name] : ($request->query->all()[$name] ?? '');
 
         return is_scalar($value) ? (string) $value : '';
     }

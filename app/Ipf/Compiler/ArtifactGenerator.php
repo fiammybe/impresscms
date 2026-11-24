@@ -286,7 +286,7 @@ final class ArtifactGenerator
             'control' => $field->control?->name,
             'multiple' => (bool) $field->control?->isMultiple(),
             'options' => $field->control?->options?->toArray(),
-            'settings' => $field->control?->settings ?? [],
+            'settings' => $field->control === null ? [] : $field->control->settings,
             'required' => $field->required,
             'maxLength' => $field->maxLength,
             'default' => is_scalar($field->default) || $field->default === null || is_array($field->default) ? $field->default : null,

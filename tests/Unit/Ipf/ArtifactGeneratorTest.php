@@ -9,6 +9,7 @@ use App\Ipf\Compiler\PhpExporter;
 use App\Ipf\Definition\DefinitionReader;
 use App\Ipf\Definition\ResourceDefinition;
 use App\Ipf\Resource\ResourceRegistration;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/Fixtures.php';
@@ -51,6 +52,10 @@ final class ArtifactGeneratorTest extends TestCase
         self::assertStringNotContainsString("'settings'", $request, 'a field without a form element is not validated');
     }
 
+    /**
+     * @scenario Upload control
+     */
+    #[Group('spec:ipf-forms')]
     public function testAnUnsupportedControlLeavesTheResourceOnTheLegacyForm(): void
     {
         $entity = new FixtureEntity();

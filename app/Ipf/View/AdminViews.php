@@ -202,7 +202,7 @@ final class AdminViews
             'multiple' => (bool) $field['multiple'],
             'options' => $field['options'] === null ? [] : $resource->legacy->options($name),
             'settings' => $field['settings'],
-            'value' => $field['key'] ? ($record->id ?? 0) : $record->value($name),
+            'value' => $field['key'] ? ($record->id ?? 0) : $resource->legacy->editValue($name, $record->value($name)),
         ];
     }
 

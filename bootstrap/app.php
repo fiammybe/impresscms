@@ -6,6 +6,7 @@ use App\Auth\LoginRedirect;
 use App\Console\Commands\DefinitionsCheckCommand;
 use App\Console\Commands\DefinitionsCompileCommand;
 use App\Console\Commands\RoutesOwnershipCommand;
+use App\Console\Commands\SchemaDiffCommand;
 use App\Http\HostKernel;
 use App\Http\Middleware\RequiresActiveModule;
 use App\Http\Middleware\RequiresLegacy;
@@ -38,7 +39,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
             require dirname(__DIR__) . '/routes/web.php';
         },
     )
-    ->withCommands([RoutesOwnershipCommand::class, DefinitionsCompileCommand::class, DefinitionsCheckCommand::class])
+    ->withCommands([RoutesOwnershipCommand::class, DefinitionsCompileCommand::class, DefinitionsCheckCommand::class, SchemaDiffCommand::class])
     ->withMiddleware(static function (Middleware $middleware): void {
         // A route that takes over a legacy URL must see the input legacy saw.
         $middleware->remove([TrimStrings::class, ConvertEmptyStringsToNull::class]);

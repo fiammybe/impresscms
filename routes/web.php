@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
  *   LegacyScriptController, which asks the takeover registry whether Laravel
  *   or the legacy script answers the request (query string and POST body
  *   variants, switches, module state)
- * - module routes come from modules/<dirname>/routes.php
+ * - module routes come from app-modules/<dirname>/routes.php
  * - everything no route claims falls through to the legacy bridge, last
  */
 

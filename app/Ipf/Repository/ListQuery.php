@@ -46,21 +46,36 @@ final class ListQuery
             }
         }
 
-        $sort = (string) $request->query->get("{$item}_sortsel", (string) $request->cookies->get("tbl_{$entity}_sortsel", $list['sortBy']));
+        $query = $request->query->all();
+        $cookies = $request->cookies->all();
+        $sort = self::scalar($query, "{$item}_sortsel") ?? self::scalar($cookies, "tbl_{$entity}_sortsel") ?? (string) $list['sortBy'];
         if (! in_array($sort, $sortable, true)) {
             $sort = (string) $list['sortBy'];
         }
 
-        $order = strtoupper((string) $request->query->get("{$item}_ordersel", (string) $request->cookies->get("tbl_{$entity}_ordersel", $list['order'])));
-        $limit = (string) $request->query->get('limitsel', (string) $request->cookies->get('tbl_limitsel', (string) $list['limit']));
-        $search = trim((string) $request->request->get("quicksearch_{$entity}", (string) $request->query->get("quicksearch_{$entity}", '')));
+        $order = strtoupper(self::scalar($query, "{$item}_ordersel") ?? self::scalar($cookies, "tbl_{$entity}_ordersel") ?? (string) $list['order']);
+        $limit = self::scalar($query, 'limitsel') ?? self::scalar($cookies, 'tbl_limitsel') ?? (string) $list['limit'];
+        $search = trim(self::scalar($request->request->all(), "quicksearch_{$entity}") ?? self::scalar($query, "quicksearch_{$entity}") ?? '');
 
         return new self(
             search: $search !== '' ? $search : null,
             sort: $sort,
             order: $order === 'DESC' ? 'DESC' : 'ASC',
             limit: $limit === 'all' ? null : max(1, (int) $limit ?: (int) $list['limit']),
-            start: max(0, (int) $request->query->get('start' . $descriptor::primaryKey(), 0)),
+            start: max(0, (int) (self::scalar($query, 'start' . $descriptor::primaryKey()) ?? 0)),
         );
+    }
+
+    /**
+     * A scalar parameter as a string; null when missing or not scalar
+     * (InputBag::get() refuses arrays, which the legacy table ignores).
+     *
+     * @param array<string, mixed> $parameters
+     */
+    private static function scalar(array $parameters, string $name): ?string
+    {
+        $value = $parameters[$name] ?? null;
+
+        return is_scalar($value) ? (string) $value : null;
     }
 }

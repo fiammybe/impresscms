@@ -17,8 +17,8 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Takeovers of legacy URLs are switched off by ICMS_TAKEOVERS_DISABLED, read
- * through config('icms.takeovers.disabled') (design L26), and a route can
- * match a parameter that only the POST body carries (`whereInput()`).
+ * through config('icms.takeovers.disabled') (design L26), and a takeover can
+ * match a parameter that only the POST body carries (Takeover `input`).
  */
 #[Group('spec:request-ownership')]
 final class TakeoverSwitchTest extends TestCase

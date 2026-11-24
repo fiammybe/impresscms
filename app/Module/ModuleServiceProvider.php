@@ -16,8 +16,9 @@ use ReflectionClass;
 
 /**
  * The Laravel side of one ImpressCMS module, in the host's trust path:
- * `modules/<dirname>/`, namespace `Modules\<Dirname>\`, next to the module's
- * legacy code in the web root, which it does not change.
+ * `app-modules/<dirname>/`, namespace `Modules\<Dirname>\`, next to the
+ * module's legacy code in the web root, which it does not change. (The trust
+ * path's `modules/` belongs to legacy: Protector and duplicatable modules.)
  *
  * A module directory may hold:
  *

@@ -232,6 +232,9 @@ final class DefinitionReader
         ), $permissions));
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     private function listDefinition(ReflectionClass $class, string $identifier): ?ListDefinition
     {
         $view = $this->attribute($class, ListView::class);
@@ -274,6 +277,7 @@ final class DefinitionReader
 
     /**
      * @return list<RelationDefinition>
+     * @param ReflectionClass<object> $class
      */
     private function relations(ReflectionClass $class): array
     {
@@ -297,6 +301,9 @@ final class DefinitionReader
         return $relations;
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     private function legacyOperations(ReflectionClass $class): ?LegacyOperationsDefinition
     {
         $legacy = $this->attribute($class, LegacyOperations::class);
@@ -317,6 +324,7 @@ final class DefinitionReader
 
     /**
      * @return list<NotificationDefinition>
+     * @param ReflectionClass<object> $class
      */
     private function notifications(ReflectionClass $class): array
     {
@@ -354,6 +362,7 @@ final class DefinitionReader
 
     /**
      * @template T of object
+     * @param ReflectionClass<object> $class
      * @param class-string<T> $attribute
      * @return T|null
      */
@@ -367,6 +376,7 @@ final class DefinitionReader
      * derived handler keeps the metadata of the class it extends).
      *
      * @template T of object
+     * @param ReflectionClass<object> $class
      * @param class-string<T> $attribute
      * @return list<T>
      */

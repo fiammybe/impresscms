@@ -64,20 +64,28 @@ final class Takeover
             return false;
         }
 
+        // all(): get() refuses arrays (fct[]=…), which legacy accepts and these never match
+        $query = $request->query->all();
+        $body = $request->request->all();
+
         foreach ($this->query as $name => $value) {
-            if ((string) $request->query->get($name) !== $value) {
+            if (! self::equals($query[$name] ?? null, $value)) {
                 return false;
             }
         }
 
         foreach ($this->input as $name => $value) {
-            $actual = $request->request->has($name) ? $request->request->get($name) : $request->query->get($name);
-            if (! is_scalar($actual) || (string) $actual !== $value) {
+            if (! self::equals(array_key_exists($name, $body) ? $body[$name] : ($query[$name] ?? null), $value)) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private static function equals(mixed $actual, string $expected): bool
+    {
+        return is_scalar($actual) && (string) $actual === $expected;
     }
 
     /**

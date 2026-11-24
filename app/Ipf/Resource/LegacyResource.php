@@ -95,6 +95,24 @@ final class LegacyResource
     }
 
     /**
+     * A stored value as the legacy form shows it for editing (getVar($key, 'e')):
+     * text areas without the marks of the HTML input filter, which saving adds
+     * again. Plain text: the view escapes it.
+     */
+    public function editValue(string $field, mixed $value): mixed
+    {
+        $type = $this->descriptor::field($field)['type'];
+        if (! is_string($value) || ! in_array($type, ['TXTAREA', 'SOURCE'], true)) {
+            return $value;
+        }
+
+        $this->template();
+        $edit = (string) \Icms\Core\DataFilter::checkVar($value, 'html', 'edit');
+
+        return html_entity_decode($edit, ENT_QUOTES, 'UTF-8');
+    }
+
+    /**
      * All groups by id, sorted by name (Icms\Ipf\Form\Base::createPermissionControls()).
      *
      * @return array<int, string>
@@ -148,15 +166,14 @@ final class LegacyResource
     /**
      * @param array<string, mixed> $provider
      */
-    private function itemHandler(array $provider): ?object
+    private function itemHandler(array $provider): object
     {
         $this->runtime->bootTo('module');
         $name = (string) $provider['handler'];
-        $handler = isset($provider['module'])
+
+        return isset($provider['module'])
             ? $this->handlers->get("module:{$provider['module']}/{$name}")
             : $this->handlers->get($name);
-
-        return is_object($handler) ? $handler : null;
     }
 
     /**

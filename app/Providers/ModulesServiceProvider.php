@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * Registers the Laravel side of the ImpressCMS modules found in the host's
- * `modules/` directory: `modules/<dirname>/<Dirname>ModuleServiceProvider.php`
+ * `app-modules/` directory: `app-modules/<dirname>/<Dirname>ModuleServiceProvider.php`
  * (App\Module\ModuleServiceProvider). A module without one stays purely
  * legacy.
  */
@@ -23,7 +23,7 @@ final class ModulesServiceProvider extends ServiceProvider
         $this->app->singleton(ResourceRegistry::class);
         $this->app->singleton(TakeoverRegistry::class);
 
-        foreach (self::discover($this->app->basePath('modules')) as $provider) {
+        foreach (self::discover($this->app->basePath('app-modules')) as $provider) {
             $this->app->register($provider);
         }
     }

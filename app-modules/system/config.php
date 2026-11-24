@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * Switches of the system module's Laravel side, merged as
+ * Switches of the system module (app-modules/system)'s Laravel side, merged as
  * config('icms_modules.system'). Each one rolls back one concern of a
  * resource to its legacy implementation; none needs a code change. The
  * whole legacy URL goes back to the legacy script with
