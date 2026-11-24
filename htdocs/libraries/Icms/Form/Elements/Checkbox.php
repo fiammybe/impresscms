@@ -292,4 +292,19 @@ class Checkbox extends \Icms\Form\Element {
 			$this->addOption($value, $label);
 		}
 	}
+
+	/**
+	 * The definition: a choice field of type "checkbox"
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		$name = $this->getName(false);
+		return new \Icms\Form\Definition\ChoiceField(...array_merge($this->definitionBase('checkbox'), [
+			'name' => substr($name, -2) === '[]' ? substr($name, 0, -2) : $name,
+			'options' => \Icms\Form\Definition\Choice::fromArray($this->getOptions()),
+			'selected' => array_map('strval', (array) $this->getValue()),
+			'multiple' => true,
+			'attributes' => ['delimiter' => $this->getDelimeter()],
+		]));
+	}
 }

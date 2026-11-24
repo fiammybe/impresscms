@@ -37,5 +37,11 @@ class Upload extends \Icms\Form\Elements\File {
 		        <input type='file' name='" . $this->getName() . "' id='" . $this->getName() . "'" . $this->getExtra() . " />
 		        <input type='hidden' name='icms_upload_file[]' id='icms_upload_file[]' value='" . $this->getName() . "' />";
 	}
-}
 
+	/**
+	 * The definition: a field of type "file" (this class renders the input itself)
+	 */
+	protected function describe(): \Icms\Form\Definition\Field {
+		return parent::describe();
+	}
+}

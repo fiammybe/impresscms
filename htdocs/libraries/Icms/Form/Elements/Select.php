@@ -222,31 +222,30 @@ class Select extends Element
     }
 
     /**
+     * The definition: a choice field of type "select"
+     */
+    protected function describe(): \Icms\Form\Definition\Field
+    {
+        return new \Icms\Form\Definition\ChoiceField(...$this->definitionBase('select') + [
+            'options' => \Icms\Form\Definition\Choice::fromArray($this->getOptions()),
+            'selected' => array_map('strval', $this->getValue()),
+            'multiple' => $this->isMultiple(),
+            'size' => $this->getSize(),
+        ]);
+    }
+
+    protected function definitionTemplate(): ?string
+    {
+        return 'icms_form_elements_select_display.html';
+    }
+
+    /**
      * Prepare HTML for output
      *
-     * @return string HTML
+     * @return string HTML (icms_form_elements_select_display.html)
      */
     public function render(): string
     {
-        $eleName = $this->getName();
-        $eleValue = $this->getValue();
-        $eleOptions = $this->getOptions();
-        $ret = '<select size="' . $this->getSize() . '"' . $this->getExtra();
-
-        if ($this->isMultiple()) {
-            $ret .= ' name="' . htmlspecialchars($eleName, ENT_QUOTES) . '[]" id="' . htmlspecialchars($eleName, ENT_QUOTES) . '" multiple="multiple">';
-        } else {
-            $ret .= ' name="' . htmlspecialchars($eleName, ENT_QUOTES) . '" id="' . htmlspecialchars($eleName, ENT_QUOTES) . '">';
-        }
-
-        foreach ($eleOptions as $v => $n) {
-            $ret .= '<option value="' . htmlspecialchars((string) $v, ENT_QUOTES) . '"';
-            if (count($eleValue) > 0 && in_array((string) $v, (array) $eleValue, true)) {
-                $ret .= ' selected="selected"';
-            }
-            $ret .= '>' . htmlspecialchars((string) $n, ENT_QUOTES) . "</option>\n";
-        }
-        $ret .= '</select>';
-        return $ret;
+        return $this->renderDefinition();
     }
 }

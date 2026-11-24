@@ -1,0 +1,3 @@
+<{if $field.value != ''}><div><{$view.current_label}><a href='<{$field.attributes.current_url}>' target='_blank' ><{$field.value}></a></div><{/if}><div><input type='hidden' name='MAX_FILE_SIZE' value='<{$field.attributes.max_file_size}>' />
+		        <input type='file' name='<{$field.name|escape}>' id='<{$field.name|escape}>' <{$field.extra}> />
+		        <input type='hidden' name='icms_upload_file[]' id='icms_upload_file[]' value='<{$field.name|escape}>' /></div>

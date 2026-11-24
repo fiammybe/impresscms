@@ -89,5 +89,12 @@ class Label extends \Icms\Form\Element {
 		public function render(): string {
 		return $this->getValue();
 	}
-}
 
+	/**
+	 * The definition: a field of type "label" (text shown, nothing submitted)
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		return new \Icms\Form\Definition\Field(...$this->definitionBase('label') + ['value' => $this->getValue()]);
+	}
+}

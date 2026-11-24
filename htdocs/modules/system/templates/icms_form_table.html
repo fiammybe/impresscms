@@ -1,0 +1,6 @@
+<{$form.title}>
+<form name='<{$form.name}>' id='<{$form.name}>' action='<{$form.action}>' method='<{$form.method}>'<{$form.extra}>>
+<table border='0' width='100%'>
+<{foreach from=$form.rows item=row}><{if $row.type == 'raw'}><{$row.html}><{else}><tr valign='top' align='<{$form.align}>'><td><{$row.field.label}><{if $row.field.description}><br /><br /><span style="font-weight: normal;"><{$row.field.description}></span><{/if}></td><td><{if $row.template}><{include file=$row.template field=$row.field view=$row.view}><{else}><{$row.html}><{/if}></td></tr><{/if}><{/foreach}></table>
+<{foreach from=$form.hidden item=row}><{if $row.template}><{include file=$row.template field=$row.field view=$row.view}><{else}><{$row.html}><{/if}>
+<{/foreach}></form>

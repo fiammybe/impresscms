@@ -96,16 +96,23 @@ class Hidden extends \Icms\Form\Element {
 	 * @return	string	HTML
 	 */
 	public function render(): string {
-		if (is_array($this->getValue())) {
-			$ret = '';
-			foreach ($this->getValue() as $value){
-				$ret .= "<input type='hidden' name='" . $this->getName() . "[]' id='" . $this->getName() . "' value='" . $value . "' />\n";
-			}
-		} else {
-			$ret = "<input type='hidden' name='" . $this->getName() . "' id='" . $this->getName() . "' value='" . $this->getValue() . "' />";
-		}
+		return $this->renderDefinition();
+	}
 
-		return $ret;
+	/**
+	 * The definition: a hidden field; an array value is submitted as name[],
+	 * one input per value. Values are output as the control holds them.
+	 */
+	protected function describe(): \Icms\Form\Definition\Field {
+		$value = $this->getValue();
+		return new \Icms\Form\Definition\Field(...$this->definitionBase('hidden') + [
+			'value' => $value,
+			'attributes' => ['multiple' => is_array($value)],
+		]);
+	}
+
+	protected function definitionTemplate(): ?string {
+		return 'icms_form_elements_hidden_display.html';
 	}
 }
 

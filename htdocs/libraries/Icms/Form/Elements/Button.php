@@ -128,4 +128,15 @@ class Button extends \Icms\Form\Element {
 
 	return $this->tpl->fetch('db:' . $element_html_template);
 	}
+
+	/**
+	 * The definition: a field of type "button" (attribute button_type: submit, button or reset)
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		return new \Icms\Form\Definition\Field(...$this->definitionBase('button') + [
+			'value' => $this->getValue(),
+			'attributes' => ['button_type' => $this->getType()],
+		]);
+	}
 }

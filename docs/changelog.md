@@ -6,6 +6,7 @@
 * Build Version : 119
 
 ### What's Changed
+* enhancement:Hardcoded HTML in `htdocs/libraries/Icms` (PageNav, form layouts and controls, tree select boxes, IPF controller/form elements, comment renderer, user/module links) moved to Smarty templates in `modules/system/templates`. Form templates receive a neutral form definition (`Icms\Form\Definition`) that the Symfony form bridge uses as well. Until the system module is updated, the template files are used directly. See `docs/templating.md`
 * fix:Fix system module update resetting db version to 47 by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1723
 * fix:Array values no longer read as empty (2.0.2/2.0.3) and repair the HTML filter's allowed lists by @fiammybe in https://github.com/ImpressCMS/impresscms/pull/1731
 * fix:Use lowercase table names for IPF objects by @skenow in https://github.com/ImpressCMS/impresscms/pull/1730

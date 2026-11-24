@@ -64,14 +64,7 @@ class Table extends Base
 	 */
 	public function insertBreak(string|null $extra = '', string $class = ''): void
 	{
-		$class = ($class !== '') ? " class='$class'" : '';
-		// Fix for $extra tag not showing
-		if ($extra) {
-			$extra = "<tr><td colspan='2' $class>$extra</td></tr>";
-		} else {
-			$extra = "<tr><td colspan='2' $class>&nbsp;</td></tr>";
-		}
-		$this->addElement($extra, false);
+		$this->addElement(trim(\Icms\View\SystemTemplate::fetch('icms_form_break_row.html', ['extra' => (string) $extra, 'class' => $class])), false);
 	}
 
 	/**
@@ -81,28 +74,6 @@ class Table extends Base
 	 */
 	public function render(): string
 	{
-		$ret = $this->getTitle() . "\n<form name='" . $this->getName()
-			. "' id='" . $this->getName()
-			. "' action='" . $this->getAction()
-			. "' method='" . $this->getMethod() . "'" . $this->getExtra()
-			. ">\n<table border='0' width='100%'>\n";
-		$hidden = '';
-		foreach ($this->getElements() as $ele) {
-			if (!is_object($ele)) {
-				$ret .= $ele;
-				continue;
-			}
-			if (!$ele->isHidden()) {
-				$ret .= "<tr valign='top' align='" . _GLOBAL_LEFT . "'><td>" . $ele->getCaption();
-				if ($ele_desc = $ele->getDescription()) {
-					$ret .= '<br /><br /><span style="font-weight: normal;">' . $ele_desc . '</span>';
-				}
-				$ret .= "</td><td>" . $ele->render() . "</td></tr>";
-			} else {
-				$hidden .= $ele->render() . "\n";
-			}
-		}
-		$ret .= "</table>\n$hidden</form>\n";
-		return $ret;
+		return $this->renderLayout('icms_form_table.html');
 	}
 }

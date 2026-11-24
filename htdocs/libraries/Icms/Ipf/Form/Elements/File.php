@@ -38,18 +38,31 @@ class File extends \Icms\Form\Elements\File {
 	 * @return	string	$ret  the constructed HTML
 	 */
 	public function render(): string {
-		$ret = '';
-		if ($this->_object->getVar($this->_key) != '') {
-			$ret .=	"<div>" . _CO_ICMS_CURRENT_FILE
-				. "<a href='" . $this->_object->getUploadDir() . $this->_object->getVar($this->_key)
-				. "' target='_blank' >". $this->_object->getVar($this->_key) . "</a></div>" ;
-		}
+		return $this->renderDefinition();
+	}
 
-		$ret .= "<div><input type='hidden' name='MAX_FILE_SIZE' value='" . $this->getMaxFileSize() . "' />
-		        <input type='file' name='" . $this->getName() . "' id='" . $this->getName() . "'" . $this->getExtra() . " />
-		        <input type='hidden' name='icms_upload_file[]' id='icms_upload_file[]' value='" . $this->getName() . "' /></div>";
+	/**
+	 * The definition: a compound field of type "file" with the file input as
+	 * child "upload"; the value is the current file name
+	 */
+	protected function describe(): \Icms\Form\Definition\Field {
+		$current = (string) $this->_object->getVar($this->_key);
+		$base = $this->definitionBase('file');
+		return new \Icms\Form\Definition\CompoundField(...$base + [
+			'children' => ['upload' => new \Icms\Form\Definition\Field($base['name'], 'file', attributes: ['max_file_size' => $this->getMaxFileSize()], extra: $base['extra'])],
+			'value' => $current,
+			'attributes' => [
+				'max_file_size' => $this->getMaxFileSize(),
+				'current_url' => $current !== '' ? $this->_object->getUploadDir() . $current : '',
+			],
+		]);
+	}
 
-		return $ret;
+	protected function definitionTemplate(): ?string {
+		return 'icms_ipf_form_elements_file_display.html';
+	}
+
+	protected function viewData(): array {
+		return ['current_label' => _CO_ICMS_CURRENT_FILE];
 	}
 }
-

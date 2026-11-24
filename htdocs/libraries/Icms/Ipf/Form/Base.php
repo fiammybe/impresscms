@@ -500,36 +500,29 @@ class Base extends \Icms\Form\Theme {
 	 */
 	public function render(): string {
 		$this->createButtons($this->_form_name, $this->_form_caption, $this->_submit_button_caption);
-		$required =& $this->getRequired();
-		$ret = "
-			<form name='".$this->getName()."_dorga' id='".$this->getName()."' action='".$this->getAction()."' method='".$this->getMethod()."' onsubmit='return xoopsFormValidate_".$this->getName()."(this);'".$this->getExtra().">
-			<table width='100%' class='outer' cellspacing='1'>
-			<tr><th colspan='2'>".$this->getTitle()."</th></tr>
-		";
-		$hidden = '';
-		$class = 'even';
+		return $this->renderLayout('icms_ipf_form_base.html', ['rows' => $this->sectionRows()]);
+	}
+
+	/**
+	 * The rows of the form, with type section / section_close for the
+	 * sections (also for a Section subclass that renders itself)
+	 *
+	 * @return list<array<string, mixed>>
+	 */
+	private function sectionRows(): array {
+		$rows = array();
 		foreach ($this->getElements() as $ele) {
 			if (!is_object($ele)) {
-				$ret .= $ele;
+				$rows[] = \Icms\Form\View\FormView::raw((string) $ele) + array('hidden' => false);
 			} elseif (!$ele->isHidden()) {
-				if ($ele instanceof \Icms\Ipf\Form\Elements\Section && !$ele->isClosingSection()) {
-					$ret .= '<tr><th colspan="2">' . $ele->render() . '</th></tr>';
-				} elseif ($ele instanceof \Icms\Ipf\Form\Elements\Section && $ele->isClosingSection()) {
-					$ret .= '<tr><td class="even" colspan="2">&nbsp;</td></tr>';
-				} else {
-					$ret .= "<tr id='" . $ele->getName() . "_row' valign='top' align='"._GLOBAL_LEFT."'><td class='head'>".$ele->getCaption();
-					if ($ele->getDescription() != '') {
-						$ret .= '<br /><br /><span style="font-weight: normal;">'.$ele->getDescription().'</span>';
-					}
-					$ret .= "</td><td class='$class'>".$ele->render()."</td></tr>\n";
+				$row = \Icms\Form\View\FormView::control($ele) + array('hidden' => false);
+				if ($ele instanceof \Icms\Ipf\Form\Elements\Section) {
+					$row['type'] = $ele->isClosingSection() ? \Icms\Form\Definition\Field::TYPE_SECTION_CLOSE : \Icms\Form\Definition\Field::TYPE_SECTION;
 				}
-			} else {
-				$hidden .= $ele->render();
+				$rows[] = $row;
 			}
 		}
-		$ret .= "</table>\n$hidden\n</form>\n";
-		$ret .= $this->renderValidationJS(TRUE);
-		return $ret;
+		return $rows;
 	}
 
 	/**
@@ -554,6 +547,7 @@ class Base extends \Icms\Form\Theme {
 			$elements[$n]['section'] = $ele instanceof \Icms\Ipf\Form\Elements\Section && !$ele->isClosingSection();
 			$elements[$n]['section_close'] = $ele instanceof \Icms\Ipf\Form\Elements\Section && $ele->isClosingSection();
 			$elements[$n]['hide'] = isset($this->targetObject->vars[$n]['hide']) ? $this->targetObject->vars[$n]['hide'] : FALSE;
+			$elements[$n]['field'] = $ele->getDefinition()->toArray();
 
 			if ($ele->getDescription() != '') {
 				$elements[$n]['description']  = $ele->getDescription();
@@ -577,9 +571,6 @@ class Base extends \Icms\Form\Theme {
 	 */
 	public function renderValidationJS(bool $withtags = true): string {
 		$js = "";
-		if ($withtags) {
-			$js .= "\n<!-- Start Form Validation JavaScript //-->\n<script type='text/javascript'>\n<!--//\n";
-		}
 		$formname = $this->getName();
 		$js .= "function xoopsFormValidate_{$formname}(myform) {";
 		// First, output code to check required elements
@@ -653,7 +644,7 @@ class Base extends \Icms\Form\Theme {
 		}
 		$js .= "return true;\n}\n";
 		if ($withtags) {
-			$js .= "//--></script>\n<!-- End Form Vaidation JavaScript //-->\n";
+			return self::validationScript($js);
 		}
 		return $js;
 	}

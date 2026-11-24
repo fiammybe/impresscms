@@ -1,0 +1,2 @@
+<{if $field.attributes.multiple}><{foreach from=$field.value item=value}><input type='hidden' name='<{$field.name|escape}>[]' id='<{$field.name|escape}>' value='<{$value}>' />
+<{/foreach}><{else}><input type='hidden' name='<{$field.name|escape}>' id='<{$field.name|escape}>' value='<{$field.value}>' /><{/if}>

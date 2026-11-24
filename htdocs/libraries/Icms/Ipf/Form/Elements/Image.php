@@ -19,43 +19,116 @@ defined('ICMS_ROOT_PATH') or die("ImpressCMS root path not defined");
 
 class Image extends \Icms\Form\Elements\Tray {
 	/**
+	 * The current image: type (external, local or '' for none) and url
+	 * @var array
+	 */
+	private $_image = array('type' => '', 'url' => '');
+
+	/**
+	 * @var \Icms\Ipf\Form\Elements\Fileupload
+	 */
+	private $_upload;
+
+	/**
+	 * @var \Icms\Form\Elements\Text|null
+	 */
+	private $_url = null;
+
+	/**
+	 * @var \Icms\Form\Elements\Checkbox|null
+	 */
+	private $_delete = null;
+
+	/**
+	 * @var string	the variable
+	 */
+	private $_key;
+
+	/**
 	 * Constructor
-	 * @param	object    $object   reference to targetobject (@link \icms_ipf_Object)
+	 * @param	object    $object   reference to targetobject (@link icms_ipf_Object)
 	 * @param	string    $key      the form name
 	 */
 	public function __construct($object, $key) {
+		$this->_key = (string) $key;
 		$var = $object->vars[$key];
 		$control = $object->getControl($key);
-
 		$object_imageurl = $object->getImageDir();
 		parent::__construct($var['form_caption'], ' ');
 
-		if (isset($objectArray['image'])){
-			$objectArray['image'] = str_replace('{ICMS_URL}', ICMS_URL, $objectArray['image']);
+		$value = $object->getVar($key, 'e');
+		if ($value != '' && (substr($value, 0, 4) == 'http' || substr($value, 0, 10) == '{ICMS_URL}')) {
+			$this->_image = array('type' => 'external', 'url' => str_replace('{ICMS_URL}', ICMS_URL, $value));
+		} elseif ($value != '') {
+			$this->_image = array('type' => 'local', 'url' => $object_imageurl . $value);
 		}
 
-		if ($object->getVar($key, 'e') != '' && (substr($object->getVar($key, 'e'), 0, 4) == 'http' || substr($object->getVar($key, 'e'), 0, 10) == '{ICMS_URL}')) {
-			$this->addElement(new \Icms\Form\Elements\Label('', "<img src='" . str_replace('{ICMS_URL}', ICMS_URL, $object->getVar($key, 'e')) . "' alt='' /><br/><br/>" ));
-		} elseif ($object->getVar($key, 'e') != '') {
-			$this->addElement(new \Icms\Form\Elements\Label('', "<a rel='lightbox' title='" . $object_imageurl . $object->getVar($key, 'e') 
-				. "' href='" . $object_imageurl . $object->getVar($key, 'e') 
-				. "' ><img class='acp_object_imageurl' src='" . $object_imageurl . $object->getVar($key, 'e') 
-				. "' alt='" . $object_imageurl . $object->getVar($key, 'e') . "' height='150' /></a><br/><br/>" ));
-		}
-
-		$this->addElement(new \Icms\Ipf\Form\Elements\Fileupload($object, $key));
+		$this->_upload = new \Icms\Ipf\Form\Elements\Fileupload($object, $key);
+		$this->addElement($this->_upload);
 
 		if (!isset($control['nourl']) || !$control['nourl']) {
-			$this->addElement(new \Icms\Form\Elements\Label('<div style="padding-top: 8px; font-size: 80%;">'._CO_ICMS_URL_FILE_DSC.'</div>', ''));
-			$this->addElement(new \Icms\Form\Elements\Label('', '<br />' . _CO_ICMS_URL_FILE));
-			$this->addElement(new \Icms\Form\Elements\Text('', 'url_'.$key, 50, 500));
+			$this->_url = new \Icms\Form\Elements\Text('', 'url_' . $key, 50, 500);
+			$this->addElement($this->_url);
 		}
 		if (!$object->isNew()) {
-			$this->addElement(new \Icms\Form\Elements\Label('', '<br /><br />'));
-			$delete_check = new \Icms\Form\Elements\Checkbox('', 'delete_'.$key);
-			$delete_check->addOption(1, '<span style="color:red;">'._CO_ICMS_DELETE.'</span>');
-			$this->addElement($delete_check);
+			$this->_delete = new \Icms\Form\Elements\Checkbox('', 'delete_' . $key);
+			$this->_delete->addOption(1, trim(\Icms\View\SystemTemplate::fetch('icms_ipf_form_elements_image_delete.html', ['text' => _CO_ICMS_DELETE])));
+			$this->addElement($this->_delete);
 		}
 	}
-}
 
+	/**
+	 * Renders the current image, the upload field, the url field and the delete
+	 * checkbox (icms_ipf_form_elements_image_display.html)
+	 */
+	public function render(): string {
+		return $this->renderDefinition();
+	}
+
+	/**
+	 * The definition: a compound field of type "image" with the children
+	 * upload, url (unless the control has nourl) and delete (for an existing
+	 * object); attributes image_type (external, local or '') and image_url
+	 */
+	protected function describe(): \Icms\Form\Definition\Field {
+		$children = ['upload' => $this->_upload->getDefinition()];
+		if ($this->_url !== null) {
+			$children['url'] = $this->_url->getDefinition();
+		}
+		if ($this->_delete !== null) {
+			$children['delete'] = $this->_delete->getDefinition();
+		}
+		return new \Icms\Form\Definition\CompoundField(...$this->definitionBase('image') + [
+			'name' => $this->_key,
+			'children' => $children,
+			'value' => $this->_image['url'],
+			'attributes' => ['image_type' => $this->_image['type'], 'image_url' => $this->_image['url'], 'delimiter' => $this->getDelimeter()],
+		]);
+	}
+
+	protected function definitionTemplate(): ?string {
+		return 'icms_ipf_form_elements_image_display.html';
+	}
+
+	/**
+	 * The parts in display order (kind: image, element, url_help, url_label
+	 * or break; element parts have the control array of the child)
+	 */
+	protected function viewData(): array {
+		$parts = array();
+		if ($this->_image['type'] !== '') {
+			$parts[] = array('kind' => 'image');
+		}
+		$parts[] = array('kind' => 'element', 'control' => \Icms\Form\View\FormView::control($this->_upload));
+		if ($this->_url !== null) {
+			$parts[] = array('kind' => 'url_help', 'text' => _CO_ICMS_URL_FILE_DSC);
+			$parts[] = array('kind' => 'url_label', 'text' => _CO_ICMS_URL_FILE);
+			$parts[] = array('kind' => 'element', 'control' => \Icms\Form\View\FormView::control($this->_url));
+		}
+		if ($this->_delete !== null) {
+			$parts[] = array('kind' => 'break');
+			$parts[] = array('kind' => 'element', 'control' => \Icms\Form\View\FormView::control($this->_delete));
+		}
+		return array('parts' => $parts);
+	}
+}

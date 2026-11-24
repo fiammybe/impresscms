@@ -71,21 +71,28 @@ class Text {
 	 * @return string	$form the Captcha Form
 	 */
 	public function render() {
-		global $icmsConfigCaptcha;
-		$form = $this->loadText()
-			. "&nbsp;&nbsp; <input type='text' name='" . $this->config["name"]
-			."' id='" . $this->config["name"]
-			. "' size='" . $icmsConfigCaptcha['captcha_num_chars']
-			. "' maxlength='" . $icmsConfigCaptcha['captcha_num_chars']
-			. "' value='' />";
-		$rule = constant("ICMS_CAPTCHA_RULE_TEXT");
-		if (!empty($rule)) {
-			$form .= "&nbsp;&nbsp;<small>{$rule}</small>";
-		}
+		$expression = $this->loadText();
+		$form = \Icms\View\SystemTemplate::fetch('icms_form_elements_captcha_text_display.html', [
+			'field' => $this->getDefinition()->toArray(),
+			'view' => ['expression' => $expression, 'hint' => (string) constant("ICMS_CAPTCHA_RULE_TEXT")],
+		]);
 
 		$this->setCode();
 
 		return $form;
+	}
+
+	/**
+	 * The definition: a compound field of type "captcha" (mode "text") with
+	 * the text input for the result as child "code"
+	 */
+	public function getDefinition(): \Icms\Form\Definition\CompoundField {
+		global $icmsConfigCaptcha;
+		$name = (string) $this->config["name"];
+		$chars = (int) $icmsConfigCaptcha['captcha_num_chars'];
+		return new \Icms\Form\Definition\CompoundField($name, 'captcha', children: [
+			'code' => new \Icms\Form\Definition\Field($name, 'text', value: '', required: true, attributes: ['size' => $chars, 'maxlength' => $chars], constraints: ['maxlength' => $chars]),
+		], required: true, attributes: ['mode' => 'text']);
 	}
 
 	/**
@@ -103,7 +110,7 @@ class Text {
 			$this->code = $val_a + $val_b;
 		}
 
-		return "<span style='font-style: normal; font-weight: bold; font-size: 100%; font-color: #333; border: 1px solid #333; padding: 1px 5px;'>{$expression}</span>";
+		return $expression;
 	}
 
 }

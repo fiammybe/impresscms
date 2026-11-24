@@ -92,6 +92,12 @@ abstract class Base
 	protected array $_elements = [];
 
 	/**
+	 * Template that replaces the default template of the form layout
+	 * @var string|null
+	 */
+	public ?string $customTemplate = null;
+
+	/**
 	 * extra information for the <form> tag
 	 * @var array
 	 */
@@ -427,9 +433,6 @@ abstract class Base
 	public function renderValidationJS(bool $withtags = true): string
 	{
 		$js = "";
-		if ($withtags) {
-			$js .= "\n<!-- Start Form Validation JavaScript //-->\n<script type='text/javascript'>\n<!--//\n";
-		}
 		$formname = $this->getName();
 		$js .= "function xoopsFormValidate_{$formname}() { myform = window.document.{$formname}; ";
 		$elements = $this->getElements(true);
@@ -439,14 +442,67 @@ abstract class Base
 			}
 		}
 		$js .= "return true;\n}\n";
-		if ($withtags) {
-			$js .= "//--></script>\n<!-- End Form Validation JavaScript //-->\n";
+		return $withtags ? self::validationScript($js) : $js;
+	}
+
+	/**
+	 * Wrap validation code in its script tags (icms_form_validation_script.html)
+	 *
+	 * @param string $javascript the validation function
+	 */
+	public static function validationScript(string $javascript): string
+	{
+		return \Icms\View\SystemTemplate::fetch('icms_form_validation_script.html', ['validation' => ['javascript' => $javascript]]);
+	}
+
+	/**
+	 * The neutral definition of the form (Icms\Form\Definition\Form): the
+	 * definitions of its elements, visible ones as rows, hidden ones as hidden
+	 * values; buttons (and trays of only buttons) are also its actions. HTML
+	 * added as a string has no definition.
+	 */
+	public function getDefinition(): \Icms\Form\Definition\Form
+	{
+		$rows = $hidden = $actions = [];
+		foreach ($this->getElements() as $element) {
+			if (!is_object($element)) {
+				continue;
+			}
+			$field = $element->getDefinition();
+			if ($element->isHidden()) {
+				$hidden[] = $field;
+				continue;
+			}
+			$rows[] = $field;
+			if ($field->type === 'button' || $field->type === 'actions') {
+				$actions[] = $field;
+			}
 		}
-		return $js;
+		return new \Icms\Form\Definition\Form(
+			$this->getName(false), $this->getTitle(), $this->getAction(false), $this->getMethod(),
+			$rows, $hidden, $actions, trim($this->getExtra())
+		);
+	}
+
+	/**
+	 * Render the form with a layout template: the template receives `form`
+	 * (Icms\Form\View\FormView::form()); customTemplate replaces $template
+	 *
+	 * @param string               $template the layout template
+	 * @param array<string, mixed> $extra    additional keys of `form`
+	 */
+	protected function renderLayout(string $template, array $extra = []): string
+	{
+		$form = \Icms\Form\View\FormView::form($this, $extra + ['align' => _GLOBAL_LEFT]);
+		$form['validation']['script'] = self::validationScript($form['validation']['javascript']);
+		return \Icms\View\SystemTemplate::fetch($template, ['form' => $form], $this->customTemplate);
 	}
 
 	/**
 	 * Assign to Smarty form template instead of displaying directly
+	 *
+	 * Every element has name, caption, body (its HTML), hidden, required,
+	 * description and field (its definition, Element::getDefinition()).
 	 *
 	 * @param Object $tpl    reference to a {@link Smarty} object
 	 * @see     Smarty
@@ -469,6 +525,7 @@ abstract class Base
 			$elements[$n]['body']       = $ele->render();
 			$elements[$n]['hidden']     = $ele->isHidden();
 			$elements[$n]['required']   = $ele->isRequired();
+			$elements[$n]['field']      = $ele->getDefinition()->toArray();
 			if ($ele_description !== '') {
 				$elements[$n]['description']  = $ele_description;
 			}

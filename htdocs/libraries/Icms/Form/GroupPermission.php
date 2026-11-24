@@ -153,32 +153,7 @@ class GroupPermission extends Base {
 		$tray->addElement(new \Icms\Form\Elements\Button('', 'submit', _SUBMIT, 'submit'));
 		$tray->addElement(new \Icms\Form\Elements\Button('', 'reset', _CANCEL, 'reset'));
 		$this->addElement($tray);
-		$ret = '<h4>' . $this->getTitle() . '</h4>' . $this->_permDesc . '<br />';
-		$ret .= "<form name='" . $this->getName()
-			. "' id='" . $this->getName()
-			. "' action='" . $this->getAction()
-			. "' method='" . $this->getMethod()
-			. "'" . $this->getExtra()
-			. ">\n<table width='100%' class='outer' cellspacing='1' valign='top'>\n";
-		$elements = $this->getElements();
-		$hidden = '';
-		foreach (array_keys($elements) as $i) {
-			if (!is_object($elements[$i])) {
-				$ret .= $elements[$i];
-			}
-			elseif (!$elements[$i]->isHidden()) {
-				$ret .= "<tr valign='top' align='" . _GLOBAL_LEFT . "'><td class='head'>" . $elements[$i]->getCaption();
-				if ($elements[$i]->getDescription() != '') {
-					$ret .= '<br /><br /><span style="font-weight: normal;">' . $elements[$i]->getDescription() . '</span>';
-				}
-				$ret .= "</td>\n<td class='even'>\n" . $elements[$i]->render() . "\n</td></tr>\n";
-			} else {
-				$hidden .= $elements[$i]->render();
-			}
-		}
-		$ret .= "</table>$hidden</form>";
-		$ret .= $this->renderValidationJS(true);
-		return $ret;
+		return $this->renderLayout('icms_form_groupperm.html', ['description' => $this->_permDesc]);
 	}
 
 	/**

@@ -22,84 +22,41 @@ class Page extends \Icms\Form\Elements\Tray {
 	 * @param	object    $object   reference to targetobject (@link \icms_ipf_Object)
 	 * @param	string    $key      the form name
 	 */
+	/**
+	 * Selected values ("mid-page_id")
+	 * @var array
+	 */
+	private $_visiblein = array();
+
 	public function __construct($object, $key) {
 		\icms_loadLanguageFile('system', 'blocksadmin', TRUE);
 		parent::__construct(_AM_VISIBLEIN, ' ', $key . '_visiblein_tray');
-		$visible_label = new \Icms\Form\Elements\Label('', '<select name="visiblein[]" id="visiblein[]" multiple="multiple" size="10">' . $this->getPageSelOptions($object->getVar('visiblein')) . '</select>');
-		$this->addElement($visible_label);
+		$value = $object->getVar('visiblein');
+		$this->_visiblein = is_array($value) ? $value : array($value);
 	}
 
 	/**
-	 * build options string
-	 *
-	 * @param mixed $value module-page combination
-	 * @return string html
+	 * Renders the "visible in" select list (icms_ipf_form_elements_page_display.html)
 	 */
-	private function getPageSelOptions($value = NULL){
-		$icms_page_handler = \icms::handler('icms_data_page');
-		if (!is_array($value)){
-			$value = array($value);
-		}
-		$module_handler = \icms::handler('icms_module');
-		$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('hasmain', 1));
-		$criteria->add(new \Icms\Db\Criteria\Item('isactive', 1));
-		$module_list = $module_handler->getObjects($criteria);
-		$mods = '';
-		foreach ($module_list as $module){
-			$mods .= '<optgroup label="' . $module->getVar('name') . '">';
-			$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('page_moduleid', $module->getVar('mid')));
-			$criteria->add(new \Icms\Db\Criteria\Item('page_status', 1));
-			$pages = $icms_page_handler->getObjects($criteria);
-			$sel = '';
-			if (in_array($module->getVar('mid') . '-0', $value)){
-				$sel = ' selected=selected';
-			}
-			$mods .= '<option value="' . $module->getVar('mid') . '-0"' . $sel . '>' . _AM_ALLPAGES . '</option>';
-			foreach ($pages as $page){
-				$sel = '';
-				if (in_array($module->getVar('mid') . '-' . $page->getVar('page_id'), $value)){
-					$sel = ' selected=selected';
-				}
-				$mods .= '<option value="' . $module->getVar('mid') . '-' . $page->getVar('page_id') . '"' . $sel . '>';
-				$mods .= $page->getVar('page_title') . '</option>';
-			}
-			$mods .= '</optgroup>';
-		}
+	public function render(): string {
+		return $this->renderDefinition() . "\n";
+	}
 
-		$module = $module_handler->get(1);
-		$criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('page_moduleid', 1));
-		$criteria->add(new \Icms\Db\Criteria\Item('page_status', 1));
-		$pages = $icms_page_handler->getObjects($criteria);
-		$cont = '';
-		if (count($pages) > 0){
-			$cont = '<optgroup label="' . $module->getVar('name') . '">';
-			$sel = '';
-			if (in_array($module->getVar('mid') . '-0', $value)){
-				$sel = ' selected=selected';
-			}
-			$cont .= '<option value="' . $module->getVar('mid') . '-0"' . $sel . '>' . _AM_ALLPAGES . '</option>';
-			foreach ($pages as $page){
-				$sel = '';
-				if (in_array($module->getVar('mid').'-'.$page->getVar('page_id'),$value)) {
-					$sel = ' selected=selected';
-				}
-				$cont .= '<option value="' . $module->getVar('mid') . '-' . $page->getVar('page_id') . '"' . $sel . '>';
-				$cont .= $page->getVar('page_title') . '</option>';
-			}
-			$cont .= '</optgroup>';
-		}
-		$sel = $sel1 = '';
-		if (in_array('0-1', $value)){
-			$sel = ' selected=selected';
-		}
-		if (in_array('0-0', $value)){
-			$sel1 = ' selected=selected';
-		}
-		$ret = '<option value="0-1"' . $sel . '>' . _AM_TOPPAGE . '</option>';
-		$ret .= '<option value="0-0"' . $sel1 . '>' . _AM_ALLPAGES . '</option>';
-		$ret .= $cont.$mods;
+	/**
+	 * The definition: a choice field of type "page", named visiblein, with the
+	 * pages grouped by module (Icms\Data\Page\Handler::getPageChoices())
+	 */
+	protected function describe(): \Icms\Form\Definition\Field {
+		return new \Icms\Form\Definition\ChoiceField('visiblein', 'page', $this->getCaption(), $this->getDescription(),
+			options: \icms::handler('icms_data_page')->getPageChoices(),
+			selected: array_map('strval', $this->_visiblein),
+			multiple: true,
+			size: 10,
+			required: $this->isRequired()
+		);
+	}
 
-		return $ret;
+	protected function definitionTemplate(): ?string {
+		return 'icms_ipf_form_elements_page_display.html';
 	}
 }
-

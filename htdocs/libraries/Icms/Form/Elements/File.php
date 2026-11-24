@@ -93,4 +93,14 @@ class File extends \Icms\Form\Element {
 		$ret .= "<input type='hidden' name='xoops_upload_file[]' id='xoops_upload_file[]' value='" . $ele_name . "' />";
 		return $ret;
 	}
+
+	/**
+	 * The definition: a field of type "file"
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		return new \Icms\Form\Definition\Field(...$this->definitionBase('file') + [
+			'attributes' => ['max_file_size' => $this->getMaxFileSize()],
+		]);
+	}
 }

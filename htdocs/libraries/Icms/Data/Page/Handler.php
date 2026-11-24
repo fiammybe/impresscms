@@ -43,75 +43,64 @@ class Handler extends \Icms\Ipf\Handler
         return $rtn;
     }
 
-    public function getPageSelOptions($value = null)
+    /**
+     * The options of a "visible in" select list, in display order: the top
+     * page, all pages, then the pages of the system module (if it has any)
+     * and of every active module with a main menu entry, grouped by module
+     * (the group is the module name; values are "mid-page_id", "mid-0" is all
+     * pages of a module)
+     *
+     * @return list<\Icms\Form\Definition\Choice>
+     */
+    public function getPageChoices(): array
     {
-        if (!is_array($value)) {
-            $value = [$value];
-        }
+        $choices = [new \Icms\Form\Definition\Choice('0-1', _AM_TOPPAGE), new \Icms\Form\Definition\Choice('0-0', _AM_ALLPAGES)];
+
         $module_handler = \icms::handler('icms_module');
+        $system = $this->modulePageChoices($module_handler->get(1));
+        if (count($system) > 1) {
+            $choices = array_merge($choices, $system);
+        }
+
         $criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('hasmain', 1));
         $criteria->add(new \Icms\Db\Criteria\Item('isactive', 1));
-        $module_list =& $module_handler->getObjects($criteria);
-        $mods = '';
-        foreach ($module_list as $module) {
-            $mods .= '<optgroup label="' . $module->getVar('name') . '">';
-            $criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('page_moduleid', $module->getVar('mid')));
-            $criteria->add(new \Icms\Db\Criteria\Item('page_status', 1));
-            $pages =& $this->getObjects($criteria);
-            $sel = '';
-            if (in_array($module->getVar('mid') . '-0', $value)) {
-                $sel = ' selected=selected';
-            }
-            $mods .= '<option value="' . $module->getVar('mid') . '-0"' . $sel . '>' . _AM_ALLPAGES . '</option>';
-            foreach ($pages as $page) {
-                $sel = '';
-                if (in_array($module->getVar('mid') . '-' . $page->getVar('page_id'), $value)) {
-                    $sel = ' selected=selected';
-                }
-                $mods .= '<option value="'
-                        . $module->getVar('mid') . '-' . $page->getVar('page_id') . '"' . $sel . '>'
-                        . $page->getVar('page_title')
-                         . '</option>';
-            }
-            $mods .= '</optgroup>';
+        foreach ($module_handler->getObjects($criteria) as $module) {
+            $choices = array_merge($choices, $this->modulePageChoices($module));
         }
 
-        $module = $module_handler->get(1);
-        $criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('page_moduleid', 1));
+        return $choices;
+    }
+
+    /**
+     * The options of a "visible in" select list, as HTML
+     *
+     * @param mixed $value selected module-page combinations ("mid-page_id")
+     * @return string HTML of the options (icms_data_page_seloptions.html)
+     */
+    public function getPageSelOptions($value = null)
+    {
+        $field = new \Icms\Form\Definition\ChoiceField('visiblein', 'page', options: $this->getPageChoices(), selected: array_map('strval', is_array($value) ? $value : [$value]), multiple: true, size: 10);
+
+        return \Icms\View\SystemTemplate::fetch('icms_data_page_seloptions.html', ['field' => $field->toArray()]);
+    }
+
+    /**
+     * "All pages" of a module, then its active pages, in the module's group
+     *
+     * @param \Icms\Module\Entity $module
+     * @return list<\Icms\Form\Definition\Choice>
+     */
+    private function modulePageChoices($module): array
+    {
+        $mid = $module->getVar('mid');
+        $group = (string) $module->getVar('name');
+        $criteria = new \Icms\Db\Criteria\Compo(new \Icms\Db\Criteria\Item('page_moduleid', $mid));
         $criteria->add(new \Icms\Db\Criteria\Item('page_status', 1));
-        $pages =& $this->getObjects($criteria);
-        $cont = '';
-        if (count($pages) > 0) {
-            $cont = '<optgroup label="' . $module->getVar('name') . '">';
-            $sel = '';
-            if (in_array($module->getVar('mid') . '-0', $value)) {
-                $sel = ' selected=selected';
-            }
-            $cont .= '<option value="' . $module->getVar('mid') . '-0"' . $sel . '>' . _AM_ALLPAGES . '</option>';
-            foreach ($pages as $page) {
-                $sel = '';
-                if (in_array($module->getVar('mid') . '-' . $page->getVar('page_id'), $value)) {
-                    $sel = ' selected=selected';
-                }
-                $cont .= '<option value="' . $module->getVar('mid') . '-' . $page->getVar('page_id') . '"' . $sel . '>'
-                        . $page->getVar('page_title')
-                        . '</option>';
-            }
-            $cont .= '</optgroup>';
+        $choices = [new \Icms\Form\Definition\Choice($mid . '-0', _AM_ALLPAGES, $group)];
+        foreach ($this->getObjects($criteria) as $page) {
+            $choices[] = new \Icms\Form\Definition\Choice($mid . '-' . $page->getVar('page_id'), (string) $page->getVar('page_title'), $group);
         }
-        $sel = $sel1 = '';
-        if (in_array('0-1', $value)) {
-            $sel = ' selected=selected';
-        }
-        if (in_array('0-0', $value)) {
-            $sel1 = ' selected=selected';
-        }
-        $ret = '<option value="0-1"' . $sel . '>' . _AM_TOPPAGE
-            . '</option><option value="0-0"' . $sel1 . '>' . _AM_ALLPAGES
-            . '</option>';
-        $ret .= $cont . $mods;
 
-        return $ret;
+        return $choices;
     }
 }
-

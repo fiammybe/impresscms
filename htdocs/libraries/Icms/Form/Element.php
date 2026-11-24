@@ -49,7 +49,7 @@ defined('ICMS_ROOT_PATH') or die('ImpressCMS root path not defined');
  * @version    $Id: Element.php 12313 2013-09-15 21:14:35Z skenow $
  */
 
-abstract class Element
+abstract class Element implements \Icms\Form\Definition\Describable
 {
 	/**
 	 * Javascript performing additional validation of this element data
@@ -394,6 +394,124 @@ abstract class Element
 			}
 		}
 		return '';
+	}
+
+	/**
+	 * The neutral definition of this control (Icms\Form\Definition)
+	 *
+	 * A class describes its control by overriding describe(). When a subclass
+	 * renders differently (it overrides render() below the class that
+	 * describes the control), the description no longer fits and the control
+	 * is Field::legacy(): renderers that need a definition must not guess.
+	 */
+	public function getDefinition(): \Icms\Form\Definition\Field
+	{
+		if (!$this->describesRendering()) {
+			return \Icms\Form\Definition\Field::legacy(
+				$this->getName(false), static::class, $this->getCaption(), $this->getDescription(), $this->isRequired(), $this->isHidden()
+			);
+		}
+		return $this->describe();
+	}
+
+	/**
+	 * The system template that renders this control from its definition, for
+	 * form layouts that include the control template instead of the control's
+	 * HTML; null when the control has no such template (or is rendered by a
+	 * subclass): layouts then use render().
+	 *
+	 * @return string|null template name (customTemplate when set)
+	 */
+	public function getDefinitionTemplate(): ?string
+	{
+		$template = $this->definitionTemplate();
+		if ($template === null || !$this->describesRendering()) {
+			return null;
+		}
+		$declaring = (new \ReflectionMethod($this, 'definitionTemplate'))->getDeclaringClass()->getName();
+		$rendering = (new \ReflectionMethod($this, 'render'))->getDeclaringClass()->getName();
+		if ($declaring !== $rendering && !is_subclass_of($declaring, $rendering)) {
+			return null;
+		}
+		return $this->customTemplate ?: $template;
+	}
+
+	/**
+	 * The variables of the definition template: `field` (the definition) and
+	 * `view` (presentation data derived from it, if the template needs any)
+	 *
+	 * @return array{field: array<string, mixed>, view: array<string, mixed>}
+	 */
+	public function getDefinitionTemplateVars(): array
+	{
+		return ['field' => $this->getDefinition()->toArray(), 'view' => $this->viewData()];
+	}
+
+	/**
+	 * Describe the control; the default is Field::legacy()
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		return \Icms\Form\Definition\Field::legacy(
+			$this->getName(false), static::class, $this->getCaption(), $this->getDescription(), $this->isRequired(), $this->isHidden()
+		);
+	}
+
+	/**
+	 * The definition template of the control, if it has one
+	 */
+	protected function definitionTemplate(): ?string
+	{
+		return null;
+	}
+
+	/**
+	 * Presentation data for the definition template (`view`)
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function viewData(): array
+	{
+		return [];
+	}
+
+	/**
+	 * Render the control with its definition template
+	 */
+	protected function renderDefinition(): string
+	{
+		$template = $this->definitionTemplate();
+		return \Icms\View\SystemTemplate::fetch((string) $template, $this->getDefinitionTemplateVars(), $this->customTemplate);
+	}
+
+	/**
+	 * The properties every definition shares, from this element
+	 *
+	 * @return array<string, mixed> named arguments for a Field constructor
+	 */
+	protected function definitionBase(string $type): array
+	{
+		$extra = implode(' ', $this->_extra);
+		return [
+			'name' => $this->getName(false),
+			'type' => $type,
+			'label' => $this->getCaption(),
+			'description' => $this->getDescription(),
+			'required' => $this->isRequired(),
+			'disabled' => (bool) preg_match('/(^|\s)disabled(\s|=|$)/i', $extra),
+			'hidden' => $this->isHidden(),
+			'extra' => $extra,
+		];
+	}
+
+	/**
+	 * Is the control rendered by the class that describes it (or a parent)?
+	 */
+	private function describesRendering(): bool
+	{
+		$describing = (new \ReflectionMethod($this, 'describe'))->getDeclaringClass()->getName();
+		$rendering = (new \ReflectionMethod($this, 'render'))->getDeclaringClass()->getName();
+		return $describing === $rendering || is_subclass_of($describing, $rendering);
 	}
 
 	/**

@@ -115,70 +115,91 @@ class Groupperm extends \Icms\Form\Element {
 	 */
 	public function render(): string
 	{
-		$ele_name = $this->getName();
-		$ret = '<table class="outer"><tr><td class="odd"><table><tr>';
-		$cols = 1;
-		foreach ($this->_optionTree[0]['children'] as $topitem) {
-			if ($cols > 4) {
-				$ret .= '</tr><tr>';
-				$cols = 1;
-			}
-			$tree = '<td valign="top">';
-			$prefix = '';
-			$this->_renderOptionTree($tree, $this->_optionTree[$topitem], $prefix);
-			$ret .= $tree . '</td>';
-			$cols++;
-		}
-		$ret .= '</tr></table></td><td class="even" valign="top">';
-		foreach (array_keys($this->_optionTree) as $id) {
-			if (!empty ($id)) {
-				$option_ids[] = "'" . $ele_name . '[groups][' . $this->_groupId . '][' . $id . ']' . "'";
-			}
-		}
-		$checkallbtn_id = $ele_name . '[checkallbtn][' . $this->_groupId . ']';
-		$option_ids_str = implode(', ', $option_ids);
-		$ret .= _ALL . " <input id=\"" . $checkallbtn_id . "\" type=\"checkbox\" value=\"\" onclick=\"var optionids = new Array(" . $option_ids_str . "); xoopsCheckAllElements(optionids, '" . $checkallbtn_id . "');\" />";
-		$ret .= '</td></tr></table>';
-		return $ret;
+		return $this->renderDefinition();
 	}
 
 	/**
-	 * Renders checkbox options for an item tree
+	 * The definition: a choice field of type "groupperm"; the options are the
+	 * items of the tree (value: item id), attributes hold the group id and the
+	 * item tree
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		$options = [];
+		foreach ((array) $this->_optionTree as $id => $item) {
+			if (!empty($id)) {
+				$options[$id] = $item['name'] ?? '';
+			}
+		}
+		return new \Icms\Form\Definition\ChoiceField(...$this->definitionBase('groupperm') + [
+			'options' => \Icms\Form\Definition\Choice::fromArray($options),
+			'selected' => array_map('strval', $this->_value),
+			'multiple' => true,
+			'attributes' => ['group_id' => $this->_groupId, 'tree' => (array) $this->_optionTree],
+		]);
+	}
+
+	protected function definitionTemplate(): ?string
+	{
+		return 'icms_form_elements_groupperm_display.html';
+	}
+
+	/**
+	 * The tree as the template shows it: rows of at most 4 columns, one per
+	 * top item, each with its items in tree order (prefix, input names, the
+	 * inputs of its parents and children), and the names of all inputs for
+	 * the "all" checkbox
+	 */
+	protected function viewData(): array
+	{
+		$name = $this->getName();
+		$columns = [];
+		foreach ($this->_optionTree[0]['children'] ?? [] as $top) {
+			$nodes = [];
+			$this->collectOptionTree($nodes, $this->_optionTree[$top], '');
+			$columns[] = $nodes;
+		}
+		$inputs = [];
+		foreach (array_keys((array) $this->_optionTree) as $id) {
+			if (!empty($id)) {
+				$inputs[] = $name . '[groups][' . $this->_groupId . '][' . $id . ']';
+			}
+		}
+		return [
+			'rows' => array_chunk($columns, 4),
+			'inputs' => $inputs,
+			'checkall' => $name . '[checkallbtn][' . $this->_groupId . ']',
+			'all_label' => _ALL,
+		];
+	}
+
+	/**
+	 * Collect the items of a tree, depth first
 	 *
-	 * @param string $tree
+	 * @param array $nodes
 	 * @param array $option
 	 * @param string $prefix
 	 * @param array $parentIds
-	 * @access private
 	 */
-	function _renderOptionTree(& $tree, $option, $prefix, $parentIds = array ()) {
-		$ele_name = $this->getName();
-		$tree .= $prefix . "<input type=\"checkbox\" name=\"" . $ele_name . "[groups][" . $this->_groupId . "][" . $option['id'] . "]\" id=\"" . $ele_name . "[groups][" . $this->_groupId . "][" . $option['id'] . "]\" onclick=\"";
-		// If there are parent elements, add javascript that will
-		// make them selecteded when this element is checked to make
-		// sure permissions to parent items are added as well.
-		foreach ($parentIds as $pid) {
-			$parent_ele = $ele_name . '[groups][' . $this->_groupId . '][' . $pid . ']';
-			$tree .= "var ele = xoopsGetElementById('" . $parent_ele . "'); if(ele.checked != true) {ele.checked = this.checked;}";
-		}
-		// If there are child elements, add javascript that will
-		// make them unchecked when this element is unchecked to make
-		// sure permissions to child items are not added when there
-		// is no permission to this item.
-		foreach ($option['allchild'] as $cid) {
-			$child_ele = $ele_name . '[groups][' . $this->_groupId . '][' . $cid . ']';
-			$tree .= "var ele = xoopsGetElementById('" . $child_ele . "'); if(this.checked != true) {ele.checked = false;}";
-		}
-		$tree .= '" value="1"';
-		if (in_array($option['id'], $this->_value)) {
-			$tree .= ' checked="checked"';
-		}
-		$tree .= " />" . $option['name'] . "<input type=\"hidden\" name=\"" . $ele_name . "[parents][" . $option['id'] . "]\" value=\"" . implode(':', $parentIds) . "\" /><input type=\"hidden\" name=\"" . $ele_name . "[itemname][" . $option['id'] . "]\" value=\"" . htmlspecialchars((string) $option['name']) . "\" /><br />\n";
-		if (isset ($option['children'])) {
-			foreach ($option['children'] as $child) {
-				array_push($parentIds, $option['id']);
-				$this->_renderOptionTree($tree, $this->_optionTree[$child], $prefix . '&nbsp;-', $parentIds);
-			}
+	private function collectOptionTree(array &$nodes, array $option, string $prefix, array $parentIds = []): void
+	{
+		$name = $this->getName();
+		$input = $name . '[groups][' . $this->_groupId . '][';
+		$nodes[] = [
+			'id' => $option['id'],
+			'label' => $option['name'],
+			'prefix' => $prefix,
+			'input' => $input . $option['id'] . ']',
+			'parents' => array_map(static fn ($id): string => $input . $id . ']', $parentIds),
+			'children' => array_map(static fn ($id): string => $input . $id . ']', $option['allchild'] ?? []),
+			'checked' => in_array($option['id'], $this->_value),
+			'parents_input' => $name . '[parents][' . $option['id'] . ']',
+			'parents_value' => implode(':', $parentIds),
+			'itemname_input' => $name . '[itemname][' . $option['id'] . ']',
+		];
+		foreach ($option['children'] ?? [] as $child) {
+			$parentIds[] = $option['id'];
+			$this->collectOptionTree($nodes, $this->_optionTree[$child], $prefix . '&nbsp;-', $parentIds);
 		}
 	}
 }

@@ -1,0 +1,1 @@
+<{foreach from=$field.groups item=group}><{if $group.label != ""}><optgroup label="<{$group.label}>"><{/if}><{foreach from=$group.options item=option}><option value="<{$option.value}>"<{if $option.selected}> selected="selected"<{/if}>><{$option.label}></option><{/foreach}><{if $group.label != ""}></optgroup><{/if}><{/foreach}>

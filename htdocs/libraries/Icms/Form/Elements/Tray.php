@@ -196,4 +196,24 @@ class Tray extends \Icms\Form\Element {
 		}
 		return $ret;
 	}
+
+	/**
+	 * The definition: a compound field of type "tray" with the definitions of
+	 * its elements as children (by name, or position for unnamed ones), or of
+	 * type "actions" when it only holds buttons and hidden values
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		$children = [];
+		$actions = true;
+		foreach ($this->getElements() as $i => $element) {
+			$child = $element->getDefinition();
+			$children[$child->name !== '' && !isset($children[$child->name]) ? $child->name : (string) $i] = $child;
+			$actions = $actions && in_array($child->type, ['button', 'hidden'], true);
+		}
+		return new \Icms\Form\Definition\CompoundField(...$this->definitionBase($actions && $children ? 'actions' : 'tray') + [
+			'children' => $children,
+			'attributes' => ['delimiter' => $this->getDelimeter()],
+		]);
+	}
 }

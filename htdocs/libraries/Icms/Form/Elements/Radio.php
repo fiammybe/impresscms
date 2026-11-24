@@ -185,4 +185,17 @@ class Radio extends \Icms\Form\Element {
 		}
 		return $ret;
 	}
+
+	/**
+	 * The definition: a choice field of type "radio" ("yesno" for Radioyn)
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		$value = $this->getValue();
+		return new \Icms\Form\Definition\ChoiceField(...$this->definitionBase($this instanceof Radioyn ? 'yesno' : 'radio') + [
+			'options' => \Icms\Form\Definition\Choice::fromArray($this->getOptions()),
+			'selected' => $value === null ? [] : [(string) $value],
+			'attributes' => ['delimiter' => $this->getDelimeter()],
+		]);
+	}
 }

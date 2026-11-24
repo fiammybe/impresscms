@@ -71,5 +71,13 @@ class Section extends \Icms\Form\Element {
 		if ($this->_close) return '';
 		return $this->getValue();
 	}
-}
 
+	/**
+	 * The definition: a field of type "section" (label: the heading) or
+	 * "section_close"
+	 */
+	protected function describe(): \Icms\Form\Definition\Field {
+		$base = $this->definitionBase($this->_close ? \Icms\Form\Definition\Field::TYPE_SECTION_CLOSE : \Icms\Form\Definition\Field::TYPE_SECTION);
+		return new \Icms\Form\Definition\Field(...array_merge($base, ['label' => $this->_close ? '' : (string) $this->getValue()]));
+	}
+}

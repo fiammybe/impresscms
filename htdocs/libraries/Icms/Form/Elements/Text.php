@@ -149,5 +149,18 @@ class Text extends \Icms\Form\Element {
 		$element_html_template = $this->customTemplate ? $this->customTemplate : 'icms_form_elements_text_display.html';
 		return $this->tpl->fetch('db:' . $element_html_template);
 	}
-}
 
+	/**
+	 * The definition: a field of type "text" (rendered by the released
+	 * template icms_form_elements_text_display.html, with its own variables)
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		$constraints = $this->getMaxlength() > 0 ? ['maxlength' => (int) $this->getMaxlength()] : [];
+		return new \Icms\Form\Definition\Field(...$this->definitionBase('text') + [
+			'value' => $this->getValue(),
+			'attributes' => ['size' => $this->getSize(), 'maxlength' => $this->getMaxlength()],
+			'constraints' => $constraints,
+		]);
+	}
+}

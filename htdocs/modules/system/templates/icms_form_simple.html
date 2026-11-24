@@ -1,0 +1,5 @@
+<{$form.title}>
+<form name='<{$form.name}>' id='<{$form.name}>' action='<{$form.action}>' method='<{$form.method}>'<{$form.extra}>>
+<{foreach from=$form.elements item=row}><{if $row.type == 'raw'}><{$row.html}><{elseif $row.hidden}><{if $row.template}><{include file=$row.template field=$row.field view=$row.view}><{else}><{$row.html}><{/if}>
+<{else}><strong><{$row.field.label}></strong><br /><{if $row.template}><{include file=$row.template field=$row.field view=$row.view}><{else}><{$row.html}><{/if}><br />
+<{/if}><{/foreach}></form>

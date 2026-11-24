@@ -1,0 +1,10 @@
+&nbsp;<a href="#" onclick="$('#ed_block_<{$bid}>').dialog('open'); return false;"><img src="<{$images_url}>/configure.png" title="<{$lang_edit}> <{$lang_block_id}> <{$bid}>" alt="<{$lang_edit}>"  /></a><button style="display: none;"><div id="ed_block_<{$bid}>"><a href='<{$admin_url}>&amp;op=visible&amp;bid=<{$bid}>&amp;rtn=<{$rtn}>'> <img src='<{$images_url}>/button_cancel.png' alt='<{$lang_invisible}>'  /> <{$lang_invisible}></a><br /><a href='<{$admin_url}>&amp;op=clone&amp;bid=<{$bid}>'> <img src='<{$images_url}>/editcopy.png' alt='<{$lang_clone}>'  /> <{$lang_clone}></a><br /><a href='<{$admin_url}>&amp;op=mod&amp;bid=<{$bid}>'> <img src='<{$images_url}>/edit.png' alt='<{$lang_edit}>'  /> <{$lang_edit}></a><br /><a href='<{$admin_url}>&amp;op=up&amp;bid=<{$bid}>&amp;rtn=<{$rtn}>'> <img src='<{$images_url}>/up.png' alt='<{$lang_up}>'  /> <{$lang_up}></a><br /><a href='<{$admin_url}>&amp;op=down&amp;bid=<{$bid}>&amp;rtn=<{$rtn}>'> <img src='<{$images_url}>/down.png' alt='<{$lang_down}>'  /> <{$lang_down}></a><{if $is_custom}><br /><a href='<{$admin_url}>&amp;op=del&amp;bid=<{$bid}>'> <img src='<{$images_url}>/editdelete.png' alt='<{$lang_delete}>'  /> <{$lang_delete}></a><{/if}></div></button><script type="text/javascript">
+					$(function() {
+						$('#ed_block_<{$bid}>').dialog({
+							bgiframe: true,
+							//height: 140,
+							autoOpen: false,
+							modal: true
+						});
+					});
+					</script>

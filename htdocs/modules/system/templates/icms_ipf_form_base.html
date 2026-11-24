@@ -1,0 +1,9 @@
+
+			<form name='<{$form.name}>_dorga' id='<{$form.name}>' action='<{$form.action}>' method='<{$form.method}>' onsubmit='return xoopsFormValidate_<{$form.name}>(this);'<{$form.extra}>>
+			<table width='100%' class='outer' cellspacing='1'>
+			<tr><th colspan='2'><{$form.title}></th></tr>
+		<{foreach from=$form.rows item=row}><{if $row.type == 'raw'}><{$row.html}><{elseif $row.type == 'section'}><tr><th colspan="2"><{if $row.field.type == 'section'}><{$row.field.label}><{else}><{$row.html}><{/if}></th></tr><{elseif $row.type == 'section_close'}><tr><td class="even" colspan="2">&nbsp;</td></tr><{else}><tr id='<{$row.field.name|escape}>_row' valign='top' align='<{$form.align}>'><td class='head'><{$row.field.label}><{if $row.field.description != ''}><br /><br /><span style="font-weight: normal;"><{$row.field.description}></span><{/if}></td><td class='even'><{if $row.template}><{include file=$row.template field=$row.field view=$row.view}><{else}><{$row.html}><{/if}></td></tr>
+<{/if}><{/foreach}></table>
+<{foreach from=$form.hidden item=row}><{if $row.template}><{include file=$row.template field=$row.field view=$row.view}><{else}><{$row.html}><{/if}><{/foreach}>
+</form>
+<{$form.validation.script}>

@@ -65,23 +65,6 @@ class Simple extends Base
 	 */
 	public function render(): string
 	{
-		$ret = $this->getTitle() . "\n<form name='" . $this->getName()
-			. "' id='" . $this->getName()
-			. "' action='" . $this->getAction()
-			. "' method='" . $this->getMethod() . "'" . $this->getExtra()
-			. ">\n";
-		foreach ($this->getElements() as $ele) {
-			if (!is_object($ele)) {
-				$ret .= $ele;
-				continue;
-			}
-			if (!$ele->isHidden()) {
-				$ret .= "<strong>" . $ele->getCaption() . "</strong><br />" . $ele->render() . "<br />\n";
-			} else {
-				$ret .= $ele->render() . "\n";
-			}
-		}
-		$ret .= "</form>\n";
-		return $ret;
+		return $this->renderLayout('icms_form_simple.html');
 	}
 }

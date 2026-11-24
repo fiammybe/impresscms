@@ -132,12 +132,23 @@ class Textarea extends \Icms\Form\Element {
 	 */
 	public function render(): string
 	{
-		return "<textarea name='" . $this->getName()
-			. "' id='" . $this->getName() . '_tarea'
-			. "' rows='" . $this->getRows()
-			. "' cols='" . $this->getCols()
-			. "'" . $this->getExtra() . ">"
-			. $this->getValue()
-			. "</textarea>";
+		return $this->renderDefinition();
+	}
+
+	/**
+	 * The definition: a field of type "textarea"; the value is as the control
+	 * holds it (callers pass it encoded, the template does not escape it)
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		return new \Icms\Form\Definition\Field(...$this->definitionBase('textarea') + [
+			'value' => $this->getValue(),
+			'attributes' => ['id' => $this->getName(false) . '_tarea', 'rows' => $this->getRows(), 'cols' => $this->getCols()],
+		]);
+	}
+
+	protected function definitionTemplate(): ?string
+	{
+		return 'icms_form_elements_textarea_display.html';
 	}
 }

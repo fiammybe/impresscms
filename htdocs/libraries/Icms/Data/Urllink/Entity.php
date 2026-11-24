@@ -72,10 +72,12 @@ class Entity extends \Icms\Ipf\Entity
      */
     public function render(): string
     {
-        $ret  = "<a href='" . $this->getVar("url") . "' target='" . $this->getVar("target") . "' ";
-        $ret .= "title='" . $this->getVar("description") . "'>";
-        $ret .= $this->getVar("caption") . "</a>";
-        return $ret;
+        return trim(\Icms\View\SystemTemplate::fetch('icms_data_urllink_link.html', [
+            'url' => $this->getVar("url"),
+            'target' => $this->getVar("target"),
+            'title' => $this->getVar("description"),
+            'caption' => $this->getVar("caption"),
+        ]));
     }
 }
 

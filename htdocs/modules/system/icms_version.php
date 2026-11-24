@@ -395,5 +395,144 @@ $modversion["templates"] = [
 	[
 		"file" => "icms_form_elements_passwordtray_display.html",
 		"description" => "Display template for a passwordtray",
+	],	[
+		"file" => "icms_data_comment_adminfooter.html",
+		"description" => "Comment admin footer (status and IP)",
+	],
+	[
+		"file" => "icms_data_comment_posterlink.html",
+		"description" => "Comment poster link",
+	],
+	[
+		"file" => "icms_data_comment_status.html",
+		"description" => "Comment status label",
+	],
+	[
+		"file" => "icms_data_file_link.html",
+		"description" => "File link",
+	],
+	[
+		"file" => "icms_data_page_seloptions.html",
+		"description" => "Options of a visible-in select list (field)",
+	],
+	[
+		"file" => "icms_data_urllink_link.html",
+		"description" => "URL link",
+	],
+	[
+		"file" => "icms_form_break_row.html",
+		"description" => "Separator row of a form (insertBreak)",
+	],
+	[
+		"file" => "icms_form_elements_captcha_image_display.html",
+		"description" => "Image captcha (field, view)",
+	],
+	[
+		"file" => "icms_form_elements_captcha_text_display.html",
+		"description" => "Text captcha (field, view)",
+	],
+	[
+		"file" => "icms_form_elements_groupperm_display.html",
+		"description" => "Group permission tree (field, view)",
+	],
+	[
+		"file" => "icms_form_elements_hidden_display.html",
+		"description" => "Hidden field (field)",
+	],
+	[
+		"file" => "icms_form_elements_select_display.html",
+		"description" => "Select list (field)",
+	],
+	[
+		"file" => "icms_form_elements_textarea_display.html",
+		"description" => "Textarea (field)",
+	],
+	[
+		"file" => "icms_form_groupperm.html",
+		"description" => "Group permission form layout (form)",
+	],
+	[
+		"file" => "icms_form_simple.html",
+		"description" => "Simple form layout (form)",
+	],
+	[
+		"file" => "icms_form_table.html",
+		"description" => "Table form layout (form)",
+	],
+	[
+		"file" => "icms_form_theme.html",
+		"description" => "Theme form layout (form)",
+	],
+	[
+		"file" => "icms_form_validation_script.html",
+		"description" => "Script tags of the form validation (validation)",
+	],
+	[
+		"file" => "icms_ipf_controller_imagelink.html",
+		"description" => "IPF controller image link",
+	],
+	[
+		"file" => "icms_ipf_controller_link.html",
+		"description" => "IPF controller link",
+	],
+	[
+		"file" => "icms_ipf_form_base.html",
+		"description" => "IPF form layout (form)",
+	],
+	[
+		"file" => "icms_ipf_form_elements_file_display.html",
+		"description" => "IPF file upload (field, view)",
+	],
+	[
+		"file" => "icms_ipf_form_elements_image_delete.html",
+		"description" => "Label of the delete checkbox of an IPF image",
+	],
+	[
+		"file" => "icms_ipf_form_elements_image_display.html",
+		"description" => "IPF image upload (field, view)",
+	],
+	[
+		"file" => "icms_ipf_form_elements_page_display.html",
+		"description" => "IPF visible-in select list (field)",
+	],
+	[
+		"file" => "icms_member_userlink.html",
+		"description" => "User link",
+	],
+	[
+		"file" => "icms_module_mainlink.html",
+		"description" => "Module main link",
+	],
+	[
+		"file" => "icms_module_message.html",
+		"description" => "Module message",
+	],
+	[
+		"file" => "icms_view_pagebuilder_blockedit.html",
+		"description" => "Block edit buttons",
+	],
+	[
+		"file" => "icms_view_pagenav_image.html",
+		"description" => "Page navigation with images",
+	],
+	[
+		"file" => "icms_view_pagenav_select.html",
+		"description" => "Page navigation as a select list",
+	],
+	[
+		"file" => "icms_view_pagenav_stylesheet.html",
+		"description" => "Page navigation stylesheet",
+	],
+	[
+		"file" => "icms_view_pagenav_text.html",
+		"description" => "Page navigation as text",
+	],
+	[
+		"file" => "icms_view_tree_pathlink.html",
+		"description" => "Tree path links",
+	],
+	[
+		"file" => "icms_view_tree_selbox.html",
+		"description" => "Tree select box",
 	],
 ];

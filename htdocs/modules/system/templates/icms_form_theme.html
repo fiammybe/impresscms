@@ -1,0 +1,10 @@
+<form id='<{$form.name}>' name='<{$form.name}>' action='<{$form.action}>' method='<{$form.method}>' onsubmit='return xoopsFormValidate_<{$form.name}>();'<{$form.extra}>>
+			<div class='xo-theme-form'>
+			<table width='100%' class='outer' cellspacing='1'>
+			<tr><th colspan='2'><{$form.title}></th></tr>
+		<{foreach from=$form.rows item=row}><{if $row.type == 'raw'}><{$row.html}><{else}><tr valign='top' align='<{$form.align}>'><td class='head'><{if $row.field.label !== ''}><div class='xoops-form-element-caption<{if $row.field.required}>-required<{/if}>'><span class='caption-text'><{$row.field.label}></span><span class='caption-marker'>*</span></div><{/if}><{if $row.field.description !== ''}><div class='xoops-form-element-help'><{$row.field.description}></div><{/if}></td><td class='even'><{if $row.template}><{include file=$row.template field=$row.field view=$row.view}><{else}><{$row.html}><{/if}></td></tr>
+<{/if}><{/foreach}></table>
+<{foreach from=$form.hidden item=row}><{if $row.template}><{include file=$row.template field=$row.field view=$row.view}><{else}><{$row.html}><{/if}><{/foreach}>
+</div>
+</form>
+<{$form.validation.script}>

@@ -64,14 +64,7 @@ class Theme extends Base
 	 */
 	public function insertBreak(string|null $extra = '', string $class = ''): void
 	{
-		$class = ($class !== '') ? " class='$class'" : '';
-		// Fix for $extra tag not showing
-		if ($extra) {
-			$extra = "<tr><td colspan='2' $class>$extra</td></tr>";
-		} else {
-			$extra = "<tr><td colspan='2' $class>&nbsp;</td></tr>";
-		}
-		$this->addElement($extra, false);
+		$this->addElement(trim(\Icms\View\SystemTemplate::fetch('icms_form_break_row.html', ['extra' => (string) $extra, 'class' => $class])), false);
 	}
 
 	/**
@@ -81,40 +74,6 @@ class Theme extends Base
 	 */
 	public function render(): string
 	{
-		$ele_name = $this->getName();
-		$ret = "<form id='" . $ele_name
-			. "' name='" . $ele_name
-			. "' action='" . $this->getAction()
-			. "' method='" . $this->getMethod()
-			. "' onsubmit='return xoopsFormValidate_" . $ele_name . "();'" . $this->getExtra() . ">
-			<div class='xo-theme-form'>
-			<table width='100%' class='outer' cellspacing='1'>
-			<tr><th colspan='2'>" . $this->getTitle() . "</th></tr>
-		";
-		$hidden = '';
-		$class ='even';
-		foreach ($this->getElements() as $ele) {
-			if (!is_object($ele)) {
-				$ret .= $ele;
-			} elseif (!$ele->isHidden()) {
-				$ret .= "<tr valign='top' align='" . _GLOBAL_LEFT . "'><td class='head'>";
-				if (($caption = $ele->getCaption()) !== '') {
-					$ret .=
-				      "<div class='xoops-form-element-caption" . ($ele->isRequired() ? "-required" : "" ) . "'>"
-					. "<span class='caption-text'>{$caption}</span>"
-					. "<span class='caption-marker'>*</span>"
-					. "</div>";
-				}
-				if (($desc = $ele->getDescription()) !== '') {
-					$ret .= "<div class='xoops-form-element-help'>{$desc}</div>";
-				}
-				$ret .= "</td><td class='$class'>" . $ele->render() . "</td></tr>\n";
-			} else {
-				$hidden .= $ele->render();
-			}
-		}
-		$ret .= "</table>\n$hidden\n</div>\n</form>\n";
-		$ret .= $this->renderValidationJS(true);
-		return $ret;
+		return $this->renderLayout('icms_form_theme.html');
 	}
 }

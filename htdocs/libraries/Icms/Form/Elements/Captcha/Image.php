@@ -63,30 +63,57 @@ class Image {
 	 * @return  string String that contains the Captcha Image form
 	 */
 	public function render() {
-		global $icmsConfigCaptcha;
-		$form = "<input type='text' name='" . $this->config["name"]
-			. "' id='" . $this->config["name"]
-			. "' size='" . $icmsConfigCaptcha['captcha_num_chars']
-			. "' maxlength='" . $icmsConfigCaptcha['captcha_num_chars']
-			. "' value='' /> &nbsp; ". $this->loadImage();
-		$rule = htmlspecialchars(ICMS_CAPTCHA_REFRESH, ENT_QUOTES);
-		if ($icmsConfigCaptcha['captcha_maxattempt']) {
-			$rule .=  " | ". sprintf(constant("ICMS_CAPTCHA_MAXATTEMPTS"), $icmsConfigCaptcha['captcha_maxattempt']);
-		}
-		$form .= "&nbsp;&nbsp;<small>{$rule}</small>";
-
-		return $form;
+		return \Icms\View\SystemTemplate::fetch('icms_form_elements_captcha_image_display.html', [
+			'field' => $this->getDefinition()->toArray(),
+			'view' => $this->viewData(),
+		]);
 	}
 
 	/**
-	 * Loads the Captcha Image
+	 * The definition: a compound field of type "captcha" (mode "image") with
+	 * the text input for the code as child "code"
+	 */
+	public function getDefinition(): \Icms\Form\Definition\CompoundField {
+		global $icmsConfigCaptcha;
+		$name = (string) $this->config["name"];
+		$chars = (int) $icmsConfigCaptcha['captcha_num_chars'];
+		return new \Icms\Form\Definition\CompoundField($name, 'captcha', children: [
+			'code' => new \Icms\Form\Definition\Field($name, 'text', value: '', required: true, attributes: ['size' => $chars, 'maxlength' => $chars], constraints: ['maxlength' => $chars]),
+		], required: true, attributes: [
+			'mode' => 'image',
+			'image_url' => ICMS_URL . '/libraries/Icms/Form/Elements/Captcha/img.php',
+			'case_sensitive' => (bool) $icmsConfigCaptcha['captcha_casesensitive'],
+			'max_attempts' => (int) $icmsConfigCaptcha['captcha_maxattempt'],
+		]);
+	}
+
+	/**
+	 * Texts for the template: rule (alt text of the image) and hint
+	 *
+	 * @return array{rule: string, hint: string}
+	 */
+	private function viewData(): array {
+		global $icmsConfigCaptcha;
+		$hint = htmlspecialchars(ICMS_CAPTCHA_REFRESH, ENT_QUOTES);
+		if ($icmsConfigCaptcha['captcha_maxattempt']) {
+			$hint .= " | " . sprintf(constant("ICMS_CAPTCHA_MAXATTEMPTS"), $icmsConfigCaptcha['captcha_maxattempt']);
+		}
+		return [
+			'rule' => $icmsConfigCaptcha['captcha_casesensitive'] ? constant("ICMS_CAPTCHA_RULE_CASESENSITIVE") : constant("ICMS_CAPTCHA_RULE_CASEINSENSITIVE"),
+			'hint' => $hint,
+		];
+	}
+
+	/**
+	 * The captcha image tag
+	 *
+	 * @deprecated	the image is part of icms_form_elements_captcha_image_display.html; use render()
 	 * @return  string String that contains the Captcha image
 	 */
 	public function loadImage() {
-		global $icmsConfigCaptcha;
-		$rule = $icmsConfigCaptcha['captcha_casesensitive'] ? constant("ICMS_CAPTCHA_RULE_CASESENSITIVE") : constant("ICMS_CAPTCHA_RULE_CASEINSENSITIVE");
-		$ret = "<img id='captcha' src='" . ICMS_URL . "/libraries/Icms/Form/Elements/Captcha/img.php' onclick=\"this.src='" . ICMS_URL . "/libraries/Icms/Form/Elements/Captcha/img.php?refresh='+Math.random()"
-					."\" style='cursor: pointer;margin-left: auto;margin-right: auto;text-align:center;' alt='" . htmlspecialchars($rule, ENT_QUOTES) . "' />";
-		return $ret;
+		$field = $this->getDefinition();
+		$url = $field->attribute('image_url');
+		return "<img id='captcha' src='" . $url . "' onclick=\"this.src='" . $url . "?refresh='+Math.random()"
+			. "\" style='cursor: pointer;margin-left: auto;margin-right: auto;text-align:center;' alt='" . htmlspecialchars($this->viewData()['rule'], ENT_QUOTES) . "' />";
 	}
 }

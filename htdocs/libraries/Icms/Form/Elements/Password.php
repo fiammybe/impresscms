@@ -179,4 +179,17 @@ class Password extends \Icms\Form\Element {
 		$element_html_template = $this->customTemplate ? $this->customTemplate : 'icms_form_elements_password_display.html';
 		return $this->tpl->fetch('db:' . $element_html_template);
 	}
+
+	/**
+	 * The definition: a field of type "password"
+	 */
+	protected function describe(): \Icms\Form\Definition\Field
+	{
+		$constraints = $this->getMaxlength() > 0 ? ['maxlength' => (int) $this->getMaxlength()] : [];
+		return new \Icms\Form\Definition\Field(...$this->definitionBase('password') + [
+			'value' => $this->getValue(),
+			'attributes' => ['size' => $this->getSize(), 'maxlength' => $this->getMaxlength()],
+			'constraints' => $constraints,
+		]);
+	}
 }

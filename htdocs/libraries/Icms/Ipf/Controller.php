@@ -444,14 +444,10 @@ class Controller {
 		if ($onlyUrl) {
 			return $ret;
 		} elseif ($withimage) {
-			return "<a href='" . $ret . "'>
-					<img src='" . ICMS_IMAGES_SET_URL
-					. "/actions/viewmag.png' style='vertical-align: middle;' alt='"
-					. _CO_ICMS_ADMIN_VIEW . "'  title='"
-					. _CO_ICMS_ADMIN_VIEW . "'/></a>";
+			return $this->renderImageLink($ret, "viewmag.png", _CO_ICMS_ADMIN_VIEW);
 		}
 
-		return "<a href='" . $ret . "'>" . $icmsObj->getVar($this->handler->identifierName) . "</a>";
+		return $this->renderLink($ret, $icmsObj->getVar($this->handler->identifierName));
 	}
 
 	/**
@@ -485,7 +481,7 @@ class Controller {
 		//}
 
 		if (!$onlyUrl) {
-			$ret = "<a href='" . $ret . "'>" . $icmsObj->getVar($this->handler->identifierName) . "</a>";
+			$ret = $this->renderLink($ret, $icmsObj->getVar($this->handler->identifierName));
 		}
 		return $ret;
 	}
@@ -513,12 +509,10 @@ class Controller {
 		if ($onlyUrl) {
 			return $ret;
 		} elseif ($withimage) {
-			return "<a href='" . $ret . "'>
-				<img src='" . ICMS_IMAGES_SET_URL . "/actions/viewmag.png' style='vertical-align: middle;' alt='"
-				. _PREVIEW . "'  title='" . _PREVIEW . "'/></a>";
+			return $this->renderImageLink($ret, "viewmag.png", _PREVIEW);
 		}
 
-		return "<a href='" . $ret . "'>" . $icmsObj->getVar($this->handler->identifierName) . "</a>";
+		return $this->renderLink($ret, $icmsObj->getVar($this->handler->identifierName));
 	}
 
 	/**
@@ -535,12 +529,10 @@ class Controller {
 		if ($onlyUrl) {
 			return $ret;
 		} elseif ($withimage) {
-			return "<a href='" . $ret . "'>
-				<img src='" . ICMS_IMAGES_SET_URL . "/actions/wizard.png' style='vertical-align: middle;' alt='"
-				. _CO_ICMS_LANGUAGE_MODIFY . "'  title='" . _CO_ICMS_LANGUAGE_MODIFY . "'/></a>";
+			return $this->renderImageLink($ret, "wizard.png", _CO_ICMS_LANGUAGE_MODIFY);
 		}
 
-		return "<a href='" . $ret . "'>" . $icmsObj->getVar($this->handler->identifierName) . "</a>";
+		return $this->renderLink($ret, $icmsObj->getVar($this->handler->identifierName));
 	}
 
 	/**
@@ -568,12 +560,10 @@ class Controller {
 		if ($onlyUrl) {
 			return $ret;
 		} elseif ($withimage) {
-			return "<a href='" . $ret . "'>
-				<img src='" . ICMS_IMAGES_SET_URL . "/actions/edit.png' style='vertical-align: middle;' alt='"
-				. _CO_ICMS_MODIFY . "'  title='" . _CO_ICMS_MODIFY . "'/></a>";
+			return $this->renderImageLink($ret, "edit.png", _CO_ICMS_MODIFY);
 		}
 
-		return "<a href='" . $ret . "'>" . $icmsObj->getVar($this->handler->identifierName) . "</a>";
+		return $this->renderLink($ret, $icmsObj->getVar($this->handler->identifierName));
 	}
 
 	/**
@@ -601,12 +591,10 @@ class Controller {
 		if ($onlyUrl) {
 			return $ret;
 		} elseif ($withimage) {
-			return "<a href='" . $ret . "'>
-				<img src='" . ICMS_IMAGES_SET_URL . "/actions/editdelete.png' style='vertical-align: middle;' alt='"
-				. _CO_ICMS_DELETE . "'  title='" . _CO_ICMS_DELETE . "'/></a>";
+			return $this->renderImageLink($ret, "editdelete.png", _CO_ICMS_DELETE);
 		}
 
-		return "<a href='" . $ret . "'>" . $icmsObj->getVar($this->handler->identifierName) . "</a>";
+		return $this->renderLink($ret, $icmsObj->getVar($this->handler->identifierName));
 	}
 
 	/**
@@ -639,5 +627,31 @@ class Controller {
 		$ret = $this->handler->_moduleName . '_' . $this->handler->_itemname;
 		return $ret;
 	}
-}
 
+	/**
+	 * Renders a plain text link
+	 *
+	 * @param	string	$url
+	 * @param	string	$label	(HTML allowed, as returned by the object)
+	 * @return	string
+	 */
+	protected function renderLink($url, $label) {
+		return \Icms\View\SystemTemplate::fetch('icms_ipf_controller_link.html', array('url' => $url, 'label' => $label));
+	}
+
+	/**
+	 * Renders an action icon link
+	 *
+	 * @param	string	$url
+	 * @param	string	$image	File name of the icon in the actions folder of the image set
+	 * @param	string	$title	Alt and title text
+	 * @return	string
+	 */
+	protected function renderImageLink($url, $image, $title) {
+		return \Icms\View\SystemTemplate::fetch('icms_ipf_controller_imagelink.html', array(
+			'url' => $url,
+			'image_url' => ICMS_IMAGES_SET_URL . '/actions/' . $image,
+			'title' => $title
+		));
+	}
+}

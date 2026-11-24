@@ -1,0 +1,2 @@
+<select size="<{$field.size}>" <{$field.extra}> name="<{$field.name|escape}><{if $field.multiple}>[]<{/if}>" id="<{$field.name|escape}>"<{if $field.multiple}> multiple="multiple"<{/if}>><{foreach from=$field.options item=option}><option value="<{$option.value|escape}>"<{if $option.selected}> selected="selected"<{/if}>><{$option.label|escape}></option>
+<{/foreach}></select>

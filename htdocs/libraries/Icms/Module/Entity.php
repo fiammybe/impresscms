@@ -257,8 +257,7 @@ class Entity extends \Icms\Core\Entity {
 	 */
 	public function mainLink() {
 		if ($this->getVar('hasmain') == 1) {
-			$ret = '<a href="' . ICMS_URL . '/modules/' . $this->getVar('dirname') . '/">' . $this->getVar('name') . '</a>';
-			return $ret;
+			return trim(\Icms\View\SystemTemplate::fetch('icms_module_mainlink.html', ['url' => ICMS_URL . '/modules/' . $this->getVar('dirname') . '/', 'name' => $this->getVar('name')]));
 		}
 		return false;
 	}
@@ -408,22 +407,14 @@ class Entity extends \Icms\Core\Entity {
 	 * @param string $msg The Error Message
 	 * @param string $title The Error Message title
 	 * @param bool $render Whether to echo (render) or return the HTML string
-	 *
-	 * @todo Make this work with templates ;)
 	 */
 	function setMessage($msg, $title = '', $render = false) {
-		$ret = '<div class="moduleMsg">';
-		if ($title != '') {
-			$ret .= '<h4>' . $title . '</h4>';
-		}
-		if (is_array($msg)) {
-			foreach ($msg as $m) {
-				$ret .= $m . '<br />';
-			}
-		} else {
-			$ret .= $msg;
-		}
-		$ret .= '</div>';
+		$ret = \Icms\View\SystemTemplate::fetch('icms_module_message.html', [
+			'title' => $title,
+			'is_list' => is_array($msg),
+			'messages' => is_array($msg) ? $msg : [],
+			'message' => is_array($msg) ? '' : $msg,
+		]);
 		if ($render) {
 			echo $ret;
 		} else {
