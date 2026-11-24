@@ -481,6 +481,7 @@ class Renderer {
 	private function _renderAdminFooter($comment, $bottom_margin = true) {
 		return trim(\Icms\View\SystemTemplate::fetch('icms_data_comment_adminfooter.html', $this->_getStatusData($comment->getVar('com_status')) + [
 			'bottom_margin' => (bool) $bottom_margin,
+			'status_template' => \Icms\View\SystemTemplate::resource('icms_data_comment_status.html'),
 			'status_label' => _CM_STATUS,
 			'ip' => $comment->getVar('com_ip'),
 		]));

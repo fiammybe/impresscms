@@ -21,8 +21,10 @@ namespace Icms\Tests\Unit\Form;
 use Icms\Tests\Support\FormOutputScenarios;
 use Icms\Tests\Support\HtmlCanonicalizer;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+#[Group('spec:library-templating')]
 final class LegacyOutputTest extends TestCase
 {
     /**
@@ -35,6 +37,11 @@ final class LegacyOutputTest extends TestCase
         }
     }
 
+    /**
+     * @scenario Rendering a migrated component
+     * @scenario Public API stability
+     * @scenario User-supplied value
+     */
     #[DataProvider('scenarios')]
     public function testOutputIsSemanticallyUnchanged(string $name): void
     {

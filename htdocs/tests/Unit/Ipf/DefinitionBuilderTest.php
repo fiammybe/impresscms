@@ -18,8 +18,10 @@ use Icms\Tests\Support\FakeIpfEntity;
 use Icms\Tests\Support\FormOutputScenarios;
 use Icms\Tests\Support\TemplateEnvironment;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+#[Group('spec:ipf-forms')]
 final class DefinitionBuilderTest extends TestCase
 {
     protected function setUp(): void
@@ -123,6 +125,9 @@ final class DefinitionBuilderTest extends TestCase
         self::assertSame('itemform', $actions->child('op')?->value);
     }
 
+    /**
+     * @scenario Legacy elements match the definition
+     */
     #[DataProvider('newAndExisting')]
     public function testLegacyFormElementsHaveTheSameDefinitions(bool $new): void
     {

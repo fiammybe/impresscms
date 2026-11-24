@@ -1,5 +1,7 @@
 ## Context
-`icms_view_Tpl extends Smarty` (`view/Tpl.php`). Existing pattern (see `form/elements/Text.php`):
+Ported to `pre-3` (PSR-4: `htdocs/libraries/Icms/...`, `Icms\View\Tpl`, Smarty 2.6.33 via Composer). Paths
+below that use the old lowercase layout (`form/elements/Text.php`) mean their PSR-4 equivalents
+(`Form/Elements/Text.php`). Existing pattern (see `Form/Elements/Text.php`):
 
 ```php
 $this->tpl = new icms_view_Tpl();
@@ -44,9 +46,11 @@ first (use `token_get_all`, only inspect `T_CONSTANT_ENCAPSED_STRING`, `T_ENCAPS
   child elements) un-escaped, with a comment in the template. No behaviour change for existing output.
 - **Render once, after preparing the data** (as `icms_form_elements_Button::render()` does): a component
   collects everything in PHP arrays, then creates one `icms_view_Tpl`, does one `assign()` and one
-  `fetch('db:...')` in its `render()`. Nested fragments are included from the template with
-  `<{include file='db:...' var=$x}>` instead of being rendered in PHP first, and there is no shared
-  `renderTemplate()` helper. Output that repeats per request (status labels, poster links) is memoized.
+  fetch in its `render()`, through `Icms\View\SystemTemplate::fetch()` (the one helper: `db:` resource,
+  falling back to the template file until the system module is updated). Nested fragments are included
+  from the template instead of being rendered in PHP first, with a resource PHP resolves
+  (`SystemTemplate::resource()`, passed in a variable), never a literal `db:` include. Output that repeats
+  per request (status labels, poster links) is memoized.
   Caching stays off unless the caller already enables it.
 
 ## Decision 4: Parity verification
@@ -64,9 +68,26 @@ Phased by priority so each phase is independently shippable: 0 inventory → 1 f
 2 view (PageNav, Tree, Theme, PageBuilder) → 3 ipf → 4 core (Message, Filesystem…) →
 5 guard/lint → 6 docs & changelog. Roll back = revert the phase's commit; PHP signatures unchanged.
 
+## Decision 5: Forms render from a neutral definition
+The form templates are new in this change, so their variables can still be chosen freely. Instead of
+pre-rendered child HTML (`ele.html`) they receive a neutral definition (`Icms\Form\Definition`: `Field`,
+`ChoiceField`, `CompoundField`, `Form`), which the Symfony form bridge reads as well:
+- every `Icms\Form\Element` describes itself (`getDefinition()`, overridden through `describe()`); a
+  subclass that renders itself below the describing class is `Field::legacy()`, never a guess;
+- layouts receive `form` (`Icms\Form\View\FormView`): rows with `field`, `view` and the control's
+  `template`, which the layout includes; only controls without such a template (released `ele_*`
+  templates, legacy and module controls) bring their own `html`;
+- `Icms\Ipf\Form\DefinitionBuilder` holds the IPF rules (hidden values, controls per data type, options,
+  permissions); `Icms\Ipf\Form\Base` creates its elements from it and `App\Ipf\Form\IpfEntityType` /
+  `ControlMap` build the Symfony form from it;
+- escaping stays as each control had it (templates escape what the PHP escaped before).
+Parity: characterization snapshots captured from pre-3 (`htdocs/tests/Unit/Form/LegacyOutputTest.php`:
+controls byte for byte, layouts semantically), builder/element and builder/Symfony parity tests, and the
+HTTP characterization of the mimetype pages.
+
 ## Resolved Decisions
 - **Template location**: all new templates go in `htdocs/modules/system/templates/`, next to the existing `icms_form_elements_*` templates. No library-owned template directory is created.
-- **Smarty version**: Smarty 2.6.31 as bundled with ImpressCMS 2.0.4 (`htdocs/libraries/smarty`). Templates use Smarty 2 syntax only, with the ImpressCMS delimiters `<{` and `}>` (`<{$var}>`, `<{if}>`, `<{foreach from=... item=...}>`, `|escape`); no Smarty 3+ features.
+- **Smarty version**: Smarty 2 (2.6.33 through Composer on pre-3; 2.6.31 bundled with ImpressCMS 2.0.4). Templates use Smarty 2 syntax only, with the ImpressCMS delimiters `<{` and `}>` (`<{$var}>`, `<{if}>`, `<{foreach from=... item=...}>`, `|escape`); no Smarty 3+ features.
 - **Logger/debug output out of scope**: `core/Logger.php` and `core/Logger_render.php` are not migrated (dev-only output); they are listed as Keep in the inventory.
 
 ## Open Questions

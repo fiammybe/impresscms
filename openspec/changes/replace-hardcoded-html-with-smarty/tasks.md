@@ -2,7 +2,7 @@
 - [x] 0.1 Write `bin/find-hardcoded-html.php` (token-based, per design Decision 1)
 - [x] 0.2 Generate `inventory.md` (file, method, tag count, classification, rationale)
 - [ ] 0.3 Review inventory with maintainers; settle Keep/Asset decisions (initial classification is in `inventory.md`, awaiting review)
-- [x] 0.4 Parity baseline: old (git HEAD) vs. new output compared side by side for PageNav, form Table/Theme/Simple, Groupperm, Select, Textarea; templates for the other migrated classes verified against the old literal strings. No stored golden files / no PHPUnit suite exists in the repo
+- [x] 0.4 Parity baseline: on pre-3, `htdocs/tests/Unit/Form/__snapshots__/legacy-form-output.json` (captured from pre-3 before the templates) covers the form controls and layouts, IPF form, captcha, IPF file/image and page navigation; `LegacyOutputTest` compares it
 
 ## 1. Forms (`form/**`, `ipf/form/**`)
 - [x] 1.1 `form/Base` (validation JS wrapper, break row), `form/Table`, `form/Theme`, `form/Simple`
@@ -35,6 +35,15 @@
 
 ## 6. Templates, upgrade & docs
 - [x] 6.1 Templates placed in `htdocs/modules/system/templates/` (Smarty 2.6.31, `<{ }>` delimiters) and registered in `modules/system/icms_version.php`
-- [ ] 6.2 Verify on a real install that updating the system module imports the new `db:` templates (no DB schema change, so `ICMS_SYSTEM_DBVERSION` is unchanged); decide whether the module version must be bumped to trigger the update prompt
+- [ ] 6.2 Verify on a real install that updating the system module imports the new `db:` templates (no DB schema change, so `ICMS_SYSTEM_DBVERSION` is unchanged); decide whether the module version must be bumped to trigger the update prompt. Until then `SystemTemplate` reads the template files, so nothing renders empty (the test install imports them: `bin/test-db`)
 - [x] 6.3 Template names/variables documented in `docs/templating.md`; entry added to `docs/changelog.md`
 - [ ] 6.4 Manual smoke test in a browser (admin forms, pagination, comments, block edit buttons, group permissions). Only template-level and class-level comparisons were run so far
+
+## 7. Neutral form definition (pre-3)
+- [x] 7.1 Port this change to the PSR-4 library of pre-3
+- [x] 7.2 `Icms\Form\Definition` (Field, ChoiceField, CompoundField, Choice, Form, Describable); `Element::getDefinition()` with an explicit legacy fallback
+- [x] 7.3 Form templates receive definitions (`field`, `view`, `form`) instead of pre-rendered child HTML; `Hidden` gets `icms_form_elements_hidden_display.html`
+- [x] 7.4 `Icms\Ipf\Form\DefinitionBuilder`; `Icms\Ipf\Form\Base` creates its elements from it
+- [x] 7.5 `App\Ipf\Form\IpfEntityType` and `ControlMap` build the Symfony form from the same definitions; parity tests
+- [ ] 7.6 Capability form fields (`CapabilityFormExtension`, not on pre-3 yet) through definitions and `ControlMap::fromDefinition()`
+- [ ] 7.7 More definitions and Symfony types, one at a time with a definition, legacy rendering and Symfony test: radio, checkbox, yes/no; date/time; user/group/country/timezone; URL/file/image; autocomplete/editor/source; richfile/signature/passwordtray; module controls (opt in)

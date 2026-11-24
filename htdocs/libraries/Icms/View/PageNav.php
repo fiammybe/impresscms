@@ -212,7 +212,7 @@ class PageNav {
 		);
 		return array(
 			'template' => 'icms_view_pagenav_text.html',
-			'vars' => array('style' => $style, 'stylesheet_url' => $stylesheet_url, 'items' => $items)
+			'vars' => array('style' => $style, 'stylesheet_url' => $stylesheet_url, 'stylesheet_template' => \Icms\View\SystemTemplate::resource('icms_view_pagenav_stylesheet.html'), 'items' => $items)
 		);
 	}
 

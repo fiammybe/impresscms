@@ -20,8 +20,10 @@ use Icms\Form\Elements\Textarea;
 use Icms\Form\View\FormView;
 use Icms\Tests\Support\FakeIpfEntity;
 use Icms\Tests\Support\TemplateEnvironment;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+#[Group('spec:library-templating')]
 final class DefinitionTest extends TestCase
 {
     protected function setUp(): void
@@ -29,6 +31,9 @@ final class DefinitionTest extends TestCase
         TemplateEnvironment::boot();
     }
 
+    /**
+     * @scenario Definition free of renderers
+     */
     public function testDefinitionClassesDependOnNoRenderer(): void
     {
         foreach (glob(dirname(__DIR__, 3) . '/libraries/Icms/Form/Definition/*.php') ?: [] as $file) {
@@ -91,6 +96,9 @@ final class DefinitionTest extends TestCase
         self::assertSame(['title', 'image'], array_column($form->toArray()['rows'], 'name'));
     }
 
+    /**
+     * @scenario Control described by its definition
+     */
     public function testSelectDescribesItsChoices(): void
     {
         $select = new Select('Fruit', 'fruit', ['a', 'c'], 4, true);
@@ -119,6 +127,9 @@ final class DefinitionTest extends TestCase
         self::assertSame(['id' => 'body_tarea', 'rows' => 3, 'cols' => 20], $textarea->getDefinition()->attributes);
     }
 
+    /**
+     * @scenario Control that renders itself
+     */
     public function testSubclassThatRendersItselfIsLegacy(): void
     {
         $select = new class ('Mine', 'mine') extends Select {
@@ -200,6 +211,9 @@ final class DefinitionTest extends TestCase
         self::assertSame(['body', 'name'], array_column($view['definition']['rows'], 'name'));
     }
 
+    /**
+     * @scenario Layout without pre-rendered control HTML
+     */
     public function testFormTemplateDoesNotNeedPrerenderedHtmlForDefinedControls(): void
     {
         $form = new \Icms\Form\Theme('T', 't', 'a.php');
