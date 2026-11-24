@@ -63,6 +63,9 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 	 */
 	public $className;
 
+	/** @var array|null cache of key field data types */
+	protected $_keyDataTypes;
+
 	/**
 	 * Name of the field which properly identify the {@link icms_ipf_Object}
 	 *
@@ -278,6 +281,53 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 	}
 
 	/**
+	 * Validates a key value against the field definition of the key
+	 *
+	 * @param string $keyName trusted key column name
+	 * @param mixed $value
+	 * @return string|bool the value to bind, or FALSE if it is not valid for this key
+	 */
+	protected function normalizeKeyValue($keyName, $value) {
+		if (!is_scalar($value) || is_bool($value)) {
+			return false;
+		}
+		$value = (string) $value;
+		if (!isset($this->_keyDataTypes)) {
+			$tmp = $this->create(false);
+			$this->_keyDataTypes = array();
+			foreach ($tmp->vars as $name => $var) {
+				$this->_keyDataTypes[$name] = $var['data_type'];
+			}
+		}
+		if (isset($this->_keyDataTypes[$keyName]) && $this->_keyDataTypes[$keyName] == XOBJ_DTYPE_INT
+				&& !preg_match('/^-?[0-9]+$/', $value)) {
+			return false;
+		}
+		return $value;
+	}
+
+	/**
+	 * Builds a parameterized WHERE condition identifying an object by its key(s)
+	 *
+	 * @param icms_ipf_Object $obj
+	 * @return array|bool array(sql, params) or FALSE if a key value is invalid
+	 */
+	protected function buildKeyWhere($obj) {
+		$keyNames = is_array($this->keyName) ? $this->keyName : array($this->keyName);
+		$clause = array();
+		$params = array();
+		foreach ($keyNames as $keyName) {
+			$value = $this->normalizeKeyValue($keyName, $obj->getVar($keyName, 'n'));
+			if ($value === false) {
+				return false;
+			}
+			$clause[] = $keyName . ' = ?';
+			$params[] = $value;
+		}
+		return array(implode(' AND ', $clause), $params);
+	}
+
+	/**
 	 * retrieve a {@link icms_ipf_Object}
 	 *
 	 * @param mixed $id ID of the object - or array of ids for joint keys. Joint keys MUST be given in the same order as in the constructor
@@ -288,22 +338,23 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 		if (!$criteria) {
 			$criteria = new icms_db_criteria_Compo();
 		}
-		if (is_array($this->keyName)) {
-			foreach ($this->keyName as $i => $keyName) {
-				/**
-				 * In some situations, the $id is not an INTEGER. icms_ipf_ObjectTag is an example.
-				 * Is the fact that we removed the intval() represents a security risk ?
-				 */
-				//$criteria->add(new icms_db_criteria_Item($this->keyName[$i], ($id[$i]), '=', $this->_itemname));
-				$criteria->add(new icms_db_criteria_Item($keyName, $id[$i], '=', $this->_itemname));
+		$keyNames = is_array($this->keyName) ? $this->keyName : array($this->keyName);
+		$ids = is_array($this->keyName) ? (is_array($id) ? array_values($id) : array()) : array($id);
+		$valid = count($ids) == count($keyNames);
+		foreach ($keyNames as $i => $keyName) {
+			$value = $valid ? $this->normalizeKeyValue($keyName, $ids[$i]) : false;
+			if ($value === false) {
+				$valid = false;
+				break;
 			}
-		} else {
-			//$criteria = new icms_db_criteria_Item($this->keyName, intval($id), '=', $this->_itemname);
-			/**
-			 * In some situations, the $id is not an INTEGER. icms_ipf_ObjectTag is an example.
-			 * Is the fact that we removed the intval() represents a security risk ?
-			 */
-			$criteria->add(new icms_db_criteria_Item($this->keyName, $id, '=', $this->_itemname));
+			// the value is bound as a parameter, never interpolated into the SQL
+			$item = new icms_db_criteria_Item($keyName, $value, '=', $this->_itemname);
+			$item->setBind(true);
+			$criteria->add($item);
+		}
+		if (!$valid) {
+			$obj = $this->create();
+			return $obj;
 		}
 		$criteria->setLimit(1);
 		if ($debug) {
@@ -311,7 +362,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 		} else {
 			$obj_array = $this->getObjects($criteria, false, $as_object);
 			//patch : weird bug of indexing by id even if id_as_key = false;
-			if (count($obj_array) && !isset($obj_array[0]) && is_object($obj_array[$id])) {
+			if (count($obj_array) && !isset($obj_array[0]) && is_scalar($id) && isset($obj_array[$id]) && is_object($obj_array[$id])) {
 				$obj_array[0] = $obj_array[$id];
 				unset($obj_array[$id]);
 				$obj_array[0]->unsetNew();
@@ -349,6 +400,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 	public function getObjects($criteria = null, $id_as_key = false, $as_object = true, $sql = false, $debug = false) {
 		$ret = array();
 		$limit = $start = 0;
+		$params = array();
 
 		if ($this->generalSQL) {
 			$sql = $this->generalSQL;
@@ -363,12 +415,17 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 			}
 			$limit = $criteria->getLimit();
 			$start = $criteria->getStart();
+			$params = $criteria->getParams();
 		}
 		if ($debug) {
 			icms_core_Debug::message($sql);
 		}
 
-		$result = $this->db->query($sql, $limit, $start);
+		if (!empty($params)) {
+			$result = $this->db->query($sql, $limit, $start, $params);
+		} else {
+			$result = $this->db->query($sql, $limit, $start);
+		}
 		if (!$result) {
 			return $ret;
 		}
@@ -387,6 +444,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 	 */
 	public function query($sql, $criteria, $force = false, $debug = false) {
 		$ret = array();
+		$params = array();
 
 		if (isset($criteria) && is_subclass_of($criteria, 'icms_db_criteria_Element')) {
 			$sql .= ' ' . $criteria->renderWhere();
@@ -396,16 +454,16 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 			if ($criteria->getSort() != '') {
 				$sql .= ' ORDER BY ' . $criteria->getSort() . ' ' . $criteria->getOrder();
 			}
-
+			$params = $criteria->getParams();
 		}
 		if ($debug) {
 			icms_core_Debug::message($sql);
 		}
 
 		if ($force) {
-			$result = $this->db->queryF($sql);
+			$result = empty($params) ? $this->db->queryF($sql) : $this->db->queryF($sql, 0, 0, $params);
 		} else {
-			$result = $this->db->query($sql);
+			$result = empty($params) ? $this->db->query($sql) : $this->db->query($sql, 0, 0, $params);
 		}
 
 		if (!$result) {
@@ -510,6 +568,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 	 */
 	public function getList($criteria = null, $limit = 0, $start = 0, $debug = false) {
 		$ret = array();
+		$params = array();
 		if ($criteria == null) {
 			$criteria = new icms_db_criteria_Compo();
 		}
@@ -530,13 +589,14 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 			}
 			$limit = $criteria->getLimit();
 			$start = $criteria->getStart();
+			$params = $criteria->getParams();
 		}
 
 		if ($debug) {
 			icms_core_Debug::message($sql);
 		}
 
-		$result = $this->db->query($sql, $limit, $start);
+		$result = empty($params) ? $this->db->query($sql, $limit, $start) : $this->db->query($sql, $limit, $start, $params);
 		if (!$result) {
 			return $ret;
 		}
@@ -558,6 +618,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 	public function getCount($criteria = null) {
 		$field = "";
 		$groupby = false;
+		$params = array();
 		if (isset($criteria) && is_subclass_of($criteria, 'icms_db_criteria_Element')) {
 			if ($criteria->groupby != "") {
 				$groupby = true;
@@ -579,9 +640,10 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 			if ($criteria->groupby != "") {
 				$sql .= $criteria->getGroupby();
 			}
+			$params = $criteria->getParams();
 		}
 
-		$result = $this->db->query($sql);
+		$result = empty($params) ? $this->db->query($sql) : $this->db->query($sql, 0, 0, $params);
 		if (!$result) {
 			return 0;
 		}
@@ -611,20 +673,15 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 			return false;
 		}
 
-		if (is_array($this->keyName)) {
-			$clause = array();
-			for ($i = 0; $i < count($this->keyName); $i++) {
-				$clause[] = $this->keyName[$i] . ' = ' . $obj->getVar($this->keyName[$i]);
-			}
-			$whereclause = implode(" AND ", $clause);
-		} else {
-			$whereclause = $this->keyName . ' = ' . $obj->getVar($this->keyName);
+		$where = $this->buildKeyWhere($obj);
+		if ($where === false) {
+			return false;
 		}
-		$sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $whereclause;
+		$sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $where[0];
 		if (false != $force) {
-			$result = $this->db->queryF($sql);
+			$result = $this->db->queryF($sql, 0, 0, $where[1]);
 		} else {
-			$result = $this->db->query($sql);
+			$result = $this->db->query($sql, 0, 0, $where[1]);
 		}
 		if (!$result) {
 			return false;
@@ -779,6 +836,7 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 			$obj->setErrors('Variables were not cleaned properly.');
 			return false;
 		}
+		$params = array();
 		$fieldsToStoreInDB = array();
 		foreach ($obj->cleanVars as $k => $v) {
 			if ($obj->vars[$k]['data_type'] == XOBJ_DTYPE_INT) {
@@ -817,18 +875,13 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 				$sql .= ' ' . $key . ' = ' . $value;
 				$notfirst = true;
 			}
-			if (is_array($this->keyName)) {
-				$whereclause = '';
-				for ($i = 0; $i < count($this->keyName); $i++) {
-					if ($i > 0) {
-						$whereclause .= ' AND ';
-					}
-					$whereclause .= $this->keyName[$i] . ' = ' . $obj->getVar($this->keyName[$i]);
-				}
-			} else {
-				$whereclause = $this->keyName . ' = ' . $obj->getVar($this->keyName);
+			$where = $this->buildKeyWhere($obj);
+			if ($where === false) {
+				$obj->setErrors('Invalid key value');
+				return false;
 			}
-			$sql .= ' WHERE ' . $whereclause;
+			$sql .= ' WHERE ' . $where[0];
+			$params = $where[1];
 		}
 
 		if ($debug) {
@@ -836,9 +889,9 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 		}
 
 		if (false != $force) {
-			$result = $this->db->queryF($sql);
+			$result = $this->db->queryF($sql, 0, 0, $params);
 		} else {
-			$result = $this->db->query($sql);
+			$result = $this->db->query($sql, 0, 0, $params);
 		}
 
 		if (!$result) {
@@ -901,14 +954,16 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 		} else {
 			$set_clause .= $this->db->quoteString($fieldvalue);
 		}
+		$params = array();
 		$sql = 'UPDATE '.$this->table.' SET '.$set_clause;
 		if (isset($criteria) && is_subclass_of($criteria, 'icms_db_criteria_Element')) {
 			$sql .= ' ' . $criteria->renderWhere();
+			$params = $criteria->getParams();
 		}
 		if (false != $force) {
-			$result = $this->db->queryF($sql);
+			$result = $this->db->queryF($sql, 0, 0, $params);
 		} else {
-			$result = $this->db->query($sql);
+			$result = $this->db->query($sql, 0, 0, $params);
 		}
 		if (!$result) {
 			return false;
@@ -965,10 +1020,14 @@ class icms_ipf_Handler extends icms_core_ObjectHandler {
 	 */
 	public function updateCounter($object) {
 		if (isset($object->vars['counter'])) {
-			$new_counter = $object->getVar('counter') + 1;
+			$new_counter = (int) $object->getVar('counter') + 1;
+			$value = $this->normalizeKeyValue($this->keyName, $object->id());
+			if ($value === false) {
+				return;
+			}
 			$sql = 'UPDATE ' . $this->table . ' SET counter=' . $new_counter
-				. ' WHERE ' . $this->keyName . '=' . $object->id();
-			$this->query($sql, null, true);
+				. ' WHERE ' . $this->keyName . ' = ?';
+			$this->db->queryF($sql, 0, 0, array($value));
 		}
 	}
 
