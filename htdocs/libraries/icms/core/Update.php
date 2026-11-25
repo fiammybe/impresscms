@@ -69,6 +69,7 @@ class icms_core_Update {
 		'cache/',
 		'templates_c/',
 		'uploads/',
+		'update-recovery.php', // written by the updater itself, see icms_core_UpdateRecovery
 	);
 
 	/**
@@ -94,6 +95,36 @@ class icms_core_Update {
 	 * @var array|null
 	 */
 	private $fileList = null;
+
+	/**
+	 * Path of the backup taken before this update
+	 * @var string|null
+	 */
+	private $backupPath = null;
+
+	/**
+	 * Path of the update record (the list of files this update writes)
+	 * @var string|null
+	 */
+	private $manifestPath = null;
+
+	/**
+	 * The update record
+	 * @var array|null
+	 */
+	private $manifest = null;
+
+	/**
+	 * Recovery password of this update
+	 * @var string|null
+	 */
+	private $recoveryKey = null;
+
+	/**
+	 * Whether the recovery password was created by the updater (and must be shown) or chosen by the administrator
+	 * @var bool
+	 */
+	private $recoveryKeyGenerated = false;
 
 	/**
 	 * Constructor
@@ -247,6 +278,7 @@ class icms_core_Update {
 		$backupPath = $this->backup->createBackup($backupName, true);
 
 		if ($backupPath) {
+			$this->backupPath = $backupPath;
 			// Merge backup messages with update messages
 			$backupMessages = $this->backup->getMessages(false);
 			foreach ($backupMessages as $message) {
@@ -313,7 +345,14 @@ class icms_core_Update {
 				return false;
 			}
 
-			if (!$this->installFiles($sourceDir, ICMS_ROOT_PATH, $this->fileList)) {
+			// Record what will change and install the recovery script, before any file is changed
+			if (!$this->prepareRecovery($sourceDir, $this->fileList)) {
+				return false;
+			}
+
+			$installed = $this->installFiles($sourceDir, ICMS_ROOT_PATH, $this->fileList);
+			$this->finishManifest($installed ? 'completed' : 'failed');
+			if (!$installed) {
 				return false;
 			}
 
@@ -613,6 +652,115 @@ class icms_core_Update {
 	}
 
 	/**
+	 * Write the update record and install the recovery script
+	 *
+	 * The record lists every file the update adds, replaces or deletes. It is written before any
+	 * file is changed, so the recovery script can also undo an update that stopped halfway.
+	 *
+	 * @param string $sourceDir Package root
+	 * @param array $fileList List from buildFileList()
+	 * @return bool
+	 */
+	private function prepareRecovery($sourceDir, array $fileList) {
+		if ($this->backupPath === null || !is_file($this->backupPath)) {
+			$this->errors[] = "Update aborted before any file was changed: there is no backup to restore from.";
+			return false;
+		}
+		if (!is_writable(ICMS_ROOT_PATH)) {
+			$this->errors[] = "Update aborted before any file was changed: the recovery script cannot be written to " . ICMS_ROOT_PATH;
+			return false;
+		}
+
+		$added = $replaced = array();
+		foreach ($fileList['install'] as $relative) {
+			if (file_exists(ICMS_ROOT_PATH . '/' . $relative)) {
+				$replaced[] = $relative;
+			} else {
+				$added[] = $relative;
+			}
+		}
+
+		$toVersion = '';
+		$versionFile = (string) @file_get_contents($sourceDir . '/include/version.php');
+		if (preg_match("/define\\(\\s*'ICMS_VERSION_NAME'\\s*,\\s*'([^']+)'/", $versionFile, $matches)) {
+			$toVersion = $matches[1];
+		}
+
+		$this->manifestPath = icms_core_UpdateRecovery::getManifestPath($this->backupPath);
+		$this->manifest = array(
+			'started' => date('c'),
+			'finished' => null,
+			'status' => 'in_progress',
+			'from_version' => defined('ICMS_VERSION_NAME') ? ICMS_VERSION_NAME : '',
+			'to_version' => $toVersion,
+			'backup' => basename($this->backupPath),
+			'added' => $added,
+			'replaced' => $replaced,
+			'deleted' => $fileList['delete'],
+		);
+		if (!icms_core_UpdateRecovery::writeManifest($this->manifestPath, $this->manifest)) {
+			$this->errors[] = "Update aborted before any file was changed: the update record could not be written to " . $this->manifestPath;
+			return false;
+		}
+		$this->messages[] = sprintf(
+			"Update record written: %s (%d files added, %d replaced, %d deleted)",
+			basename($this->manifestPath), count($added), count($replaced), count($fileList['delete'])
+		);
+
+		$recovery = new icms_core_UpdateRecovery();
+		$key = $this->recoveryKey;
+		$this->recoveryKeyGenerated = ($key === null || $key === '');
+		if (!$recovery->install($this->manifestPath, $this->backupPath, $key)) {
+			foreach ($recovery->errors as $error) {
+				$this->errors[] = $error;
+			}
+			$this->errors[] = "Update aborted before any file was changed: the recovery script could not be installed.";
+			return false;
+		}
+		$this->recoveryKey = $key;
+		$this->messages[] = "Recovery script installed: " . icms_core_UpdateRecovery::getScriptUrl();
+		return true;
+	}
+
+	/**
+	 * Store the outcome of the update in the update record
+	 *
+	 * @param string $status completed or failed
+	 */
+	private function finishManifest($status) {
+		if ($this->manifest === null) {
+			return;
+		}
+		$this->manifest['status'] = $status;
+		$this->manifest['finished'] = date('c');
+		if (!icms_core_UpdateRecovery::writeManifest($this->manifestPath, $this->manifest)) {
+			$this->errors[] = "Could not store the outcome of the update in " . $this->manifestPath;
+		}
+	}
+
+	/**
+	 * Get the recovery details of this update, to show to the administrator
+	 *
+	 * The password is only included when the updater created it; a password the administrator
+	 * chose is never shown again.
+	 *
+	 * @return array|null Null when no recovery script was installed
+	 */
+	public function getRecoveryInfo() {
+		$status = icms_core_UpdateRecovery::getStatus();
+		if ($this->manifestPath === null || $status === null) {
+			return null;
+		}
+		return array(
+			'url' => icms_core_UpdateRecovery::getScriptUrl(),
+			'key' => $this->recoveryKeyGenerated ? $this->recoveryKey : null,
+			'expires_formatted' => $status ? $status['expires_formatted'] : '',
+			'backup' => basename($this->backupPath),
+			'manifest' => basename($this->manifestPath),
+		);
+	}
+
+	/**
 	 * Get the file list of the last installation attempt
 	 *
 	 * @return array|null
@@ -625,9 +773,18 @@ class icms_core_Update {
 	 * Perform complete update process
 	 *
 	 * @param string $expectedHash Optional hash to verify
+	 * @param string $recoveryPassword Password for the recovery script. When empty, a random one
+	 *                                 is created; get it with getRecoveryInfo().
 	 * @return bool
 	 */
-	public function performUpdate($expectedHash = null) {
+	public function performUpdate($expectedHash = null, $recoveryPassword = null) {
+		if ($recoveryPassword !== null && $recoveryPassword !== ''
+			&& strlen($recoveryPassword) < icms_core_UpdateRecovery::MIN_PASSWORD_LENGTH) {
+			$this->errors[] = "The recovery password must be at least " . icms_core_UpdateRecovery::MIN_PASSWORD_LENGTH . " characters long.";
+			return false;
+		}
+		$this->recoveryKey = ($recoveryPassword === '') ? null : $recoveryPassword;
+
 		try {
 			// Never fall back to a directory inside the web root
 			if (!$this->createDirectories()) {

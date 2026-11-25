@@ -451,6 +451,11 @@ class icms_core_Backup {
 
 		// Use icms_core_Filesystem::deleteFile for consistency
 		if (icms_core_Filesystem::deleteFile($backupPath)) {
+			// the update record of this backup is useless without it
+			$manifest = preg_replace('/\.zip$/i', '', $backupPath) . '.json';
+			if (is_file($manifest)) {
+				@unlink($manifest);
+			}
 			$this->messages[] = "Backup deleted successfully: " . $backupName;
 			return true;
 		} else {

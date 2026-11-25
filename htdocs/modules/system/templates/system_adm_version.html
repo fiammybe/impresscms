@@ -22,6 +22,28 @@
 </div>
 <{/if}>
 
+<{if $recovery_removed === true}>
+<div class="even"><div class="successMsg"><{$smarty.const._AM_VERSION_RECOVERY_REMOVED}></div></div>
+<{elseif $recovery_removed === false}>
+<div class="even"><div class="errorMsg"><{$smarty.const._AM_VERSION_RECOVERY_REMOVE_FAILED}></div></div>
+<{/if}>
+
+<{if $recovery_status}>
+<div class="even">
+    <h3><{$smarty.const._AM_VERSION_RECOVERY_TITLE}></h3>
+    <p><{$recovery_active_text}></p>
+    <{if $recovery_info && $recovery_info.key}>
+    <p><strong><{$smarty.const._AM_VERSION_RECOVERY_GENERATED_KEY}></strong> <code><{$recovery_info.key}></code></p>
+    <{/if}>
+    <p><{$recovery_backup_text}></p>
+    <form method="post" action="" onsubmit="return confirm('<{$smarty.const._AM_VERSION_RECOVERY_REMOVE_CONFIRM}>');">
+        <input type="hidden" name="action" value="remove_recovery" />
+        <{$recovery_token}>
+        <input type="submit" value="<{$smarty.const._AM_VERSION_RECOVERY_REMOVE}>" class="formButton" />
+    </form>
+</div>
+<{/if}>
+
 <{if $update_available == "1"}>
     <div class="even">
 	    <div class="errorMsg">
@@ -42,6 +64,11 @@
             <form method="post" action="" onsubmit="return confirm('<{$smarty.const._AM_VERSION_UPDATE_CONFIRM}>');">
                 <input type="hidden" name="action" value="update" />
                 <{$update_token}>
+                <div style="margin-bottom: 10px;">
+                    <label for="recovery_password"><strong><{$smarty.const._AM_VERSION_RECOVERY_PASSWORD}>:</strong></label><br />
+                    <input type="password" name="recovery_password" id="recovery_password" required minlength="<{$recovery_min_length}>" autocomplete="new-password" style="width: 400px;" /><br />
+                    <small><{$recovery_password_desc}></small>
+                </div>
                 <div style="margin-bottom: 10px;">
                     <label for="hash"><{$smarty.const._AM_VERSION_UPDATE_HASH_OPTIONAL}>:</label><br />
                     <input type="text" name="hash" id="hash" placeholder="<{$smarty.const._AM_VERSION_UPDATE_HASH_PLACEHOLDER}>" style="width: 400px;" />

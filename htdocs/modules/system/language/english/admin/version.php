@@ -44,5 +44,17 @@ define("_AM_VERSION_UPDATE_STEP_DOWNLOAD", 'Step 2: Downloading update...');
 define("_AM_VERSION_UPDATE_STEP_VERIFY", 'Step 3: Verifying download...');
 define("_AM_VERSION_UPDATE_STEP_INSTALL", 'Step 4: Installing update...');
 define("_AM_VERSION_UPDATE_STEP_CLEANUP", 'Step 5: Cleaning up...');
+define("_AM_VERSION_RECOVERY_PASSWORD", 'Recovery password');
+define("_AM_VERSION_RECOVERY_PASSWORD_DESC", 'Choose a password of at least %d characters and write it down. If the update breaks the site, you open %s and enter this password to undo the update. It is not shown again.');
+define("_AM_VERSION_RECOVERY_PASSWORD_SHORT", 'The update was not started: choose a recovery password of at least %d characters.');
+define("_AM_VERSION_RECOVERY_TITLE", 'Update recovery');
+define("_AM_VERSION_RECOVERY_ACTIVE", 'If the site stops working after this update, open %s and enter the recovery password to undo the update. This page works without the rest of ImpressCMS and stops working on %s.');
+define("_AM_VERSION_RECOVERY_GENERATED_KEY", 'Recovery password (write it down now, it is not shown again):');
+define("_AM_VERSION_RECOVERY_REMOVE", 'The site works: remove the recovery script');
+define("_AM_VERSION_RECOVERY_REMOVE_CONFIRM", 'Remove the recovery script? The update can then only be undone by restoring the backup by hand.');
+define("_AM_VERSION_RECOVERY_REMOVED", 'The recovery script has been removed.');
+define("_AM_VERSION_RECOVERY_REMOVE_FAILED", 'The recovery script could not be removed. Delete update-recovery.php from the web root by hand.');
+define("_AM_VERSION_RECOVERY_TOKEN_INVALID", 'The recovery script was not removed: the security token is missing or has expired. Reload the page and try again.');
+define("_AM_VERSION_RECOVERY_BACKUP", 'Backup: %s');
 define("_AM_VERSION_UPDATE_TOKEN_INVALID", 'The update was not started: the security token is missing or has expired. Reload the page and try again.');
 ?>

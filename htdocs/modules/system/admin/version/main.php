@@ -33,17 +33,36 @@ if (isset($_GET['mid'])) {
 /**
  * Handle update actions
  */
+$recoveryInfo = null;
+$recoveryRemoved = null;
+if (isset($_POST['action']) && $_POST['action'] === 'remove_recovery' && icms_core_Update::canUpdate()) {
+	if (!icms::$security->check()) {
+		$updateSuccess = false;
+		$updateErrors = _AM_VERSION_RECOVERY_TOKEN_INVALID . '<br />' . implode('<br />', icms::$security->getErrors());
+		$updateMessages = '';
+	} else {
+		$recoveryRemoved = icms_core_UpdateRecovery::remove();
+	}
+}
+
 if (isset($_POST['action']) && $_POST['action'] === 'update' && icms_core_Update::canUpdate()) {
+	$recoveryPassword = isset($_POST['recovery_password']) ? (string) $_POST['recovery_password'] : '';
 	if (!icms::$security->check()) {
 		// missing or expired token: the request did not come from the form on this page
 		$updateSuccess = false;
 		$updateErrors = _AM_VERSION_UPDATE_TOKEN_INVALID . '<br />' . implode('<br />', icms::$security->getErrors());
 		$updateMessages = '';
+	} elseif (strlen($recoveryPassword) < icms_core_UpdateRecovery::MIN_PASSWORD_LENGTH) {
+		$updateSuccess = false;
+		$updateErrors = sprintf(_AM_VERSION_RECOVERY_PASSWORD_SHORT, icms_core_UpdateRecovery::MIN_PASSWORD_LENGTH);
+		$updateMessages = '';
 	} else {
 	$updater = new icms_core_Update();
 	$expectedHash = isset($_POST['hash']) && !empty(trim($_POST['hash'])) ? trim($_POST['hash']) : null;
 
-	if ($updater->performUpdate($expectedHash)) {
+	$result = $updater->performUpdate($expectedHash, $recoveryPassword);
+	$recoveryInfo = $updater->getRecoveryInfo();
+	if ($result) {
 		$updateSuccess = true;
 		$updateMessages = $updater->getMessages(true);
 	} else {
@@ -74,6 +93,21 @@ if (isset($updateSuccess)) {
 // Check if user can perform updates
 $icmsAdminTpl->assign('can_update', icms_core_Update::canUpdate());
 $icmsAdminTpl->assign('update_token', icms::$security->getTokenHTML());
+
+// Recovery script of the last update
+$recoveryStatus = icms_core_Update::canUpdate() ? icms_core_UpdateRecovery::getStatus() : null;
+$recoveryUrl = icms_core_UpdateRecovery::getScriptUrl();
+$recoveryLink = '<a href="' . htmlspecialchars($recoveryUrl, ENT_QUOTES) . '" rel="nofollow">' . htmlspecialchars($recoveryUrl) . '</a>';
+$icmsAdminTpl->assign('recovery_info', $recoveryInfo);
+$icmsAdminTpl->assign('recovery_status', $recoveryStatus);
+if ($recoveryStatus) {
+	$icmsAdminTpl->assign('recovery_active_text', sprintf(_AM_VERSION_RECOVERY_ACTIVE, $recoveryLink, htmlspecialchars($recoveryStatus['expires_formatted'])));
+	$icmsAdminTpl->assign('recovery_backup_text', sprintf(_AM_VERSION_RECOVERY_BACKUP, htmlspecialchars($recoveryStatus['backup'])));
+}
+$icmsAdminTpl->assign('recovery_removed', $recoveryRemoved);
+$icmsAdminTpl->assign('recovery_token', icms::$security->getTokenHTML());
+$icmsAdminTpl->assign('recovery_min_length', icms_core_UpdateRecovery::MIN_PASSWORD_LENGTH);
+$icmsAdminTpl->assign('recovery_password_desc', sprintf(_AM_VERSION_RECOVERY_PASSWORD_DESC, icms_core_UpdateRecovery::MIN_PASSWORD_LENGTH, htmlspecialchars($recoveryUrl)));
 
 $icmsVersionChecker->check();
 	$icmsAdminTpl->assign('latest', $icmsVersionChecker->latest);

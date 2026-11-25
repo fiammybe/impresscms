@@ -94,6 +94,35 @@ Before anything is changed, every target file is checked for write access; if on
 
 Bundled themes and modules are overwritten with the release version, so changes made directly in those files are lost.
 
+## Update recovery
+
+Before the update changes any file, the updater:
+
+1. writes an **update record** next to the backup: `<trust path>/backups/update-backup-<date-time>.json`. It lists the files the update adds (`added`), replaces (`replaced`) and deletes (`deleted`), the versions, and the outcome (`in_progress`, `completed` or `failed`). Because it is written first, it also describes an update that stopped halfway.
+2. installs a **recovery script** in the web root: `update-recovery.php`. It does not load any ImpressCMS code, so it keeps working when the new core is broken.
+
+The update form asks for a **recovery password** (at least 8 characters). The administrator chooses it before the update starts, so they know it even when the page after the update does not load. Only a `password_hash()` of it is stored, in `<trust path>/updates/recovery.json`; wrong passwords are answered after a delay.
+
+If the site breaks, open `https://<your site>/update-recovery.php`, enter the recovery password and choose **Undo the update**. The script:
+
+- restores every replaced or deleted file from the backup,
+- deletes the files the update added, and directories that are empty after that,
+- clears `cache/` and `templates_c/`.
+
+It does not touch `mainfile.php`, `uploads/` or the database. If the System module was updated after the core update (the administration area asks for this), the database was changed too; restore the database backup of your hosting provider if the site still shows errors.
+
+The recovery script stops working, and deletes itself, a week after the update. When the update works, remove it earlier with **The site works: remove the recovery script** on the version checker page, or with the button on the recovery page itself. Deleting a backup in the Backup Manager also deletes its update record.
+
+## Restoring a backup by hand
+
+When the recovery script is gone or the password is lost, restore the backup by hand:
+
+1. Find the trust path: it is set as `XOOPS_TRUST_PATH` in `mainfile.php`.
+2. Download the newest `update-backup-<date-time>.zip` from `<trust path>/backups/`.
+3. Unzip it over the web root, replacing existing files (with SSH: `unzip -o <backup>.zip -d <web root>`).
+4. Delete the files listed under `added` in the matching `.json` update record.
+5. Empty `cache/` and `templates_c/`, keeping their `index.html` files.
+
 ## System Requirements
 
 - **PHP Extensions**: zip (ZipArchive)
