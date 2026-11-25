@@ -134,6 +134,13 @@ The same definition gives the same bytes.
 The trust path's own `modules/` directory belongs to legacy (Protector,
 duplicatable modules), hence `app-modules/`.
 
+The directory keeps the ImpressCMS dirname (`system`) and the namespace is
+`Modules\System\`, so each module needs its own psr-4 entry in
+`composer.json` (`"Modules\System\\": "app-modules/system/"`). A catch-all
+`Modules\` entry would only work on case-insensitive filesystems.
+`ModulesServiceProvider` throws when a module's provider cannot be loaded,
+and `ModuleAutoloadTest` checks the entries.
+
 Module state is read per request (`App\Module\ModuleRegistry`: the `modules`
 row, and `ICMS_MODULES_LARAVEL_DISABLED`), never baked into the route cache.
 An inactive module's takeovers fall through to legacy, and its routes behind

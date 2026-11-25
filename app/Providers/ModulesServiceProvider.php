@@ -14,6 +14,10 @@ use Illuminate\Support\ServiceProvider;
  * `app-modules/` directory: `app-modules/<dirname>/<Dirname>ModuleServiceProvider.php`
  * (App\Module\ModuleServiceProvider). A module without one stays purely
  * legacy.
+ *
+ * The directory keeps the module's ImpressCMS dirname (`system`) while the
+ * namespace is `Modules\System\`, so every module needs its own composer
+ * psr-4 entry: `"Modules\System\\": "app-modules/system/"`.
  */
 final class ModulesServiceProvider extends ServiceProvider
 {
@@ -37,9 +41,16 @@ final class ModulesServiceProvider extends ServiceProvider
         foreach (glob("{$directory}/*/*ModuleServiceProvider.php") ?: [] as $file) {
             $dirname = basename(dirname($file));
             $class = 'Modules\\' . ucfirst($dirname) . '\\' . basename($file, '.php');
-            if (class_exists($class)) {
-                $providers[] = $class;
+            if (! class_exists($class)) {
+                throw new \LogicException(sprintf(
+                    'Cannot load %s from %s: add "%s" => "app-modules/%s/" to the psr-4 autoload in composer.json and run composer dump-autoload.',
+                    $class,
+                    $file,
+                    'Modules\\' . ucfirst($dirname) . '\\',
+                    $dirname,
+                ));
             }
+            $providers[] = $class;
         }
 
         sort($providers);

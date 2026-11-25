@@ -62,6 +62,10 @@ class SystemUserrankHandler extends icms_ipf_Handler {
 
 ## 3. Register and compile
 
+For a module's first resource, create `app-modules/<dirname>/` with its
+`<Dirname>ModuleServiceProvider.php`, and add the module's psr-4 entry to
+`composer.json`, for example `"Modules\Profile\\": "app-modules/profile/"`.
+
 `app-modules/system/resources.php`:
 
 ```php
