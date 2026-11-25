@@ -24,4 +24,14 @@ final class MimetypeEloquentReadTest extends MimetypeBladeTest
             'ICMS_SYSTEM_MIMETYPE_PERSISTENCE' => 'eloquent-read',
         ]);
     }
+
+    protected function setUp(): void
+    {
+        // an external server (ICMS_TEST_BASE_URL) runs with its own environment
+        if (ServerProcess::externalBaseUri() !== null) {
+            self::markTestSkipped('An external server cannot be started with ICMS_SYSTEM_MIMETYPE_PERSISTENCE=eloquent-read.');
+        }
+
+        parent::setUp();
+    }
 }

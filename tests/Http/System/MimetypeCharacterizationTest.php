@@ -46,6 +46,11 @@ class MimetypeCharacterizationTest extends HttpTestCase
 
     protected function setUp(): void
     {
+        // an external server (ICMS_TEST_BASE_URL) runs with its own
+        // environment, so it serves the default Blade renderer
+        if (ServerProcess::externalBaseUri() !== null) {
+            self::markTestSkipped('An external server cannot be started with ICMS_SYSTEM_MIMETYPE_RENDERER=legacy.');
+        }
         TestSite::restoreSnapshot();
         parent::setUp();
     }

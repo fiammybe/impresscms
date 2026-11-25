@@ -70,6 +70,14 @@ final class HostRunner
 
     private function send(Response $response): void
     {
+        // PHP writes the session at shutdown, but under php-fpm send() ends the
+        // request first (fastcgi_finish_request): the browser could follow a
+        // login redirect, or replay a used-up token, before the session is
+        // stored. Legacy ImpressCMS stored it before the response completed.
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+
         $response->send();
 
         // @phpstan-ignore argument.type (documented as Illuminate\Http\Response, used with any Symfony response)
