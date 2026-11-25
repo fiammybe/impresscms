@@ -130,7 +130,7 @@ The update system uses the following directories:
 
 Backups and downloads contain the site's code and configuration, so they are kept in the trust path, outside the web root, and never in the publicly reachable `cache/` directory. When no trust path is defined or it is not writable, the updater and the backup manager stop with an error instead of falling back to a directory in the web root. Both directories get an `.htaccess` that denies web access, in case the trust path was placed inside the web root.
 
-Because the backups are outside the web root, they cannot be downloaded from the browser; copy them from the server with FTP, SFTP or the hosting control panel.
+Because the backups are outside the web root, they cannot be reached by URL. Administrators download them with the Download button in the Backup Manager, which streams the file through PHP after checking the security token.
 
 ## Error Handling
 

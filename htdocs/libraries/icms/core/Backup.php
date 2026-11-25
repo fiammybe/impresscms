@@ -409,6 +409,28 @@ class icms_core_Backup {
 	}
 
 	/**
+	 * Get the full path of a backup by its file name
+	 *
+	 * Only files that listBackups() returns are accepted, so the name cannot point anywhere
+	 * else in the trust path or outside it.
+	 *
+	 * @param string $backupName Backup filename, as listed by listBackups()
+	 * @return string|false
+	 */
+	public function getBackupFile($backupName) {
+		$backupName = (string) $backupName;
+		if ($backupName === '' || $backupName !== basename($backupName)) {
+			return false;
+		}
+		foreach ($this->listBackups() as $backup) {
+			if ($backup['name'] === $backupName && is_file($backup['path']) && is_readable($backup['path'])) {
+				return $backup['path'];
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Delete a backup file
 	 *
 	 * @param string $backupName Backup filename

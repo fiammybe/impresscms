@@ -19,13 +19,15 @@ if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmi
 	exit("Access Denied");
 }
 
-// Handle actions: they all change files, so they are only accepted as POST requests with a valid token
+// Handle actions: they are only accepted as POST requests with a valid token
 $action = isset($_POST['action']) ? $_POST['action'] : '';
 $backup = new icms_core_Backup();
 $message = '';
 $error = '';
 
-if ($action !== '' && !icms::$security->check()) {
+// A download does not change anything and does not reload the page, so its token stays valid
+// (until it expires) and the button can be used more than once. All other tokens are single use.
+if ($action !== '' && !icms::$security->check($action !== 'download')) {
 	$error = "The request was not carried out: the security token is missing or has expired. Reload the page and try again.<br />"
 		. implode('<br />', icms::$security->getErrors());
 	$action = '';
@@ -61,6 +63,28 @@ switch ($action) {
 			$error = "Permission denied";
 		}
 		break;
+
+	case 'download':
+		$path = (icms_core_Backup::canCreateBackup() && isset($_POST['file'])) ? $backup->getBackupFile($_POST['file']) : false;
+		if ($path === false) {
+			$error = "Permission denied or backup not found";
+			break;
+		}
+
+		// Send the file as is: no debug output, no buffered page output
+		icms::$logger->disableLogger();
+		while (ob_get_level() > 0) {
+			ob_end_clean();
+		}
+		$downloadName = preg_replace('/[^A-Za-z0-9._-]/', '_', basename($path));
+		header('Content-Type: application/zip');
+		header('Content-Disposition: attachment; filename="' . $downloadName . '"');
+		header('Content-Length: ' . filesize($path));
+		header('Content-Transfer-Encoding: binary');
+		header('Cache-Control: no-store, no-cache, must-revalidate, private');
+		header('X-Content-Type-Options: nosniff');
+		readfile($path);
+		exit();
 
 	case 'delete':
 		if (icms_core_Backup::canCreateBackup() && isset($_POST['file'])) {
@@ -144,7 +168,13 @@ icms_cp_header();
 					<td style="padding: 8px; border: 1px solid #ddd;"><?php echo $backupInfo['created_formatted']; ?></td>
 					<td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
 						<?php if (icms_core_Backup::canCreateBackup()): ?>
-						<form method="post" action="" style="margin: 0;" onsubmit="return confirm('Are you sure you want to delete this backup?');">
+						<form method="post" action="" style="margin: 0; display: inline;">
+							<input type="hidden" name="action" value="download" />
+							<input type="hidden" name="file" value="<?php echo htmlspecialchars($backupInfo['name'], ENT_QUOTES); ?>" />
+							<?php echo icms::$security->getTokenHTML(); ?>
+							<input type="submit" value="Download" class="formButton" />
+						</form>
+						<form method="post" action="" style="margin: 0; display: inline;" onsubmit="return confirm('Are you sure you want to delete this backup?');">
 							<input type="hidden" name="action" value="delete" />
 							<input type="hidden" name="file" value="<?php echo htmlspecialchars($backupInfo['name'], ENT_QUOTES); ?>" />
 							<?php echo icms::$security->getTokenHTML(); ?>
