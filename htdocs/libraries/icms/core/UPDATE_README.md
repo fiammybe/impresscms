@@ -99,7 +99,7 @@ Bundled themes and modules are overwritten with the release version, so changes 
 - **PHP Extensions**: zip (ZipArchive)
 - **PHP Functions**: file_get_contents
 - **PHP Settings**: allow_url_fopen enabled
-- **File Permissions**: Write access to ICMS_ROOT_PATH and ICMS_CACHE_PATH
+- **File Permissions**: Write access to ICMS_ROOT_PATH and ICMS_TRUST_PATH
 - **User Permissions**: Administrator access required
 
 ## Security Features
@@ -124,9 +124,13 @@ Bundled themes and modules are overwritten with the release version, so changes 
 
 The update system uses the following directories:
 
-- **Temporary Directory**: `ICMS_CACHE_PATH/updates`
-- **Backup Directory**: `ICMS_CACHE_PATH/backups`
-- **Extract Directory**: `ICMS_CACHE_PATH/updates/extract`
+- **Temporary Directory**: `ICMS_TRUST_PATH/updates`
+- **Backup Directory**: `ICMS_TRUST_PATH/backups`
+- **Extract Directory**: `ICMS_TRUST_PATH/updates/extract`
+
+Backups and downloads contain the site's code and configuration, so they are kept in the trust path, outside the web root, and never in the publicly reachable `cache/` directory. When no trust path is defined or it is not writable, the updater and the backup manager stop with an error instead of falling back to a directory in the web root. Both directories get an `.htaccess` that denies web access, in case the trust path was placed inside the web root.
+
+Because the backups are outside the web root, they cannot be downloaded from the browser; copy them from the server with FTP, SFTP or the hosting control panel.
 
 ## Error Handling
 
@@ -199,7 +203,7 @@ Enable error reporting and check the following:
 
 - PHP error logs
 - Web server error logs
-- File permissions on ICMS_ROOT_PATH and ICMS_CACHE_PATH
+- File permissions on ICMS_ROOT_PATH and ICMS_TRUST_PATH
 - Available disk space
 - Network connectivity to GitHub
 

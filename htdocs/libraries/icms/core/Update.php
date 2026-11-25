@@ -114,7 +114,8 @@ class icms_core_Update {
 			$this->backup = $backup;
 		}
 
-		$this->tempDir = ICMS_CACHE_PATH . '/updates';
+		// Downloads and extracted packages are kept outside the web root, in the trust path
+		$this->tempDir = icms_core_Backup::getPrivateDir('updates');
 
 		// Ensure directories exist
 		$this->createDirectories();
@@ -126,14 +127,11 @@ class icms_core_Update {
 	 * @return bool
 	 */
 	private function createDirectories() {
-		if (!is_dir($this->tempDir)) {
-			if (!icms_core_Filesystem::mkdir($this->tempDir, 0755, '')) {
-				$this->errors[] = "Failed to create temporary directory: " . $this->tempDir;
-				return false;
-			}
+		if ($this->tempDir === false) {
+			$this->errors[] = "Updates are downloaded to the trust path, but no trust path is defined (ICMS_TRUST_PATH).";
+			return false;
 		}
-
-		return true;
+		return icms_core_Backup::preparePrivateDir($this->tempDir, $this->errors, "update download directory");
 	}
 
 	/**
@@ -631,6 +629,11 @@ class icms_core_Update {
 	 */
 	public function performUpdate($expectedHash = null) {
 		try {
+			// Never fall back to a directory inside the web root
+			if (!$this->createDirectories()) {
+				return false;
+			}
+
 			// Check if update is available
 			if (!$this->isUpdateAvailable()) {
 				$this->errors[] = "No update available";
@@ -659,6 +662,9 @@ class icms_core_Update {
 	 * Clean up temporary files
 	 */
 	public function cleanup() {
+		if ($this->tempDir === false) {
+			return;
+		}
 		if ($this->downloadedFile && file_exists($this->downloadedFile)) {
 			icms_core_Filesystem::deleteFile($this->downloadedFile);
 		}

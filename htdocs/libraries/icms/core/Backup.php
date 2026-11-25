@@ -68,11 +68,11 @@ class icms_core_Backup {
 	 * Constructor
 	 *
 	 * @param string $sourceDir Source directory to backup (defaults to ICMS_ROOT_PATH)
-	 * @param string $backupDir Backup directory (defaults to ICMS_CACHE_PATH/backups)
+	 * @param string $backupDir Backup directory (defaults to <trust path>/backups)
 	 */
 	public function __construct($sourceDir = null, $backupDir = null) {
 		$this->sourceDir = $sourceDir ?: ICMS_ROOT_PATH;
-		$this->backupDir = $backupDir ?: ICMS_CACHE_PATH . '/backups';
+		$this->backupDir = $backupDir ?: self::getPrivateDir('backups');
 		
 		// Default exclusions for ImpressCMS
 		$this->excludeDirs = array('cache', 'uploads', 'templates_c', 'backups');
@@ -89,18 +89,57 @@ class icms_core_Backup {
 	 * @return bool
 	 */
 	private function createBackupDirectory() {
-		if (!is_dir($this->backupDir)) {
-			if (!icms_core_Filesystem::mkdir($this->backupDir, 0755, '')) {
-				$this->errors[] = "Failed to create backup directory: " . $this->backupDir;
-				return false;
-			}
-		}
-
-		if (!is_writable($this->backupDir)) {
-			$this->errors[] = "Backup directory is not writable: " . $this->backupDir;
+		if ($this->backupDir === false) {
+			$this->errors[] = "Backups are stored in the trust path, but no trust path is defined (ICMS_TRUST_PATH).";
 			return false;
 		}
+		return self::preparePrivateDir($this->backupDir, $this->errors, "backup directory");
+	}
 
+	/**
+	 * Get the path of a directory in the trust path
+	 *
+	 * Backups and downloaded updates hold the site's code and configuration, so they are kept in
+	 * the trust path, which is outside the web root, instead of in the publicly reachable cache.
+	 *
+	 * @param string $name Directory name
+	 * @return string|false False when no trust path is defined
+	 */
+	public static function getPrivateDir($name) {
+		if (!defined('ICMS_TRUST_PATH') || ICMS_TRUST_PATH === '') {
+			return false;
+		}
+		return rtrim(str_replace('\\', '/', ICMS_TRUST_PATH), '/') . '/' . $name;
+	}
+
+	/**
+	 * Create a directory for private files and check that it can be written to
+	 *
+	 * The directory gets an .htaccess file that denies web access and an empty index.html, as a
+	 * second line of defence for sites whose trust path was placed inside the web root.
+	 *
+	 * @param string $dir Directory to prepare
+	 * @param array $errors Errors are added to this array
+	 * @param string $label Name of the directory in error messages
+	 * @return bool
+	 */
+	public static function preparePrivateDir($dir, array &$errors, $label = "directory") {
+		if (!is_dir($dir) && !@mkdir($dir, 0750, true) && !is_dir($dir)) {
+			$errors[] = "Failed to create " . $label . ": " . $dir;
+			return false;
+		}
+		if (!is_writable($dir)) {
+			$errors[] = ucfirst($label) . " is not writable: " . $dir;
+			return false;
+		}
+		if (!file_exists($dir . '/.htaccess')) {
+			@file_put_contents($dir . '/.htaccess', "# Backups and downloaded updates are never served over the web\n"
+				. "<IfModule mod_authz_core.c>\n\tRequire all denied\n</IfModule>\n"
+				. "<IfModule !mod_authz_core.c>\n\tOrder allow,deny\n\tDeny from all\n</IfModule>\n");
+		}
+		if (!file_exists($dir . '/index.html')) {
+			@file_put_contents($dir . '/index.html', '');
+		}
 		return true;
 	}
 
@@ -255,10 +294,17 @@ class icms_core_Backup {
 		// Get normalized paths for exclusion checking (similar to Filesystem class)
 		$cache_dir = preg_replace('#[\|/]#', DIRECTORY_SEPARATOR, ICMS_CACHE_PATH);
 		$templates_dir = preg_replace('#[\|/]#', DIRECTORY_SEPARATOR, ICMS_COMPILE_PATH);
+		// never include the trust path (credentials, earlier backups) when it lies inside the web root
+		$trust_dir = defined('ICMS_TRUST_PATH') && ICMS_TRUST_PATH !== ''
+			? rtrim(preg_replace('#[\|/]#', DIRECTORY_SEPARATOR, ICMS_TRUST_PATH), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR
+			: null;
 
 		foreach ($iterator as $name => $item) {
 			if ($item->isFile()) {
 				$filePath = $item->getPathname();
+				if ($trust_dir !== null && strpos($filePath, $trust_dir) === 0) {
+					continue;
+				}
 				$relativePath = $this->getRelativePath($filePath);
 				$fileSize = $item->getSize();
 				$itemPath = $item->getPath();
