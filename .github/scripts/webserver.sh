@@ -82,7 +82,9 @@ case "$server" in
         sudo systemctl restart apache2
         ;;
     frankenphp)
-        curl -fsSL -o "$work/frankenphp" https://github.com/php/frankenphp/releases/latest/download/frankenphp-linux-x86_64
+        # pinned: v1.14 embeds PHP 8.6, which Laravel 12 does not support yet
+        # (spl_object_hash deprecations in the output)
+        curl -fsSL -o "$work/frankenphp" https://github.com/php/frankenphp/releases/download/v1.13.4/frankenphp-linux-x86_64
         chmod +x "$work/frankenphp"
         "$work/frankenphp" version
         {

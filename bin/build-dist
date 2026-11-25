@@ -4,7 +4,7 @@
  * Assemble the host's staging directory for a release package.
  *
  * Copies the host (host.php, artisan, composer.json, composer.lock, app/,
- * bootstrap/, config/, routes/) into htdocs/trust_dist/ and installs its
+ * bootstrap/, config/, app-modules/, resources/, routes/) into htdocs/trust_dist/ and installs its
  * dependencies there without development packages. The installer and the
  * system module update copy this directory into the site's trust path (see
  * icms_core_Filesystem::installTrustDistribution()); until then legacy loads
@@ -69,7 +69,7 @@ $copy = static function (string $from, string $to) use (&$copy): void {
 $remove($target);
 mkdir($target, 0777, true);
 
-foreach (['host.php', 'artisan', 'composer.json', 'composer.lock', 'app', 'bootstrap', 'config', 'routes'] as $entry) {
+foreach (['host.php', 'artisan', 'composer.json', 'composer.lock', 'app', 'bootstrap', 'config', 'app-modules', 'resources', 'routes'] as $entry) {
     if (! file_exists("{$root}/{$entry}")) {
         fwrite(STDERR, "Missing {$root}/{$entry}\n");
         exit(1);

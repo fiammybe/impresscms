@@ -6,19 +6,12 @@ use App\Http\Controllers\Test\IdentityTestController;
 use App\Http\Controllers\Test\LegacyConfigurationController;
 use App\Http\Controllers\Test\LegacyHandlerController;
 use App\Http\Controllers\Test\SystemAdminAccessController;
-use App\Http\Controllers\Test\TakeoverNotSuppressed;
-use App\Http\Controllers\Test\UsersTakeoverController;
 use Illuminate\Support\Facades\Route;
 
 /*
- * Test-only routes, registered when APP_ENV is `test`.
+ * Test-only routes, registered when APP_ENV is `test`. The test takeover of
+ * /modules/system/admin.php?fct=users is App\Testing\TestServiceProvider's.
  */
-
-Route::get('/modules/system/admin.php', UsersTakeoverController::class)
-    ->whereQuery(['fct' => 'users'])
-    ->matching(TakeoverNotSuppressed::class)
-    ->takeover('test.users')
-    ->name('test.takeover.system_users');
 
 Route::get('/_test/legacy/sitename', LegacyConfigurationController::class)
     ->middleware('icms.legacy:siteState')

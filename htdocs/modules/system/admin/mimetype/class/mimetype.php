@@ -96,9 +96,17 @@ class SystemMimetype extends icms_ipf_Object {
 /**
  * Handler for the mimetype object class
  *
+ * The attributes describe the admin list and URLs of admin/mimetype/main.php
+ * for the Laravel host's definition compiler; legacy code does not read them.
+ *
  * @package		System
  * @subpackage	Mimetypes
  */
+#[\Icms\Ipf\Metadata\ListView(actions: ['edit', 'delete'], quickSearch: ['name', 'extension', 'types'], createButton: true)]
+#[\Icms\Ipf\Metadata\ListColumn('name', align: 'left', width: 150)]
+#[\Icms\Ipf\Metadata\ListColumn('extension', align: 'left', width: 150)]
+#[\Icms\Ipf\Metadata\ListColumn('types', align: 'left')]
+#[\Icms\Ipf\Metadata\LegacyOperations('/modules/system/admin.php', match: ['fct' => 'mimetype'], form: 'mod', save: 'addmimetype', delete: 'del')]
 class SystemMimetypeHandler extends icms_ipf_Handler {
 
 	public $objects = FALSE;

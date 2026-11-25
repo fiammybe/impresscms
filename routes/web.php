@@ -4,25 +4,32 @@ declare(strict_types=1);
 
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\LegacyBridgeController;
-use App\Http\Controllers\System\MimetypeController;
+use App\Http\Controllers\LegacyScriptController;
+use App\Http\Controllers\ReservedPrefixController;
 use App\Http\Controllers\WhoamiController;
 use App\Routing\RouteOwnership;
+use App\Takeover\TakeoverRegistry;
 use Illuminate\Support\Facades\Route;
 
 /*
  * Laravel routes and legacy ImpressCMS share one URL space without a prefix
- * (design L4). A route can claim a legacy URL, also a `.php` path, and with
- * whereQuery() only some variants of it. Everything no route claims falls
- * through to the legacy bridge, registered last.
+ * (design L4). Every route here is an ordinary route, so the table can be
+ * cached (`php artisan route:cache`):
+ *
+ * - a legacy script URL some takeovers claim is one route to
+ *   LegacyScriptController, which asks the takeover registry whether Laravel
+ *   or the legacy script answers the request (query string and POST body
+ *   variants, switches, module state)
+ * - module routes come from app-modules/<dirname>/routes.php
+ * - everything no route claims falls through to the legacy bridge, last
  */
 
 Route::get('/up', HealthController::class)->name('up');
 
-Route::match(['GET', 'POST'], '/modules/system/admin.php', MimetypeController::class)
-    ->whereInput(['fct' => 'mimetype'])
-    ->takeover(MimetypeController::TAKEOVER)
-    ->middleware('icms.admin:mimetype')
-    ->name(MimetypeController::ROUTE);
+foreach (app(TakeoverRegistry::class)->paths() as $path => $methods) {
+    Route::match($methods, $path, LegacyScriptController::class)
+        ->name(RouteOwnership::SCRIPT_ROUTE_PREFIX . $path);
+}
 
 if (app()->environment('local', 'test')) {
     Route::get('/whoami', WhoamiController::class)
@@ -35,7 +42,7 @@ if (app()->environment('test')) {
 }
 
 foreach (config('icms.legacy.reserved_prefixes') as $prefix) {
-    Route::any(trim($prefix, '/') . '/{rest?}', static fn () => abort(404))
+    Route::any(trim($prefix, '/') . '/{rest?}', ReservedPrefixController::class)
         ->where('rest', '.*')
         ->name(RouteOwnership::RESERVED_ROUTE_PREFIX . $prefix);
 }

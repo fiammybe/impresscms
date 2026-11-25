@@ -33,6 +33,8 @@ and `openspec/changes/archive/2026-11-03-relocate-laravel-host-into-trust-path/`
 | trust path `app/` (`App\`) | HTTP kernel, legacy bridge, runtime integration, session, identity |
 | trust path `config/*.php` | settings that differ from Laravel's defaults (see *Configuration*) |
 | trust path `routes/web.php`, `routes/test.php` | routes and the legacy fallback; test-only routes |
+| trust path `app-modules/<dirname>/` (`Modules\<Dirname>\`) | the Laravel side of an ImpressCMS module: its provider, IPF resources, switches, controllers, views and the generated artifacts (see [ipf-on-laravel.md](ipf-on-laravel.md)) |
+| trust path `resources/views/` | the IPF Blade components (`<x-ipf::…>`) and admin page views |
 | trust path `artisan` | Laravel console (`icms:routes:ownership`, `route:list`, …) |
 | trust path `.env.local` | the site's settings. Written during installation and kept by updates |
 | trust path `var/` | Laravel's storage directory: logs (`var/log/<env>.log`), compiled views, file cache |
@@ -61,26 +63,39 @@ legacy `icms_*` names.
    trust path's `vendor/autoload.php`, records PHP's error settings
    (`App\Runtime\PhpEnvironment`) before Laravel changes them, and hands the
    request to `App\Runtime\HostRunner`.
-2. The router decides. Laravel routes have no fixed prefix. A route can claim
-   an existing legacy URL, including `.php` paths, and with `whereQuery()`,
-   `whereInput()` (the POST body, else the query) or `matching()` only some
-   variants of it. `takeover('<key>')` makes it switchable
-   (`ICMS_TAKEOVERS_DISABLED`):
+2. The router decides. Laravel routes have no fixed prefix, and every route
+   is an ordinary route, so the table can be cached (`php artisan
+   route:cache`). A legacy script URL that Laravel takes over only in some
+   variants, such as `/modules/system/admin.php?fct=mimetype`, is one route to
+   `App\Http\Controllers\LegacyScriptController`. That controller asks
+   `App\Takeover\TakeoverRegistry` which takeover, if any, owns the request:
+   by query-string parameters, by POST-body-else-query parameters (as
+   `admin.php` extracts them), by `App\Takeover\TakeoverCondition`s, the
+   switch (`ICMS_TAKEOVERS_DISABLED`) and the module's state. A matching
+   takeover runs its action behind its middleware; anything else goes to the
+   legacy bridge as if no route claimed the URL. Takeovers are registered by
+   module providers (from the IPF metadata, see *IPF resources*) or directly:
 
    ```php
-   Route::get('/modules/system/admin.php', UsersController::class)
-       ->whereQuery(['fct' => 'users'])
-       ->matching(TakeoverEnabled::class)   // an App\Routing\RouteCondition
-       ->takeover('system.users');
+   $registry->add(new Takeover(
+       key: 'system.users',
+       path: '/modules/system/admin.php',
+       methods: ['GET'],
+       action: UsersController::class,
+       query: ['fct' => 'users'],
+       conditions: [TakeoverEnabled::class],   // an App\Takeover\TakeoverCondition
+   ));
    ```
 
-   Several routes may claim the same URL: `App\Routing\VariantRouteCollection`
-   keeps them all, in the order they were registered, where Laravel's own
-   collection keeps only the last route of a method and URI.
+   Laravel's route matcher, compiled or not, cannot select a route by query
+   string or body; that one decision is the registry's, behind one standard
+   route per path. It is not a router: it never matches paths for Laravel
+   routes.
 
    Unclaimed requests reach `App\Http\Controllers\LegacyBridgeController`,
    an all-method route marked as fallback. Paths that a Laravel route serves
-   with other methods answer 405 there. Reserved prefixes
+   with other methods answer 405 there (for a legacy script route, only the
+   variants a takeover owns). Reserved prefixes
    (`icms.legacy.reserved_prefixes`, none by default) always answer 404 and
    never reach legacy. `php artisan icms:routes:ownership '<url>' --method=POST`
    shows who owns a URL.
@@ -111,10 +126,10 @@ legacy `icms_*` names.
    page. Details appear only with `APP_DEBUG=1`, and are always logged to
    `<trust>/var/log/<env>.log`.
 
-**Route caching is not supported.** Laravel's compiled matcher
-(`php artisan route:cache`) ignores `whereQuery()` and `matching()`, so every
-takeover would claim all variants of its URL. The host refuses to serve
-requests while routes are cached; run `php artisan route:clear`.
+**Route caching** works: `php artisan route:cache` with the site's
+`APP_ENV`, after every deployment that changes routes, modules or generated
+artifacts; `php artisan route:clear` removes it. Module state needs no cache
+rebuild: it is read per request (`App\Module\ModuleRegistry`).
 
 ## Routing levels and web servers
 
@@ -289,52 +304,30 @@ reflects a type only when it resolves it, and resolves contextual attributes
 before the type, so this is safe; a bare legacy type hint without the attribute
 is not.
 
-## Taking over an IPF admin page
+## IPF resources on Laravel
 
 The mimetype administration of the system module
-(`modules/system/admin.php?fct=mimetype`) runs on Laravel:
-`App\Http\Controllers\System\MimetypeController`. The other IPF admin pages
-follow the same pattern. The controller owns the page logic; the output stays
-legacy (the Smarty content template, `Icms\Ipf\View\Table`, the IPF form HTML
-and the admin theme), so the page can be compared with the legacy one byte for
-byte.
+(`modules/system/admin.php?fct=mimetype`) is the first IPF resource whose
+admin page runs on standard Laravel artifacts generated from its IPF
+definition. The architecture, the rollback switches and the limits are in
+[ipf-on-laravel.md](ipf-on-laravel.md); how to migrate another resource is in
+[migrating-a-resource.md](migrating-a-resource.md).
 
-```php
-Route::match(['GET', 'POST'], '/modules/system/admin.php', MimetypeController::class)
-    ->whereInput(['fct' => 'mimetype'])
-    ->takeover('system.mimetype')
-    ->middleware('icms.admin:mimetype')
-    ->name('system.mimetype');
-
-public function __invoke(Request $request, #[IcmsHandler('module:system/mimetype')] object $mimetypes): Response
-```
+The legacy building blocks the generated pages use remain available to
+hand-written takeovers:
 
 | Piece | Does |
 |---|---|
-| route | claims the legacy URL; `whereInput()` because the delete confirmation posts `fct` without a query string. `takeover()` makes it switchable: `ICMS_TAKEOVERS_DISABLED=system.mimetype` serves the legacy page again (the rollback) |
 | middleware `icms.admin:<fct>` | `App\Admin\SystemAdminContext` enters the function as `admin.php` does: the superglobals and working directory of `admin.php`, `ICMS_IN_ADMIN`, the full boot, `cp_functions.php`, the language files and constants. Denied visitors get the legacy denials: a redirect to the login page with "no permission" for visitors who do not administer the system module, `Location: admin.php` for administrators without the function's category right. Do not combine it with `auth`: resolving the user launches the module, which exits for those visitors. `App\Admin\SystemAdminAccess::isGranted()` applies the same rules elsewhere |
+| middleware `icms.token:legacy` | the ImpressCMS security token on POST; a missing or used token goes back to the previous page with `_CORE_TOKENINVALID`, as legacy admin pages do (`icms.token` answers 403) |
+| middleware `icms.module:<dirname>` | 404 unless the module is installed, active, and its Laravel side is not switched off |
 | `#[IcmsHandler('module:<dir>/<name>')]` | the module's IPF handler, the instance `icms_getModuleHandler()` gives legacy code in the same request (see *Container services*) |
-| `App\Admin\AdminPageRenderer` | `render('db:<template>.html', fn ($tpl) => …)` runs `icms_cp_header()`, your assignments, the template and `icms_cp_footer()`; `renderFragment()` wraps content that legacy echoes (`Icms\Core\Message::confirm()`) |
-| `App\Admin\LegacyRedirect` | `to($url, $delay, $message)`: `redirect_header()` without `exit()`, in both `use_custom_redirection` modes, and only to URLs on the site |
-| `App\Ipf\Form\IpfFormFactory` | `for($entity)` builds an `IpfForm` from the entity's metadata: fields, captions, required and length rules, select options, the handler's permissions (`ControlMap`). `submit($request)` validates the top-level keys the legacy form posts with Laravel's validator, in the legacy wording (`_XOBJ_ERR_REQUIRED`), and applies them to the entity. Unsupported controls (uploads, editors, dates) raise `UnsupportedIpfControlException`; such pages stay legacy |
-| `App\Ipf\IpfPersister` | `save($form)`: the handler's `insert()` with its events, then the bound permission groups; `delete($entity)`: the handler's `delete()`, which removes the permissions |
+| `App\Admin\AdminPageRenderer` | `render('db:<template>.html', fn ($tpl) => …)` runs `icms_cp_header()`, your assignments, the template and `icms_cp_footer()`; `renderFragment()` wraps other content (Blade output, `Icms\Core\Message::confirm()`) |
+| `App\Admin\LegacyRedirect`, `App\Admin\LegacyNavigation` | `redirect_header()` without `exit()`, in both `use_custom_redirection` modes, and only to URLs on the site; the previous page, the page before a form and the token field without `icms::` in controllers |
 
 Output, status code and headers of the legacy calls are captured by
 `App\Admin\LegacyOutput`, as the bridge captures legacy scripts, so nothing
-exits and each header goes out once. Saving and deleting check the ImpressCMS
-token (`icms::$security->check()`) and render the edit form with
-`getSecureForm()`. The list's sort, filter and quick search forms post without
-a token, so `icms.token` (every POST) is not used.
-
-To take over a page:
-
-1. Record its legacy behaviour first: a characterization test with the
-   takeover disabled (`tests/Http/System/MimetypeLegacyCharacterizationTest`),
-   database effects asserted directly.
-2. Write the controller with the pieces above, mirroring the legacy `op`
-   handling.
-3. Run the same tests against the takeover; only intended changes (the token)
-   may differ.
+exits and each header goes out once.
 
 ## Events
 
@@ -396,7 +389,9 @@ puts the web root and the trust path there for every web request.
 | `ICMS_LEGACY_ROOT` | the web root. Set by `index.php` for web requests; in `.env.local` for `artisan`; `htdocs/` in a checkout |
 | `ICMS_TRUST_PATH` | set by `index.php`; refused by the bridge if it lies under the web root |
 | `ICMS_HERD_ROUTING` | `2` switches the Herd driver to routing level 2 |
-| `ICMS_TAKEOVERS_DISABLED` | comma-separated takeover keys, for example `system.mimetype`: those routes no longer match, and legacy serves their URLs (the rollback). Read through `config()`; after a manual `php artisan config:cache`, run `php artisan config:clear` when you change it |
+| `ICMS_TAKEOVERS_DISABLED` | comma-separated takeover keys, for example `system.mimetype`: those takeovers no longer match, and legacy serves their URLs (the rollback). Read through `config()`; after a manual `php artisan config:cache`, run `php artisan config:clear` when you change it |
+| `ICMS_MODULES_LARAVEL_DISABLED` | comma-separated module directories, for example `system`: every takeover of those modules falls through to legacy, and their routes answer 404 |
+| `ICMS_SYSTEM_MIMETYPE_RENDERER`, `…_PERSISTENCE`, `…_VALIDATION`, `…_POLICY` | per-resource rollback switches, declared in `app-modules/<dirname>/config.php` (see [ipf-on-laravel.md](ipf-on-laravel.md)) |
 
 The host changes these Laravel defaults:
 

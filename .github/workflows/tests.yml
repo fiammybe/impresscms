@@ -56,7 +56,7 @@ jobs:
 
       - name: Lint
         run: |
-          find app bootstrap config routes tests htdocs/libraries/Icms htdocs/include htdocs/install docs/server -name '*.php' -print0 \
+          find app app-modules bootstrap config routes tests htdocs/libraries/Icms htdocs/include htdocs/install docs/server -name '*.php' -print0 \
             | xargs -0 -r -n 50 -P 4 php -l > /dev/null
           for script in artisan host.php bin/* htdocs/index.php htdocs/mainfile.php; do php -l "$script" > /dev/null; done
 
@@ -69,6 +69,14 @@ jobs:
       - name: Test site
         run: php bin/test-db
 
+      # generated Laravel artifacts must equal what the IPF definitions generate
+      - name: IPF definitions and schema
+        run: |
+          php artisan icms:definitions:check
+          php artisan icms:schema:diff
+        env:
+          ICMS_MAINFILE: ${{ github.workspace }}/var/test/mainfile.php
+
       - name: Integration suite
         run: vendor/bin/phpunit --testsuite Integration
 
@@ -79,6 +87,15 @@ jobs:
         run: vendor/bin/phpunit --testsuite Http
         env:
           ICMS_TEST_ROUTING: 3
+
+      - name: Http suite (routing level 3, cached routes)
+        run: |
+          APP_ENV=test php artisan route:cache
+          vendor/bin/phpunit --testsuite Http
+          php artisan route:clear
+        env:
+          ICMS_TEST_ROUTING: 3
+          ICMS_MAINFILE: ${{ github.workspace }}/var/test/mainfile.php
 
       - name: Http suite (routing level 2, scripts executed directly)
         run: vendor/bin/phpunit --testsuite Http
