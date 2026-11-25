@@ -19,11 +19,17 @@ if (!is_object(icms::$user) || !is_object(icms::$module) || !icms::$user->isAdmi
 	exit("Access Denied");
 }
 
-// Handle actions
-$action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : '');
+// Handle actions: they all change files, so they are only accepted as POST requests with a valid token
+$action = isset($_POST['action']) ? $_POST['action'] : '';
 $backup = new icms_core_Backup();
 $message = '';
 $error = '';
+
+if ($action !== '' && !icms::$security->check()) {
+	$error = "The request was not carried out: the security token is missing or has expired. Reload the page and try again.<br />"
+		. implode('<br />', icms::$security->getErrors());
+	$action = '';
+}
 
 switch ($action) {
 	case 'create':
@@ -57,8 +63,8 @@ switch ($action) {
 		break;
 
 	case 'delete':
-		if (icms_core_Backup::canCreateBackup() && isset($_GET['file'])) {
-			$filename = basename($_GET['file']); // Security: only filename, no path
+		if (icms_core_Backup::canCreateBackup() && isset($_POST['file'])) {
+			$filename = basename($_POST['file']); // Security: only filename, no path
 
 			if ($backup->deleteBackup($filename)) {
 				$message = "Backup deleted successfully: " . $filename;
@@ -95,6 +101,7 @@ icms_cp_header();
 	<?php if (icms_core_Backup::canCreateBackup()): ?>
 	<form method="post" action="">
 		<input type="hidden" name="action" value="create" />
+		<?php echo icms::$security->getTokenHTML(); ?>
 		<div style="margin-bottom: 10px;">
 			<label for="backup_name">Backup Name (optional):</label><br />
 			<input type="text" name="backup_name" id="backup_name" placeholder="Leave empty for auto-generated name" style="width: 300px;" />
@@ -104,6 +111,7 @@ icms_cp_header();
 
 	<form method="post" action="" style="margin-top: 10px;">
 		<input type="hidden" name="action" value="checksum" />
+		<?php echo icms::$security->getTokenHTML(); ?>
 		<input type="submit" value="Generate Checksum File" class="formButton" onclick="return confirm('Generate a checksum file for integrity verification?');" />
 	</form>
 	<?php else: ?>
@@ -136,9 +144,12 @@ icms_cp_header();
 					<td style="padding: 8px; border: 1px solid #ddd;"><?php echo $backupInfo['created_formatted']; ?></td>
 					<td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
 						<?php if (icms_core_Backup::canCreateBackup()): ?>
-						<a href="?action=delete&file=<?php echo urlencode($backupInfo['name']); ?>"
-						   onclick="return confirm('Are you sure you want to delete this backup?');"
-						   style="color: red;">Delete</a>
+						<form method="post" action="" style="margin: 0;" onsubmit="return confirm('Are you sure you want to delete this backup?');">
+							<input type="hidden" name="action" value="delete" />
+							<input type="hidden" name="file" value="<?php echo htmlspecialchars($backupInfo['name'], ENT_QUOTES); ?>" />
+							<?php echo icms::$security->getTokenHTML(); ?>
+							<input type="submit" value="Delete" class="formButton" style="color: red;" />
+						</form>
 						<?php else: ?>
 						<span style="color: #999;">No permission</span>
 						<?php endif; ?>

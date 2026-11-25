@@ -9,7 +9,7 @@ The `icms_core_Update` class provides functionality to automatically download, v
 - **Automatic Download**: Downloads the latest release from GitHub
 - **Hash Verification**: Optional SHA256 hash verification for security
 - **Backup Creation**: Creates a backup before updating
-- **Safe Installation**: Extracts and installs updates safely
+- **File List Installation**: Installs the release file by file, never touching the site configuration or the installer
 - **Permission Checks**: Ensures only administrators can perform updates
 - **Error Handling**: Comprehensive error reporting and logging
 
@@ -80,10 +80,24 @@ $backup->setMaxFileSize(100 * 1024 * 1024); // 100MB
 $backup->generateChecksum();
 ```
 
+## What the updater installs
+
+Release packages (built by `bin/build-package`) hold the contents of `htdocs/` in the root of the zip. The updater finds the package root by looking for `include/version.php` (in the zip root, in `htdocs/`, or in a single wrapper directory) and checks that the core files are present.
+
+The files are then installed one by one from a list:
+
+- **Never written or deleted**: `mainfile.php` (the site configuration), `install/` (the installer is removed after installation and must not come back), `cache/`, `templates_c/` and `uploads/`.
+- **Only installed when the site does not have them yet**: `robots.txt`, `favicon.ico` and `htaccess.txt`.
+- **Deleted**: files listed in `DELETED-FILES.txt`, which packages built with `bin/build-package --from` contain, except protected paths and paths outside the web root.
+
+Before anything is changed, every target file is checked for write access; if one is not writable, the update stops without changing the site. Files that fail to copy or delete are reported.
+
+Bundled themes and modules are overwritten with the release version, so changes made directly in those files are lost.
+
 ## System Requirements
 
-- **PHP Extensions**: ZipArchive (preferred) or system unzip command
-- **PHP Functions**: file_get_contents, exec (optional)
+- **PHP Extensions**: zip (ZipArchive)
+- **PHP Functions**: file_get_contents
 - **PHP Settings**: allow_url_fopen enabled
 - **File Permissions**: Write access to ICMS_ROOT_PATH and ICMS_CACHE_PATH
 - **User Permissions**: Administrator access required
@@ -93,7 +107,8 @@ $backup->generateChecksum();
 1. **Permission Checks**: Only administrators can perform updates
 2. **Hash Verification**: Optional SHA256 hash verification
 3. **Backup Creation**: Automatic backup before installation
-4. **Safe Extraction**: Files extracted to temporary directory first
+4. **Safe Extraction**: Archive entries that would end up outside the extraction directory are rejected, files are extracted to a temporary directory first, and temporary files are removed also when an update fails
+5. **Security Tokens**: The update form and the backup manager actions only run with a valid security token
 5. **Error Handling**: Comprehensive error checking throughout process
 
 ## File Structure
@@ -173,7 +188,7 @@ Both Update and Backup classes leverage `icms_core_Filesystem` for file operatio
 
 ### Common Issues
 
-1. **ZipArchive not available**: Install php-zip extension or ensure system unzip command is available
+1. **ZipArchive not available**: Install the php-zip extension
 2. **Permission denied**: Ensure web server has write access to required directories
 3. **Download fails**: Check allow_url_fopen setting and network connectivity
 4. **Hash verification fails**: Verify the provided hash is correct

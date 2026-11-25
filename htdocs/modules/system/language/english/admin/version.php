@@ -44,4 +44,5 @@ define("_AM_VERSION_UPDATE_STEP_DOWNLOAD", 'Step 2: Downloading update...');
 define("_AM_VERSION_UPDATE_STEP_VERIFY", 'Step 3: Verifying download...');
 define("_AM_VERSION_UPDATE_STEP_INSTALL", 'Step 4: Installing update...');
 define("_AM_VERSION_UPDATE_STEP_CLEANUP", 'Step 5: Cleaning up...');
+define("_AM_VERSION_UPDATE_TOKEN_INVALID", 'The update was not started: the security token is missing or has expired. Reload the page and try again.');
 ?>

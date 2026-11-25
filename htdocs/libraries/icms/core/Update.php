@@ -59,6 +59,43 @@ class icms_core_Update {
 	private $downloadedFile;
 
 	/**
+	 * Paths, relative to the web root, that the updater never writes or deletes.
+	 * A trailing slash protects a directory and everything in it.
+	 * @var array
+	 */
+	private $protectedPaths = array(
+		'mainfile.php',   // site configuration written by the installer
+		'install/',       // the installer is removed after installation and must not come back
+		'cache/',
+		'templates_c/',
+		'uploads/',
+	);
+
+	/**
+	 * Files that hold site-specific changes: only installed when the site does not have them yet
+	 * @var array
+	 */
+	private $keepExisting = array('robots.txt', 'favicon.ico', 'htaccess.txt');
+
+	/**
+	 * Files a package must contain
+	 * @var array
+	 */
+	private $requiredFiles = array('index.php', 'include/version.php', 'include/common.php');
+
+	/**
+	 * Name of the list of deleted files in packages built with bin/build-package --from
+	 * @var string
+	 */
+	private $deletedFilesList = 'DELETED-FILES.txt';
+
+	/**
+	 * File list of the last installation attempt
+	 * @var array|null
+	 */
+	private $fileList = null;
+
+	/**
 	 * Constructor
 	 *
 	 * @param icms_core_Versionchecker $versionChecker Version checker instance
@@ -231,10 +268,14 @@ class icms_core_Update {
 	/**
 	 * Extract and install the update
 	 *
+	 * The archive is extracted to a temporary directory, the package root is located
+	 * and checked, and only the files on the install list are written to the site.
+	 * Nothing is written when one of the target files is not writable.
+	 *
 	 * @return bool
 	 */
 	public function installUpdate() {
-		if (!file_exists($this->downloadedFile)) {
+		if (!$this->downloadedFile || !file_exists($this->downloadedFile)) {
 			$this->errors[] = "Downloaded file not found for installation";
 			return false;
 		}
@@ -242,29 +283,39 @@ class icms_core_Update {
 		$this->messages[] = "Starting installation process";
 
 		try {
-			// Extract to temporary directory first
+			// Extract to a clean temporary directory first
 			$extractDir = $this->tempDir . '/extract';
-			if (!is_dir($extractDir)) {
-				icms_core_Filesystem::mkdir($extractDir, 0755, '');
+			if (is_dir($extractDir)) {
+				icms_core_Filesystem::deleteRecursive($extractDir);
+			}
+			if (!is_dir($extractDir) && !mkdir($extractDir, 0755, true)) {
+				$this->errors[] = "Failed to create extraction directory: " . $extractDir;
+				return false;
 			}
 
-			// Try to extract using ZipArchive first, fallback to alternative methods
 			if (!$this->extractArchive($this->downloadedFile, $extractDir)) {
 				return false;
 			}
 
-			// Find the extracted directory (usually has a version name)
-			$extractedDirs = glob($extractDir . '/*', GLOB_ONLYDIR);
-			if (empty($extractedDirs)) {
-				$this->errors[] = "No extracted directory found";
+			$sourceDir = $this->findPackageRoot($extractDir);
+			if ($sourceDir === false) {
+				return false;
+			}
+			$this->messages[] = "Package root: " . $sourceDir;
+
+			$this->fileList = $this->buildFileList($sourceDir, ICMS_ROOT_PATH);
+			$this->messages[] = sprintf(
+				"%d files to install, %d files to delete, %d files skipped",
+				count($this->fileList['install']),
+				count($this->fileList['delete']),
+				count($this->fileList['skip'])
+			);
+
+			if (!$this->checkWritable($this->fileList, ICMS_ROOT_PATH)) {
 				return false;
 			}
 
-			$sourceDir = $extractedDirs[0];
-			$this->messages[] = "Extracted to: " . $sourceDir;
-
-			// Copy files to ImpressCMS root
-			if (!$this->copyFiles($sourceDir, ICMS_ROOT_PATH)) {
+			if (!$this->installFiles($sourceDir, ICMS_ROOT_PATH, $this->fileList)) {
 				return false;
 			}
 
@@ -280,65 +331,296 @@ class icms_core_Update {
 	/**
 	 * Extract archive file to destination directory
 	 *
+	 * Every entry name is checked before anything is extracted, so an archive cannot
+	 * write outside the extraction directory.
+	 *
 	 * @param string $archiveFile Path to archive file
 	 * @param string $extractDir Directory to extract to
 	 * @return bool
 	 */
 	private function extractArchive($archiveFile, $extractDir) {
-		// Try ZipArchive first if available
-		if (class_exists('ZipArchive')) {
-			$zip = new ZipArchive();
-			$result = $zip->open($archiveFile);
+		if (!class_exists('ZipArchive')) {
+			$this->errors[] = "Failed to extract archive: the PHP zip extension (ZipArchive) is required.";
+			return false;
+		}
 
-			if ($result === TRUE) {
-				if ($zip->extractTo($extractDir)) {
-					$zip->close();
-					$this->messages[] = "Archive extracted using ZipArchive";
-					return true;
-				}
+		$zip = new ZipArchive();
+		$result = $zip->open($archiveFile);
+		if ($result !== true) {
+			$this->errors[] = "Failed to open archive (ZipArchive error " . $result . "). The download may not be a zip file.";
+			return false;
+		}
+
+		for ($i = 0; $i < $zip->numFiles; $i++) {
+			$name = $zip->getNameIndex($i);
+			if ($name === false || !self::isSafeRelativePath($name)) {
 				$zip->close();
+				$this->errors[] = "Archive rejected: unsafe entry name " . ($name === false ? '#' . $i : $name);
+				return false;
 			}
 		}
 
-		// Fallback: Try to use system unzip command if available
-		if (function_exists('exec')) {
-			$command = "unzip -q " . escapeshellarg($archiveFile) . " -d " . escapeshellarg($extractDir);
-			$output = array();
-			$returnCode = 0;
-			exec($command, $output, $returnCode);
+		if (!$zip->extractTo($extractDir)) {
+			$zip->close();
+			$this->errors[] = "Failed to extract archive to: " . $extractDir;
+			return false;
+		}
+		$zip->close();
 
-			if ($returnCode === 0) {
-				$this->messages[] = "Archive extracted using system unzip command";
-				return true;
+		$this->messages[] = "Archive extracted";
+		return true;
+	}
+
+	/**
+	 * Check that a path from an archive or a file list stays inside its base directory
+	 *
+	 * @param string $path Relative path
+	 * @return bool
+	 */
+	public static function isSafeRelativePath($path) {
+		$path = str_replace('\\', '/', $path);
+		if ($path === '' || strpos($path, "\0") !== false) {
+			return false;
+		}
+		// absolute paths and Windows drive letters
+		if ($path[0] === '/' || preg_match('#^[a-zA-Z]:#', $path)) {
+			return false;
+		}
+		foreach (explode('/', $path) as $segment) {
+			if ($segment === '..') {
+				return false;
 			}
 		}
+		return true;
+	}
 
-		$this->errors[] = "Failed to extract archive. ZipArchive extension and system unzip command are not available.";
+	/**
+	 * Locate the web root inside the extracted package
+	 *
+	 * Release packages built by bin/build-package hold the contents of htdocs/ in the
+	 * root of the zip. Archives with a single wrapper directory, with or without an
+	 * htdocs/ directory inside it, are accepted too.
+	 *
+	 * @param string $extractDir Directory the archive was extracted to
+	 * @return string|false
+	 */
+	private function findPackageRoot($extractDir) {
+		$candidates = array($extractDir, $extractDir . '/htdocs');
+
+		$entries = array_values(array_diff(scandir($extractDir), array('.', '..')));
+		if (count($entries) === 1 && is_dir($extractDir . '/' . $entries[0])) {
+			$candidates[] = $extractDir . '/' . $entries[0];
+			$candidates[] = $extractDir . '/' . $entries[0] . '/htdocs';
+		}
+
+		foreach ($candidates as $candidate) {
+			if (!is_file($candidate . '/include/version.php')) {
+				continue;
+			}
+			foreach ($this->requiredFiles as $required) {
+				if (!is_file($candidate . '/' . $required)) {
+					$this->errors[] = "The package is incomplete: " . $required . " is missing.";
+					return false;
+				}
+			}
+			return $candidate;
+		}
+
+		$this->errors[] = "The archive is not an ImpressCMS package: include/version.php was not found.";
 		return false;
 	}
 
 	/**
-	 * Copy files from source to destination
+	 * Check whether the updater must never write or delete a path
 	 *
-	 * @param string $source Source directory
-	 * @param string $destination Destination directory
+	 * @param string $relativePath Path relative to the web root, with forward slashes
 	 * @return bool
 	 */
-	private function copyFiles($source, $destination) {
-		try {
-			// Use icms_core_Filesystem::copyRecursive for consistency
-			if (icms_core_Filesystem::copyRecursive($source, $destination)) {
-				$this->messages[] = "Files copied successfully from " . basename($source) . " to " . basename($destination);
+	public function isProtectedPath($relativePath) {
+		$path = strtolower($relativePath);
+		foreach ($this->protectedPaths as $protected) {
+			$protected = strtolower($protected);
+			if (substr($protected, -1) === '/') {
+				if (strpos($path, $protected) === 0 || $path === rtrim($protected, '/')) {
+					return true;
+				}
+			} elseif ($path === $protected) {
 				return true;
-			} else {
-				$this->errors[] = "Failed to copy files from " . $source . " to " . $destination;
-				return false;
 			}
+		}
+		return false;
+	}
 
-		} catch (Exception $e) {
-			$this->errors[] = "File copy failed: " . $e->getMessage();
+	/**
+	 * Build the list of files to install, delete and skip
+	 *
+	 * @param string $sourceDir Package root
+	 * @param string $destination Site web root
+	 * @return array Array with keys 'install', 'delete' and 'skip' (relative paths), and 'skip_reasons'
+	 */
+	public function buildFileList($sourceDir, $destination) {
+		$list = array('install' => array(), 'delete' => array(), 'skip' => array(), 'skip_reasons' => array());
+		$sourceDir = rtrim(str_replace('\\', '/', $sourceDir), '/');
+
+		$iterator = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator($sourceDir, FilesystemIterator::SKIP_DOTS),
+			RecursiveIteratorIterator::LEAVES_ONLY
+		);
+
+		foreach ($iterator as $item) {
+			if (!$item->isFile()) {
+				continue;
+			}
+			$relative = substr(str_replace('\\', '/', $item->getPathname()), strlen($sourceDir) + 1);
+
+			if ($relative === $this->deletedFilesList) {
+				continue;
+			}
+			if ($this->isProtectedPath($relative)) {
+				$list['skip'][] = $relative;
+				$list['skip_reasons'][$relative] = 'protected';
+				continue;
+			}
+			if (in_array(strtolower($relative), array_map('strtolower', $this->keepExisting), true)
+				&& file_exists($destination . '/' . $relative)) {
+				$list['skip'][] = $relative;
+				$list['skip_reasons'][$relative] = 'kept existing';
+				continue;
+			}
+			$list['install'][] = $relative;
+		}
+
+		// Files removed from the core since the previous release (only present in packages built with --from)
+		$deletedFile = $sourceDir . '/' . $this->deletedFilesList;
+		if (is_file($deletedFile)) {
+			foreach (file($deletedFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+				$relative = trim(str_replace('\\', '/', $line));
+				if ($relative === '' || !self::isSafeRelativePath($relative) || $this->isProtectedPath($relative)) {
+					continue;
+				}
+				if (is_file($destination . '/' . $relative)) {
+					$list['delete'][] = $relative;
+				}
+			}
+		}
+
+		sort($list['install']);
+		sort($list['delete']);
+		sort($list['skip']);
+		return $list;
+	}
+
+	/**
+	 * Check that every file on the list can be written or deleted, before anything is changed
+	 *
+	 * @param array $fileList List from buildFileList()
+	 * @param string $destination Site web root
+	 * @return bool
+	 */
+	private function checkWritable(array $fileList, $destination) {
+		$notWritable = array();
+
+		foreach (array_merge($fileList['install'], $fileList['delete']) as $relative) {
+			$target = $destination . '/' . $relative;
+			if (file_exists($target)) {
+				if (!is_writable($target)) {
+					$notWritable[] = $relative;
+				}
+				continue;
+			}
+			// new file: the nearest existing parent directory must be writable
+			$parent = dirname($target);
+			while (!file_exists($parent) && dirname($parent) !== $parent) {
+				$parent = dirname($parent);
+			}
+			if (!is_dir($parent) || !is_writable($parent)) {
+				$notWritable[] = $relative;
+			}
+		}
+
+		// deleting a file needs write access to its directory
+		foreach ($fileList['delete'] as $relative) {
+			if (!is_writable(dirname($destination . '/' . $relative))) {
+				$notWritable[] = $relative;
+			}
+		}
+
+		if ($notWritable) {
+			$notWritable = array_values(array_unique($notWritable));
+			$shown = array_slice($notWritable, 0, 20);
+			$this->errors[] = sprintf(
+				"Update aborted before any file was changed: %d files or directories are not writable by the web server: %s%s",
+				count($notWritable),
+				implode(', ', $shown),
+				count($notWritable) > count($shown) ? ', ...' : ''
+			);
 			return false;
 		}
+		return true;
+	}
+
+	/**
+	 * Copy the files on the install list and delete the files on the delete list
+	 *
+	 * @param string $sourceDir Package root
+	 * @param string $destination Site web root
+	 * @param array $fileList List from buildFileList()
+	 * @return bool False when one or more files could not be written or deleted
+	 */
+	private function installFiles($sourceDir, $destination, array $fileList) {
+		$failed = array();
+		$copied = 0;
+
+		foreach ($fileList['install'] as $relative) {
+			$target = $destination . '/' . $relative;
+			$dir = dirname($target);
+			if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+				$failed[] = $relative . ' (could not create directory)';
+				continue;
+			}
+			if (!copy($sourceDir . '/' . $relative, $target)) {
+				$failed[] = $relative;
+				continue;
+			}
+			$copied++;
+		}
+
+		$deleted = 0;
+		foreach ($fileList['delete'] as $relative) {
+			if (unlink($destination . '/' . $relative)) {
+				$deleted++;
+			} else {
+				$failed[] = $relative . ' (could not delete)';
+			}
+		}
+
+		$this->messages[] = sprintf("%d files installed, %d obsolete files deleted", $copied, $deleted);
+		foreach ($fileList['skip'] as $relative) {
+			if ($fileList['skip_reasons'][$relative] === 'kept existing') {
+				$this->messages[] = "Kept the site's own " . $relative . " (the release version was not installed)";
+			}
+		}
+
+		if ($failed) {
+			$shown = array_slice($failed, 0, 20);
+			$this->errors[] = sprintf(
+				"%d files could not be updated, the site may be partly updated. Restore the backup or copy these files by hand: %s%s",
+				count($failed),
+				implode(', ', $shown),
+				count($failed) > count($shown) ? ', ...' : ''
+			);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Get the file list of the last installation attempt
+	 *
+	 * @return array|null
+	 */
+	public function getFileList() {
+		return $this->fileList;
 	}
 
 	/**
@@ -348,38 +630,36 @@ class icms_core_Update {
 	 * @return bool
 	 */
 	public function performUpdate($expectedHash = null) {
-		// Check if update is available
-		if (!$this->isUpdateAvailable()) {
-			$this->errors[] = "No update available";
-			return false;
+		try {
+			// Check if update is available
+			if (!$this->isUpdateAvailable()) {
+				$this->errors[] = "No update available";
+				return false;
+			}
+
+			// Create backup
+			if (!$this->createBackup()) {
+				return false;
+			}
+
+			// Download update
+			if (!$this->downloadUpdate($expectedHash)) {
+				return false;
+			}
+
+			// Install update
+			return $this->installUpdate();
+		} finally {
+			// Never leave downloaded or extracted files behind, also not when the update failed
+			$this->cleanup();
 		}
-
-		// Create backup
-		if (!$this->createBackup()) {
-			return false;
-		}
-
-		// Download update
-		if (!$this->downloadUpdate($expectedHash)) {
-			return false;
-		}
-
-		// Install update
-		if (!$this->installUpdate()) {
-			return false;
-		}
-
-		// Clean up temporary files
-		$this->cleanup();
-
-		return true;
 	}
 
 	/**
 	 * Clean up temporary files
 	 */
 	public function cleanup() {
-		if (file_exists($this->downloadedFile)) {
+		if ($this->downloadedFile && file_exists($this->downloadedFile)) {
 			icms_core_Filesystem::deleteFile($this->downloadedFile);
 		}
 

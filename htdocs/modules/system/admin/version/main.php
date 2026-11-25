@@ -34,6 +34,12 @@ if (isset($_GET['mid'])) {
  * Handle update actions
  */
 if (isset($_POST['action']) && $_POST['action'] === 'update' && icms_core_Update::canUpdate()) {
+	if (!icms::$security->check()) {
+		// missing or expired token: the request did not come from the form on this page
+		$updateSuccess = false;
+		$updateErrors = _AM_VERSION_UPDATE_TOKEN_INVALID . '<br />' . implode('<br />', icms::$security->getErrors());
+		$updateMessages = '';
+	} else {
 	$updater = new icms_core_Update();
 	$expectedHash = isset($_POST['hash']) && !empty(trim($_POST['hash'])) ? trim($_POST['hash']) : null;
 
@@ -45,6 +51,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'update' && icms_core_Update
 		$updateErrors = $updater->getErrors(true);
 		$updateMessages = $updater->getMessages(true);
 	}
+	}
 }
 
 /**
@@ -55,6 +62,7 @@ $icmsVersionChecker = icms_core_Versioncheckergithub::getInstance();
 icms_cp_header();
 
 // Assign update-related variables
+$icmsAdminTpl->assign('update_success', false);
 if (isset($updateSuccess)) {
 	$icmsAdminTpl->assign('update_success', $updateSuccess);
 	$icmsAdminTpl->assign('update_messages', $updateMessages);
@@ -65,6 +73,7 @@ if (isset($updateSuccess)) {
 
 // Check if user can perform updates
 $icmsAdminTpl->assign('can_update', icms_core_Update::canUpdate());
+$icmsAdminTpl->assign('update_token', icms::$security->getTokenHTML());
 
 $icmsVersionChecker->check();
 	$icmsAdminTpl->assign('latest', $icmsVersionChecker->latest);
